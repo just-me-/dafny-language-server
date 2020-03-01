@@ -1,0 +1,74 @@
+variables:
+  BUILD_IMAGE: $CI_REGISTRY_IMAGE/dafny-linux-mono-build
+  NUnitversion: 3.11.1
+  NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
+  NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
+
+stages:
+  - prebuild
+  - build
+  - test
+  - sonar
+
+build_image:
+  stage: prebuild
+  image: docker:latest
+  only:
+    refs:
+      - master
+    changes:
+      - Dockerfile
+      - .gitlab-ci.yml
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build --tag $BUILD_IMAGE:latest - < Dockerfile
+    - docker push $BUILD_IMAGE:latest
+
+build_server:
+  stage: build
+  image: $BUILD_IMAGE:latest
+  script:
+    - if [ ! -e boogie ];
+        then ln -s /opt/boogie;
+      fi;
+    - cd dafny/Source
+    - nuget restore Dafny.sln
+    - msbuild Dafny.sln
+  artifacts:
+    paths:
+      - dafny/Binaries/
+
+test_nunit:
+  stage: test
+  image: $BUILD_IMAGE:latest
+  script:
+    - pushd dafny/Binaries; ln -s /opt/z3; popd
+    - cd dafny/Binaries/
+    - nuget install $NUnitNugetPackage
+    - mono ./$NUnitRunner ContentManagerTests.dll
+    - mono ./$NUnitRunner CompletionHandlerTest.dll
+    - mono ./$NUnitRunner VerificationServiceTest.dll
+    - mono ./$NUnitRunner CompileHandlerTest.dll
+    - mono ./$NUnitRunner CounterExampleTest.dll
+  artifacts:
+    reports:
+      junit: dafny/Binaries/TestResult.xml
+
+test_dafny:
+  stage: test
+  image: $BUILD_IMAGE:latest
+  script:
+    - cd dafny
+    - pushd Binaries; ln -s /opt/z3; popd
+    - npm install bignumber.js
+    - cd Test
+    - "find . -name '*.dfy' -not -path './compileHandlerFiles/*' -not -path './CounterExampleFiles/*' -exec sed -i 's!/optimize !!g' {} +"
+    - lit --time-tests -v .
+
+sonar_scanner:
+  stage: sonar
+  image: $BUILD_IMAGE:latest
+  only:
+    - master@dafny-ba/dafny-language-server
+  script:
+    - sonar-scanner
