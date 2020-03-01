@@ -1,11 +1,11 @@
 # Dafny Server Redesign
-This porject is a redesign of the [original plugin that brings support for Dafny for Visual Studio Code](https://github.com/DafnyVSCode/Dafny-VSCode). 
+This porject is a redesign of the [original Dafny language server and VSCode plugin that brings support for Dafny for Visual Studio Code](https://github.com/DafnyVSCode/Dafny-VSCode). 
 
 ## Overview
 The project has two main parts. 
-On the one hand, there is the Visual Studio Code Plugin. 
+On the one hand, there is the Visual Studio Code Plugin. You can find [it in this seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin). 
 It just contains a very basic level of logic and is mainly responsible for displaying information to the user. 
-On the other hand, is the Visual Studio Solution “Dafny Server”. 
+On the other hand, is the Visual Studio Solution “Dafny Server”. The server is placed in this git repository. 
 It delivers the needed information to the Visual Studio Code Plugin over the Language Server Protocol (LSP). 
 The Dafny Server itself does not directly evaluate Dafny code. It uses the Dafny-Lang project.
 It uses this project directly and not over an JSON pared request like the bachelor theses before thought.
@@ -29,4 +29,4 @@ For future adaptations of the documentation, the Word file will be made availabl
 For the current processing an alternative Word document synchronization is more suitable (SharePoint).
 
 ## VS Code Plugin Features
-If you would like to know which features are supported by the Visual Studio Code Plugin, please checkout the [VSCodePlugin-ReadMe](./VSCodePlugin/README.md). 
+If you would like to know which features are supported by the Visual Studio Code Plugin, please checkout the [VSCodePlugin-ReadMe in the seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin/-/blob/master/README.md). 
