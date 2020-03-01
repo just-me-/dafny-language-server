@@ -19,8 +19,8 @@ MsgLogger.txt
 
 boogie/
 boogiepartners/
-dafny/Binaries/CodeContracts/
-dafny/Binaries/*.json
+Binaries/CodeContracts/
+Binaries/*.json
 
 *.exe.config
 *.dll.config
