@@ -1,6 +1,6 @@
 variables:
   BUILD_IMAGE: $CI_REGISTRY_IMAGE/dafny-language-server-linux-mono-build
-  NUnitversion: 3.11.1
+  NUnitVersion: 3.11.1
   NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
   NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
 
