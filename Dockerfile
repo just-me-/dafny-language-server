@@ -3,6 +3,7 @@ FROM mono:5.20
 ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.7/z3-4.8.7-x64-ubuntu-16.04.zip
 ARG GO_RELEASE=go1.10.3.linux-amd64.tar.gz
 ARG SonarScanner_RELEASE=3.0.3.778
+ARG BOOGIE_RELEASE=v2.4.2
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DISPLAY=:99
@@ -38,7 +39,7 @@ RUN wget --no-verbose ${Z3_RELEASE} &&\
     mv z3* z3
 ENV PATH=$PATH:/opt/z3
 
-RUN git clone https://github.com/boogie-org/boogie.git &&\
+RUN git clone --branch ${BOOGIE_RELEASE} https://github.com/boogie-org/boogie.git &&\
     msbuild boogie/Source/Boogie.sln
 ENV PATH=$PATH:/opt/boogie/Binaries
 

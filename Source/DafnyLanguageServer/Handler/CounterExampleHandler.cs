@@ -1,11 +1,11 @@
 ﻿using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Services;
-using OmniSharp.Extensions.Embedded.MediatR;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace DafnyLanguageServer.Handler
 {

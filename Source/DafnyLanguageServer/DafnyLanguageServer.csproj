@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -102,6 +102,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\boogie\Binaries\BoogieVCGeneration.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.7.0.0\lib\net461\MediatR.dll</HintPath>
+    </Reference>
+    <Reference Include="MediatR.Extensions.Microsoft.DependencyInjection, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.Extensions.Microsoft.DependencyInjection.7.0.0\lib\netstandard2.0\MediatR.Extensions.Microsoft.DependencyInjection.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
@@ -123,18 +129,30 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="OmniSharp.Extensions.JsonRpc, Version=0.13.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
-      <HintPath>..\packages\OmniSharp.Extensions.JsonRpc.0.13.1\lib\netstandard2.0\OmniSharp.Extensions.JsonRpc.dll</HintPath>
+    <Reference Include="OmniSharp.Extensions.JsonRpc, Version=0.15.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
+      <HintPath>..\packages\OmniSharp.Extensions.JsonRpc.0.15.0\lib\netstandard2.0\OmniSharp.Extensions.JsonRpc.dll</HintPath>
     </Reference>
-    <Reference Include="OmniSharp.Extensions.LanguageProtocol, Version=0.13.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
-      <HintPath>..\packages\OmniSharp.Extensions.LanguageProtocol.0.13.1\lib\netstandard2.0\OmniSharp.Extensions.LanguageProtocol.dll</HintPath>
+    <Reference Include="OmniSharp.Extensions.LanguageProtocol, Version=0.15.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
+      <HintPath>..\packages\OmniSharp.Extensions.LanguageProtocol.0.15.0\lib\netstandard2.0\OmniSharp.Extensions.LanguageProtocol.dll</HintPath>
     </Reference>
-    <Reference Include="OmniSharp.Extensions.LanguageServer, Version=0.13.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
-      <HintPath>..\packages\OmniSharp.Extensions.LanguageServer.0.13.1\lib\netstandard2.0\OmniSharp.Extensions.LanguageServer.dll</HintPath>
+    <Reference Include="OmniSharp.Extensions.LanguageServer, Version=0.15.0.0, Culture=neutral, PublicKeyToken=6d868dff454e6022, processorArchitecture=MSIL">
+      <HintPath>..\packages\OmniSharp.Extensions.LanguageServer.0.15.0\lib\netstandard2.0\OmniSharp.Extensions.LanguageServer.dll</HintPath>
     </Reference>
     <Reference Include="Provers.SMTLib, Version=2.4.1.10503, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\boogie\Binaries\Provers.SMTLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.8.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Extensions.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Extensions.Logging.3.0.1\lib\netstandard2.0\Serilog.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Console, Version=3.1.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Console.3.1.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.File.4.1.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

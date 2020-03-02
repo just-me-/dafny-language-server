@@ -1,12 +1,12 @@
 using DafnyLanguageServer.Handler;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using OmniSharp.Extensions.Embedded.MediatR;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Handlers;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using MediatR;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System;
