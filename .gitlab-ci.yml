@@ -1,5 +1,5 @@
 variables:
-  BUILD_IMAGE: $CI_REGISTRY_IMAGE/dafny-linux-mono-build
+  BUILD_IMAGE: $CI_REGISTRY_IMAGE/dafny-language-server-linux-mono-build
   NUnitversion: 3.11.1
   NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
   NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
@@ -31,19 +31,19 @@ build_server:
     - if [ ! -e boogie ];
         then ln -s /opt/boogie;
       fi;
-    - cd dafny/Source
+    - cd Source
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
   artifacts:
     paths:
-      - dafny/Binaries/
+      - Binaries/
 
 test_nunit:
   stage: test
   image: $BUILD_IMAGE:latest
   script:
-    - pushd dafny/Binaries; ln -s /opt/z3; popd
-    - cd dafny/Binaries/
+    - pushd Binaries; ln -s /opt/z3; popd
+    - cd Binaries/
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner ContentManagerTests.dll
     - mono ./$NUnitRunner CompletionHandlerTest.dll
@@ -52,13 +52,12 @@ test_nunit:
     - mono ./$NUnitRunner CounterExampleTest.dll
   artifacts:
     reports:
-      junit: dafny/Binaries/TestResult.xml
+      junit: Binaries/TestResult.xml
 
 test_dafny:
   stage: test
   image: $BUILD_IMAGE:latest
   script:
-    - cd dafny
     - pushd Binaries; ln -s /opt/z3; popd
     - npm install bignumber.js
     - cd Test
