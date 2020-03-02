@@ -39,7 +39,7 @@ RUN wget --no-verbose ${Z3_RELEASE} &&\
     mv z3* z3
 ENV PATH=$PATH:/opt/z3
 
-RUN git clone --branch ${BOOGIE_RELEASE} https://github.com/boogie-org/boogie.git &&\
+RUN git clone --branch v2.4.2 https://github.com/boogie-org/boogie.git &&\
     msbuild boogie/Source/Boogie.sln
 ENV PATH=$PATH:/opt/boogie/Binaries
 
