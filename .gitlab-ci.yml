@@ -32,6 +32,8 @@ build_server:
         then ln -s /opt/boogie;
       fi;
     - cd Source
+    - ls -alh
+    - pwd
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
   artifacts:
