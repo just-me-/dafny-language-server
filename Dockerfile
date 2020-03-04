@@ -33,7 +33,7 @@ RUN wget --no-verbose https://dl.google.com/go/${GO_RELEASE} &&\
 ENV GOROOT=/opt/go
 ENV PATH=${PATH}:${GOROOT}/bin
 
-RUN pip3 install lit OutputCheck pyyaml # TODO: Pin versions with e.g. requirements.txt
+RUN pip3 install lit OutputCheck pyyaml
 
 RUN wget --no-verbose ${Z3_RELEASE} &&\
     unzip z3*.zip &&\
