@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using MediatR;
+using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
 
 namespace LSPIntegrationTests
 {
@@ -130,17 +131,43 @@ namespace LSPIntegrationTests
 
                 log.Information("*** Language server has been successfully initialised. ");
 
+
+                //    public delegate void PublishDiagnosticsHandler(Uri documentUri, List<Diagnostic> diagnostics);
+                // d.h. methode, input uri und diaglist, output void
+
+                PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
+                {
+
+                    log.Information($"%%%%% Received Diagnostics!");
+                    log.Information("Uri: " + uri);
+                    foreach (var d in diagList)
+                    {
+                        log.Information(
+                            $"Severity: {d.Severity} / Range: {d.Range.ToCustomString()} / Message: {d.Message}");
+                        log.Information("Related Information: " + d.RelatedInformation.First().Message);
+                    }
+                };
+
+                client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
+
                 log.Information("*** Sending DidOpen.....");
 
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
 
+                log.Information("Waiting here in hope to get a diagnostics....");
+                Thread.Sleep(1000);
+                log.Information("...Sleep ended");
 
                 log.Information("*** Sending DidChange.....");
+
                 client.TextDocument.DidChange(aDfyFile, "dfy");
+                log.Information("Waiting here in hope to get a diagnostics....");
+                Thread.Sleep(1000);
+                log.Information("...Sleep ended");
 
 
-                //es kommt an:
-                //[{"label":"a (Type: Method) (Parent: _default)","kind":2,"deprecated":false,"preselect":false,"insertTextFormat":0,"textEdit":{"range":{"start":{"line":2,"character":5},"end":{"line":2,"character":6}},"newText":"a"}}]
+
+
 
                 ///////////////////AUTO COMPLETION EXAMPLE ///////////////////////////////////////////
 
@@ -235,6 +262,7 @@ namespace LSPIntegrationTests
 
                 var compilerResults = client.SendRequest<CompilerResults>("compile", compilerParams, cancellationSource.Token).Result;
                 log.Information($"Got compile answer: Error: {compilerResults.Error} / Exe?:{compilerResults.Executable} / Massage: {compilerResults.Message}");
+
 
 
 
