@@ -100,7 +100,7 @@ namespace LSPIntegrationTests
 
             ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(serverExe)
             {
-                Arguments = ""
+                Arguments = "--log TestLog.txt"
             });
             LanguageClient client = new LanguageClient(LoggerFactory, server);
             //IHandler h = new DiagHandler();
@@ -139,7 +139,7 @@ namespace LSPIntegrationTests
 
                 
 
-                log.Information("\n*** Sending Completions.....");
+                log.Information("*** Sending Completions.....");
                 var c = client.TextDocument.Completions(
                     filePath: aDfyFile,
                     line: 2,
