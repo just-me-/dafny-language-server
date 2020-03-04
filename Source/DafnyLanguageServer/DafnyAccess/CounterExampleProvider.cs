@@ -31,6 +31,10 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private List<ILanguageSpecificModel> LoadModelFromFile()
         {
+            if (!File.Exists((ModelBvd)))
+            {
+                Console.WriteLine("**********File not existing...");
+            }
             using (var wr = new StreamReader(ModelBvd))
             {
                 var output = wr.ReadToEnd();
