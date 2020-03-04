@@ -43,6 +43,20 @@ namespace LSPIntegrationTests
         internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/IntegrationTests/LSPIntegrationTest/LSPIntegrationTestFiles/testfile.dfy"));
         internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
 
+        private bool barrierIsDown = true;
+
+        private void WaitUntilBarrierIsUp()
+        {
+            double waitedTime = 0.1;
+            while (barrierIsDown)
+            {
+                Thread.Sleep(100);
+                waitedTime += 0.1;
+            }
+            barrierIsDown = true;
+            Console.WriteLine("Waited: " + waitedTime + "s");
+        }
+
         [SetUp]
         public void CheckFiles()
         {
@@ -79,8 +93,6 @@ namespace LSPIntegrationTests
                 Arguments = "--log TestLog.txt"
             });
             LanguageClient client = new LanguageClient(LoggerFactory, server);
-            //IHandler h = new DiagHandler();
-            //client.RegisterHandler(h)
 
 
             try
@@ -96,29 +108,25 @@ namespace LSPIntegrationTests
 
 
                 ///////////////////OPEN, CHANGE EXAMPLE ///////////////////////////////////////////
-                //var myDiagHandler = new DiagHandler();
-                //client.RegisterHandler(myDiagHandler);  //todo hier so iwie die handler registieren für alles was kein request ist aber einfach so rein kommt,a lso so verification shit.
 
-
-                //textdocument.onpublishdiagnostics ist der richtige ansatz würd ich eher ssagen.
 
                 log.Information("*** Language server has been successfully initialised. ");
 
 
-                //    public delegate void PublishDiagnosticsHandler(Uri documentUri, List<Diagnostic> diagnostics);
-                // d.h. methode, input uri und diaglist, output void
 
                 PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
                 {
 
-                    log.Information($"%%%%% Received Diagnostics!");
+                    log.Information("%%%%% Received Diagnostics!");
                     log.Information("Uri: " + uri);
                     foreach (var d in diagList)
                     {
                         log.Information(
                             $"Severity: {d.Severity} / Range: {d.Range.ToCustomString()} / Message: {d.Message}");
-                        log.Information("Related Information: " + d.RelatedInformation.First().Message);
+                        log.Information("Related Information: " + d.RelatedInformation?.FirstOrDefault().Message);
                     }
+
+                    barrierIsDown = false;
                 };
 
                 client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
@@ -128,7 +136,8 @@ namespace LSPIntegrationTests
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
 
                 log.Information("Waiting here in hope to get a diagnostics....");
-                Thread.Sleep(1000);
+                WaitUntilBarrierIsUp();
+
                 log.Information("...Sleep ended");
 
                 log.Information("*** Sending DidChange.....");
@@ -155,8 +164,6 @@ namespace LSPIntegrationTests
                 ).Result;
 
 
-
-                //Test completions for correctness here
 
                 if (completions != null)
                 {
