@@ -6,7 +6,6 @@ using OmniSharp.Extensions.LanguageServer.Client.Handlers;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using MediatR;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System;
@@ -15,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace LSPIntegrationTests
 {
@@ -42,8 +42,8 @@ namespace LSPIntegrationTests
 
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
         internal static readonly string serverExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/DafnyLanguageServer.exe"));
-        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/CounterExampleFiles/fail1.dfy"));
-        internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/CounterExampleFiles/"));
+        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/UnitTests/CounterExampleTest/CounterExampleTestFiles/fail1.dfy"));
+        internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
 
         [SetUp]
         public void CheckFiles()

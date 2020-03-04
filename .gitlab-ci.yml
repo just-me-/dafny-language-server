@@ -3,6 +3,7 @@ variables:
   NUnitVersion: 3.11.1
   NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
   NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
+  TestBinaries: dafny/Binaries/
 
 stages:
   - prebuild
@@ -47,17 +48,13 @@ test_nunit:
   stage: test
   image: $BUILD_IMAGE:latest
   script:
-    - pushd Binaries; ln -s /opt/z3; popd
-    - cd Binaries/
+    - pushd $TestBinaries; ln -s /opt/z3; popd
+    - cd $TestBinaries
     - nuget install $NUnitNugetPackage
-    - mono ./$NUnitRunner ContentManagerTests.dll
-    - mono ./$NUnitRunner CompletionHandlerTest.dll
-    - mono ./$NUnitRunner VerificationServiceTest.dll
-    - mono ./$NUnitRunner CompileHandlerTest.dll
-    - mono ./$NUnitRunner CounterExampleTest.dll
+    - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
   artifacts:
     reports:
-      junit: Binaries/TestResult.xml
+      junit: $TestBinaries/TestResult.xml
 
 test_dafny:
   stage: test

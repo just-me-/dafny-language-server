@@ -2,26 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-	<OutputPath>../../Binaries/</OutputPath>
+	<OutputPath>../../../../Binaries/</OutputPath>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	<IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.13.1" />
+    <Compile Remove="CounterExampleTestFiles\**" />
+    <EmbeddedResource Remove="CounterExampleTestFiles\**" />
+    <None Remove="CounterExampleTestFiles\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="BoogieExecutionEngine">
-      <HintPath>..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
 
