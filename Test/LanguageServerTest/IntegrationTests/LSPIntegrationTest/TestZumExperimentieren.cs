@@ -45,18 +45,27 @@ namespace LSPIntegrationTests
 
         private bool barrierIsDown = true;
 
-        private void WaitUntilBarrierIsUp(ILogger log)
+        private void WaitUntilDiagnosticsArrived(ILogger log)
         {
             log.Information("Waiting here in hope to get a diagnostics....");
 
             double waitedTime = 0.1;
-            while (barrierIsDown)
+            while (barrierIsDown && waitedTime < 5)
             {
                 Thread.Sleep(100);
                 waitedTime += 0.1;
             }
             barrierIsDown = true;
-            log.Information($"Success! Continuing... Time Waited: {waitedTime}");
+
+            if (waitedTime >= 5)
+            {
+                log.Error("Waited max time... Continuing now.");
+            }
+            else
+            {
+                log.Information($"Success: Continuing... Time Waited: {waitedTime}");
+            }
+            
 
         }
 
@@ -138,13 +147,13 @@ namespace LSPIntegrationTests
 
                 log.Information("*** Sending DidOpen.....");
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
-                WaitUntilBarrierIsUp(log);                                      //Todo: mit event arbeiten ?
+                WaitUntilDiagnosticsArrived(log);                                      //Todo: mit event arbeiten ?
 
 
 
                 log.Information("*** Sending DidChange.....");
                 client.TextDocument.DidChange(aDfyFile, "dfy");
-                WaitUntilBarrierIsUp(log);
+                WaitUntilDiagnosticsArrived(log);
 
 
 
@@ -214,7 +223,7 @@ namespace LSPIntegrationTests
                 }
 
     
-                ///////////GOTO/////////////////
+                //////////////////////////////////GOTO EXAMPLE/////////////////////////
 
                 log.Information("Diong Goto Definition");
 
@@ -230,7 +239,7 @@ namespace LSPIntegrationTests
 
 
 
-                ////////////COMPILE/////////
+                ////////////////////////COMPILE Example///////////////////////////
                 CompilerParams compilerParams = new CompilerParams
                 {
                     DafnyFilePath = aDfyFile,
