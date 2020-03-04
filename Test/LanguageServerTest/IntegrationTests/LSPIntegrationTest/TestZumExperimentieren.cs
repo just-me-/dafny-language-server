@@ -21,24 +21,6 @@ using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.Pub
 namespace LSPIntegrationTests
 {
 
-    internal class DiagHandler : IPublishDiagnosticsHandler, IHandler
-    {
-        public string Method => "diagnostics";
-
-        public Type PayloadType => typeof(PublishDiagnosticsParams);
-
-        private List<Diagnostic> Diagnostics { get; } = new List<Diagnostic>();
-
-        public Task<Unit> Handle(PublishDiagnosticsParams request, CancellationToken cancellationToken)
-        {
-            var a = request.Diagnostics;
-            foreach (var item in a)
-            {
-                Diagnostics.Add(item);
-            }
-            return Unit.Task;
-        }
-    }
 
 
 
