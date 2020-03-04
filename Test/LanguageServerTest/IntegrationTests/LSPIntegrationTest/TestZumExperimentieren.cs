@@ -56,6 +56,7 @@ namespace LSPIntegrationTests
 
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
         internal static readonly string serverExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/DafnyLanguageServer.exe"));
+        internal static readonly string compilerExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/Dafny.exe"));
         internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/IntegrationTests/LSPIntegrationTest/LSPIntegrationTestFiles/testfile.dfy"));
         internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
 
@@ -124,6 +125,8 @@ namespace LSPIntegrationTests
                 //var myDiagHandler = new DiagHandler();
                 //client.RegisterHandler(myDiagHandler);  //todo hier so iwie die handler registieren für alles was kein request ist aber einfach so rein kommt,a lso so verification shit.
 
+
+                //textdocument.onpublishdiagnostics ist der richtige ansatz würd ich eher ssagen.
 
                 log.Information("*** Language server has been successfully initialised. ");
 
@@ -214,6 +217,27 @@ namespace LSPIntegrationTests
                 {
                     log.Information($"Got Location for goto " + gonetodef.First().Location.Range.ToCustomString() + " in file " + gonetodef.First().Location.Uri.AbsolutePath);
                 }
+
+
+                //Code lens erstma weglassen bis da symbol zeug rady würd ich sagen
+                //ausserdem seh ich grad nicht wie man das senden / empfangen kann hust hust
+
+
+
+                ////////////COMPILE/////////
+                CompilerParams compilerParams = new CompilerParams
+                {
+                    DafnyFilePath = aDfyFile,
+                    DafnyExePath = compilerExe
+                };
+
+                log.Information("Sending that compile ;_)");
+
+                var compilerResults = client.SendRequest<CompilerResults>("compile", compilerParams, cancellationSource.Token).Result;
+                log.Information($"Got compile answer: Error: {compilerResults.Error} / Exe?:{compilerResults.Executable} / Massage: {compilerResults.Message}");
+
+
+
 
 
             }
