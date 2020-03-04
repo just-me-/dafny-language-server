@@ -1,4 +1,4 @@
-using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.Handler;
 using Microsoft.Boogie;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +51,7 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
-
+                    
             );
 
             log.Information("Server Running");

@@ -27,7 +27,7 @@ trait MyTrait {
   const c := 17
   static const d: int
   static const e := 18
-    
+
   function method F(): int { 8 }
   static function method G(): int { 9 }
   method M() returns (r: int) { r := 69; }
@@ -39,6 +39,8 @@ class MyTraitInstance extends MyTrait {
     a := 101 + x;
     b := 201 + x;
   }
+
+  static method SetTraitField(m : MyTrait) modifies m { m.a := N(); }
 }
 
 method CallEm(c: MyClass, t: MyTrait, i: MyTraitInstance)
@@ -66,7 +68,7 @@ method CallEm(c: MyClass, t: MyTrait, i: MyTraitInstance)
   print u, " ";
   u := c.N();
   print u, "\n";
-  
+
   print t.b, " ";
   print t.c, " ";
   print t.d, " ";
@@ -108,6 +110,9 @@ method CallEm(c: MyClass, t: MyTrait, i: MyTraitInstance)
   print MyTraitInstance.G(), " ";
   u := MyTraitInstance.N();
   print u, "\n";
+
+  MyTraitInstance.SetTraitField(i);
+  print i.a, "\n";
 }
 
 method Main() {
@@ -123,6 +128,7 @@ method Main() {
   // Upcast via function call
   CallEm(c, t, i);
   DependentStaticConsts.Test();
+  NewtypeWithMethods.Test();
 }
 
 module Module1 {
@@ -132,7 +138,7 @@ module Module1 {
 module Module2 {
   import Module1
 
-  class ClassExtendingTraitInOtherModule extends Module1.TraitInModule { } 
+  class ClassExtendingTraitInOtherModule extends Module1.TraitInModule { }
 }
 
 module DependentStaticConsts {
@@ -148,5 +154,27 @@ module DependentStaticConsts {
   method Test()
   {
     print Suite[B], " ", Suite[D], "\n";  // hi later
+  }
+}
+
+newtype NewtypeWithMethods = x | 0 <= x < 42 {
+  function method double() : int {
+    this as int * 2
+  }
+
+  method divide(d : NewtypeWithMethods) returns (q : int, r : int) requires d != 0 {
+    q := (this / d) as int;
+    r := (this % d) as int;
+  }
+
+  static method Test() {
+    var a : NewtypeWithMethods := 21;
+    var b : NewtypeWithMethods;
+    b := 4;
+    var q : int;
+    var r : int;
+    q, r := a.divide(b);
+
+    print a, " ", b, " ", a.double(), " ", q, " ", r, "\n";
   }
 }

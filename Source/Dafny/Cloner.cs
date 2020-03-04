@@ -15,7 +15,8 @@ namespace Microsoft.Dafny
       if (m is DefaultModuleDecl) {
         nw = new DefaultModuleDecl();
       } else {
-        nw = new ModuleDefinition(Tok(m.tok), name, m.PrefixIds, m.IsAbstract, m.IsProtected, m.IsFacade, m.RefinementBaseName, m.Module, CloneAttributes(m.Attributes), true);
+        nw = new ModuleDefinition(Tok(m.tok), name, m.PrefixIds, m.IsAbstract, m.IsProtected, m.IsFacade, m.RefinementBaseName, m.Module, CloneAttributes(m.Attributes),
+                                  true, m.IsToBeVerified, m.IsToBeCompiled);
       }
       foreach (var d in m.TopLevelDecls) {
         nw.TopLevelDecls.Add(CloneDeclaration(d, nw));
@@ -361,7 +362,8 @@ namespace Microsoft.Dafny
 
       } else if (expr is SeqConstructionExpr) {
         var e = (SeqConstructionExpr)expr;
-        return new SeqConstructionExpr(Tok(e.tok), CloneExpr(e.N), CloneExpr(e.Initializer));
+        var elemType = e.ExplicitElementType == null ? null : CloneType(e.ExplicitElementType);
+        return new SeqConstructionExpr(Tok(e.tok), elemType, CloneExpr(e.N), CloneExpr(e.Initializer));
 
       } else if (expr is MultiSetFormingExpr) {
         var e = (MultiSetFormingExpr)expr;
@@ -552,6 +554,10 @@ namespace Microsoft.Dafny
         var s = (AssertStmt)stmt;
         r = new AssertStmt(Tok(s.Tok), Tok(s.EndTok), CloneExpr(s.Expr), CloneBlockStmt(s.Proof), s.Label == null ? null : new AssertLabel(Tok(s.Label.Tok), s.Label.Name), null);
 
+      } else if (stmt is ExpectStmt) {
+        var s = (ExpectStmt)stmt;
+        r = new ExpectStmt(Tok(s.Tok), Tok(s.EndTok), CloneExpr(s.Expr), CloneExpr(s.Message), CloneAttributes(s.Attributes));
+
       } else if (stmt is AssumeStmt) {
         var s = (AssumeStmt)stmt;
         r = new AssumeStmt(Tok(s.Tok), Tok(s.EndTok), CloneExpr(s.Expr), null);
@@ -635,7 +641,7 @@ namespace Microsoft.Dafny
 
       } else if (stmt is AssignOrReturnStmt) {
         var s = (AssignOrReturnStmt)stmt;
-        r = new AssignOrReturnStmt(Tok(s.Tok), Tok(s.EndTok), s.Lhss.ConvertAll(CloneExpr), CloneExpr(s.Rhs));
+        r = new AssignOrReturnStmt(Tok(s.Tok), Tok(s.EndTok), s.Lhss.ConvertAll(CloneExpr), CloneExpr(s.Rhs), s.ExpectToken == null ? null : Tok(s.ExpectToken));
 
       } else if (stmt is VarDeclStmt) {
         var s = (VarDeclStmt)stmt;
@@ -1003,7 +1009,14 @@ namespace Microsoft.Dafny
       this.compilationModuleClones = compilationModuleClones;
     }
 
-
+    public override TopLevelDecl CloneDeclaration(TopLevelDecl d, ModuleDefinition m) {
+      var r = base.CloneDeclaration(d, m);
+      if (d is AliasModuleDecl importDeclSource) {
+        var importDeclClone = (AliasModuleDecl)r;  // if d is AliasModuleDecl, then we expect base to return an AliasModuleDecl
+        importDeclClone.ShadowsLiteralModule = importDeclSource.ShadowsLiteralModule;
+      }
+      return r;
+    }
 
     public override Expression CloneExpr(Expression expr) {
       var me = expr as MatchExpr;

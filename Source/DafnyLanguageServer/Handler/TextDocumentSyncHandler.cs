@@ -1,11 +1,11 @@
 ﻿using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.Services;
+using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
-using MediatR;
 using System;
 using System.Linq;
 using System.Threading;
@@ -24,7 +24,7 @@ namespace DafnyLanguageServer.Handler
                 Pattern = "**/*.dfy"
             }
         );
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
         public TextDocumentSyncHandler(ILanguageServer router, BufferManager bufferManager)
         {
