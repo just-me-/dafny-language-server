@@ -84,7 +84,7 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                log.Error("Couldn't redirect output stream");
+                log.Error("Couldn't redirect output stream with error\n" + e.Message);
             }
 
             log.Information("Server Closed");

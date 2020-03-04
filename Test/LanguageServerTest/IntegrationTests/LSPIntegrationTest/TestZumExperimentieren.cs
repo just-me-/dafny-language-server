@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.DafnyAccess;
 using MediatR;
 
 namespace LSPIntegrationTests
@@ -36,6 +37,19 @@ namespace LSPIntegrationTests
             return Unit.Task;
         }
     }
+
+
+
+    //Todo evtl diese extension methode iwo anders parkieren... ist nur für einfache stringausgabe jetzt zum tesetn, is aber sicher auch in zukunft nützlich.
+    public static class Extension
+    {
+        public static string ToCustomString(this Range r)
+        {
+            return $"[Range: L{r.Start.Line} C{r.Start.Character} - L{r.End.Line} C{r.End.Character}]";
+        }
+    }
+
+
     public class Tests
     {
 
@@ -72,7 +86,7 @@ namespace LSPIntegrationTests
             //    .CreateLogger();
 
             ILogger log = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -96,7 +110,7 @@ namespace LSPIntegrationTests
             try
             {
 
-                log.Information("\n**** Initialising language server...\n");
+                log.Information("**** Initialising language server...");
 
                 client.Initialize(
                     workspaceRoot: workspaceDir,
@@ -108,14 +122,14 @@ namespace LSPIntegrationTests
                 //client.RegisterHandler(myDiagHandler);  //todo
 
 
-                log.Information("\n\n*** Language server has been successfully initialised. \n");
+                log.Information("*** Language server has been successfully initialised. ");
 
-                log.Information("\n\n*** Sending DidOpen.....\n");
+                log.Information("*** Sending DidOpen.....");
 
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
 
 
-                log.Information("\n\n*** Sending DidChange.....\n");
+                log.Information("*** Sending DidChange.....");
                 client.TextDocument.DidChange(aDfyFile, "dfy");
 
 
@@ -123,7 +137,9 @@ namespace LSPIntegrationTests
                 //[{"label":"a (Type: Method) (Parent: _default)","kind":2,"deprecated":false,"preselect":false,"insertTextFormat":0,"textEdit":{"range":{"start":{"line":2,"character":5},"end":{"line":2,"character":6}},"newText":"a"}}]
 
 
-                log.Information("\\nn*** Sending Completions.....\n");
+                
+
+                log.Information("\n*** Sending Completions.....");
                 var c = client.TextDocument.Completions(
                     filePath: aDfyFile,
                     line: 2,
@@ -135,15 +151,20 @@ namespace LSPIntegrationTests
 
                 var completions = c.Result;
 
+
                 //Test completions for correctness here
 
                 if (completions != null)
                 {
-                    log.Information("\n\nGot completion list" + completions);
+                    log.Information("Got completion list!");
+                    foreach (var cl in completions.Items)
+                    {
+                        log.Information( $"Completion Item: {cl.TextEdit.NewText} with label {cl.Label} at {cl.TextEdit.Range.ToCustomString()}");
+                    }
                 }
                 else
                 {
-                    log.Warning("\nNo hover info available at ({Line}, {Column}).", 7, 3);
+                    log.Warning("No hover info available at ({Line}, {Column}).", 7, 3);
                 }
 
 
@@ -155,32 +176,39 @@ namespace LSPIntegrationTests
                 //geiler scheiss alter
 
 
-                //also es kommt iwie an aber die variablen hier werden nicht passend gesetzt.
-
                 var counterExampleParam = new CounterExampleParams
                 {
                     DafnyFile = aDfyFile
                 };
+                
 
-
-                Log.Information("*** \n\nSending counterExample.....\n");
-                CounterExampleResult counterExamples = client.SendRequest<CounterExampleResult>("counterExample",
+                log.Information("*** Sending counterExample.....");
+                var counterExamples = client.SendRequest<CounterExampleResults>("counterExample",
                     counterExampleParam, cancellationSource.Token).Result;
+
+
+                
 
                 if (counterExamples != null)
                 {
-                    Log.Information("\n\n*** Got counter examples: ");
-                    Log.Information("Line {0}, Col {1}", counterExamples.Line, counterExamples.Col);
-                    foreach (KeyValuePair<string, string> kvp in counterExamples.Variables)
+                    log.Information("*** Got counter examples: ");
+
+                    foreach (CounterExampleResult ce in counterExamples.CounterExamples)
                     {
-                        Log.Information("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                        log.Information("Line {0}, Col {1}", ce.Line, ce.Col);
+                        foreach (KeyValuePair<string, string> kvp in ce.Variables)
+                        {
+                            log.Information("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                        }
                     }
                 }
                 else
                 {
-                    Log.Warning("\n\n***No counter Examples available");
+                    log.Warning("***No counter Examples available");
 
                 }
+
+    
 
 
 
@@ -188,17 +216,17 @@ namespace LSPIntegrationTests
             }
             catch (Exception e)
             {
-                Log.Error(e, "Error Msg:", e.Message);
+                log.Error(e, "Error Msg:", e.Message);
             }
             finally
             {
-                Log.Information("\n\nShutting down client...");
+                log.Information("Shutting down client...");
                 client.Shutdown().Wait();
-                Log.Information("\\nClient shutdown is complete.");
+                log.Information("Client shutdown is complete.");
 
-                Log.Information("\n\nShutting down server...");
+                log.Information("Shutting down server...");
                 server.Stop().Wait();
-                Log.Information("\n\nServer shutdown is complete.");
+                log.Information("Server shutdown is complete.");
 
                 client.Dispose();
                 server.Dispose();
