@@ -14,7 +14,7 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         private List<ILanguageSpecificModel> _languageSpecificModels;
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
-        public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
+        public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "model.bvd"));
 
         public CounterExample LoadCounterModel()
         {
