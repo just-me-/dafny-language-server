@@ -1,6 +1,6 @@
 FROM mono:5.20
 
-ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.7/z3-4.8.7-x64-ubuntu-16.04.zip
+ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.4/z3-4.8.4.d6df51951f4c-x64-ubuntu-14.04.zip
 ARG GO_RELEASE=go1.10.3.linux-amd64.tar.gz
 ARG NODE_VERSION=10.16.3
 ARG SonarScanner_RELEASE=3.0.3.778
