@@ -23,8 +23,8 @@ namespace DafnyLanguageServer
             string assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
             string logPath = Path.Combine(assemblyPath, "../Logs");
             Directory.CreateDirectory(logPath);
-            string redirectedStreamPath ="";// = Path.Combine(logPath, "./StreamRedirection.txt");
-            string loggerOutputPath="";// = Path.Combine(logPath, "./Log.txt");
+            string redirectedStreamPath = Path.Combine(logPath, "./StreamRedirection.txt");
+            string loggerOutputPath = Path.Combine(logPath, "./Log.txt");
 
             if (args.Length % 2 != 0)
             {
@@ -39,25 +39,17 @@ namespace DafnyLanguageServer
                 }
                 if (args[i].ToLower() == "--log")
                 {
-                    loggerOutputPath = Path.Combine(logPath, args[i + 1]);
+                    loggerOutputPath = Path.Combine(logPath, args[i+1]);
                 }
             }
 
-
             ILogger log = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 .WriteTo.File(loggerOutputPath, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             log.Information("Server Starting");
-
-            foreach (string a in args)
-            {
-                log.Debug("Arg is " + a);
-                log.Information("Arg is " + a);
-            }
-
 
             var server = await LanguageServer.From(options =>
                 options
@@ -92,8 +84,6 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                Console.WriteLine("Cannot open MsgLogger.txt for writing");
-                Console.WriteLine(e.Message);
                 log.Error("Couldn't redirect output stream");
             }
 
