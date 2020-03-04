@@ -1,5 +1,4 @@
 using DafnyLanguageServer.Handler;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Handlers;
@@ -64,15 +63,21 @@ namespace LSPIntegrationTests
         {
 
 
-            LoggerProviderCollection providers = new LoggerProviderCollection();
+            //LoggerProviderCollection providers = new LoggerProviderCollection();
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()   //set to debug here for full information
+            //Log.Logger = new LoggerConfiguration()
+            //    .MinimumLevel.Debug()   //set to debug here for full information
+            //    .WriteTo.Console()
+            //    .WriteTo.Providers(providers)
+            //    .CreateLogger();
+
+            ILogger log = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Providers(providers)
                 .CreateLogger();
 
-            ILoggerFactory LoggerFactory = new SerilogLoggerFactory(Log.Logger);
+            var LoggerFactory = new SerilogLoggerFactory(log);
 
             var cancellationSource = new CancellationTokenSource();
             cancellationSource.CancelAfter(
@@ -91,7 +96,7 @@ namespace LSPIntegrationTests
             try
             {
 
-                Log.Information("\n**** Initialising language server...\n");
+                log.Information("\n**** Initialising language server...\n");
 
                 client.Initialize(
                     workspaceRoot: workspaceDir,
@@ -103,14 +108,14 @@ namespace LSPIntegrationTests
                 //client.RegisterHandler(myDiagHandler);  //todo
 
 
-                Log.Information("\n\n*** Language server has been successfully initialised. \n");
+                log.Information("\n\n*** Language server has been successfully initialised. \n");
 
-                Log.Information("\n\n*** Sending DidOpen.....\n");
+                log.Information("\n\n*** Sending DidOpen.....\n");
 
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
 
 
-                Log.Information("\n\n*** Sending DidChange.....\n");
+                log.Information("\n\n*** Sending DidChange.....\n");
                 client.TextDocument.DidChange(aDfyFile, "dfy");
 
 
@@ -118,7 +123,7 @@ namespace LSPIntegrationTests
                 //[{"label":"a (Type: Method) (Parent: _default)","kind":2,"deprecated":false,"preselect":false,"insertTextFormat":0,"textEdit":{"range":{"start":{"line":2,"character":5},"end":{"line":2,"character":6}},"newText":"a"}}]
 
 
-                Log.Information("\\nn*** Sending Completions.....\n");
+                log.Information("\\nn*** Sending Completions.....\n");
                 var c = client.TextDocument.Completions(
                     filePath: aDfyFile,
                     line: 2,
@@ -134,11 +139,11 @@ namespace LSPIntegrationTests
 
                 if (completions != null)
                 {
-                    Log.Information("\n\nGot completion list" + completions);
+                    log.Information("\n\nGot completion list" + completions);
                 }
                 else
                 {
-                    Log.Warning("\nNo hover info available at ({Line}, {Column}).", 7, 3);
+                    log.Warning("\nNo hover info available at ({Line}, {Column}).", 7, 3);
                 }
 
 
