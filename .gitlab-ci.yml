@@ -9,6 +9,7 @@ stages:
   - build
   - test
   - sonar
+  - test_temporary_at_end
 
 build_image:
   stage: prebuild
@@ -56,7 +57,7 @@ test_nunit:
       junit: Binaries/TestResult.xml
 
 test_dafny:
-  stage: test
+  stage: test_temporary_at_end
   image: $BUILD_IMAGE:latest
   script:
     - pushd Binaries; ln -s /opt/z3; popd
