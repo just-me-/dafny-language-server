@@ -50,20 +50,20 @@ method Main() {
   print s, "\n";
   s := a[..8];
   print s, "\n";
-  
+
   // Conversion to sequence should copy elements (sequences are immutable!)
   a[0] := 42;
   print s, "\n";
 
   InitTests();
-  
+
   MultipleDimensions();
 
   PrintArray<int>(null);
 }
 
 type lowercase = ch | 'a' <= ch <= 'z' witness 'd'
-  
+
 method InitTests() {
   var aa := new lowercase[3];
   PrintArray(aa);
@@ -75,14 +75,31 @@ method InitTests() {
 method MultipleDimensions() {
   var matrix := new int[2,8];
   PrintMatrix(matrix);
-  matrix := new int[3, 5]((x,y) => if x==y then 1 else 0);
+  matrix := DiagMatrix(3, 5, 0, 1);
   PrintMatrix(matrix);
 
   var cube := new int[3,0,4]((_,_,_) => 16);
   print "cube dims: ", cube.Length0, " ", cube.Length1, " ", cube.Length2, "\n";
+
+//  FIXME: This breaks Java (and has for some time).
+//
+//  var jagged := new array<int>[5];
+//  var i := 0;
+//  while i < 5 {
+//    jagged[i] := new int[i];
+//    i := i + 1;
+//  }
+//  PrintArray(jagged);
 }
 
-method PrintMatrix(m: array2<int>) {
+method DiagMatrix<A>(rows: int, cols: int, zero: A, one: A)
+    returns (a: array2<A>)
+    requires rows >= 0 && cols >= 0
+{
+  return new A[rows, cols]((x,y) => if x==y then one else zero);
+}
+
+method PrintMatrix<A>(m: array2<A>) {
   var i := 0;
   while i < m.Length0 {
     var j := 0;

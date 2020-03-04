@@ -23,6 +23,7 @@ readonly Include theInclude;
 readonly ModuleDecl theModule;
 readonly BuiltIns theBuiltIns;
 readonly bool theVerifyThisFile;
+readonly bool theCompileThisFile;
 int anonymousIds = 0;
 
 /// <summary>
@@ -107,17 +108,17 @@ void CheckDeclModifiers(DeclModifierData dmod, string declCaption, AllowedDeclMo
 /// Returns the number of parsing errors encountered.
 /// Note: first initialize the Scanner.
 ///</summary>
-public static int Parse (string/*!*/ filename, Include include, ModuleDecl module, BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true) /* throws System.IO.IOException */ {
+public static int Parse (string/*!*/ filename, Include include, ModuleDecl module, BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true, bool compileThisFile=true) /* throws System.IO.IOException */ {
   Contract.Requires(filename != null);
   Contract.Requires(module != null);
   string s;
   if (filename == "stdin.dfy") {
     s = Microsoft.Boogie.ParserHelper.Fill(System.Console.In, new List<string>());
-    return Parse(s, filename, filename, include, module, builtIns, errors, verifyThisFile);
+    return Parse(s, filename, filename, include, module, builtIns, errors, verifyThisFile, compileThisFile);
   } else {
     using (System.IO.StreamReader reader = new System.IO.StreamReader(filename)) {
       s = Microsoft.Boogie.ParserHelper.Fill(reader, new List<string>());
-      return Parse(s, filename, DafnyOptions.Clo.UseBaseNameForFileName ? Path.GetFileName(filename) : filename, include, module, builtIns, errors, verifyThisFile);
+      return Parse(s, filename, DafnyOptions.Clo.UseBaseNameForFileName ? Path.GetFileName(filename) : filename, include, module, builtIns, errors, verifyThisFile, compileThisFile);
     }
   }
 }
@@ -127,16 +128,16 @@ public static int Parse (string/*!*/ filename, Include include, ModuleDecl modul
 /// Returns the number of parsing errors encountered.
 /// Note: first initialize the Scanner.
 ///</summary>
-public static int Parse (string/*!*/ s, string/*!*/ fullFilename, string/*!*/ filename, ModuleDecl module, BuiltIns builtIns, ErrorReporter reporter, bool verifyThisFile=true) {
+public static int Parse (string/*!*/ s, string/*!*/ fullFilename, string/*!*/ filename, ModuleDecl module, BuiltIns builtIns, ErrorReporter reporter, bool verifyThisFile=true, bool compileThisFile=true) {
   Contract.Requires(s != null);
   Contract.Requires(filename != null);
   Contract.Requires(module != null);
   Errors errors = new Errors(reporter);
-  return Parse(s, fullFilename, filename, null, module, builtIns, errors, verifyThisFile);
+  return Parse(s, fullFilename, filename, null, module, builtIns, errors, verifyThisFile, compileThisFile);
 }
 
 public static Parser SetupParser(string/*!*/ s, string/*!*/ fullFilename, string/*!*/ filename, Include include, ModuleDecl module,
-                                 BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true) {
+                                 BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true, bool compileThisFile=true) {
   Contract.Requires(s != null);
   Contract.Requires(filename != null);
   Contract.Requires(module != null);
@@ -144,12 +145,12 @@ public static Parser SetupParser(string/*!*/ s, string/*!*/ fullFilename, string
   byte[]/*!*/ buffer = cce.NonNull( UTF8Encoding.Default.GetBytes(s));
   MemoryStream ms = new MemoryStream(buffer,false);
   Scanner scanner = new Scanner(ms, errors, fullFilename, filename);
-  return new Parser(scanner, errors, include, module, builtIns, verifyThisFile);
+  return new Parser(scanner, errors, include, module, builtIns, verifyThisFile, compileThisFile);
 }
 
 public static Expression ParseExpression(string/*!*/ s, string/*!*/ fullFilename, string/*!*/ filename, Include include, ModuleDecl module,
-                                         BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true) {
-  Parser parser = SetupParser(s, fullFilename, filename, include, module, builtIns, errors, verifyThisFile);
+                                         BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true, bool compileThisFile=true) {
+  Parser parser = SetupParser(s, fullFilename, filename, include, module, builtIns, errors, verifyThisFile, compileThisFile);
   parser.la = new Token();
   parser.la.val = "";
   parser.Get();
@@ -165,13 +166,13 @@ public static Expression ParseExpression(string/*!*/ s, string/*!*/ fullFilename
 /// Note: first initialize the Scanner with the given Errors sink.
 ///</summary>
 public static int Parse (string/*!*/ s, string/*!*/ fullFilename, string/*!*/ filename, Include include, ModuleDecl module,
-                         BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true) {
-  Parser parser = SetupParser(s, fullFilename, filename, include, module, builtIns, errors, verifyThisFile);
+                         BuiltIns builtIns, Errors/*!*/ errors, bool verifyThisFile=true, bool compileThisFile=true) {
+  Parser parser = SetupParser(s, fullFilename, filename, include, module, builtIns, errors, verifyThisFile, compileThisFile);
   parser.Parse();
   return parser.errors.ErrorCount;
 }
 
-public Parser(Scanner/*!*/ scanner, Errors/*!*/ errors, Include include, ModuleDecl module, BuiltIns builtIns, bool verifyThisFile=true)
+public Parser(Scanner/*!*/ scanner, Errors/*!*/ errors, Include include, ModuleDecl module, BuiltIns builtIns, bool verifyThisFile=true, bool compileThisFile=true)
   : this(scanner, errors)  // the real work
 {
   // initialize readonly fields
@@ -185,6 +186,7 @@ public Parser(Scanner/*!*/ scanner, Errors/*!*/ errors, Include include, ModuleD
   theModule = module;
   theBuiltIns = builtIns;
   theVerifyThisFile = verifyThisFile;
+  theCompileThisFile = compileThisFile;
 }
 
 bool IsLabel(bool allowLabel) {
@@ -425,7 +427,7 @@ bool IsIdentColonOrBar() {
 }
 
 bool SemiFollowsCall(bool allowSemi, Expression e) {
-  return allowSemi && la.kind == _semi && (e is ApplySuffix || (e is RevealExpr && (((RevealExpr)e).Expr is ApplySuffix)));
+  return allowSemi && la.kind == _semicolon && (e is ApplySuffix || (e is RevealExpr && (((RevealExpr)e).Expr is ApplySuffix)));
 }
 
 bool IsNotEndOfCase() {
@@ -464,7 +466,7 @@ bool IsGenericInstantiation(bool inExpressionContext) {
     case _rbracket:
     case _rbrace:
     case _comma:
-    case _semi:
+    case _semicolon:
     case _then:
     case _else:
     case _case:
@@ -725,7 +727,7 @@ TOKENS
   bullet = '\u2022'.
   dot = '.'.
   backtick = "`".
-  semi = ';'.
+  semicolon = ';'.
   darrow = "=>".
   assume = "assume".
   calc = "calc".
@@ -781,6 +783,7 @@ TOKENS
   notIn = "!in" CONTEXT (nonidchar).
   ellipsis = "...".
   reveal = "reveal".
+  expect = "expect".
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO lf
 IGNORE cr + lf + tab
@@ -875,7 +878,9 @@ SubModuleDecl<DeclModifierData dmod, ModuleDefinition parent, out ModuleDecl sub
       "." NoUSIdent<out id>
     }
     [ "refines" ModuleName<out idRefined> ]
-    (. module = new ModuleDefinition(id, id.val, prefixIds, isAbstract, isProtected, false, idRefined, parent, attrs, false); module.IsToBeVerified = theVerifyThisFile; .)
+    (. module = new ModuleDefinition(id, id.val, prefixIds, isAbstract, isProtected, false, idRefined, parent, attrs,
+                                      false, theVerifyThisFile, theCompileThisFile);
+    .)
     "{"                                 (. module.BodyStartTok = t; .)
       { TopDecl<module, namedModuleDefaultClassMembers, /* isTopLevel */ false, isAbstract>}
     "}"                                 (. module.BodyEndTok = t;
@@ -2105,6 +2110,7 @@ OneStmt<out Statement/*!*/ s>
   SYNC
   ( BlockStmt<out bs, out bodyStart, out bodyEnd>  (. s = bs; .)
   | AssertStmt<out s, false>
+  | ExpectStmt<out s>
   | AssumeStmt<out s>
   | PrintStmt<out s>
   | RevealStmt<out s>
@@ -2185,6 +2191,7 @@ UpdateStmt<out Statement/*!*/ s>
      Attributes attrs = null;
      IToken suchThatAssume = null;
      Expression suchThat = null;
+     IToken exceptionExpect = null;
      Expression exceptionExpr = null;
   .)
 ( Lhs<out e>                       (. x = e.tok; .)
@@ -2203,12 +2210,18 @@ UpdateStmt<out Statement/*!*/ s>
       ]
       Expression<out suchThat, false, true>
     | ":-"                         (. x = t; .)
+      [ IF(la.kind == _expect)     /* an Expression can also begin with an "expect", so this says to resolve it to pick up any "expect" here */
+        "expect"                   (. exceptionExpect = t; .)
+      ]
       Expression<out exceptionExpr, false, false>
     )
     ";"                            (. endTok = t; .)
   | ":"                            (. SemErr(t, "invalid statement (did you forget the 'label' keyword?)"); .)
   )
 | ":-"                             (. x = t; .)
+   [ IF(la.kind == _expect)        /* an Expression can also begin with an "expect", so this says to resolve it to pick up any "expect" here */
+     "expect"                      (. exceptionExpect = t; .)
+   ]
    Expression<out exceptionExpr, false, false>
    ";"                             (. endTok = t; .)
 )
@@ -2219,7 +2232,7 @@ UpdateStmt<out Statement/*!*/ s>
          SemErr(x, "':-' assignments can only have one LHS");
          lhss = new List<Expression>() { lhss[0] };
        }
-       s = new AssignOrReturnStmt(x, endTok, lhss, exceptionExpr);
+       s = new AssignOrReturnStmt(x, endTok, lhss, exceptionExpr, exceptionExpect);
      } else {
        if (lhss.Count == 0 && rhss.Count == 0) {
          s = new BlockStmt(x, endTok, new List<Statement>()); // error, give empty statement
@@ -2309,6 +2322,7 @@ VarDeclStatement<.out Statement/*!*/ s.>
      List<AssignmentRhs> rhss = new List<AssignmentRhs>();
      IToken suchThatAssume = null;
      Expression suchThat = null;
+     IToken exceptionExpect = null;
      Expression exceptionExpr = null;
      Attributes attrs = null;
      IToken endTok;
@@ -2335,6 +2349,9 @@ VarDeclStatement<.out Statement/*!*/ s.>
       ]
       Expression<out suchThat, false, true>
     | ":-"                           (. assignTok = t; .)
+      [ IF(la.kind == _expect)     /* an Expression can also begin with an "expect", so this says to resolve it to pick up any "expect" here */
+        "expect"                   (. exceptionExpect = t; .)
+      ]
       Expression<out exceptionExpr, false, false>
     ]
     SYNC ";"                         (. endTok = t; .)
@@ -2351,7 +2368,7 @@ VarDeclStatement<.out Statement/*!*/ s.>
              SemErr(assignTok, "':-' assignments can only have one LHS");
              lhsExprs = new List<Expression>() { lhsExprs[0] };
            }
-           update = new AssignOrReturnStmt(assignTok, endTok, lhsExprs, exceptionExpr);
+           update = new AssignOrReturnStmt(assignTok, endTok, lhsExprs, exceptionExpr, exceptionExpect);
        } else if (rhss.Count == 0) {
          update = null;
        } else {
@@ -2652,6 +2669,25 @@ AssertStmt<out Statement/*!*/ s, bool inExprContext>
        s = new SkeletonStatement(new AssertStmt(x, t, new LiteralExpr(x, true), null, null, attrs), dotdotdot, null);
      } else {
        s = new AssertStmt(x, t, e, proof, lbl == null ? null : new AssertLabel(lbl, lbl.val), attrs);
+     }
+  .)
+  .
+ExpectStmt<out Statement/*!*/ s>
+= (. Contract.Ensures(Contract.ValueAtReturn(out s) != null); IToken/*!*/ x;
+     Expression e = dummyExpr; Expression m = null; Attributes attrs = null;
+     IToken dotdotdot = null;
+  .)
+  "expect"                                     (. x = t; .)
+  { Attribute<ref attrs> }
+  ( Expression<out e, false, true>
+  | "..."                                      (. dotdotdot = t; .)
+  )
+  [ "," Expression<out m, false, true> ]
+  ";"
+  (. if (dotdotdot != null) {
+       s = new SkeletonStatement(new ExpectStmt(x, t, new LiteralExpr(x, true), m, attrs), dotdotdot, null);
+     } else {
+       s = new ExpectStmt(x, t, e, m, attrs);
      }
   .)
   .
@@ -3386,15 +3422,24 @@ MultiSetExpr<out Expression e>
 SeqConstructionExpr<out Expression e>
 = (. Contract.Ensures(Contract.ValueAtReturn(out e) != null);
      IToken x = null;
+     Type explicitTypeArg = null;
      Expression n, f;
      e = dummyExpr;
   .)
   "seq"                          (. x = t; .)
+  [ (. var gt = new List<Type>(); .)
+    GenericInstantiation<gt>     (. if (gt.Count > 1) {
+                                      SemErr("seq type expects only one type argument");
+                                    } else {
+                                      explicitTypeArg = gt[0];
+                                    }
+                                 .)
+  ]
   "("
   Expression<out n, true, true>
   ","
   Expression<out f, true, true>
-  ")"                            (. e = new SeqConstructionExpr(x, n, f); .)
+  ")"                            (. e = new SeqConstructionExpr(x, explicitTypeArg, n, f); .)
   .
 MapDisplayExpr<IToken/*!*/ mapToken, bool finite, out Expression e>
 = (. Contract.Ensures(Contract.ValueAtReturn(out e) != null);
@@ -3486,6 +3531,7 @@ EndlessExpression<out Expression e, bool allowSemi, bool allowLambda, bool allow
 StmtInExpr<out Statement s>
 = (. s = dummyStmt; .)
   ( AssertStmt<out s, true>
+  | ExpectStmt<out s>
   | AssumeStmt<out s>
   | CalcStmt<out s>
   )

@@ -53,7 +53,7 @@ namespace Microsoft.Dafny
 
       if (exitValue == ExitValue.VERIFIED)
       {
-        exitValue = ProcessFiles(dafnyFiles, otherFiles.AsReadOnly(), reporter); 
+        exitValue = ProcessFiles(dafnyFiles, otherFiles.AsReadOnly(), reporter);
       }
 
       if (CommandLineOptions.Clo.XmlSink != null) {
@@ -117,39 +117,54 @@ namespace Microsoft.Dafny
       { Contract.Assert(file != null);
         string extension = Path.GetExtension(file);
         if (extension != null) { extension = extension.ToLower(); }
-        try { dafnyFiles.Add(new DafnyFile(file)); } catch (IllegalDafnyFile) {
-          if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.Csharp) {
-            if (extension == ".cs" || extension == ".dll") {
-              otherFiles.Add(file);
-            } else {
-              ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or C# files (.cs) or managed DLLS (.dll)", file,
-                extension == null ? "" : extension);
-              return ExitValue.PREPROCESSING_ERROR;
-            }
-          } else if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.JavaScript) {
-            if (extension == ".js") {
-              otherFiles.Add(file);
-            } else {
-              ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or JavaScript files (.js)", file,
-                extension == null ? "" : extension);
-              return ExitValue.PREPROCESSING_ERROR;
-            }
-          } else if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.Java) {
-            if (extension == ".java") {
-              otherFiles.Add(file);
-            } else {
-              ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or Java files (.java)", file,
-                extension == null ? "" : extension);
-              return ExitValue.PREPROCESSING_ERROR;
-            }
-          } else {
-            if (extension == ".go") {
-              otherFiles.Add(file);
-            } else {
-              ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or Go files (.go)", file,
-                extension == null ? "" : extension);
-              return ExitValue.PREPROCESSING_ERROR;
-            }
+
+        bool isDafnyFile = false;
+        try {
+          dafnyFiles.Add(new DafnyFile(file));
+          isDafnyFile = true;
+        } catch (IllegalDafnyFile) {
+          // Fall through and try to handle the file as an "other file"
+        }
+
+        if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.Csharp) {
+          if (extension == ".cs" || extension == ".dll") {
+            otherFiles.Add(file);
+          } else if (!isDafnyFile) {
+            ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or C# files (.cs) or managed DLLS (.dll)", file,
+              extension == null ? "" : extension);
+            return ExitValue.PREPROCESSING_ERROR;
+          }
+        } else if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.JavaScript) {
+          if (extension == ".js") {
+            otherFiles.Add(file);
+          } else if (!isDafnyFile) {
+            ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or JavaScript files (.js)", file,
+              extension == null ? "" : extension);
+            return ExitValue.PREPROCESSING_ERROR;
+          }
+        } else if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.Java) {
+          if (extension == ".java") {
+            otherFiles.Add(file);
+          } else if (!isDafnyFile) {
+            ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or Java files (.java)", file,
+              extension == null ? "" : extension);
+            return ExitValue.PREPROCESSING_ERROR;
+          }
+        } else if (DafnyOptions.O.CompileTarget == DafnyOptions.CompilationTarget.Php) {
+          if (extension == ".php") {
+            otherFiles.Add(file);
+          } else if (!isDafnyFile) {
+            ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or PHP files (.php)", file,
+              extension == null ? "" : extension);
+            return ExitValue.PREPROCESSING_ERROR;
+          }
+        } else {
+          if (extension == ".go") {
+            otherFiles.Add(file);
+          } else if (!isDafnyFile) {
+            ExecutionEngine.printer.ErrorWriteLine(Console.Out, "*** Error: '{0}': Filename extension '{1}' is not supported. Input files must be Dafny programs (.dfy) or Go files (.go)", file,
+              extension == null ? "" : extension);
+            return ExitValue.PREPROCESSING_ERROR;
           }
         }
       }
@@ -464,6 +479,10 @@ namespace Microsoft.Dafny
           targetExtension = "java";
           targetBaseDir = baseName;
           break;
+        case DafnyOptions.CompilationTarget.Php:
+          targetExtension = "php";
+          targetBaseDir = baseName;
+          break;
         default:
           Contract.Assert(false);
           throw new cce.UnreachableException();
@@ -477,7 +496,7 @@ namespace Microsoft.Dafny
         Directory.Delete(targetDir, true);
       string targetFilename = Path.Combine(targetDir, targetBaseName);
       if (targetProgram != null) {
-        WriteFile(targetFilename, targetProgram); 
+        WriteFile(targetFilename, targetProgram);
       }
 
       string relativeTarget = Path.Combine(targetBaseDir, targetBaseName);
@@ -593,7 +612,7 @@ namespace Microsoft.Dafny
         }
         targetFilename = WriteDafnyProgramToFiles(dafnyProgramName, p, completeProgram, otherFiles, outputWriter);
       }
-      
+
       if (DafnyOptions.O.CompileTarget is DafnyOptions.CompilationTarget.Java) {
         string targetBaseDir = baseName;
         string targetDir = Path.Combine(Path.GetDirectoryName(dafnyProgramName), targetBaseDir);
@@ -607,7 +626,6 @@ namespace Microsoft.Dafny
         jcompiler.CompileTuples(dest);
         jcompiler.CreateFunctionInterface(dest);
         jcompiler.CompileDafnyArrays(dest);
-        jcompiler.CompileArrayInits(dest);
       }
 
       if (!completeProgram) {

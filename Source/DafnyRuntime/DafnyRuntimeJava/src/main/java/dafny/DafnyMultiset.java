@@ -62,10 +62,27 @@ public class DafnyMultiset<T> {
         return (DafnyMultiset<T>) EMPTY;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> Type<DafnyMultiset<T>> _type(Type<T> elementType) {
+        // Fudge the type parameter; it's not great, but it's safe because
+        // (for now) type descriptors are only used for default values
+        return Type.referenceWithInitializer(
+                (Class<DafnyMultiset<T>>) (Class<?>) DafnyMultiset.class,
+                DafnyMultiset::empty);
+    }
+
     public BigInteger cardinality() {
         BigInteger b = BigInteger.ZERO;
         for (BigInteger big : innerMap.values()) {
             b = b.add(big);
+        }
+        return b;
+    }
+
+    public int cardinalityInt() {
+        int b = 0;
+        for (BigInteger big : innerMap.values()) {
+            b += big.intValue();
         }
         return b;
     }
