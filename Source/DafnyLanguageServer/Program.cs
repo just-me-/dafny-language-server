@@ -20,16 +20,31 @@ namespace DafnyLanguageServer
         {
             ExecutionEngine.printer = new DafnyConsolePrinter();
 
-            //Note: TempPath goes to C:\Users\[user]\AppData\Local\Temp\ on Windows
             string assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
             string logPath = Path.Combine(assemblyPath, "../Logs");
-
-
             Directory.CreateDirectory(logPath);
             string redirectedStreamPath = Path.Combine(logPath, "./StreamRedirection.txt");
             string loggerOutputPath = Path.Combine(logPath, "./Log.txt");
 
+            if (args.Length % 2 != 0)
+            {
+                throw new ArgumentException("Invalid Number of Arguments provided");
+            }
+
+            for (int i = 0; i < args.Length; i += 2)
+            {
+                if (args[i].ToLower() == "--stream")
+                {
+                    redirectedStreamPath = Path.Combine(logPath, args[i+1]);
+                }
+                if (args[i].ToLower() == "--log")
+                {
+                    loggerOutputPath = Path.Combine(logPath, args[i+1]);
+                }
+            }
+
             ILogger log = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 .WriteTo.File(loggerOutputPath, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
@@ -69,8 +84,6 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                Console.WriteLine("Cannot open MsgLogger.txt for writing");
-                Console.WriteLine(e.Message);
                 log.Error("Couldn't redirect output stream");
             }
 
