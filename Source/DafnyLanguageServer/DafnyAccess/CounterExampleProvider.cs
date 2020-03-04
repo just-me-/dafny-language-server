@@ -18,19 +18,16 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public CounterExample LoadCounterModel()
         {
-            try
-            {
                 var models = LoadModelFromFile();
                 return ConvertModels(models);
-            }
-            catch (Exception)
-            {
-                return new CounterExample();
-            }
         }
 
         private List<ILanguageSpecificModel> LoadModelFromFile()
         {
+            if (!File.Exists((ModelBvd)))
+            {
+                throw new IOException("Model.bvd File is not existing");
+            }
             using (var wr = new StreamReader(ModelBvd))
             {
                 var output = wr.ReadToEnd();

@@ -214,7 +214,7 @@ namespace Tests
     public class IntegrationTests
     {
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(IntegrationTests).Assembly.Location);
-        internal static readonly string testPath = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/CounterExampleFiles"));
+        internal static readonly string testPath = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/UnitTests/CounterExampleTest/CounterExampleTestFiles"));
 
         private CounterExampleResults ProvideCounterExamples(string filename)
         {

@@ -6,8 +6,9 @@ namespace CompileHandlerTest
     {
 
         internal static readonly string assemblyPath = Path.GetDirectoryName(typeof(PathConstants).Assembly.Location);
-        internal static readonly string testPath = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/compileHandlerFiles"));
-        internal static readonly string dafnyExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/Dafny.exe"));
+        internal static readonly string rootPath = Path.GetFullPath(Path.Combine(assemblyPath, "../"));
+        internal static readonly string testFilesPath = Path.GetFullPath(Path.Combine(rootPath, "Test/LanguageServerTest/UnitTests/CompileHandlerTest/CompileHandlerTestFiles"));
+        internal static readonly string dafnyExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/Dafny.exe"));
 
         internal static readonly string fineDLLOutput = "fineDLL.dll";
         internal static readonly string fineEXEOutput = "fineEXE.exe";

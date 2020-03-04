@@ -9,7 +9,7 @@ namespace CompileHandlerTest
     class ProcessRunnerTest
     {
 
-        private static readonly string testPath = PathConstants.testPath;
+        private static readonly string testPath = PathConstants.testFilesPath;
         private static readonly string dafnyExe = PathConstants.dafnyExe;
 
         [SetUp]
