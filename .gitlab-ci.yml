@@ -28,11 +28,7 @@ build_server:
   stage: build
   image: $BUILD_IMAGE:latest
   script:
-    - pwd
-    - ls -alh
     - cd ..
-    - ls -alh
-    - ls -alg /opt/boogie
     - if [ ! -e boogie ];
         then ln -s /opt/boogie;
       fi;
