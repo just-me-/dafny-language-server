@@ -52,6 +52,8 @@ test_nunit:
   artifacts:
     reports:
       junit: $TestBinaries/TestResult.xml
+    paths:
+      - Logs/
 
 test_dafny:
   stage: test_temporary_at_end
