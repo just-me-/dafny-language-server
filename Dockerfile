@@ -2,6 +2,7 @@ FROM mono:5.20
 
 ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.7/z3-4.8.7-x64-ubuntu-16.04.zip
 ARG GO_RELEASE=go1.10.3.linux-amd64.tar.gz
+ARG NODE_VERSION=10.16.3
 ARG SonarScanner_RELEASE=3.0.3.778
 ARG BOOGIE_RELEASE=v2.4.2
 
@@ -10,6 +11,7 @@ ENV DISPLAY=:99
 ENV XVFB_WHD=${XVFB_WHD:-1280x720x16}
 ENV CXX="g++-4.9"
 ENV CC="gcc-4.9"
+ENV NODE_ENV=dev
 
 # Note: The mkdir is required due to a bug in the debian-slim image.
 RUN apt-get update \
@@ -43,6 +45,11 @@ RUN git clone --branch ${BOOGIE_RELEASE} https://github.com/boogie-org/boogie.gi
     msbuild boogie/Source/Boogie.sln
 ENV PATH=$PATH:/opt/boogie/Binaries
 
+RUN wget --no-verbose https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz &&\
+    tar -xJf node-v${NODE_VERSION}-linux-x64.tar.xz &&\
+    rm node-v${NODE_VERSION}-linux-x64.tar.xz &&\
+    ln -s node-v${NODE_VERSION}-linux-x64 node
+ENV PATH=$PATH:/opt/node/bin
 
 RUN curl -o sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SonarScanner_RELEASE}-linux.zip && \
     unzip sonarscanner.zip && \
