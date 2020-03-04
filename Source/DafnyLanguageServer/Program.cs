@@ -21,10 +21,13 @@ namespace DafnyLanguageServer
             ExecutionEngine.printer = new DafnyConsolePrinter();
 
             //Note: TempPath goes to C:\Users\[user]\AppData\Local\Temp\ on Windows
-            string tempPath = Path.Combine(Path.GetTempPath(), "./Dafny");
-            Directory.CreateDirectory(tempPath);
-            string redirectedStreamPath = Path.Combine(tempPath, "./StreamRedirection.txt");
-            string loggerOutputPath = Path.Combine(tempPath, "./LoggerOutput.txt");
+            string assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            string logPath = Path.Combine(assemblyPath, "../Logs");
+
+
+            Directory.CreateDirectory(logPath);
+            string redirectedStreamPath = Path.Combine(logPath, "./StreamRedirection.txt");
+            string loggerOutputPath = Path.Combine(logPath, "./Log.txt");
 
             ILogger log = new LoggerConfiguration()
                 .Enrich.FromLogContext()
