@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
@@ -55,7 +56,7 @@ namespace LSPIntegrationTests
 
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
         internal static readonly string serverExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/DafnyLanguageServer.exe"));
-        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/UnitTests/CounterExampleTest/CounterExampleTestFiles/fail1.dfy"));
+        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/IntegrationTests/LSPIntegrationTest/LSPIntegrationTestFiles/testfile.dfy"));
         internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
 
         [SetUp]
@@ -86,7 +87,7 @@ namespace LSPIntegrationTests
             //    .CreateLogger();
 
             ILogger log = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -118,8 +119,10 @@ namespace LSPIntegrationTests
                     cancellationToken: cancellationSource.Token
                 ).Wait();
 
+
+                ///////////////////OPEN, CHANGE EXAMPLE ///////////////////////////////////////////
                 //var myDiagHandler = new DiagHandler();
-                //client.RegisterHandler(myDiagHandler);  //todo
+                //client.RegisterHandler(myDiagHandler);  //todo hier so iwie die handler registieren für alles was kein request ist aber einfach so rein kommt,a lso so verification shit.
 
 
                 log.Information("*** Language server has been successfully initialised. ");
@@ -136,20 +139,18 @@ namespace LSPIntegrationTests
                 //es kommt an:
                 //[{"label":"a (Type: Method) (Parent: _default)","kind":2,"deprecated":false,"preselect":false,"insertTextFormat":0,"textEdit":{"range":{"start":{"line":2,"character":5},"end":{"line":2,"character":6}},"newText":"a"}}]
 
+                ///////////////////AUTO COMPLETION EXAMPLE ///////////////////////////////////////////
 
-                
+
 
                 log.Information("*** Sending Completions.....");
-                var c = client.TextDocument.Completions(
+                var completions = client.TextDocument.Completions(
                     filePath: aDfyFile,
                     line: 2,
                     column: 5,
                     cancellationToken: cancellationSource.Token
-                );
+                ).Result;
 
-                c.Wait();
-
-                var completions = c.Result;
 
 
                 //Test completions for correctness here
@@ -167,14 +168,9 @@ namespace LSPIntegrationTests
                     log.Warning("No hover info available at ({Line}, {Column}).", 7, 3);
                 }
 
+                
 
-                //kommt an:
-                //[21:01:03 DBG] Read response body {"jsonrpc":"2.0","id":"3","result":{"counterExamples":[{"line":4,"col":19,"variables":{"inp1":"((- 160))","more":"((- 320))"}}]}}.
-                //[21:01:03 DBG] Received response 3 from language server: {"counterExamples":[{"line":4,"col":19,"variables":{"inp1":"((- 160))","more":"((- 320))"}
-                //}]}
-
-                //geiler scheiss alter
-
+                ///////////////////COUNTER EXAMPLE EXAMPLE ///////////////////////////////////////////
 
                 var counterExampleParam = new CounterExampleParams
                 {
@@ -209,8 +205,15 @@ namespace LSPIntegrationTests
                 }
 
     
+                ///////////GOTO/////////////////
 
+                log.Information("Diong Goto Definition");
 
+                var gonetodef = client.TextDocument.Definition(aDfyFile, 9, 12).Result;
+                if (gonetodef != null && gonetodef.Count() == 1)
+                {
+                    log.Information($"Got Location for goto " + gonetodef.First().Location.Range.ToCustomString() + " in file " + gonetodef.First().Location.Uri.AbsolutePath);
+                }
 
 
             }
