@@ -3,7 +3,7 @@ variables:
   NUnitVersion: 3.11.1
   NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
   NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
-  TestBinaries: dafny/Binaries/
+  TestBinaries: Binaries/
 
 stages:
   - prebuild
