@@ -45,8 +45,10 @@ namespace LSPIntegrationTests
 
         private bool barrierIsDown = true;
 
-        private void WaitUntilBarrierIsUp()
+        private void WaitUntilBarrierIsUp(ILogger log)
         {
+            log.Information("Waiting here in hope to get a diagnostics....");
+
             double waitedTime = 0.1;
             while (barrierIsDown)
             {
@@ -54,7 +56,8 @@ namespace LSPIntegrationTests
                 waitedTime += 0.1;
             }
             barrierIsDown = true;
-            Console.WriteLine("Waited: " + waitedTime + "s");
+            log.Information($"Success! Continuing... Time Waited: {waitedTime}");
+
         }
 
         [SetUp]
@@ -116,7 +119,7 @@ namespace LSPIntegrationTests
 
                 PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
                 {
-
+                    
                     log.Information("%%%%% Received Diagnostics!");
                     log.Information("Uri: " + uri);
                     foreach (var d in diagList)
@@ -131,21 +134,17 @@ namespace LSPIntegrationTests
 
                 client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
 
+
+
                 log.Information("*** Sending DidOpen.....");
-
                 client.TextDocument.DidOpen(aDfyFile, "dfy");
+                WaitUntilBarrierIsUp(log);                                      //Todo: mit event arbeiten ?
 
-                log.Information("Waiting here in hope to get a diagnostics....");
-                WaitUntilBarrierIsUp();
 
-                log.Information("...Sleep ended");
 
                 log.Information("*** Sending DidChange.....");
-
                 client.TextDocument.DidChange(aDfyFile, "dfy");
-                log.Information("Waiting here in hope to get a diagnostics....");
-                Thread.Sleep(1000);
-                log.Information("...Sleep ended");
+                WaitUntilBarrierIsUp(log);
 
 
 
