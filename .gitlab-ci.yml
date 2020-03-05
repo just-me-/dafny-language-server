@@ -62,7 +62,7 @@ test_dafny:
     - pushd Binaries; ln -s /opt/z3; popd
     - npm install bignumber.js
     - cd Test
-    - "find . -name '*.dfy' -not -path './compileHandlerFiles/*' -not -path './CounterExampleFiles/*' -exec sed -i 's!/optimize !!g' {} +"
+    - "find . -name '*.dfy' -not -path './LanguageServerTest/*' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
 
 sonar_scanner:
