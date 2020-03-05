@@ -22,7 +22,7 @@ namespace DafnyLanguageServer
         {
             ExecutionEngine.printer = new DafnyConsolePrinter();
 
-            SetupLog(args, out string redirectedStreamFile, out string logFile, out LogLevel minLevel);
+            SetupLog(args, out string redirectedStreamFile, out string logFile, out LogLevel minLevel, out bool errorOnLogging);
 
             ILogger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
@@ -53,6 +53,11 @@ namespace DafnyLanguageServer
                     
             );
 
+            if (errorOnLogging)
+            {
+                log.Warning("Error while configuring log - default used. Check Launch Args and Config File!");
+            }
+
             log.Information("Server Running");
 
             try
@@ -78,7 +83,7 @@ namespace DafnyLanguageServer
             services.AddLogging();
         }
 
-        private static void SetupLog(string[] args, out string redirectedStreamFile, out string logFile, out LogLevel loglevel)
+        private static void SetupLog(string[] args, out string redirectedStreamFile, out string logFile, out LogLevel loglevel, out bool errorOnLogs)
             //Log Levels (starting from 0)
             //Trace - Debug - Info - Warning - Error - Critical - None
         {
@@ -88,46 +93,53 @@ namespace DafnyLanguageServer
             redirectedStreamFile = Path.Combine(assemblyPath, "../Logs/StreamRedirection.txt");
             logFile = Path.Combine(assemblyPath, "../Logs/Log.txt");
             loglevel = LogLevel.None;
+            errorOnLogs = false;
 
-
-            //Overwrite with config if available
-            string cfgFile = Path.Combine(assemblyPath, "LanguageServerConfig.json");
-            if (File.Exists(cfgFile))
+            try
             {
-                JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
-                logFile = cfg["logging"]["log"] == null
-                    ? logFile
-                    : Path.Combine(assemblyPath, (string)cfg["logging"]["log"]);
-                redirectedStreamFile = cfg["logging"]["stream"] == null
-                    ? redirectedStreamFile
-                    : Path.Combine(assemblyPath, (string)cfg["logging"]["stream"]);
-                loglevel = cfg["logging"]["loglevel"] == null
-                    ? loglevel
-                    : (LogLevel) (int) cfg["logging"]["loglevel"];
-            }
-
-            //Overwrite with args if available
-            if (args.Length % 2 != 0)
-            {
-                throw new ArgumentException("Invalid number of arguments provided.");
-            }
-
-            for (int i = 0; i < args.Length; i += 2)
-            {
-                switch (args[i].ToLower())
+                //Overwrite with config if available
+                string cfgFile = Path.Combine(assemblyPath, "LanguageServerConfig.json");
+                if (File.Exists(cfgFile))
                 {
-                    case "/stream":
-                        redirectedStreamFile = Path.Combine(assemblyPath, args[i + 1]);
-                        break;
-                    case "/log":
-                        logFile = Path.Combine(assemblyPath, args[i + 1]);
-                        break;
-                    case "/loglevel":
-                        loglevel = (LogLevel) int.Parse(args[i + 1]);
-                        break;
-                    default:
-                        throw new ArgumentException("Unkown Parameter: " + args[i]);
+                    JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
+                    logFile = cfg["logging"]["log"] == null
+                        ? logFile
+                        : Path.Combine(assemblyPath, (string) cfg["logging"]["log"]);
+                    redirectedStreamFile = cfg["logging"]["stream"] == null
+                        ? redirectedStreamFile
+                        : Path.Combine(assemblyPath, (string) cfg["logging"]["stream"]);
+                    loglevel = cfg["logging"]["loglevel"] == null
+                        ? loglevel
+                        : (LogLevel) (int) cfg["logging"]["loglevel"];
                 }
+
+                //Overwrite with args if available
+                if (args.Length % 2 != 0)
+                {
+                    throw new ArgumentException("Invalid number of arguments provided.");
+                }
+
+                for (int i = 0; i < args.Length; i += 2)
+                {
+                    switch (args[i].ToLower())
+                    {
+                        case "/stream":
+                            redirectedStreamFile = Path.Combine(assemblyPath, args[i + 1]);
+                            break;
+                        case "/log":
+                            logFile = Path.Combine(assemblyPath, args[i + 1]);
+                            break;
+                        case "/loglevel":
+                            loglevel = (LogLevel) int.Parse(args[i + 1]);
+                            break;
+                        default:
+                            throw new ArgumentException("Unkown Parameter: " + args[i]);
+                    }
+                }
+            }
+            catch
+            {
+                errorOnLogs = true;
             }
         }
 
