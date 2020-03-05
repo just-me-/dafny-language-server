@@ -10,7 +10,6 @@ stages:
   - build
   - test
   - sonar
-  - test_temporary_at_end
 
 build_image:
   stage: prebuild
@@ -56,13 +55,13 @@ test_nunit:
       - Logs/
 
 test_dafny:
-  stage: test_temporary_at_end
+  stage: test
   image: $BUILD_IMAGE:latest
   script:
     - pushd Binaries; ln -s /opt/z3; popd
     - npm install bignumber.js
     - cd Test
-    - "find . -name '*.dfy' -not -path './compileHandlerFiles/*' -not -path './CounterExampleFiles/*' -exec sed -i 's!/optimize !!g' {} +"
+    - "find . -path ./LanguageServerTest -prune -o -name '*.dfy' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
 
 sonar_scanner:

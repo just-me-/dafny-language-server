@@ -30,3 +30,21 @@ For the current processing an alternative Word document synchronization is more 
 
 ## VS Code Plugin Features
 If you would like to know which features are supported by the Visual Studio Code Plugin, please checkout the [VSCodePlugin-ReadMe in the seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin/-/blob/master/README.md). 
+
+## Server Launch Parameters
+
+* /log [relativePath]  relative Path to Logfile
+* lstream [relativePath]  relative Path to Console-Output
+* /loglevel [int]   minimum Loglevel.
+
+Log Levels are:
+* 0 all
+* 1 Debug
+* 2 Information
+* 3 Warinng
+* 4 Error
+* 5 Fatal
+* 6 None
+
+## Server Config
+You can edit the file Binaries/LanguageServerConfig.json with the same Information as above.

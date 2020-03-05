@@ -241,13 +241,6 @@ namespace Tests
         }
 
         [Test]
-        public void TwoMethods()
-        {
-            var results = ProvideCounterExamples("twoMethods.dfy");
-            Assert.AreEqual(1, results.CounterExamples.Count);
-        }
-
-        [Test]
         public void Ok()
         {
             var results = ProvideCounterExamples("ok.dfy");
