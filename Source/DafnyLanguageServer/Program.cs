@@ -84,7 +84,7 @@ namespace DafnyLanguageServer
         {
             string assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
 
-            //Setting hard defaults
+            //Setting hard defaults                                             //todo remove comments
             redirectedStreamFile = Path.Combine(assemblyPath, "../Logs/StreamRedirection.txt");
             logFile = Path.Combine(assemblyPath, "../Logs/Log.txt");
             loglevel = LogLevel.None;
