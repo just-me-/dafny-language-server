@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using MediatR;
 using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
+using Files = PathConstants.Paths;
 
 namespace LSPIntegrationTests
 {
@@ -36,12 +37,6 @@ namespace LSPIntegrationTests
 
     public class Tests
     {
-
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
-        internal static readonly string serverExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/DafnyLanguageServer.exe"));
-        internal static readonly string compilerExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/Dafny.exe"));
-        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/IntegrationTests/LSPIntegrationTest/LSPIntegrationTestFiles/testfile.dfy"));
-        internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
 
         private bool barrierIsDown = true;
 
@@ -72,12 +67,12 @@ namespace LSPIntegrationTests
         [SetUp]
         public void CheckFiles()
         {
-            if (!File.Exists(serverExe))
+            if (!File.Exists(Files.dafnyExe))
             {
                 throw new AssertionException("File not existing: Server Exe");
             }
 
-            if (!File.Exists(aDfyFile))
+            if (!File.Exists(Files.int_demofile))
             {
                 throw new AssertionException("File not existing: a Dfy File");
             }
@@ -100,9 +95,9 @@ namespace LSPIntegrationTests
                 TimeSpan.FromSeconds(30)
             );
 
-            ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(serverExe)
+            ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
-                Arguments = "--log TestLog.txt"
+                Arguments = "/log ../TestLog.txt"
             });
             LanguageClient client = new LanguageClient(LoggerFactory, server);
 
@@ -113,7 +108,7 @@ namespace LSPIntegrationTests
                 log.Information("**** Initialising language server...");
 
                 client.Initialize(
-                    workspaceRoot: workspaceDir,
+                    workspaceRoot: Files.testFilesPath,
                     initializationOptions: new { },
                     cancellationToken: cancellationSource.Token
                 ).Wait();
@@ -146,13 +141,13 @@ namespace LSPIntegrationTests
 
 
                 log.Information("*** Sending DidOpen.....");
-                client.TextDocument.DidOpen(aDfyFile, "dfy");
+                client.TextDocument.DidOpen(Files.int_demofile, "dfy");
                 WaitUntilDiagnosticsArrived(log);                                      //Todo: mit event arbeiten ?
 
 
 
                 log.Information("*** Sending DidChange.....");
-                client.TextDocument.DidChange(aDfyFile, "dfy");
+                client.TextDocument.DidChange(Files.int_demofile, "dfy");
                 WaitUntilDiagnosticsArrived(log);
 
 
@@ -165,7 +160,7 @@ namespace LSPIntegrationTests
 
                 log.Information("*** Sending Completions.....");
                 var completions = client.TextDocument.Completions(
-                    filePath: aDfyFile,
+                    filePath: Files.int_demofile,
                     line: 2,
                     column: 5,
                     cancellationToken: cancellationSource.Token
@@ -192,7 +187,7 @@ namespace LSPIntegrationTests
 
                 var counterExampleParam = new CounterExampleParams
                 {
-                    DafnyFile = aDfyFile
+                    DafnyFile = Files.int_demofile
                 };
                 
 
@@ -227,7 +222,7 @@ namespace LSPIntegrationTests
 
                 log.Information("Diong Goto Definition");
 
-                var gonetodef = client.TextDocument.Definition(aDfyFile, 9, 12).Result;
+                var gonetodef = client.TextDocument.Definition(Files.int_demofile, 9, 12).Result;
                 if (gonetodef != null && gonetodef.Count() == 1)
                 {
                     log.Information($"Got Location for goto " + gonetodef.First().Location.Range.ToCustomString() + " in file " + gonetodef.First().Location.Uri.AbsolutePath);
@@ -242,8 +237,8 @@ namespace LSPIntegrationTests
                 ////////////////////////COMPILE Example///////////////////////////
                 CompilerParams compilerParams = new CompilerParams
                 {
-                    DafnyFilePath = aDfyFile,
-                    DafnyExePath = compilerExe
+                    DafnyFilePath = Files.int_demofile,
+                    DafnyExePath = Files.dafnyExe
                 };
 
                 log.Information("Sending that compile ;_)");

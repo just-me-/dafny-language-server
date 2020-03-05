@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
+    <ProjectReference Include="..\..\PathConstants\PathConstants\PathConstants.csproj" />
   </ItemGroup>
 
 </Project>

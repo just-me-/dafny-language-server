@@ -10,23 +10,20 @@ namespace CompileHandlerTest
     class ProcessRunnerTest
     {
 
-        private static readonly string testPath = Files.testFilesPath;
-        private static readonly string dafnyExe = Files.dafnyExe;
-
         [SetUp]
         public void DeleteFiles()
         {
             List<string> files = new List<string>
             {
-                Path.Combine(testPath, Files.cp_out_dll),
-                Path.Combine(testPath, Files.cp_out_exe)
+                Files.cp_out_dll,
+                Files.cp_out_exe
             };
 
-            foreach (string path in files)
+            foreach (string f in files)
             {
-                if (File.Exists(path))
+                if (File.Exists(f))
                 {
-                    File.Delete(path);
+                    File.Delete(f);
                 }
             }
         }
@@ -39,7 +36,7 @@ namespace CompileHandlerTest
             {
                 StartInfo =
                     {
-                        FileName = dafnyExe,
+                        FileName = Files.dafnyExe,
                         UseShellExecute = false,
                         RedirectStandardError = true,
                         RedirectStandardOutput = true

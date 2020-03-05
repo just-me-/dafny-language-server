@@ -215,10 +215,9 @@ namespace Tests
     public class IntegrationTests
     {
 
-        private CounterExampleResults ProvideCounterExamples(string filename)
+        private CounterExampleResults ProvideCounterExamples(string fullFilePath)
         {
             ExecutionEngine.printer = new DafnyConsolePrinter();
-            string fullFilePath = Path.Combine(Files.testFilesPath, filename);
             string source = File.ReadAllText(fullFilePath);
             DafnyTranslationUnit h = new DafnyTranslationUnit(fullFilePath, source);
             var service = new CounterExampleService(h);
