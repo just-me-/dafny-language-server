@@ -92,7 +92,7 @@ namespace DafnyLanguageServer
             //Setting hard defaults                                             //todo remove comments
             redirectedStreamFile = Path.Combine(assemblyPath, "../Logs/StreamRedirection.txt");
             logFile = Path.Combine(assemblyPath, "../Logs/Log.txt");
-            loglevel = LogLevel.None;
+            loglevel = LogLevel.Error;
             errorOnLogs = false;
 
             try
