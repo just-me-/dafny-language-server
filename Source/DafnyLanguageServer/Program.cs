@@ -95,8 +95,12 @@ namespace DafnyLanguageServer
             if (File.Exists(cfgFile))
             {
                 JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
-                logFile = (string) cfg["logging"]["log"] ?? logFile;
-                redirectedStreamFile = (string) cfg["logging"]["stream"] ?? redirectedStreamFile;
+                logFile = cfg["logging"]["log"] == null
+                    ? logFile
+                    : Path.Combine(assemblyPath, (string)cfg["logging"]["log"]);
+                redirectedStreamFile = cfg["logging"]["stream"] == null
+                    ? redirectedStreamFile
+                    : Path.Combine(assemblyPath, (string)cfg["logging"]["stream"]);
                 loglevel = cfg["logging"]["loglevel"] == null
                     ? loglevel
                     : (LogLevel) (int) cfg["logging"]["loglevel"];
