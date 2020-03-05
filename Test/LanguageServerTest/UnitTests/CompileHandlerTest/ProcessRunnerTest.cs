@@ -18,8 +18,8 @@ namespace CompileHandlerTest
         {
             List<string> files = new List<string>
             {
-                Path.Combine(testPath, Files.fineDLLOutput),
-                Path.Combine(testPath, Files.fineEXEOutput)
+                Path.Combine(testPath, Files.cp_out_dll),
+                Path.Combine(testPath, Files.cp_out_exe)
             };
 
             foreach (string path in files)
