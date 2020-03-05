@@ -97,7 +97,7 @@ namespace LSPIntegrationTests
 
             ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
-                Arguments = "/log ../TestLog.txt"
+                Arguments = "/log ../Logs/TestLog.txt /loglevel 0"
             });
             LanguageClient client = new LanguageClient(LoggerFactory, server);
 
