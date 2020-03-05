@@ -3,22 +3,22 @@ using DafnyLanguageServer.Services;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
-
+using Files = PathConstants.Paths;
 namespace CompileHandlerTest
 {
     public class CompileIntegrationTests
     {
 
-        private static readonly string testPath = PathConstants.testFilesPath;
-        private static readonly string dafnyExe = PathConstants.dafnyExe;
+        private static readonly string testPath = Files.testFilesPath;
+        private static readonly string dafnyExe = Files.dafnyExe;
 
         [SetUp]
         public void DeleteFiles()
         {
             List<string> files = new List<string>
             {
-                Path.Combine(testPath, PathConstants.fineDLLOutput),
-                Path.Combine(testPath, PathConstants.fineEXEOutput)
+                Path.Combine(testPath, Files.fineDLLOutput),
+                Path.Combine(testPath, Files.fineEXEOutput)
             };
 
             foreach (string path in files)
@@ -33,7 +33,7 @@ namespace CompileHandlerTest
         [Test]
         public void IsFine()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_fineDLL);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_fineDLL);
 
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
 
@@ -45,7 +45,7 @@ namespace CompileHandlerTest
         [Test]
         public void IsFineExe()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_fineEXE);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_fineEXE);
 
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
 
@@ -57,7 +57,7 @@ namespace CompileHandlerTest
         [Test]
         public void Assertion()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_assertion);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_assertion);
 
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
 
@@ -71,7 +71,7 @@ namespace CompileHandlerTest
         [Test]
         public void Identifier()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_identifier);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_identifier);
 
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
 
@@ -85,7 +85,7 @@ namespace CompileHandlerTest
         [Test]
         public void Postcondition()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_postcondition);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_postcondition);
 
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
 
@@ -100,17 +100,18 @@ namespace CompileHandlerTest
         [Test]
         public void DllCreated()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_fineDLL);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_fineDLL);
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
-            Assert.IsTrue(File.Exists(Path.Combine(testPath, PathConstants.fineDLLOutput)));
+            Assert.IsTrue(File.Exists(Path.Combine(testPath, Files.fineDLLOutput)));
         }
 
         [Test]
         public void ExeCreated()
         {
-            string dafnyFile = Path.Combine(testPath, PathConstants.dfy_fineEXE);
+            string dafnyFile = Path.Combine(testPath, Files.dfy_fineEXE);
             CompilerResults r = new CompilationService(dafnyExe, dafnyFile).Compile().Result;
-            Assert.IsTrue(File.Exists(Path.Combine(testPath, PathConstants.fineEXEOutput)));
+            Assert.IsTrue(File.Exists(Path.Combine(testPath, Files.fineEXEOutput)));
         }
     }
+
 }

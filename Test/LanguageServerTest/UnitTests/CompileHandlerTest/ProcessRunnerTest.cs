@@ -3,22 +3,23 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Files = PathConstants.Paths;
 
 namespace CompileHandlerTest
 {
     class ProcessRunnerTest
     {
 
-        private static readonly string testPath = PathConstants.testFilesPath;
-        private static readonly string dafnyExe = PathConstants.dafnyExe;
+        private static readonly string testPath = Files.testFilesPath;
+        private static readonly string dafnyExe = Files.dafnyExe;
 
         [SetUp]
         public void DeleteFiles()
         {
             List<string> files = new List<string>
             {
-                Path.Combine(testPath, PathConstants.fineDLLOutput),
-                Path.Combine(testPath, PathConstants.fineEXEOutput)
+                Path.Combine(testPath, Files.fineDLLOutput),
+                Path.Combine(testPath, Files.fineEXEOutput)
             };
 
             foreach (string path in files)
