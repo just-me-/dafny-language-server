@@ -9,6 +9,7 @@ stages:
   - prebuild
   - build
   - test
+  - sonar_push
 
 build_image:
   stage: prebuild
@@ -36,8 +37,6 @@ build_server:
     - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN"
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
-    - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     paths:
       - Binaries/
@@ -65,3 +64,11 @@ test_dafny:
     - cd Test
     - "find . -path ./LanguageServerTest -prune -o -name '*.dfy' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
+
+sonar_upload:
+  stage: sonar_push
+  image: $BUILD_IMAGE:latest
+  script:
+    - pwd
+    - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
+    - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
