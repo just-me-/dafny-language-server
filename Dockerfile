@@ -63,10 +63,7 @@ ENV SONAR_RUNNER_HOME=/opt/sonar-scanner
 RUN curl -o sonarscanner-msbuild.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SonarScanner_RELEASE}-linux.zip && \
     unzip sonarscanner-msbuild.zip && \
     rm sonarscanner-msbuild.zip && \
-    echo '<?xml version="1.0" encoding="utf-8" ?>
-    <SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-      <Property Name="sonar.host.url">https://sonarcloud.io</Property>
-    </SonarQubeAnalysisProperties>' > sonar-scanner-msbuild-4/SonarQube.Analysis.xml
+    echo '<?xml version="1.0" encoding="utf-8" ?><SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1"><Property Name="sonar.host.url">https://sonarcloud.io</Property></SonarQubeAnalysisProperties>' > sonar-scanner-msbuild-4/SonarQube.Analysis.xml
 ENV PATH=$PATH:/opt/sonar-scanner-msbuild-4
 
 RUN mkdir /mono
