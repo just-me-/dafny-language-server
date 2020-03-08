@@ -12,6 +12,7 @@ using CounterExamples = System.Collections.Generic.List<DafnyLanguageServer.Dafn
 using CounterExampleState = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleState;
 using CounterExampleVariable = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleVariable;
 using DafnyConsolePrinter = DafnyLanguageServer.DafnyAccess.DafnyConsolePrinter;
+using Files = PathConstants.Paths;
 
 namespace Tests
 {
@@ -213,13 +214,10 @@ namespace Tests
     }
     public class IntegrationTests
     {
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(IntegrationTests).Assembly.Location);
-        internal static readonly string testPath = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/UnitTests/CounterExampleTest/CounterExampleTestFiles"));
 
-        private CounterExampleResults ProvideCounterExamples(string filename)
+        private CounterExampleResults ProvideCounterExamples(string fullFilePath)
         {
             ExecutionEngine.printer = new DafnyConsolePrinter();
-            string fullFilePath = Path.Combine(testPath, filename);
             string source = File.ReadAllText(fullFilePath);
             DafnyTranslationUnit h = new DafnyTranslationUnit(fullFilePath, source);
             var service = new CounterExampleService(h);
@@ -229,28 +227,21 @@ namespace Tests
         [Test]
         public void Fail1()
         {
-            var results = ProvideCounterExamples("fail1.dfy");
+            var results = ProvideCounterExamples(Files.ce_fail1);
             Assert.AreEqual(1, results.CounterExamples.Count);
         }
 
         [Test]
         public void Fail2()
         {
-            var results = ProvideCounterExamples("fail2.dfy");
+            var results = ProvideCounterExamples(Files.ce_fail2);
             Assert.AreEqual(2, results.CounterExamples.Count);
-        }
-
-        [Test]
-        public void TwoMethods()
-        {
-            var results = ProvideCounterExamples("twoMethods.dfy");
-            Assert.AreEqual(1, results.CounterExamples.Count);
         }
 
         [Test]
         public void Ok()
         {
-            var results = ProvideCounterExamples("ok.dfy");
+            var results = ProvideCounterExamples(Files.ce_ok);
             Assert.AreEqual(0, results.CounterExamples.Count);
         }
 
@@ -260,7 +251,7 @@ namespace Tests
             var ex = Assert.Throws<AggregateException>(() =>
             {
                 ExecutionEngine.printer = new DafnyConsolePrinter();
-                string fullFilePath = Path.Combine(testPath, "idonotexist.dfy");
+                string fullFilePath = Path.Combine(Files.testFilesPath, "idonotexist.dfy");
                 string source = "method a(){}";
                 DafnyTranslationUnit h = new DafnyTranslationUnit(fullFilePath, source);
                 var service = new CounterExampleService(h);

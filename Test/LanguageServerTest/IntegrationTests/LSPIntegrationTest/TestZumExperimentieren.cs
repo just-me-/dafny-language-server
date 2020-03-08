@@ -1,5 +1,4 @@
 using DafnyLanguageServer.Handler;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Handlers;
@@ -12,48 +11,68 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.DafnyAccess;
 using MediatR;
+using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
+using Files = PathConstants.Paths;
 
 namespace LSPIntegrationTests
 {
 
-    internal class DiagHandler : IPublishDiagnosticsHandler, IHandler
+
+
+
+    //Todo evtl diese extension methode iwo anders parkieren... ist nur für einfache stringausgabe jetzt zum tesetn, is aber sicher auch in zukunft nützlich.
+    public static class Extension
     {
-        public string Method => "diagnostics";
-
-        public Type PayloadType => typeof(PublishDiagnosticsParams);
-
-        private List<Diagnostic> Diagnostics { get; } = new List<Diagnostic>();
-
-        public Task<Unit> Handle(PublishDiagnosticsParams request, CancellationToken cancellationToken)
+        public static string ToCustomString(this Range r)
         {
-            var a = request.Diagnostics;
-            foreach (var item in a)
-            {
-                Diagnostics.Add(item);
-            }
-            return Unit.Task;
+            return $"[Range: L{r.Start.Line} C{r.Start.Character} - L{r.End.Line} C{r.End.Character}]";
         }
     }
+
+
     public class Tests
     {
 
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(Tests).Assembly.Location);
-        internal static readonly string serverExe = Path.GetFullPath(Path.Combine(assemblyPath, "../Binaries/DafnyLanguageServer.exe"));
-        internal static readonly string aDfyFile = Path.GetFullPath(Path.Combine(assemblyPath, "../Test/LanguageServerTest/UnitTests/CounterExampleTest/CounterExampleTestFiles/fail1.dfy"));
-        internal static readonly string workspaceDir = Path.GetFullPath(Path.Combine(assemblyPath, ".../Test/LanguageServerTest/UnitTests/CounterExampleTest/"));
+        private bool barrierIsDown = true;
+
+        private void WaitUntilDiagnosticsArrived(ILogger log)
+        {
+            log.Information("Waiting here in hope to get a diagnostics....");
+
+            double waitedTime = 0.1;
+            while (barrierIsDown && waitedTime < 5)
+            {
+                Thread.Sleep(100);
+                waitedTime += 0.1;
+            }
+            barrierIsDown = true;
+
+            if (waitedTime >= 5)
+            {
+                log.Error("Waited max time... Continuing now.");
+            }
+            else
+            {
+                log.Information($"Success: Continuing... Time Waited: {waitedTime}");
+            }
+            
+
+        }
 
         [SetUp]
         public void CheckFiles()
         {
-            if (!File.Exists(serverExe))
+            if (!File.Exists(Files.dafnyExe))
             {
                 throw new AssertionException("File not existing: Server Exe");
             }
 
-            if (!File.Exists(aDfyFile))
+            if (!File.Exists(Files.int_demofile))
             {
                 throw new AssertionException("File not existing: a Dfy File");
             }
@@ -63,119 +82,171 @@ namespace LSPIntegrationTests
         public void DemoTest()
         {
 
-
-            LoggerProviderCollection providers = new LoggerProviderCollection();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()   //set to debug here for full information
+            ILogger log = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Providers(providers)
                 .CreateLogger();
 
-            ILoggerFactory LoggerFactory = new SerilogLoggerFactory(Log.Logger);
+            var LoggerFactory = new SerilogLoggerFactory(log);
 
             var cancellationSource = new CancellationTokenSource();
             cancellationSource.CancelAfter(
                 TimeSpan.FromSeconds(30)
             );
 
-            ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(serverExe)
+            ServerProcess server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
-                Arguments = ""
+                Arguments = "/log ../Logs/TestLog.txt /loglevel 0"
             });
             LanguageClient client = new LanguageClient(LoggerFactory, server);
-            //IHandler h = new DiagHandler();
-            //client.RegisterHandler(h)
 
 
             try
             {
 
-                Log.Information("\n**** Initialising language server...\n");
+                log.Information("**** Initialising language server...");
 
                 client.Initialize(
-                    workspaceRoot: workspaceDir,
+                    workspaceRoot: Files.testFilesPath,
                     initializationOptions: new { },
                     cancellationToken: cancellationSource.Token
                 ).Wait();
 
-                //var myDiagHandler = new DiagHandler();
-                //client.RegisterHandler(myDiagHandler);  //todo
+
+                ///////////////////OPEN, CHANGE EXAMPLE ///////////////////////////////////////////
 
 
-                Log.Information("\n\n*** Language server has been successfully initialised. \n");
-
-                Log.Information("\n\n*** Sending DidOpen.....\n");
-
-                client.TextDocument.DidOpen(aDfyFile, "dfy");
+                log.Information("*** Language server has been successfully initialised. ");
 
 
-                Log.Information("\n\n*** Sending DidChange.....\n");
-                client.TextDocument.DidChange(aDfyFile, "dfy");
+
+                PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
+                {
+                    
+                    log.Information("%%%%% Received Diagnostics!");
+                    log.Information("Uri: " + uri);
+                    foreach (var d in diagList)
+                    {
+                        log.Information(
+                            $"Severity: {d.Severity} / Range: {d.Range.ToCustomString()} / Message: {d.Message}");
+                        log.Information("Related Information: " + d.RelatedInformation?.FirstOrDefault().Message);
+                    }
+
+                    barrierIsDown = false;
+                };
+
+                client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
 
 
-                //es kommt an:
-                //[{"label":"a (Type: Method) (Parent: _default)","kind":2,"deprecated":false,"preselect":false,"insertTextFormat":0,"textEdit":{"range":{"start":{"line":2,"character":5},"end":{"line":2,"character":6}},"newText":"a"}}]
+
+                log.Information("*** Sending DidOpen.....");
+                client.TextDocument.DidOpen(Files.int_demofile, "dfy");
+                WaitUntilDiagnosticsArrived(log);                                      //Todo: mit event arbeiten ?
 
 
-                Log.Information("\\nn*** Sending Completions.....\n");
-                var c = client.TextDocument.Completions(
-                    filePath: aDfyFile,
+
+                log.Information("*** Sending DidChange.....");
+                client.TextDocument.DidChange(Files.int_demofile, "dfy");
+                WaitUntilDiagnosticsArrived(log);
+
+
+
+
+
+                ///////////////////AUTO COMPLETION EXAMPLE ///////////////////////////////////////////
+
+
+
+                log.Information("*** Sending Completions.....");
+                var completions = client.TextDocument.Completions(
+                    filePath: Files.int_demofile,
                     line: 2,
                     column: 5,
                     cancellationToken: cancellationSource.Token
-                );
+                ).Result;
 
-                c.Wait();
 
-                var completions = c.Result;
-
-                //Test completions for correctness here
 
                 if (completions != null)
                 {
-                    Log.Information("\n\nGot completion list" + completions);
-                }
-                else
-                {
-                    Log.Warning("\nNo hover info available at ({Line}, {Column}).", 7, 3);
-                }
-
-
-                //kommt an:
-                //[21:01:03 DBG] Read response body {"jsonrpc":"2.0","id":"3","result":{"counterExamples":[{"line":4,"col":19,"variables":{"inp1":"((- 160))","more":"((- 320))"}}]}}.
-                //[21:01:03 DBG] Received response 3 from language server: {"counterExamples":[{"line":4,"col":19,"variables":{"inp1":"((- 160))","more":"((- 320))"}
-                //}]}
-
-                //geiler scheiss alter
-
-
-                //also es kommt iwie an aber die variablen hier werden nicht passend gesetzt.
-
-                var counterExampleParam = new CounterExampleParams
-                {
-                    DafnyFile = aDfyFile
-                };
-
-
-                Log.Information("*** \n\nSending counterExample.....\n");
-                CounterExampleResult counterExamples = client.SendRequest<CounterExampleResult>("counterExample",
-                    counterExampleParam, cancellationSource.Token).Result;
-
-                if (counterExamples != null)
-                {
-                    Log.Information("\n\n*** Got counter examples: ");
-                    Log.Information("Line {0}, Col {1}", counterExamples.Line, counterExamples.Col);
-                    foreach (KeyValuePair<string, string> kvp in counterExamples.Variables)
+                    log.Information("Got completion list!");
+                    foreach (var cl in completions.Items)
                     {
-                        Log.Information("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                        log.Information( $"Completion Item: {cl.TextEdit.NewText} with label {cl.Label} at {cl.TextEdit.Range.ToCustomString()}");
                     }
                 }
                 else
                 {
-                    Log.Warning("\n\n***No counter Examples available");
+                    log.Warning("No hover info available at ({Line}, {Column}).", 7, 3);
+                }
+
+                
+
+                ///////////////////COUNTER EXAMPLE EXAMPLE ///////////////////////////////////////////
+
+                var counterExampleParam = new CounterExampleParams
+                {
+                    DafnyFile = Files.int_demofile
+                };
+                
+
+                log.Information("*** Sending counterExample.....");
+                var counterExamples = client.SendRequest<CounterExampleResults>("counterExample",
+                    counterExampleParam, cancellationSource.Token).Result;
+
+
+                
+
+                if (counterExamples != null)
+                {
+                    log.Information("*** Got counter examples: ");
+
+                    foreach (CounterExampleResult ce in counterExamples.CounterExamples)
+                    {
+                        log.Information("Line {0}, Col {1}", ce.Line, ce.Col);
+                        foreach (KeyValuePair<string, string> kvp in ce.Variables)
+                        {
+                            log.Information("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    log.Warning("***No counter Examples available");
 
                 }
+
+    
+                //////////////////////////////////GOTO EXAMPLE/////////////////////////
+
+                log.Information("Diong Goto Definition");
+
+                var gonetodef = client.TextDocument.Definition(Files.int_demofile, 9, 12).Result;
+                if (gonetodef != null && gonetodef.Count() == 1)
+                {
+                    log.Information($"Got Location for goto " + gonetodef.First().Location.Range.ToCustomString() + " in file " + gonetodef.First().Location.Uri.AbsolutePath);
+                }
+
+
+                //Code lens erstma weglassen bis da symbol zeug rady würd ich sagen
+                //ausserdem seh ich grad nicht wie man das senden / empfangen kann hust hust
+
+
+
+                ////////////////////////COMPILE Example///////////////////////////
+                CompilerParams compilerParams = new CompilerParams
+                {
+                    DafnyFilePath = Files.int_demofile,
+                    DafnyExePath = Files.dafnyExe
+                };
+
+                log.Information("Sending that compile ;_)");
+
+                var compilerResults = client.SendRequest<CompilerResults>("compile", compilerParams, cancellationSource.Token).Result;
+                log.Information($"Got compile answer: Error: {compilerResults.Error} / Exe?:{compilerResults.Executable} / Massage: {compilerResults.Message}");
+
+
 
 
 
@@ -183,17 +254,17 @@ namespace LSPIntegrationTests
             }
             catch (Exception e)
             {
-                Log.Error(e, "Error Msg:", e.Message);
+                log.Error(e, "Error Msg:", e.Message);
             }
             finally
             {
-                Log.Information("\n\nShutting down client...");
+                log.Information("Shutting down client...");
                 client.Shutdown().Wait();
-                Log.Information("\\nClient shutdown is complete.");
+                log.Information("Client shutdown is complete.");
 
-                Log.Information("\n\nShutting down server...");
+                log.Information("Shutting down server...");
                 server.Stop().Wait();
-                Log.Information("\n\nServer shutdown is complete.");
+                log.Information("Server shutdown is complete.");
 
                 client.Dispose();
                 server.Dispose();
