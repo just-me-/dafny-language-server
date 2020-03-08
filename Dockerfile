@@ -4,6 +4,7 @@ ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.4/z3-4.8.
 ARG GO_RELEASE=go1.10.3.linux-amd64.tar.gz
 ARG NODE_VERSION=10.16.3
 ARG SonarScanner_RELEASE=3.0.3.778
+ARG SonarScanner_msbuild_RELEASE=4.7.1.2311
 ARG BOOGIE_RELEASE=v2.4.2
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
@@ -59,6 +60,16 @@ ENV PATH=$PATH:/opt/sonar-scanner/bin
 
 ENV SONAR_RUNNER_HOME=/opt/sonar-scanner
 
+${SonarScanner_msbuild_RELEASE}
+https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${SonarScanner_msbuild_RELEASE}/sonar-scanner-msbuild-${SonarScanner_msbuild_RELEASE}-net46.zip
+RUN curl -o sonarscanner-msbuild.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SonarScanner_RELEASE}-linux.zip && \
+    unzip sonarscanner-msbuild.zip && \
+    rm sonarscanner-msbuild.zip && \
+    echo '<?xml version="1.0" encoding="utf-8" ?>
+    <SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+      <Property Name="sonar.host.url">https://sonarcloud.io</Property>
+    </SonarQubeAnalysisProperties>' > sonar-scanner-msbuild-4/SonarQube.Analysis.xml
+ENV PATH=$PATH:/opt/sonar-scanner-msbuild-4
 
 RUN mkdir /mono
 WORKDIR /mono
