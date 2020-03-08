@@ -60,8 +60,6 @@ ENV PATH=$PATH:/opt/sonar-scanner/bin
 
 ENV SONAR_RUNNER_HOME=/opt/sonar-scanner
 
-${SonarScanner_msbuild_RELEASE}
-https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${SonarScanner_msbuild_RELEASE}/sonar-scanner-msbuild-${SonarScanner_msbuild_RELEASE}-net46.zip
 RUN curl -o sonarscanner-msbuild.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SonarScanner_RELEASE}-linux.zip && \
     unzip sonarscanner-msbuild.zip && \
     rm sonarscanner-msbuild.zip && \
