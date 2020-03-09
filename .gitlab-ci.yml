@@ -33,14 +33,11 @@ build_server:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN"
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
   artifacts:
     paths:
       - Binaries/
-      - .sonarqube/
-      - ../.sonarqube/
 
 test_nunit:
   stage: test
@@ -50,17 +47,11 @@ test_nunit:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
-    - cd ..
-    - pwd
-    - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
-    - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     reports:
       junit: $TestBinaries/TestResult.xml
     paths:
       - Logs/
-      - .sonarqube/
-      - ../.sonarqube/
 
 test_dafny:
   stage: test
@@ -71,3 +62,25 @@ test_dafny:
     - cd Test
     - "find . -path ./LanguageServerTest -prune -o -name '*.dfy' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
+
+sonar:
+  stage: build
+  image: $BUILD_IMAGE:latest
+  script:
+    - cd ..
+    - if [ ! -e boogie ];
+        then ln -s /opt/boogie;
+      fi;
+    - cd dafny-language-server/Source
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN"
+    - nuget restore Dafny.sln
+    - msbuild Dafny.sln
+    - cd ..
+    - pushd $TestBinaries; ln -s /opt/z3; popd
+    - cd $TestBinaries
+    - nuget install $NUnitNugetPackage
+    - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
+    - cd ..
+    - ls -alh
+    - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
+    - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
