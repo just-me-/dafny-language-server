@@ -40,7 +40,7 @@ build_server:
   artifacts:
     paths:
       - Binaries/
-      - .sonarqube/
+      - ../.sonarqube/
 
 test_nunit:
   stage: test
