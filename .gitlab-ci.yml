@@ -80,7 +80,6 @@ sonar:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
-    - cd ..
-    - ls -alh
+    - cd ../Source
     - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
     - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
