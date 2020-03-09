@@ -9,7 +9,6 @@ stages:
   - prebuild
   - build
   - test
-  - sonar_push
 
 build_image:
   stage: prebuild
@@ -51,6 +50,10 @@ test_nunit:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
+    - cd ..
+    - pwd
+    - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
+    - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     reports:
       junit: $TestBinaries/TestResult.xml
@@ -68,11 +71,3 @@ test_dafny:
     - cd Test
     - "find . -path ./LanguageServerTest -prune -o -name '*.dfy' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
-
-sonar_upload:
-  stage: sonar_push
-  image: $BUILD_IMAGE:latest
-  script:
-    - pwd
-    - chmod +x sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
-    - mono sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
