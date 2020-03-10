@@ -68,7 +68,6 @@ sonar:
   stage: sonar
   image: $BUILD_IMAGE:latest
   script:
-    # - packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe --result=NUnitResults.xml "NUnitTestProject1\bin\Debug\NUnitTestProject1.dll"
     - cd ..
     - if [ ! -e boogie ];
         then ln -s /opt/boogie;
@@ -77,7 +76,7 @@ sonar:
     - ls -alh
     - ls -alh ../
     - ls -alh ../$TestBinaries
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.opencover.reportsPaths=../$TestBinaries/TestResult.xml
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:v=../$TestBinaries/testcoverage.coveragexml
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
     - cd ..
@@ -85,9 +84,6 @@ sonar:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
-    mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./$NUnitRunner" -targetargs:`find -type f -name \*Test.dll`
-    #- mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe" -targetargs:`find -type f -name \*Test.dll`
-    # - $TestBinaries/TestResult.xml
     - cd ../Source
     - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
     - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
