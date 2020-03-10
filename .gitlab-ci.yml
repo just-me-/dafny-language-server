@@ -33,7 +33,7 @@ build_server_and_sonar:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:v=../$TestBinaries/testcoverage.coveragexml
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.vscoveragexml.reportsPaths=../$TestBinaries/testcoverage.coveragexml
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
     - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
