@@ -9,6 +9,7 @@ stages:
   - prebuild
   - build
   - test
+  - sonar
 
 build_image:
   stage: prebuild
@@ -64,15 +65,16 @@ test_dafny:
     - lit --time-tests -v .
 
 sonar:
-  stage: build
+  stage: sonar
   image: $BUILD_IMAGE:latest
   script:
+    # - packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe --result=NUnitResults.xml "NUnitTestProject1\bin\Debug\NUnitTestProject1.dll"
     - cd ..
     - if [ ! -e boogie ];
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN"
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.opencover.reportsPaths=$TestBinaries/TestResult.xml
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
     - cd ..
@@ -80,6 +82,7 @@ sonar:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
+    # - $TestBinaries/TestResult.xml
     - cd ../Source
     - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
     - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
