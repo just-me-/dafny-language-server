@@ -74,7 +74,10 @@ sonar:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.opencover.reportsPaths=$TestBinaries/TestResult.xml
+    - ls -alh
+    - ls -alh ../
+    - ls -alh ../$TestBinaries
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.cs.opencover.reportsPaths=../$TestBinaries/TestResult.xml
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
     - cd ..
@@ -82,6 +85,8 @@ sonar:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
+    #- mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./$NUnitRunner" -targetargs:`find -type f -name \*Test.dll`
+    #- mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe" -targetargs:`find -type f -name \*Test.dll`
     # - $TestBinaries/TestResult.xml
     - cd ../Source
     - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
