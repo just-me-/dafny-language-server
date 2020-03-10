@@ -85,7 +85,7 @@ sonar:
     - cd $TestBinaries
     - nuget install $NUnitNugetPackage
     - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
-    #- mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./$NUnitRunner" -targetargs:`find -type f -name \*Test.dll`
+    mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./$NUnitRunner" -targetargs:`find -type f -name \*Test.dll`
     #- mono ../opencover/OpenCover.Console.exe -output:TestResult.xml -register:user -target:"./NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe" -targetargs:`find -type f -name \*Test.dll`
     # - $TestBinaries/TestResult.xml
     - cd ../Source
