@@ -9,7 +9,6 @@ stages:
   - prebuild
   - build
   - test
-  - sonar
 
 build_image:
   stage: prebuild
@@ -25,7 +24,7 @@ build_image:
     - docker build --tag $BUILD_IMAGE:latest - < Dockerfile
     - docker push $BUILD_IMAGE:latest
 
-build_server:
+build_server_and_sonar:
   stage: build
   image: $BUILD_IMAGE:latest
   script:
@@ -34,8 +33,11 @@ build_server:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:v=../$TestBinaries/testcoverage.coveragexml
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
+    - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
+    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     paths:
       - Binaries/
@@ -63,27 +65,3 @@ test_dafny:
     - cd Test
     - "find . -path ./LanguageServerTest -prune -o -name '*.dfy' -exec sed -i 's!/optimize !!g' {} +"
     - lit --time-tests -v .
-
-sonar:
-  stage: sonar
-  image: $BUILD_IMAGE:latest
-  script:
-    - cd ..
-    - if [ ! -e boogie ];
-        then ln -s /opt/boogie;
-      fi;
-    - cd dafny-language-server/Source
-    - ls -alh
-    - ls -alh ../
-    - ls -alh ../$TestBinaries
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:v=../$TestBinaries/testcoverage.coveragexml
-    - nuget restore Dafny.sln
-    - msbuild Dafny.sln
-    - cd ..
-    - pushd $TestBinaries; ln -s /opt/z3; popd
-    - cd $TestBinaries
-    - nuget install $NUnitNugetPackage
-    - mono ./$NUnitRunner `find -type f -name \*Test.dll`;
-    - cd ../Source
-    - chmod +x ../sonar-scanner-msbuild-4/sonar-scanner-4.1.0.1829/bin/sonar-scanner
-    - mono ../sonar-scanner-msbuild-4/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
