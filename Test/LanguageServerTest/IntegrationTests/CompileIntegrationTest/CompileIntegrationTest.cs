@@ -26,6 +26,13 @@ namespace CompileIntegrationTest
         private string assemblyName;
         private CancellationTokenSource cancellationSource;
 
+        private CompilerResults compilerResults;
+
+        private readonly string compileKeyword = "compile";
+        private readonly string successMsg = "Compilation successful";
+        private readonly string kaiwaasas = "compile";
+
+
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
@@ -51,6 +58,16 @@ namespace CompileIntegrationTest
                 Arguments = $"/log ../Logs/{assemblyName}.txt /loglevel 0"
             });
             client = new LanguageClient(LoggerFactory, server);
+
+            client.Initialize(
+                workspaceRoot: Files.testFilesPath,
+                initializationOptions: new { },
+                cancellationToken: cancellationSource.Token
+            ).Wait();
+
+            log.Information("*** Language server has been successfully initialized.");
+
+            compilerResults = null;
         }
 
         [TearDown]
@@ -68,9 +85,27 @@ namespace CompileIntegrationTest
         }
 
         [Test]
-        public void Test1()
+        public void SuccessWithExeAsResult()
         {
-            Assert.Pass();
+            CompilerParams compilerParams = new CompilerParams
+            {
+                DafnyFilePath = Files.cp_fineEXE,
+                DafnyExePath = Files.dafnyExe
+            };
+
+            compilerResults = client.SendRequest<CompilerResults>(compileKeyword, compilerParams, cancellationSource.Token).Result;
+            VerifyCompileResults(false,true, successMsg);
+        }
+
+        private void VerifyCompileResults(bool expectedError, bool expectedExecutable, string expectedMessage)
+        {
+            if (compilerResults == null)
+            {
+                Assert.Fail("compilerResults are null - no results received!");
+            }
+            Assert.AreEqual(expectedError, compilerResults.Error);
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable);
+            Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
     }
 }
