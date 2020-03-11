@@ -212,7 +212,7 @@ namespace Tests
         }
 
     }
-    public class IntegrationTests
+    public class CounterExampleServiceTests
     {
 
         private CounterExampleResults ProvideCounterExamples(string fullFilePath)
