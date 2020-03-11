@@ -36,7 +36,7 @@ namespace PathConstants
         //Integration
         public static readonly string int_demofile = WithTestPath("integration_demofile.dfy");
 
-        private static string WithTestPath(string s) => Path.Combine(testFilesPath, s);
+        private static string WithTestPath(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
 
     }
 }

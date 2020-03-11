@@ -225,21 +225,21 @@ namespace Tests
         }
 
         [Test]
-        public void Fail1()
+        public void ViolatedWith1CounterExamples()
         {
             var results = ProvideCounterExamples(Files.ce_fail1);
             Assert.AreEqual(1, results.CounterExamples.Count);
         }
 
         [Test]
-        public void Fail2()
+        public void ViolatedWith2CounterExamples()
         {
             var results = ProvideCounterExamples(Files.ce_fail2);
             Assert.AreEqual(2, results.CounterExamples.Count);
         }
 
         [Test]
-        public void Ok()
+        public void PostConditionFullfilled()
         {
             var results = ProvideCounterExamples(Files.ce_ok);
             Assert.AreEqual(0, results.CounterExamples.Count);
