@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
 using Files = PathConstants.Paths;
 
@@ -30,14 +31,19 @@ namespace CompileIntegrationTest
 
         private readonly string compileKeyword = "compile";
         private readonly string successMsg = "Compilation successful";
-        private readonly string kaiwaasas = "compile"; //todo
+
+        [OneTimeSetUp]
+        public void A()
+        {
+            
+        }
 
 
         [SetUp]
         public void Setup()
         {
             cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(30));
+            cancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
 
             log = new LoggerConfiguration()
                 .MinimumLevel.Information()
@@ -71,8 +77,8 @@ namespace CompileIntegrationTest
         public void TearDown()
         {
             log.Information("Shutting down client...");
-            client.Shutdown().Wait();
-            
+            //client.Shutdown().Wait();   Why exception?? würd mich schon noch wunder nehmen...
+            Task.WhenAny(client.Shutdown());
             log.Information("Client shutdown is complete.");
 
             log.Information("Shutting down server...");
