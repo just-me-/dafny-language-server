@@ -32,12 +32,6 @@ namespace CompileIntegrationTest
         private readonly string compileKeyword = "compile";
         private readonly string successMsg = "Compilation successful";
 
-        [OneTimeSetUp]
-        public void A()
-        {
-            
-        }
-
 
         [SetUp]
         public void Setup()
