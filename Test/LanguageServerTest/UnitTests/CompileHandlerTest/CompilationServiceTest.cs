@@ -80,6 +80,21 @@ namespace CompileHandlerTest
 
         }
 
+
+        [Test]
+        public void Semi()
+        {
+            string dafnyFile = Files.cp_semiexpected;
+
+            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+
+            Assert.IsTrue(r.Error);
+            Assert.IsFalse(r.Executable ?? true);
+            Assert.IsTrue(r.Message.Contains("semicolon expected"));
+            Assert.IsTrue(r.Message.Contains("line 7"));
+
+        }
+
         [Test]
         public void Postcondition()
         {

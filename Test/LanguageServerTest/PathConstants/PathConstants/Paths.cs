@@ -20,6 +20,8 @@ namespace PathConstants
         public static readonly string cp_assertion = WithTestPath("compile/assertion_violation.dfy");
         public static readonly string cp_identifier = WithTestPath("compile/unknown_identifier_error.dfy");
         public static readonly string cp_postcondition = WithTestPath("compile/postcondition_violation.dfy");
+        public static readonly string cp_semiexpected = WithTestPath("compile/semi_expected_error.dfy");
+        
 
         //Compile Outputs
         public static readonly string cp_out_dll = WithTestPath("compile/compiles_as_dll.dll");

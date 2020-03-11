@@ -125,6 +125,13 @@ namespace CompileIntegrationTest
             VerifyResults(true, false, "Compilation failed: \"unresolved identifier: bruder\" in line 8.");
         }
 
+        [Test]
+        public void FailureSyntaxErrorSemiExpected()
+        {
+            RunCompilation(Files.cp_semiexpected);
+            VerifyResults(true, false, "Compilation failed: \"semicolon expected\" in line 7.");
+        }
+
 
         private void RunCompilation(string testfile)
         {
