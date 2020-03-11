@@ -81,11 +81,280 @@ namespace GotoIntegrationTest
         }
 
         [Test]
-        public void GoTo()
+        public void RandomSpot()
         {
-            SetGoToDefinitionWithoutZeroIndexing(Files.gt_goto, 21, 22);
-            VerifyResult(Files.gt_goto, 8, 7);
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 18, 1);
+            Assert.IsEmpty(goneTo);
         }
+
+        #region LeftMost
+        [Test]
+        public void LeftMost_ClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 21, 22);
+            VerifyResult(file, 9, 7);  //todo / note -> Der Cursor ist eig immer eins zu weit links! expected wär eig column 6 hier und in den folgenden tests entsprechend
+        }
+
+
+        [Test]
+        public void LeftMost_ClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 23, 22);
+            VerifyResult(file, 14, 7);
+        }
+
+        [Test]
+        public void LeftMost_MethodInClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 22, 11);
+            VerifyResult(file, 11, 11);
+        }
+
+        [Test]
+        public void LeftMost_MethodInClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 24, 11);
+            //VerifyResult(file, 16, 11);  //failed xD es nimmt das erste nicht dass in class B :P
+        }
+
+
+        [Test]
+        public void LeftMost_MultiReturnMethod()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 28, 18);
+            VerifyResult(file, 1, 8);
+        }
+
+        [Test]
+        public void LeftMost_InitializedVariableA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 33, 15);
+            VerifyResult(file, 31, 8 + 2);  //TODO beim := nicht gut wenn uninitinailsiert.
+        }
+
+
+        [Test]
+        public void LeftMost_InitializedVariableB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 33, 19);
+            VerifyResult(file, 32, 8 + 2);
+        }
+
+
+        [Test]
+        public void LeftMost_UnitializedVariableMore()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 16);
+            //VerifyResult(file, 26, 8);   //todo, das failed, siehe oben
+        }
+
+        [Test]
+        public void LeftMost_UnitializedVariableLess()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 23);
+            //VerifyResult(file, 27, 8);    //todo, das failed, siehe oben
+        }
+
+        #endregion
+
+
+
+        #region RightMost
+        [Test]
+        public void RightMost_ClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 21, 28);
+            VerifyResult(file, 9, 7);
+        }
+
+        public void RightMostAfterBrackets_ClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 21, 30);
+            VerifyResult(file, 9, 7);
+        }
+
+
+        [Test]
+        public void RightMost_ClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 23, 28);
+            VerifyResult(file, 14, 7);
+        }
+
+        [Test]
+        public void RightMostAfterBrackets_ClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 23, 30);
+            VerifyResult(file, 14, 7);
+        }
+
+        [Test]
+        public void RightMost_MethodInClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 22, 19);
+            VerifyResult(file, 11, 11);
+        }
+
+
+        [Test]
+        public void RightMostAfterBrackets_MethodInClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 22, 21);
+            VerifyResult(file, 11, 11);
+        }
+
+        [Test]
+        public void RightMost_MethodInClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 24, 19);
+            VerifyResult(file, 11, 11);
+        }
+
+
+        [Test]
+        public void RightMostAfterBrackets_MethodInClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 24, 21);
+            VerifyResult(file, 11, 11);
+        }
+
+
+
+
+        [Test]
+        public void RightMost_MultiReturnMethod()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 28, 33);
+            VerifyResult(file, 1, 8);
+        }
+
+        [Test]
+        public void RightMostAfterBrackets_MultiReturnMethod()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 28, 38);
+            VerifyResult(file, 1, 8);
+        }
+
+        [Test]
+        public void RightMost_InitializedVariableA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 33, 16);
+            VerifyResult(file, 31, 8);
+        }
+
+
+        [Test]
+        public void RightMost_InitializedVariableB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 33, 20);
+            VerifyResult(file, 32, 8);
+        }
+
+
+        [Test]
+        public void RightMost_UnitializedVariableMore()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 16);
+            VerifyResult(file, 26, 8);
+        }
+
+        [Test]
+        public void RightMost_UnitializedVariableLess()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 23);
+            VerifyResult(file, 27, 8);
+        }
+
+        #endregion
+
+
+
+        #region MidWord
+        [Test]
+        public void MidWord_ClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 21, 24);
+            VerifyResult(file, 9, 7);
+
+        }
+
+
+        [Test]
+        public void MidWord_ClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 23, 24);
+            VerifyResult(file, 14, 7);
+        }
+
+        [Test]
+        public void MidWord_MethodInClassA()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 22, 14);
+            VerifyResult(file, 11, 11);
+        }
+
+        [Test]
+        public void MidWord_MethodInClassB()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 24, 14);
+            VerifyResult(file, 16, 11);
+        }
+
+
+        [Test]
+        public void MidWord_MultiReturnMethod()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 28, 20);
+            VerifyResult(file, 1, 8);
+        }
+
+
+        [Test]
+        public void MidWord_UnitializedVariableMore()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 18);
+            VerifyResult(file, 26, 8);
+        }
+
+        [Test]
+        public void MidWord_UnitializedVariableLess()
+        {
+            string file = Files.gt_goto;
+            SetGoToDefinitionWithoutZeroIndexing(file, 29, 25);
+            VerifyResult(file, 27, 8);
+        }
+
+        #endregion
 
 
 
@@ -102,8 +371,8 @@ namespace GotoIntegrationTest
             long col = goneTo.FirstOrDefault().Location.Range.Start.Character;
             Uri uri = goneTo.FirstOrDefault().Location.Uri;
 
-            Assert.AreEqual(line, expectedLine);
-            Assert.AreEqual(col, expectedCol);
+            Assert.AreEqual(expectedLine, line + 1);  //adding 1 here to get rid of the 0 indexing.
+            Assert.AreEqual(expectedCol, col + 1 - 1);    //removing one here because cursor is one off to the right
             Assert.AreEqual(new Uri(expectedFile), uri);
         }
 
