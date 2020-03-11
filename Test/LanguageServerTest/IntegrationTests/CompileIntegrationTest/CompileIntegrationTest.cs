@@ -30,12 +30,15 @@ namespace CompileIntegrationTest
 
         private readonly string compileKeyword = "compile";
         private readonly string successMsg = "Compilation successful";
-        private readonly string kaiwaasas = "compile";
+        private readonly string kaiwaasas = "compile"; //todo
 
 
-        [OneTimeSetUp]
-        public void OneTimeSetup()
+        [SetUp]
+        public void Setup()
         {
+            cancellationSource = new CancellationTokenSource();
+            cancellationSource.CancelAfter(TimeSpan.FromSeconds(30));
+
             log = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
@@ -44,19 +47,13 @@ namespace CompileIntegrationTest
 
             LoggerFactory = new SerilogLoggerFactory(log);
 
-            cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(30));
-
             assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-        }
 
-        [SetUp]
-        public void Setup()
-        {
             server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
                 Arguments = $"/log ../Logs/{assemblyName}.txt /loglevel 0"
             });
+
             client = new LanguageClient(LoggerFactory, server);
 
             client.Initialize(
@@ -75,29 +72,66 @@ namespace CompileIntegrationTest
         {
             log.Information("Shutting down client...");
             client.Shutdown().Wait();
-            client.Dispose();
+            
             log.Information("Client shutdown is complete.");
 
             log.Information("Shutting down server...");
             server.Stop().Wait();
-            server.Dispose();
             log.Information("Server shutdown is complete.");
+
+            client.Dispose();
+            server.Dispose();
+
         }
 
         [Test]
         public void SuccessWithExeAsResult()
         {
+            RunCompilation(Files.cp_fineEXE);
+            VerifyResults(false, true, successMsg);
+        }
+
+        [Test]
+        public void SuccessWithDllAsResult()
+        {
+            RunCompilation(Files.cp_fineDLL);
+            VerifyResults(false, false, successMsg);
+        }
+
+        [Test]
+        public void FailureAssertionViolation()
+        {
+            RunCompilation(Files.cp_assertion);
+            VerifyResults(true, false, "Compilation failed: \"assertion violation\" in line 7.");
+        }
+
+        [Test]
+        public void FailurePostconditionViolation()
+        {
+            RunCompilation(Files.cp_postcondition);
+            VerifyResults(true, false, "Compilation failed: \"BP5003: A postcondition might not hold on this return path.\" in line 4.");
+        }
+
+        [Test]
+        public void FailureSyntaxErrorUnknownIdentifier()
+        {
+            RunCompilation(Files.cp_identifier);
+            VerifyResults(true, false, "Compilation failed: \"unresolved identifier: bruder\" in line 8.");
+        }
+
+
+        private void RunCompilation(string testfile)
+        {
             CompilerParams compilerParams = new CompilerParams
             {
-                DafnyFilePath = Files.cp_fineEXE,
+                DafnyFilePath = testfile,
                 DafnyExePath = Files.dafnyExe
             };
 
             compilerResults = client.SendRequest<CompilerResults>(compileKeyword, compilerParams, cancellationSource.Token).Result;
-            VerifyCompileResults(false,true, successMsg);
         }
 
-        private void VerifyCompileResults(bool expectedError, bool expectedExecutable, string expectedMessage)
+        private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
         {
             if (compilerResults == null)
             {
