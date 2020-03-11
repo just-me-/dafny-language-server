@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace GotoIntegrationtest
+namespace GotoIntegrationTest
 {
     public class Tests
     {
