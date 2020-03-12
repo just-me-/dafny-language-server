@@ -23,7 +23,9 @@ namespace TestCommons
         private ServerProcess server;
         private ILogger log;
         private SerilogLoggerFactory LoggerFactory;
-        
+
+        private bool diagnosticsHaveArrived = false;
+
 
         public TestSetupManager(string name) => this.name = name;
 
@@ -55,8 +57,10 @@ namespace TestCommons
             ).Wait();
 
             log.Information("*** Language server has been successfully initialized.");
-
         }
+
+
+        
 
         public void TearDown()
         {

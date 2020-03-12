@@ -45,6 +45,12 @@ namespace TestCommons
         //AutoCompletion
         public static readonly string ac_ac = CreateTestfilePath("autocompletion/autocompletion.dfy");
 
+        //Verification
+        public static readonly string vc_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
+        public static readonly string vc_good = CreateTestfilePath("verification/moreless_good.dfy");
+        public static readonly string vc_postcondition = CreateTestfilePath("verification/moreless_postcondition.dfy");
+        public static readonly string vc_noensure = CreateTestfilePath("verification/moreless_noensure.dfy");
+        public static readonly string vc_multiplefails = CreateTestfilePath("verification/moreless_manyfails.dfy");
 
 
         private static string CreateTestfilePath(string s)

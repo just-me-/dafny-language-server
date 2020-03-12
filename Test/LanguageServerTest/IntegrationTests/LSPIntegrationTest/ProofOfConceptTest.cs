@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using TestCommons;
 using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
 using Files = TestCommons.Paths;
 
@@ -21,13 +22,7 @@ namespace LSPIntegrationTests
 
 
     //Todo evtl diese extension methode iwo anders parkieren... ist nur für einfache stringausgabe jetzt zum tesetn, is aber sicher auch in zukunft nützlich.
-    public static class Extension
-    {
-        public static string ToCustomString(this Range r)
-        {
-            return $"[Range: L{r.Start.Line} C{r.Start.Character} - L{r.End.Line} C{r.End.Character}]";
-        }
-    }
+
 
 
     public class Tests
