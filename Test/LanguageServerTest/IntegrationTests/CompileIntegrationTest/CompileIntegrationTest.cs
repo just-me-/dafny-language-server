@@ -126,6 +126,13 @@ namespace CompileIntegrationTest
             VerifyResults(true, false, "Compilation failed: \"semicolon expected\" in line 7.");
         }
 
+        [Test]
+        public void Included_File()
+        {
+            RunCompilation(Files.ic_basic);
+            VerifyResults(false, false, successMsg);
+        }
+
 
         private void RunCompilation(string testfile)
         {
@@ -144,8 +151,8 @@ namespace CompileIntegrationTest
             {
                 Assert.Fail("compilerResults are null - no results received!");
             }
-            Assert.AreEqual(expectedError, compilerResults.Error);
-            Assert.AreEqual(expectedExecutable, compilerResults.Executable);
+            Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Mismatch");
             Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
     }

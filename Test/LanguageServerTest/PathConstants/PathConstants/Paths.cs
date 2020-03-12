@@ -39,8 +39,22 @@ namespace PathConstants
         //Goto
         public static readonly string gt_goto = WithTestPath("goto/goto.dfy");
 
+        //Include
+        public static readonly string ic_basic = WithTestPath("include/basic.dfy");
+        public static readonly string ic_includee = WithTestPath("include/includee.dfy");
 
-        private static string WithTestPath(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
+
+
+        private static string WithTestPath(string s)
+        {
+            var path = Path.GetFullPath(Path.Combine(testFilesPath, s));
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(path);
+            }
+
+            return path;
+        }
 
     }
 }

@@ -387,6 +387,16 @@ namespace GotoIntegrationTest
         #endregion
     */
 
+        [Test]
+        public void Included_File()
+        {
+            client.TextDocument.DidOpen(Files.ic_includee, "dfy");
+            client.TextDocument.DidOpen(Files.ic_basic, "dfy");
+            goneTo = client.TextDocument.Definition(Files.ic_basic, 3 - 1, 18 - 1).Result;
+
+            VerifyResult(Files.ic_includee, 1, 7); //todo, multi file support, ich glaub test läuft auch nicht korrekt
+        }
+
 
 
         private void SetGoToDefinitionWithoutZeroIndexing(string file, int line, int col)
