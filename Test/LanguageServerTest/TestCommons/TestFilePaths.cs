@@ -15,48 +15,49 @@ namespace TestCommons
         public static readonly string langServExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/DafnyLanguageServer.exe"));
 
         //Compile: Dafny Sourcefiles
-        public static readonly string cp_fineDLL = WithTestPath("compile/compiles_as_dll.dfy");
-        public static readonly string cp_fineEXE = WithTestPath("compile/compiles_as_exe.dfy");
-        public static readonly string cp_assertion = WithTestPath("compile/assertion_violation.dfy");
-        public static readonly string cp_identifier = WithTestPath("compile/unknown_identifier_error.dfy");
-        public static readonly string cp_postcondition = WithTestPath("compile/postcondition_violation.dfy");
-        public static readonly string cp_semiexpected = WithTestPath("compile/semi_expected_error.dfy");
+        public static readonly string cp_fineDLL = CreateTestfilePath("compile/compiles_as_dll.dfy");
+        public static readonly string cp_fineEXE = CreateTestfilePath("compile/compiles_as_exe.dfy");
+        public static readonly string cp_assertion = CreateTestfilePath("compile/assertion_violation.dfy");
+        public static readonly string cp_identifier = CreateTestfilePath("compile/unknown_identifier_error.dfy");
+        public static readonly string cp_postcondition = CreateTestfilePath("compile/postcondition_violation.dfy");
+        public static readonly string cp_semiexpected = CreateTestfilePath("compile/semi_expected_error.dfy");
         
-
         //Compile Outputs
-        public static readonly string cp_out_dll = WithTestPathNoCheck("compile/compiles_as_dll.dll");
-        public static readonly string cp_out_exe = WithTestPathNoCheck("compile/compiles_as_exe.exe");
+        public static readonly string cp_out_dll = AddTestFolderPrefix("compile/compiles_as_dll.dll");
+        public static readonly string cp_out_exe = AddTestFolderPrefix("compile/compiles_as_exe.exe");
 
         //Counter Example Dafny Sourcefiles
-        public static readonly string ce_fail1 = WithTestPath("counterExample/postcondition_violation_1.dfy");
-        public static readonly string ce_fail2 = WithTestPath("counterExample/postcondition_violation_2.dfy");
-        public static readonly string ce_ok = WithTestPath("counterExample/postcondition_fullfilled.dfy");
-        public static readonly string ce_2meth = WithTestPath("counterExample/two_methods.dfy");
+        public static readonly string ce_fail1 = CreateTestfilePath("counterExample/postcondition_violation_1.dfy");
+        public static readonly string ce_fail2 = CreateTestfilePath("counterExample/postcondition_violation_2.dfy");
+        public static readonly string ce_ok = CreateTestfilePath("counterExample/postcondition_fullfilled.dfy");
+        public static readonly string ce_2meth = CreateTestfilePath("counterExample/two_methods.dfy");
 
         //Integration
-        public static readonly string int_demofile = WithTestPath("integration_demofile.dfy");
+        public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
 
         //Goto
-        public static readonly string gt_goto = WithTestPath("goto/goto.dfy");
+        public static readonly string gt_goto = CreateTestfilePath("goto/goto.dfy");
 
         //Include
-        public static readonly string ic_basic = WithTestPath("include/basic.dfy");
-        public static readonly string ic_includee = WithTestPath("include/includee.dfy");
+        public static readonly string ic_basic = CreateTestfilePath("include/basic.dfy");
+        public static readonly string ic_includee = CreateTestfilePath("include/includee.dfy");
+
+        //AutoCompletion
+        public static readonly string ac_ac = CreateTestfilePath("autocompletion/autocompletion.dfy");
 
 
 
-        private static string WithTestPath(string s)
+        private static string CreateTestfilePath(string s)
         {
-            var path = WithTestPathNoCheck(s);
+            var path = AddTestFolderPrefix(s);
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException(path);
             }
-
             return path;
         }
 
-        private static string WithTestPathNoCheck(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
+        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
 
 
     }
