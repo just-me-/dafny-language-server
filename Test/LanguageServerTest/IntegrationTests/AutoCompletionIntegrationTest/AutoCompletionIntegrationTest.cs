@@ -44,7 +44,8 @@ namespace AutoCompletionIntegrationTest
                 "b",
                 "c",
                 "m",
-                "Main"
+                "Main",
+                "C"
             };
 
             GetCompletions(Files.ac_ac, line, col);
@@ -82,10 +83,7 @@ namespace AutoCompletionIntegrationTest
                 Assert.AreEqual(expectedStartCol-1, start_col, "TextEdit Item does not start at cursor position (Col Mismatch)");
             }
 
-            foreach (string expectedItem in expectedItems)
-            {
-                Assert.Contains(expectedItem, receivedEdits);
-            }
+            CollectionAssert.AreEquivalent(expectedItems, receivedEdits);
         }
 
 
