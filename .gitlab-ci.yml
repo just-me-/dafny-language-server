@@ -37,7 +37,7 @@ build_server_and_sonar:
     - mono /opt/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io"
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
-    - chmod +x /opt/$SonarScanner_Folder_Version/bin/sonar-scanner
+    - chmod +x /opt/sonar-scanner-$SonarScanner_Folder_Version/bin/sonar-scanner
     - mono /opt/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     paths:
