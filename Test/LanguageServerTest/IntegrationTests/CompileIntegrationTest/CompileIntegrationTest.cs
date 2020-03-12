@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TestCommons;
 using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
 using Files = TestCommons.Paths;
 
@@ -20,68 +21,23 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class Tests
     {
-        private LanguageClient client;
-        private ServerProcess server;
-        private ILogger log;
-        private SerilogLoggerFactory LoggerFactory;
-        private string assemblyName;
-        private CancellationTokenSource cancellationSource;
 
+        public TestSetupManager m = new TestSetupManager("GoTo");
         private CompilerResults compilerResults;
-
-        private readonly string compileKeyword = "compile";
-        private readonly string successMsg = "Compilation successful";
-
+        private const string compileKeyword = "compile";
+        private const string successMsg = "Compilation successful";
 
         [SetUp]
         public void Setup()
         {
-            cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
-
-            log = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            LoggerFactory = new SerilogLoggerFactory(log);
-
-            assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-
-            server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
-            {
-                Arguments = $"/log ../Logs/{assemblyName}.txt /loglevel 0"
-            });
-
-            client = new LanguageClient(LoggerFactory, server);
-
-            client.Initialize(
-                workspaceRoot: Files.testFilesPath,
-                initializationOptions: new { },
-                cancellationToken: cancellationSource.Token
-            ).Wait();
-
-            log.Information("*** Language server has been successfully initialized.");
-
-            compilerResults = null;
+            m.Setup();
+            compilerResults = default;
         }
 
         [TearDown]
         public void TearDown()
         {
-            log.Information("Shutting down client...");
-            //client.Shutdown().Wait();   Why exception?? würd mich schon noch wunder nehmen...
-            Task.WhenAny(client.Shutdown());
-            log.Information("Client shutdown is complete.");
-
-            log.Information("Shutting down server...");
-            server.Stop().Wait();
-            log.Information("Server shutdown is complete.");
-
-            client.Dispose();
-            server.Dispose();
-
+            m.TearDown();
         }
 
         [Test]
@@ -142,7 +98,7 @@ namespace CompileIntegrationTest
                 DafnyExePath = Files.dafnyExe
             };
 
-            compilerResults = client.SendRequest<CompilerResults>(compileKeyword, compilerParams, cancellationSource.Token).Result;
+            compilerResults = m.Client.SendRequest<CompilerResults>(compileKeyword, compilerParams, m.CancellationSource.Token).Result;
         }
 
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)

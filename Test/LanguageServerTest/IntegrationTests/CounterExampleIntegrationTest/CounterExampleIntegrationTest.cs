@@ -7,8 +7,10 @@ using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Serilog;
 using Serilog.Extensions.Logging;
+using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace CounterExampleIntegrationTest
@@ -16,66 +18,23 @@ namespace CounterExampleIntegrationTest
     [TestFixture]
     public class Tests
     {
-        private LanguageClient client;
-        private ServerProcess server;
-        private ILogger log;
-        private SerilogLoggerFactory LoggerFactory;
-        private string assemblyName;
-        private CancellationTokenSource cancellationSource;
-
+        public TestSetupManager m = new TestSetupManager("GoTo");
         private CounterExampleResults counterExampleResults;
-
-        private readonly string keyword = "counterExample";
+        private const string keyword = "counterExample";
 
         [SetUp]
         public void Setup()
         {
-            cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
-
-            log = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            LoggerFactory = new SerilogLoggerFactory(log);
-
-            assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-
-            server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
-            {
-                Arguments = $"/log ../Logs/{assemblyName}.txt /loglevel 0"
-            });
-
-            client = new LanguageClient(LoggerFactory, server);
-
-            client.Initialize(
-                workspaceRoot: Files.testFilesPath,
-                initializationOptions: new { },
-                cancellationToken: cancellationSource.Token
-            ).Wait();
-
-            log.Information("*** Language server has been successfully initialized.");
-
-            counterExampleResults = null;
+            m.Setup();
+            counterExampleResults = default;
         }
 
         [TearDown]
         public void TearDown()
         {
-            log.Information("Shutting down client...");
-            Task.WhenAny(client.Shutdown());
-            log.Information("Client shutdown is complete.");
-
-            log.Information("Shutting down server...");
-            server.Stop().Wait();
-            log.Information("Server shutdown is complete.");
-
-            client.Dispose();
-            server.Dispose();
-
+            m.TearDown();
         }
+
 
         [Test]
         public void PostconditionFullfilled()
@@ -106,10 +65,12 @@ namespace CounterExampleIntegrationTest
             {
                 DafnyFile = file
             };
-            client.TextDocument.DidOpen(file, "dfy");  //notiz für später / dafny translation unit etc: das counter example will, dass das file geöffnet ist! drum mussten wir da auch iwo mal explizit ne eigenen DTU machen - kann das sein??
-            counterExampleResults = client.SendRequest<CounterExampleResults>(keyword, counterExampleParams, cancellationSource.Token).Result;
+            m.Client.TextDocument.DidOpen(file, "dfy");  //notiz für später / dafny translation unit etc: das counter example will, dass das file geöffnet ist! drum mussten wir da auch iwo mal explizit ne eigenen DTU machen - kann das sein??
+            counterExampleResults = m.Client.SendRequest<CounterExampleResults>(keyword, counterExampleParams, m.CancellationSource.Token).Result;
         }
 
+
+        //todo Future Envy ticket 115
         private void CheckResult()
         {
             if (counterExampleResults == null)

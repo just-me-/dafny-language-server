@@ -13,6 +13,7 @@ using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Serilog;
 using Serilog.Extensions.Logging;
+using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
@@ -22,64 +23,20 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class Tests
     {
-        private LanguageClient client;
-        private ServerProcess server;
-        private ILogger log;
-        private SerilogLoggerFactory LoggerFactory;
-        private string assemblyName;
-        private CancellationTokenSource cancellationSource;
-
+        public TestSetupManager m = new TestSetupManager("GoTo");
         private LocationOrLocationLinks goneTo;
-
 
         [SetUp]
         public void Setup()
         {
-            cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
-
-            log = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            LoggerFactory = new SerilogLoggerFactory(log);
-
-            assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-
-            server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
-            {
-                Arguments = $"/log ../Logs/{assemblyName}.txt /loglevel 0"
-            });
-
-            client = new LanguageClient(LoggerFactory, server);
-
-            client.Initialize(
-                workspaceRoot: Files.testFilesPath,
-                initializationOptions: new { },
-                cancellationToken: cancellationSource.Token
-            ).Wait();
-
-            log.Information("Language server has been successfully initialized.");
-
-            goneTo = null;
+            m.Setup();
+            goneTo = default;
         }
 
         [TearDown]
         public void TearDown()
         {
-            log.Information("Shutting down client...");
-            Task.WhenAny(client.Shutdown());
-            log.Information("Client shutdown is complete.");
-
-            log.Information("Shutting down server...");
-            server.Stop().Wait();
-            log.Information("Server shutdown is complete.");
-
-            client.Dispose();
-            server.Dispose();
-
+            m.TearDown();
         }
 
         [Test]
@@ -194,6 +151,8 @@ namespace GotoIntegrationTest
             SetGoToDefinitionWithoutZeroIndexing(file, 29, 23);
             VerifyResult(file, 27, 8);    //todo, das failed, uninitialized variable
         }
+
+
 
         #endregion
 
@@ -390,9 +349,9 @@ namespace GotoIntegrationTest
         //[Test]
         public void Included_File()
         {
-            client.TextDocument.DidOpen(Files.ic_includee, "dfy");
-            client.TextDocument.DidOpen(Files.ic_basic, "dfy");
-            goneTo = client.TextDocument.Definition(Files.ic_basic, 3 - 1, 18 - 1).Result;
+            m.Client.TextDocument.DidOpen(Files.ic_includee, "dfy");
+            m.Client.TextDocument.DidOpen(Files.ic_basic, "dfy");
+            goneTo = m.Client.TextDocument.Definition(Files.ic_basic, 3 - 1, 18 - 1).Result;
 
             VerifyResult(Files.ic_includee, 1, 7); //todo, multi file support, ich glaub test läuft auch nicht korrekt
         }
@@ -401,8 +360,8 @@ namespace GotoIntegrationTest
 
         private void SetGoToDefinitionWithoutZeroIndexing(string file, int line, int col)
         {
-            client.TextDocument.DidOpen(file, "dfy");
-            goneTo = client.TextDocument.Definition(file, line-1, col-1).Result;
+            m.Client.TextDocument.DidOpen(file, "dfy");
+            goneTo = m.Client.TextDocument.Definition(file, line - 1, col - 1).Result;
         }
 
         private void VerifyResult(string expectedFile, int expectedLine, int expectedCol)
