@@ -3,8 +3,9 @@ FROM mono:5.20
 ARG Z3_RELEASE=https://github.com/Z3Prover/z3/releases/download/z3-4.8.4/z3-4.8.4.d6df51951f4c-x64-ubuntu-14.04.zip
 ARG GO_RELEASE=go1.10.3.linux-amd64.tar.gz
 ARG NODE_VERSION=10.16.3
-ARG SonarScanner_RELEASE=3.0.3.778
 ARG BOOGIE_RELEASE=v2.4.2
+ARG SonarScanner_RELEASE=4.7.1.2311
+ARG SonarScanner_Folder_Version=4.1.0.1829
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DISPLAY=:99
@@ -51,11 +52,11 @@ RUN wget --no-verbose https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERS
     ln -s node-v${NODE_VERSION}-linux-x64 node
 ENV PATH=$PATH:/opt/node/bin
 
-RUN curl -o sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SonarScanner_RELEASE}-linux.zip && \
+RUN curl -o sonarscanner.zip -L https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${SonarScanner_RELEASE}/sonar-scanner-msbuild-${SonarScanner_RELEASE}-net46.zip && \
     unzip sonarscanner.zip && \
     rm sonarscanner.zip && \
-    mv sonar-scanner-${SonarScanner_RELEASE}-linux sonar-scanner
-ENV PATH=$PATH:/opt/sonar-scanner/bin
+    mv sonar-scanner-${SonarScanner_Folder_Version} sonar-scanner
+ENV PATH=$PATH:/opt/sonar-scanner
 
 ENV SONAR_RUNNER_HOME=/opt/sonar-scanner
 
