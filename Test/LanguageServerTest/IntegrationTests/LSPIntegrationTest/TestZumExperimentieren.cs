@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace LSPIntegrationTests
 {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace PathConstants
+namespace TestCommons
 {
     
     public static class Paths
@@ -24,8 +24,8 @@ namespace PathConstants
         
 
         //Compile Outputs
-        public static readonly string cp_out_dll = WithTestPath("compile/compiles_as_dll.dll");
-        public static readonly string cp_out_exe = WithTestPath("compile/compiles_as_exe.exe");
+        public static readonly string cp_out_dll = WithTestPathNoCheck("compile/compiles_as_dll.dll");
+        public static readonly string cp_out_exe = WithTestPathNoCheck("compile/compiles_as_exe.exe");
 
         //Counter Example Dafny Sourcefiles
         public static readonly string ce_fail1 = WithTestPath("counterExample/postcondition_violation_1.dfy");
@@ -47,7 +47,7 @@ namespace PathConstants
 
         private static string WithTestPath(string s)
         {
-            var path = Path.GetFullPath(Path.Combine(testFilesPath, s));
+            var path = WithTestPathNoCheck(s);
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException(path);
@@ -55,6 +55,9 @@ namespace PathConstants
 
             return path;
         }
+
+        private static string WithTestPathNoCheck(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
+
 
     }
 }

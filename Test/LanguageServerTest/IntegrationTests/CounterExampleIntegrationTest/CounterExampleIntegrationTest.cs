@@ -9,7 +9,7 @@ using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using Serilog;
 using Serilog.Extensions.Logging;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace CounterExampleIntegrationTest
 {

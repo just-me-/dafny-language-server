@@ -13,7 +13,7 @@ using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Serilog;
 using Serilog.Extensions.Logging;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
 
@@ -387,7 +387,7 @@ namespace GotoIntegrationTest
         #endregion
     */
 
-        [Test]
+        //[Test]
         public void Included_File()
         {
             client.TextDocument.DidOpen(Files.ic_includee, "dfy");

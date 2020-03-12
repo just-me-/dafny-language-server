@@ -12,7 +12,7 @@ using CounterExamples = System.Collections.Generic.List<DafnyLanguageServer.Dafn
 using CounterExampleState = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleState;
 using CounterExampleVariable = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleVariable;
 using DafnyConsolePrinter = DafnyLanguageServer.DafnyAccess.DafnyConsolePrinter;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace Tests
 {
