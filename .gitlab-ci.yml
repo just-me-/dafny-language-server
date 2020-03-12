@@ -35,7 +35,7 @@ build_server:
       fi;
     - cd dafny-language-server/Source
     - nuget restore Dafny.sln
-    - msbuild Dafny.sln
+    - msbuild -langversion:7.1 Dafny.sln
   artifacts:
     paths:
       - Binaries/
