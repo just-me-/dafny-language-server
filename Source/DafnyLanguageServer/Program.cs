@@ -22,13 +22,25 @@ namespace DafnyLanguageServer
         {
             ExecutionEngine.printer = new DafnyConsolePrinter();
 
-            SetupLog(args, out string redirectedStreamFile, out string logFile, out LogLevel minLevel, out bool errorOnLogging);
+            var configReader = new ConfigReader(args);
+
+
+
 
             ILogger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
-                .WriteTo.File(logFile, rollingInterval: RollingInterval.Day)
+                .WriteTo.File(configReader.LogFile, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+
+            //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
+            //TOdo: Vor abgabe weg machen xD Ticket # 59
+            //configReader.PrintState();
+
+            if (configReader.Error)
+            {
+                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);  //todo: Besprechen: eher exception schmeissen? user erwartet log dann iwo in nem pfad dabei wird der default geused oder so #Ticket 59
+            }
 
             log.Information("Server Starting");
 
@@ -39,7 +51,7 @@ namespace DafnyLanguageServer
                     .ConfigureLogging(x => x
                         .AddSerilog(log)
                         .AddLanguageServer()
-                        .SetMinimumLevel(minLevel)
+                        .SetMinimumLevel(configReader.Loglevel)
                     )
 
                     .WithServices(ConfigureServices)
@@ -53,16 +65,11 @@ namespace DafnyLanguageServer
                     
             );
 
-            if (errorOnLogging)
-            {
-                log.Warning("Error while configuring log - default used. Check Launch Args and Config File!");
-            }
-
             log.Information("Server Running");
 
             try
             {
-                using (StreamWriter writer = new StreamWriter(new FileStream(redirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
+                using (StreamWriter writer = new StreamWriter(new FileStream(configReader.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
                 {
                     Console.SetOut(writer);
                     await server.WaitForExit;
@@ -83,65 +90,6 @@ namespace DafnyLanguageServer
             services.AddLogging();
         }
 
-        private static void SetupLog(string[] args, out string redirectedStreamFile, out string logFile, out LogLevel loglevel, out bool errorOnLogs)
-            //Log Levels (starting from 0)
-            //Trace - Debug - Info - Warning - Error - Critical - None
-        {
-            string assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-
-            //Setting hard defaults                                             //todo remove comments
-            redirectedStreamFile = Path.Combine(assemblyPath, "../Logs/StreamRedirection.txt");
-            logFile = Path.Combine(assemblyPath, "../Logs/Log.txt");
-            loglevel = LogLevel.Error;
-            errorOnLogs = false;
-
-            try
-            {
-                //Overwrite with config if available
-                string cfgFile = Path.Combine(assemblyPath, "LanguageServerConfig.json");
-                if (File.Exists(cfgFile))
-                {
-                    JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
-                    logFile = cfg["logging"]["log"] == null
-                        ? logFile
-                        : Path.Combine(assemblyPath, (string) cfg["logging"]["log"]);
-                    redirectedStreamFile = cfg["logging"]["stream"] == null
-                        ? redirectedStreamFile
-                        : Path.Combine(assemblyPath, (string) cfg["logging"]["stream"]);
-                    loglevel = cfg["logging"]["loglevel"] == null
-                        ? loglevel
-                        : (LogLevel) (int) cfg["logging"]["loglevel"];
-                }
-
-                //Overwrite with args if available
-                if (args.Length % 2 != 0)
-                {
-                    throw new ArgumentException("Invalid number of arguments provided.");
-                }
-
-                for (int i = 0; i < args.Length; i += 2)
-                {
-                    switch (args[i].ToLower())
-                    {
-                        case "/stream":
-                            redirectedStreamFile = Path.Combine(assemblyPath, args[i + 1]);
-                            break;
-                        case "/log":
-                            logFile = Path.Combine(assemblyPath, args[i + 1]);
-                            break;
-                        case "/loglevel":
-                            loglevel = (LogLevel) int.Parse(args[i + 1]);
-                            break;
-                        default:
-                            throw new ArgumentException("Unkown Parameter: " + args[i]);
-                    }
-                }
-            }
-            catch
-            {
-                errorOnLogs = true;
-            }
-        }
-
+        
     }
 }
