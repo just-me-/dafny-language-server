@@ -32,7 +32,9 @@ namespace DafnyLanguageServer
             SetDefaults();
             ReadConfig();
             ReadArgs();
+            ImprovePathLayout();
         }
+
 
         private void SetDefaults()
         {
@@ -53,24 +55,26 @@ namespace DafnyLanguageServer
                 
                 JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
 
-                if (cfg["logging"]["log"] == null)
+                var cfgLog = cfg["logging"]["log"];
+                if (cfgLog != null)
                 {
-                    LogFile = Path.Combine(AssemblyPath, (string)cfg["logging"]["log"]);
+                    LogFile = Path.Combine(AssemblyPath, (string)cfgLog);
                 }
 
-                if (cfg["logging"]["stream"] == null)
+                var cfgStream = cfg["logging"]["stream"];
+                if (cfgStream != null)
                 {
-                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfg["logging"]["stream"]);
+                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfgStream);
                 }
 
-                if (cfg["logging"]["loglevel"] == null)
+                var cfgLevel = cfg["logging"]["loglevel"];
+                if (cfgLevel != null)
                 {
-                    Loglevel = (LogLevel)(int)cfg["logging"]["loglevel"];
+                    Loglevel = (LogLevel)(int)cfgLevel;
                 }
 
             }
             catch (Exception e)
-
             {
                 Error = true;
                 ErrorMsg += "\n" + e.Message;
@@ -87,7 +91,7 @@ namespace DafnyLanguageServer
             {
                 if (LaunchArguments.Length % 2 != 0)
                 {
-                    throw new ArgumentException("Invalid number of arguments provided.");
+                    throw new ArgumentException("Invalid number of arguments provided. Must be dividable by 2.");
                 }
 
                 for (int i = 0; i < LaunchArguments.Length; i += 2)
@@ -119,5 +123,19 @@ namespace DafnyLanguageServer
             }
         }
 
+        private void ImprovePathLayout()
+        {
+            RedirectedStreamFile = Path.GetFullPath(RedirectedStreamFile);
+            LogFile = Path.GetFullPath(LogFile);
+        }
+
+        public void PrintState()
+        {
+            Console.WriteLine($"Log: {LogFile}");
+            Console.WriteLine($"Stream: {RedirectedStreamFile}");
+            Console.WriteLine($"LogLevel: {Loglevel}");
+            Console.WriteLine($"Error: {Error}");
+            Console.WriteLine($"ErrorMsg: {ErrorMsg}");
+        }
     }
 }

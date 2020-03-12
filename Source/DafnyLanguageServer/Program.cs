@@ -33,10 +33,13 @@ namespace DafnyLanguageServer
                 .WriteTo.File(configReader.LogFile, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
+            //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
+            //TOdo: Vor abgabe weg machen xD Ticket # 59
+            //configReader.PrintState();
+
             if (configReader.Error)
             {
-                Console.WriteLine("Error while configuring log. Error Message: " + configReader.ErrorMsg);
-                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);  //eher exception schmeissen? user erwartet log dann iwo in nem pfad dabei wird der default geused oder so
+                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);  //todo: Besprechen: eher exception schmeissen? user erwartet log dann iwo in nem pfad dabei wird der default geused oder so #Ticket 59
             }
 
             log.Information("Server Starting");
