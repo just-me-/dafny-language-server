@@ -18,7 +18,7 @@ namespace CounterExampleIntegrationTest
     [TestFixture]
     public class Tests
     {
-        public TestSetupManager m = new TestSetupManager("GoTo");
+        public TestSetupManager m = new TestSetupManager("CounterExample");
         private CounterExampleResults counterExampleResults;
         private const string keyword = "counterExample";
 

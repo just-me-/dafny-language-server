@@ -22,7 +22,7 @@ namespace CompileIntegrationTest
     public class Tests
     {
 
-        public TestSetupManager m = new TestSetupManager("GoTo");
+        public TestSetupManager m = new TestSetupManager("Compilation");
         private CompilerResults compilerResults;
         private const string compileKeyword = "compile";
         private const string successMsg = "Compilation successful";
