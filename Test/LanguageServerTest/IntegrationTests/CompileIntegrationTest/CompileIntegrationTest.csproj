@@ -6,6 +6,7 @@
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	<IsPackable>false</IsPackable>
+	<LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
