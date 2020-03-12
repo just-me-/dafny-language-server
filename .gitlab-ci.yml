@@ -33,11 +33,13 @@ build_server_and_sonar:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - mono /opt/sonar-scanner/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io"
+    - ls -alh /opt
+    - ls -alh /opt/sonar-scanner
+    - mono /opt/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io"
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
-    - chmod +x /opt/sonar-scanner/sonar-scanner/bin/sonar-scanner
-    - mono /opt/sonar-scanner/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
+    - chmod +x /opt/sonar-scanner/bin/sonar-scanner
+    - mono /opt/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     paths:
       - Binaries/
