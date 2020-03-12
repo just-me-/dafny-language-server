@@ -4,6 +4,7 @@ variables:
   NUnitRunner: NUnit.ConsoleRunner.$NUnitVersion/tools/nunit3-console.exe
   NUnitNugetPackage: nunit.consolerunner -Version $NUnitVersion
   TestBinaries: Binaries/
+  SonarScanner_Folder_Version: 4.1.0.1829
 
 stages:
   - prebuild
@@ -33,12 +34,10 @@ build_server_and_sonar:
         then ln -s /opt/boogie;
       fi;
     - cd dafny-language-server/Source
-    - ls -alh /opt
-    - ls -alh /opt/sonar-scanner
     - mono /opt/SonarScanner.MSBuild.exe begin /k:"dafny-language-server" /o:"hsr" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io"
     - nuget restore Dafny.sln
     - msbuild Dafny.sln
-    - chmod +x /opt/sonar-scanner/bin/sonar-scanner
+    - chmod +x /opt/$SonarScanner_Folder_Version/bin/sonar-scanner
     - mono /opt/SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_TOKEN"
   artifacts:
     paths:

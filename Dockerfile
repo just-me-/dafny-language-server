@@ -54,8 +54,7 @@ ENV PATH=$PATH:/opt/node/bin
 
 RUN curl -o sonarscanner.zip -L https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/${SonarScanner_RELEASE}/sonar-scanner-msbuild-${SonarScanner_RELEASE}-net46.zip && \
     unzip sonarscanner.zip && \
-    rm sonarscanner.zip && \
-    mv sonar-scanner-${SonarScanner_Folder_Version} sonar-scanner
+    rm sonarscanner.zip 
 ENV PATH=$PATH:/opt/sonar-scanner
 
 ENV SONAR_RUNNER_HOME=/opt/sonar-scanner
