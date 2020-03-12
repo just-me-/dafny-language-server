@@ -24,8 +24,6 @@ namespace TestCommons
         private ILogger log;
         private SerilogLoggerFactory LoggerFactory;
 
-        private bool diagnosticsHaveArrived = false;
-
 
         public TestSetupManager(string name) => this.name = name;
 
