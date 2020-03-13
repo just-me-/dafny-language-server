@@ -101,6 +101,8 @@ namespace CompileIntegrationTest
             compilerResults = m.Client.SendRequest<CompilerResults>(compileKeyword, compilerParams, m.CancellationSource.Token).Result;
         }
 
+        //todo so was null kein file mässiges ticket 210 und was kein dafny ist.
+
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
         {
             if (compilerResults == null)

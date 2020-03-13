@@ -69,6 +69,7 @@ namespace CounterExampleIntegrationTest
             counterExampleResults = m.Client.SendRequest<CounterExampleResults>(keyword, counterExampleParams, m.CancellationSource.Token).Result;
         }
 
+        //todo auch mit string vergleich machen ticket 217
 
         //todo Future Envy ticket 115
         private void CheckResult()
