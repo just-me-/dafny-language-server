@@ -120,21 +120,46 @@ namespace CompileIntegrationTest
             VerifyResults(true, false, failMsg + "EOF expected in line 1.");
         }
 
-
-
-
-        private void RunCompilation(string testfile)
+        [Test]
+        public void WithArgumentsNoCompile()
         {
+            RunCompilation(Files.cp_fineDLL, new string[] {"/compile:0"});
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+        [Test]
+        public void WithArgumentsLegit()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/compile:1", "/nologo" });
+            VerifyResults(false, false, successMsg);
+        }
+
+        [Test]
+        public void WithArgumentsGarbage()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+
+
+        private void RunCompilation(string testfile, string[] args = null)
+        {
+            if (args == null)
+            {
+                args = new string[] {};
+            }
+
             CompilerParams compilerParams = new CompilerParams
             {
                 FileToCompile = testfile,
-                CompilationArguments = new string[] {}
+                CompilationArguments = args
             };
 
             compilerResults = m.Client.SendRequest<CompilerResults>(compileKeyword, compilerParams, m.CancellationSource.Token).Result;
         }
 
-        //todo so was null kein file mässiges ticket 210 und was kein dafny ist.
+        
 
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
         {

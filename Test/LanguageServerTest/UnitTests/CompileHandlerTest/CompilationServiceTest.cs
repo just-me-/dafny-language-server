@@ -125,10 +125,35 @@ namespace CompileHandlerTest
             VerifyResults(true, false, failMsg + "EOF expected in line 1.");
         }
 
-
-        private void RunCompilation(string dafnyFile)
+        [Test]
+        public void WithArgumentsNoCompile()
         {
-            compilerResults = new CompilationService(dafnyFile, new string[] { }).Compile().Result;
+            RunCompilation(Files.cp_fineDLL, new string[] { "/compile:0" });
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+        [Test]
+        public void WithArgumentsLegit()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/compile:1", "/nologo" });
+            VerifyResults(false, false, successMsg);
+        }
+
+        [Test]
+        public void WithArgumentsGarbage()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+
+        private void RunCompilation(string dafnyFile, string[] args = null)
+        {
+            if (args == null)
+            {
+                args = new string[] { };
+            }
+            compilerResults = new CompilationService(dafnyFile, args).Compile().Result;
         }
 
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
