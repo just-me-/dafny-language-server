@@ -3,7 +3,7 @@ using DafnyLanguageServer.Services;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace CompileHandlerTest
 {
@@ -77,6 +77,21 @@ namespace CompileHandlerTest
             Assert.IsFalse(r.Executable ?? true);
             Assert.IsTrue(r.Message.Contains("unresolved identifier"));
             Assert.IsTrue(r.Message.Contains("line 8"));
+
+        }
+
+
+        [Test]
+        public void Semi()
+        {
+            string dafnyFile = Files.cp_semiexpected;
+
+            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+
+            Assert.IsTrue(r.Error);
+            Assert.IsFalse(r.Executable ?? true);
+            Assert.IsTrue(r.Message.Contains("semicolon expected"));
+            Assert.IsTrue(r.Message.Contains("line 7"));
 
         }
 

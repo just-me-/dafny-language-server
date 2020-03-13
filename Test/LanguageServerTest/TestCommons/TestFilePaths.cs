@@ -1,0 +1,70 @@
+﻿using System.IO;
+
+namespace TestCommons
+{
+    
+    public static class Paths
+    {
+        //Folders
+        public static readonly string assemblyPath = Path.GetDirectoryName(typeof(Paths).Assembly.Location);
+        public static readonly string rootPath = Path.GetFullPath(Path.Combine(assemblyPath, "../"));
+        public static readonly string testFilesPath = Path.GetFullPath(Path.Combine(rootPath, "Test/LanguageServerTest/DafnyFiles"));
+
+        //Executables
+        public static readonly string dafnyExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/Dafny.exe"));
+        public static readonly string langServExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/DafnyLanguageServer.exe"));
+
+        //Compile: Dafny Sourcefiles
+        public static readonly string cp_fineDLL = CreateTestfilePath("compile/compiles_as_dll.dfy");
+        public static readonly string cp_fineEXE = CreateTestfilePath("compile/compiles_as_exe.dfy");
+        public static readonly string cp_assertion = CreateTestfilePath("compile/assertion_violation.dfy");
+        public static readonly string cp_identifier = CreateTestfilePath("compile/unknown_identifier_error.dfy");
+        public static readonly string cp_postcondition = CreateTestfilePath("compile/postcondition_violation.dfy");
+        public static readonly string cp_semiexpected = CreateTestfilePath("compile/semi_expected_error.dfy");
+        
+        //Compile Outputs
+        public static readonly string cp_out_dll = AddTestFolderPrefix("compile/compiles_as_dll.dll");
+        public static readonly string cp_out_exe = AddTestFolderPrefix("compile/compiles_as_exe.exe");
+
+        //Counter Example Dafny Sourcefiles
+        public static readonly string ce_fail1 = CreateTestfilePath("counterExample/postcondition_violation_1.dfy");
+        public static readonly string ce_fail2 = CreateTestfilePath("counterExample/postcondition_violation_2.dfy");
+        public static readonly string ce_ok = CreateTestfilePath("counterExample/postcondition_fullfilled.dfy");
+        public static readonly string ce_2meth = CreateTestfilePath("counterExample/two_methods.dfy");
+
+        //Integration
+        public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
+
+        //Goto
+        public static readonly string gt_goto = CreateTestfilePath("goto/goto.dfy");
+
+        //Include
+        public static readonly string ic_basic = CreateTestfilePath("include/basic.dfy");
+        public static readonly string ic_includee = CreateTestfilePath("include/includee.dfy");
+
+        //AutoCompletion
+        public static readonly string ac_ac = CreateTestfilePath("autocompletion/autocompletion.dfy");
+
+        //Verification
+        public static readonly string vc_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
+        public static readonly string vc_good = CreateTestfilePath("verification/moreless_good.dfy");
+        public static readonly string vc_postcondition = CreateTestfilePath("verification/moreless_postcondition.dfy");
+        public static readonly string vc_noensure = CreateTestfilePath("verification/moreless_noensure.dfy");
+        public static readonly string vc_multiplefails = CreateTestfilePath("verification/moreless_manyfails.dfy");
+
+
+        private static string CreateTestfilePath(string s)
+        {
+            var path = AddTestFolderPrefix(s);
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(path);
+            }
+            return path;
+        }
+
+        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
+
+
+    }
+}

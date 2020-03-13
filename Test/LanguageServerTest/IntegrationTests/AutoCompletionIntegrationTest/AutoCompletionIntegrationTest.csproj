@@ -4,8 +4,9 @@
     <TargetFramework>net461</TargetFramework>
 	<OutputPath>../../../../Binaries/</OutputPath>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	<IsPackable>false</IsPackable>
+	<LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
-    <ProjectReference Include="..\..\PathConstants\PathConstants\PathConstants.csproj" />
+    <ProjectReference Include="..\..\TestCommons\TestCommons.csproj" />
   </ItemGroup>
 
 </Project>

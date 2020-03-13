@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Files = PathConstants.Paths;
+using Files = TestCommons.Paths;
 
 namespace CompileHandlerTest
 {
