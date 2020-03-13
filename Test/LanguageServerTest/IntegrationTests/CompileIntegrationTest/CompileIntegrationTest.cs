@@ -45,28 +45,28 @@ namespace CompileIntegrationTest
         public void FailureAssertionViolation()
         {
             RunCompilation(Files.cp_assertion);
-            VerifyResults(true, false, "Compilation failed: \"assertion violation\" in line 7.");
+            VerifyResults(true, false, "Compilation failed: assertion violation in line 7.");
         }
 
         [Test]
         public void FailurePostconditionViolation()
         {
             RunCompilation(Files.cp_postcondition);
-            VerifyResults(true, false, "Compilation failed: \"BP5003: A postcondition might not hold on this return path.\" in line 4.");
+            VerifyResults(true, false, "Compilation failed: BP5003: A postcondition might not hold on this return path. in line 4.");
         }
 
         [Test]
         public void FailureSyntaxErrorUnknownIdentifier()
         {
             RunCompilation(Files.cp_identifier);
-            VerifyResults(true, false, "Compilation failed: \"unresolved identifier: bruder\" in line 8.");
+            VerifyResults(true, false, "Compilation failed: unresolved identifier: bruder in line 8.");
         }
 
         [Test]
         public void FailureSyntaxErrorSemiExpected()
         {
             RunCompilation(Files.cp_semiexpected);
-            VerifyResults(true, false, "Compilation failed: \"semicolon expected\" in line 7.");
+            VerifyResults(true, false, "Compilation failed: semicolon expected in line 7.");
         }
 
         [Test]

@@ -210,6 +210,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DafnyDriver\DafnyDriver.csproj">
+      <Project>{63400D1F-05B2-453E-9592-1EAB74B2C9CC}</Project>
+      <Name>DafnyDriver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dafny\DafnyPipeline.csproj">
       <Project>{fe44674a-1633-4917-99f4-57635e6fa740}</Project>
       <Name>DafnyPipeline</Name>
