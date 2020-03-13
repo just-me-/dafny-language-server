@@ -9,7 +9,7 @@ namespace VerificationServiceTest
     public class CreateDiagnosticTest
     {
         private static readonly string randomFakeSource = "aa\naa\naa\naa\n";
-        private static VerificationService verificationService = new VerificationService(null, null); //2do
+        private static VerificationService verificationService = new VerificationService(null); //todo Ticket#281
         private Token token;
 
         [SetUp]

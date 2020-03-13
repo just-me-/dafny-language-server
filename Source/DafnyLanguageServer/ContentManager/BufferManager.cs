@@ -6,7 +6,7 @@ namespace DafnyLanguageServer.ContentManager
 {
     public class BufferManager : IBufferManager
     {
-        private ConcurrentDictionary<Uri, DafnyFile> _buffers = new ConcurrentDictionary<Uri, DafnyFile>();
+        private readonly ConcurrentDictionary<Uri, DafnyFile> _buffers = new ConcurrentDictionary<Uri, DafnyFile>();
 
         public DafnyFile UpdateBuffer(Uri documentPath, string sourceCodeOfFile)
         {

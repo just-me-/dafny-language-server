@@ -37,7 +37,7 @@ namespace DafnyLanguageServer.Handler
             };
         }
 
-        public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken token)
+        public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
             return await Task.Run(() =>
             {

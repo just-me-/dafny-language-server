@@ -21,9 +21,8 @@ namespace DafnyLanguageServer.DafnyAccess
             realigned_tok.filename = tok.filename;
             base.ReportBplError(realigned_tok, message, error, tw, category);
 
-            if (tok is Microsoft.Dafny.NestedToken)
+            if (tok is NestedToken nt)
             {
-                var nt = (Microsoft.Dafny.NestedToken)tok;
                 ReportBplError(nt.Inner, "Related location", false, tw);
             }
         }
@@ -31,9 +30,9 @@ namespace DafnyLanguageServer.DafnyAccess
 
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
-        private string fname;
-        private string source;
-        private string[] args;
+        private readonly string fname;
+        private readonly string source;
+        private readonly string[] args;
 
         private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         private Microsoft.Dafny.Program dafnyProgram;

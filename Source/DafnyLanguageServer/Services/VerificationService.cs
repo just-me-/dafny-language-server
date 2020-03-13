@@ -12,12 +12,10 @@ namespace DafnyLanguageServer.Services
     public class VerificationService
     {
         private readonly ILanguageServer _router;
-        private IDafnyTranslationUnit _dafnyTranslationUnit;
 
-        public VerificationService(ILanguageServer router, IDafnyTranslationUnit translationUnit)
+        public VerificationService(ILanguageServer router)
         {
             _router = router;
-            _dafnyTranslationUnit = translationUnit;
         }
 
         public void Verify(DafnyFile file)

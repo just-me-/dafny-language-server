@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace DafnyLanguageServer.ContentManager
 {
-    public class FileHelper
+    public static class FileHelper
     {
         public static string GetCurrentWord(string code, int line, int character)
         {
@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.ContentManager
         private static string SaveLineGetter(string code, int line, int character, bool front = true)
         {
             var codeLines = Regex.Split(code, "\r\n|\r|\n");
-            // avoid out of bounce exceptions 
+            // avoid out of bounds exceptions 
             return (codeLines.Length >= line && codeLines[line].Length >= character)
                 ?
                     (front

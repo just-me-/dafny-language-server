@@ -1,18 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
-using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using Serilog;
-using Serilog.Extensions.Logging;
 using TestCommons;
 using Files = TestCommons.Paths;
 

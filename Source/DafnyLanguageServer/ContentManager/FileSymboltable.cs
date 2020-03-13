@@ -8,9 +8,9 @@ namespace DafnyLanguageServer.ContentManager
 {
     public class FileSymboltable
     {
-        private List<SymbolTable.SymbolInformation> _symbolTable;
+        private readonly List<SymbolTable.SymbolInformation> _symbolTable;
         public bool HasEntries => (_symbolTable.Count > 0);
-        private IDafnyTranslationUnit _translationUnit;
+        private readonly IDafnyTranslationUnit _translationUnit;
 
         public FileSymboltable(IDafnyTranslationUnit translationUnit)
         {

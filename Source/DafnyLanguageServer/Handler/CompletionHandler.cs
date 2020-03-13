@@ -60,8 +60,9 @@ namespace DafnyLanguageServer.Handler
             var complitionItems = new List<CompletionItem>();
             foreach (var symbol in symbols)
             {
-                CompletionItemKind kind = CompletionItemKind.Reference;
-                Enum.TryParse(symbol.SymbolType.ToString(), true, out kind);
+                CompletionItemKind kind = Enum.TryParse(symbol.SymbolType.ToString(), true, out kind)
+                   ? kind
+                   : CompletionItemKind.Reference;
 
                 Range range = FileHelper.CreateRange(request.Position.Line, request.Position.Character, symbol.Name.Length);
                 TextEdit textEdit = new TextEdit

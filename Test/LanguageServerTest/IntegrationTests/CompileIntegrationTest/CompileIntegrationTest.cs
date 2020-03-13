@@ -1,19 +1,6 @@
 using DafnyLanguageServer.Handler;
 using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Client;
-using OmniSharp.Extensions.LanguageServer.Client.Processes;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using Serilog;
-using Serilog.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using TestCommons;
-using PublishDiagnosticsHandler = OmniSharp.Extensions.LanguageServer.Client.PublishDiagnosticsHandler;
 using Files = TestCommons.Paths;
 
 namespace CompileIntegrationTest

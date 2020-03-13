@@ -77,7 +77,7 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (var languageSpecificModel in specificModels)
             {
                 var counterExample = new CounterExample();
-                foreach (var s in languageSpecificModel.States)
+                foreach (var s in languageSpecificModel.States)  //sonar sagt macht hier immer nur eine iteration
                 {
                     var state = s as StateNode;
                     if (state == null) continue;
