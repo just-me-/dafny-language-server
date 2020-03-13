@@ -29,6 +29,25 @@ namespace DafnyLanguageServer.Services
         {
             return await Task.Run(() =>
             {
+                if (!File.Exists(DfyFile))
+                {
+                    return new CompilerResults
+                    {
+                        Error = true,
+                        Message = "Compilation failed: Dafny Source File does not exist",
+                        Executable = false
+                    };
+                }
+
+                if (Path.GetExtension(DfyFile) != ".dfy")
+                {
+                    return new CompilerResults
+                    {
+                        Error = true,
+                        Message = "Compilation failed: Can only compile .dfy files",
+                        Executable = false
+                    };
+                }
                 var argsAsList = CompilationArgs.ToList();
                 argsAsList.Add(DfyFile);
                 var finalArgs = argsAsList.ToArray();
