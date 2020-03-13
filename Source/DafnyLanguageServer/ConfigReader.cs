@@ -45,7 +45,7 @@ namespace DafnyLanguageServer
                 string cfgFile = Path.Combine(AssemblyPath, "LanguageServerConfig.json");
                 if (!File.Exists(cfgFile))
                 {
-                    return;
+                    throw new FileNotFoundException("Config file not found at: " + cfgFile);
                 }
                 
                 JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
@@ -124,7 +124,7 @@ namespace DafnyLanguageServer
             LogFile = Path.GetFullPath(LogFile);
         }
 
-        public void PrintState()
+        internal void PrintState()
         {
             Console.WriteLine($"Log: {LogFile}");
             Console.WriteLine($"Stream: {RedirectedStreamFile}");

@@ -34,10 +34,7 @@ namespace DafnyLanguageServer
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //configReader.PrintState();
 
-            if (configReader.Error)
-            {
-                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);  //todo: Besprechen: eher exception schmeissen? user erwartet log dann iwo in nem pfad dabei wird der default geused oder so #Ticket 59
-            }
+            
 
             log.Information("Server Starting");
 
@@ -64,6 +61,12 @@ namespace DafnyLanguageServer
 
             log.Information("Server Running");
 
+            if (configReader.Error)
+            {
+                server.Window.SendNotification("message", "Error while setting up config: " + configReader.ErrorMsg);
+                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);
+            }
+
             try
             {
                 using (StreamWriter writer = new StreamWriter(new FileStream(configReader.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
@@ -74,7 +77,8 @@ namespace DafnyLanguageServer
             }
             catch
             {
-                log.Error("Couldn't redirect output stream with error");
+                log.Error("Couldn't redirect output stream");
+                server.Window.SendNotification("message", "Couldn't redirect output stream");
             }
 
             log.Information("Server Closed");
