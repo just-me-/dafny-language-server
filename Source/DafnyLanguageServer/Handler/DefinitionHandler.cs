@@ -35,7 +35,7 @@ namespace DafnyLanguageServer.Handler
             };
         }
 
-        public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken token)
+        public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
             return await Task.Run(() =>
             {
@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.Handler
                     (int)request.Position.Line,
                     (int)request.Position.Character
                 );
-                // not optimized yet - ticket #40
+                // todo not optimized yet - ticket #40
                 foreach (var symbol in symbols.GetFullList())
                 {
                     if (word == symbol.Name)

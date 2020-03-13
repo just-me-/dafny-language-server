@@ -70,7 +70,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 else
                 {
                     var m = (Method)clbl;
-                    if (m.Body != null && m.Body.Body != null)
+                    if (m.Body?.Body != null)
                     {
                         information.AddRange(ResolveCallStatements(m.Body.Body));
                         information.AddRange(ResolveLocalDefinitions(m.Body.Body, m));
@@ -157,9 +157,8 @@ namespace DafnyLanguageServer.DafnyAccess
 
             foreach (var statement in statements)
             {
-                if (statement is VarDeclStmt)
+                if (statement is VarDeclStmt declarations)
                 {
-                    var declarations = (VarDeclStmt)statement;
                     {
                         Type type = null;
                         var rightSide = declarations.Update as UpdateStmt;
@@ -172,7 +171,7 @@ namespace DafnyLanguageServer.DafnyAccess
                                 type = typeDef.Type;
                             }
                         }
-                        if (type != null && type is UserDefinedType)
+                        if (type is UserDefinedType)
                         {
                             var userType = type as UserDefinedType;
                             foreach (var declarationLocal in declarations.Locals)
@@ -191,9 +190,8 @@ namespace DafnyLanguageServer.DafnyAccess
                         }
                     }
                 }
-                if (statement is UpdateStmt)
+                if (statement is UpdateStmt updateStatement)
                 {
-                    var updateStatement = statement as UpdateStmt;
                     var lefts = updateStatement.Lhss;
                     foreach (var expression in lefts)
                     {

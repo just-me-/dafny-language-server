@@ -1,9 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;

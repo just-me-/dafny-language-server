@@ -6,7 +6,7 @@ namespace DafnyLanguageServer.Services
 {
     public class CounterExampleService
     {
-        private IDafnyTranslationUnit _dafnyTranslationUnit;
+        private readonly IDafnyTranslationUnit _dafnyTranslationUnit;
 
         public CounterExampleService(IDafnyTranslationUnit dafnyTranslationUnit)
         {
