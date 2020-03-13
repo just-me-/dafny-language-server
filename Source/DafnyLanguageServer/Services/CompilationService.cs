@@ -49,11 +49,11 @@ namespace DafnyLanguageServer.Services
                 thread.Start();
                 thread.Join();
 
-                string threadOutput = sw.ToString();
-                threadOutput = threadOutput.Replace("\r", "");
-
                 Console.SetOut(oldOut);
                 Console.SetError(oldErr);
+
+                string threadOutput = sw.ToString();
+                threadOutput = threadOutput.Replace("\r", "");
 
                 if (threadOutput.Contains("Compiled assembly into") && threadOutput.Contains(".exe"))
                 {
