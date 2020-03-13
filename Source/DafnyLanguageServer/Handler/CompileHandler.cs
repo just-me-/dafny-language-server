@@ -8,8 +8,8 @@ namespace DafnyLanguageServer.Handler
 {
     public class CompilerParams : IRequest<CompilerResults>
     {
-        public string DafnyFilePath { get; set; }
-        public string DafnyExePath { get; set; }
+        public string FileToCompile { get; set; }
+        public string[] CompilationArguments { get; set; }
     }
 
     public class CompilerResults
@@ -26,7 +26,7 @@ namespace DafnyLanguageServer.Handler
     {
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
         {
-            CompilationService cs = new CompilationService(request.DafnyExePath, request.DafnyFilePath);
+            CompilationService cs = new CompilationService(request.FileToCompile, request.CompilationArguments);
             return await cs.Compile();
         }
     }

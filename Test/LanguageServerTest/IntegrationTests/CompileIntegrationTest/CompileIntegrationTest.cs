@@ -81,8 +81,8 @@ namespace CompileIntegrationTest
         {
             CompilerParams compilerParams = new CompilerParams
             {
-                DafnyFilePath = testfile,
-                DafnyExePath = Files.dafnyExe
+                FileToCompile = testfile,
+                CompilationArguments = new string[] {}
             };
 
             compilerResults = m.Client.SendRequest<CompilerResults>(compileKeyword, compilerParams, m.CancellationSource.Token).Result;

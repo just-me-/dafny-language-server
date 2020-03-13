@@ -33,7 +33,8 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Path.Combine(Files.testFilesPath, Files.cp_fineDLL);
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
 
             Assert.IsFalse(r.Error);
             Assert.IsFalse(r.Executable ?? true);
@@ -45,7 +46,8 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Files.cp_fineEXE;
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
 
             Assert.IsFalse(r.Error);
             Assert.IsTrue(r.Executable ?? false);
@@ -57,7 +59,8 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Files.cp_assertion;
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
 
             Assert.IsTrue(r.Error);
             Assert.IsFalse(r.Executable ?? true);
@@ -71,7 +74,8 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Files.cp_identifier;
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
 
             Assert.IsTrue(r.Error);
             Assert.IsFalse(r.Executable ?? true);
@@ -86,7 +90,8 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Files.cp_semiexpected;
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
 
             Assert.IsTrue(r.Error);
             Assert.IsFalse(r.Executable ?? true);
@@ -100,7 +105,9 @@ namespace CompileHandlerTest
         {
             string dafnyFile = Files.cp_postcondition;
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
+
 
             Assert.IsTrue(r.Error);
             Assert.IsFalse(r.Executable ?? true);
@@ -114,7 +121,8 @@ namespace CompileHandlerTest
         public void DllCreated()
         {
             string dafnyFile = Files.cp_fineDLL;
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
+
             Assert.IsTrue(File.Exists(Files.cp_out_dll));
         }
 
@@ -122,8 +130,15 @@ namespace CompileHandlerTest
         public void ExeCreated()
         {
             string dafnyFile = Files.cp_fineEXE;
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+            CompilerResults r = GetCompileResults(dafnyFile);
             Assert.IsTrue(File.Exists(Files.cp_out_exe));
+        }
+
+
+        private CompilerResults GetCompileResults(string dafnyFile)
+        {
+            return new CompilationService(dafnyFile, new string[] { }).Compile().Result;
+
         }
     }
 

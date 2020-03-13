@@ -2,6 +2,8 @@
 using DafnyLanguageServer.Handler;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -10,36 +12,44 @@ namespace DafnyLanguageServer.Services
     public class CompilationService
     {
         private string PathToDafnyDotExe { get; }
-        private string _pathToDfy;
-        private string PathToDfy
+        private string[] CompilationArgs { get; }
+        private string _dfyFile;
+        private string DfyFile
         {
-            get
-            {
-                return FileHelper.EscapeFilePath(_pathToDfy);
-            }
-            set
-            {
-                _pathToDfy = value;
-            }
+            get => FileHelper.EscapeFilePath(_dfyFile);
+            set => _dfyFile = value;
         }
 
-        public CompilationService(string exe, string file)
+        public CompilationService(string file, string[] args)
         {
-            PathToDafnyDotExe = exe;
-            PathToDfy = file;
+            DfyFile = file;
+            CompilationArgs = args;
+
+            string assemblyPath = Path.GetDirectoryName(typeof(DafnyLanguageServer.Program).Assembly.Location);
+            PathToDafnyDotExe = Path.GetFullPath(Path.Combine(assemblyPath, "Dafny.exe"));
+
         }
 
         public async Task<CompilerResults> Compile()
         {
             return await Task.Run(() =>
             {
+                if (!File.Exists(PathToDafnyDotExe))
+                {
+                    return new CompilerResults
+                    {
+                        Error = true,
+                        Message = "Couldn't Locate Dafny.exe in " + PathToDafnyDotExe,
+                        Executable = false
+                    };
+                }
 
                 Process process = new Process
                 {
                     StartInfo =
                     {
                         FileName = PathToDafnyDotExe,
-                        Arguments = "/compile:1 /nologo " + PathToDfy,
+                        Arguments = string.Join(" ", CompilationArgs) + " " + DfyFile,   //note: hier war compile:1 und /nolog. compile:1 ist aber eh ultradefault. no logo ka, sollte keinen ärger machen.
                         UseShellExecute = false,
                         RedirectStandardError = true,
                         RedirectStandardOutput = true
@@ -105,7 +115,7 @@ namespace DafnyLanguageServer.Services
 
     public class ProcessRunner
     {
-        public Process Process { get; private set; }
+        public Process Process { get; }
         public bool IsRunning { get; private set; } = false;
         public bool IsFinished { get; private set; } = false;
 
