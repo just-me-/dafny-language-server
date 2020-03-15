@@ -21,6 +21,11 @@ namespace TestCommons
         public static readonly string cp_identifier = CreateTestfilePath("compile/unknown_identifier_error.dfy");
         public static readonly string cp_postcondition = CreateTestfilePath("compile/postcondition_violation.dfy");
         public static readonly string cp_semiexpected = CreateTestfilePath("compile/semi_expected_error.dfy");
+        public static readonly string cp_empty = CreateTestfilePath("compile/empty.dfy");
+        public static readonly string cp_otherlang_java = CreateTestfilePath("compile/otherlang_java.java");
+        public static readonly string cp_otherlang_java_dfyending = CreateTestfilePath("compile/otherlang_java.dfy");
+        public static readonly string cp_otherlang_py = CreateTestfilePath("compile/otherlang_python.py");
+        public static readonly string cp_otherlang_py_dfyending = CreateTestfilePath("compile/otherlang_python.dfy");
         
         //Compile Outputs
         public static readonly string cp_out_dll = AddTestFolderPrefix("compile/compiles_as_dll.dll");
@@ -34,6 +39,7 @@ namespace TestCommons
 
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
+        public static readonly string int_inexistant = AddTestFolderPrefix("IDONOTEXIST.dfy");
 
         //Goto
         public static readonly string gt_goto = CreateTestfilePath("goto/goto.dfy");

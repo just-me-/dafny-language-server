@@ -2,68 +2,79 @@
 using DafnyLanguageServer.Handler;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.Services
 {
     public class CompilationService
     {
-        private string PathToDafnyDotExe { get; }
-        private string _pathToDfy;
-        private string PathToDfy
-        {
-            get
-            {
-                return FileHelper.EscapeFilePath(_pathToDfy);
-            }
-            set
-            {
-                _pathToDfy = value;
-            }
-        }
 
-        public CompilationService(string exe, string file)
+        private string[] CompilationArgs { get; }
+
+        private string DfyFile { get; }
+
+        public CompilationService(string file, string[] args)
         {
-            PathToDafnyDotExe = exe;
-            PathToDfy = file;
+            DfyFile = file;
+            CompilationArgs = args;
         }
 
         public async Task<CompilerResults> Compile()
         {
             return await Task.Run(() =>
             {
-
-                Process process = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = PathToDafnyDotExe,
-                        Arguments = "/compile:1 /nologo " + PathToDfy,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true
-                    },
-                    EnableRaisingEvents = true
-                };
-
-                string processOut;
-
-                try
-                {
-                    processOut = new ProcessRunner(process).Run();
-                }
-                catch (Exception e)
+                if (!File.Exists(DfyFile))
                 {
                     return new CompilerResults
                     {
                         Error = true,
-                        Message = "Internal Server Error: " + e.Message,
+                        Message = "Compilation failed: Dafny Source File does not exist",
                         Executable = false
                     };
                 }
 
-                if (processOut.Contains("Compiled assembly into") && processOut.Contains(".exe"))
+                if (Path.GetExtension(DfyFile) != ".dfy")
+                {
+                    return new CompilerResults
+                    {
+                        Error = true,
+                        Message = "Compilation failed: Can only compile .dfy files",
+                        Executable = false
+                    };
+                }
+                var argsAsList = CompilationArgs.ToList();
+                argsAsList.Add(DfyFile);
+                var finalArgs = argsAsList.ToArray();
+
+                
+                Thread thread = new Thread(() =>
+                {
+                    DafnyDriver.Main(finalArgs);
+                });
+
+                var sw = new StringWriter();
+                var oldOut = Console.Out;
+                var oldErr = Console.Error;
+
+                Console.SetOut(sw);
+                Console.SetError(sw);
+
+                thread.Start();
+                thread.Join();
+
+                Console.SetOut(oldOut);
+                Console.SetError(oldErr);
+
+                string threadOutput = sw.ToString();
+                threadOutput = threadOutput.Replace("\r", "");
+
+                if (threadOutput.Contains("Compiled assembly into") && threadOutput.Contains(".exe"))
                 {
                     return new CompilerResults
                     {
@@ -72,7 +83,7 @@ namespace DafnyLanguageServer.Services
                         Executable = true
                     };
                 }
-                else if (processOut.Contains("Compiled assembly into"))
+                else if (threadOutput.Contains("Compiled assembly into"))
                 {
                     return new CompilerResults
                     {
@@ -84,7 +95,7 @@ namespace DafnyLanguageServer.Services
                 else
                 {
                     const string pattern = "\\((\\d+),(\\d+)\\): Error:? (.*)\n";
-                    Match m = Regex.Match(processOut, pattern);
+                    Match m = Regex.Match(threadOutput, pattern);
 
                     int.TryParse(m.Groups[1].Value, out int line);
                     int.TryParse(m.Groups[2].Value, out int col);
@@ -93,42 +104,13 @@ namespace DafnyLanguageServer.Services
                     return new CompilerResults
                     {
                         Error = true,
-                        Message = $"Compilation failed: \"{error}\" in line {line}.",
+                        Message = $"Compilation failed: {error} in line {line}.",
                         Executable = false
                     };
                 }
             });
         }
 
-    }
-
-
-    public class ProcessRunner
-    {
-        public Process Process { get; private set; }
-        public bool IsRunning { get; private set; } = false;
-        public bool IsFinished { get; private set; } = false;
-
-        public ProcessRunner(Process p)
-        {
-            Process = p;
-        }
-
-        public string Run()
-        {
-            string processOut = "";
-            Process.OutputDataReceived += (sender, args) => processOut += args.Data + "\n";
-
-            Process.Start();
-            IsRunning = true;
-            Process.BeginErrorReadLine();
-            Process.BeginOutputReadLine();
-            Process.WaitForExit();
-            IsFinished = true;
-            IsRunning = false;
-            return processOut;
-
-        }
     }
 
 }

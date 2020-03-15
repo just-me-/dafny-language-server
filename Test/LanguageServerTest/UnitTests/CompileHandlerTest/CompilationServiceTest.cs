@@ -7,8 +7,11 @@ using Files = TestCommons.Paths;
 
 namespace CompileHandlerTest
 {
-    public class CompileIntegrationTests
+    public class CompileHandlerTests
     {
+        private CompilerResults compilerResults;
+        private const string successMsg = "Compilation successful";
+        private const string failMsg = "Compilation failed: ";
 
         [SetUp]
         public void DeleteFiles()
@@ -26,104 +29,142 @@ namespace CompileHandlerTest
                     File.Delete(path);
                 }
             }
+
+            compilerResults = null;
         }
 
         [Test]
-        public void IsFine()
+        public void SuccessWithExeAsResult()
         {
-            string dafnyFile = Path.Combine(Files.testFilesPath, Files.cp_fineDLL);
-
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-
-            Assert.IsFalse(r.Error);
-            Assert.IsFalse(r.Executable ?? true);
-
+            RunCompilation(Files.cp_fineEXE);
+            VerifyResults(false, true, successMsg);
         }
 
         [Test]
-        public void IsFineExe()
+        public void SuccessWithDllAsResult()
         {
-            string dafnyFile = Files.cp_fineEXE;
-
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-
-            Assert.IsFalse(r.Error);
-            Assert.IsTrue(r.Executable ?? false);
-
+            RunCompilation(Files.cp_fineDLL);
+            VerifyResults(false, false, successMsg);
         }
 
         [Test]
-        public void Assertion()
+        public void FailureAssertionViolation()
         {
-            string dafnyFile = Files.cp_assertion;
-
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-
-            Assert.IsTrue(r.Error);
-            Assert.IsFalse(r.Executable ?? true);
-            Assert.IsTrue(r.Message.Contains("assertion"));
-            Assert.IsTrue(r.Message.Contains("line 7"));
-
+            RunCompilation(Files.cp_assertion);
+            VerifyResults(true, false, failMsg + "assertion violation in line 7.");
         }
 
         [Test]
-        public void Identifier()
+        public void FailurePostconditionViolation()
         {
-            string dafnyFile = Files.cp_identifier;
-
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-
-            Assert.IsTrue(r.Error);
-            Assert.IsFalse(r.Executable ?? true);
-            Assert.IsTrue(r.Message.Contains("unresolved identifier"));
-            Assert.IsTrue(r.Message.Contains("line 8"));
-
-        }
-
-
-        [Test]
-        public void Semi()
-        {
-            string dafnyFile = Files.cp_semiexpected;
-
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-
-            Assert.IsTrue(r.Error);
-            Assert.IsFalse(r.Executable ?? true);
-            Assert.IsTrue(r.Message.Contains("semicolon expected"));
-            Assert.IsTrue(r.Message.Contains("line 7"));
-
+            RunCompilation(Files.cp_postcondition);
+            VerifyResults(true, false, failMsg + "BP5003: A postcondition might not hold on this return path. in line 4.");
         }
 
         [Test]
-        public void Postcondition()
+        public void FailureSyntaxErrorUnknownIdentifier()
         {
-            string dafnyFile = Files.cp_postcondition;
+            RunCompilation(Files.cp_identifier);
+            VerifyResults(true, false, failMsg + "unresolved identifier: bruder in line 8.");
+        }
 
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
+        [Test]
+        public void FailureSyntaxErrorSemiExpected()
+        {
+            RunCompilation(Files.cp_semiexpected);
+            VerifyResults(true, false, failMsg + "semicolon expected in line 7.");
+        }
 
-            Assert.IsTrue(r.Error);
-            Assert.IsFalse(r.Executable ?? true);
-            Assert.IsTrue(r.Message.Contains("postcondition might not hold"));
-            Assert.IsTrue(r.Message.Contains("line 4"));
-
+        [Test]
+        public void Included_File()
+        {
+            RunCompilation(Files.ic_basic);
+            VerifyResults(false, false, successMsg);
         }
 
 
         [Test]
-        public void DllCreated()
+        public void Inexistant_File()
         {
-            string dafnyFile = Files.cp_fineDLL;
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-            Assert.IsTrue(File.Exists(Files.cp_out_dll));
+            RunCompilation(Files.int_inexistant);
+            VerifyResults(true, false, failMsg + "Dafny Source File does not exist");
         }
 
         [Test]
-        public void ExeCreated()
+        public void Empty_File()
         {
-            string dafnyFile = Files.cp_fineEXE;
-            CompilerResults r = new CompilationService(Files.dafnyExe, dafnyFile).Compile().Result;
-            Assert.IsTrue(File.Exists(Files.cp_out_exe));
+            RunCompilation(Files.cp_empty);
+            VerifyResults(false, false, successMsg);
+        }
+
+        [Test]
+        public void Otherlang_Java()
+        {
+            RunCompilation(Files.cp_otherlang_java);
+            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+        }
+
+        [Test]
+        public void Otherlang_Java_DfyEnding()
+        {
+            RunCompilation(Files.cp_otherlang_java_dfyending);
+            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+        }
+
+        [Test]
+        public void Otherlang_Py()
+        {
+            RunCompilation(Files.cp_otherlang_py);
+            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+        }
+
+        [Test]
+        public void Otherlang_Py_DfyEnding()
+        {
+            RunCompilation(Files.cp_otherlang_py_dfyending);
+            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+        }
+
+        [Test]
+        public void WithArgumentsNoCompile()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/compile:0" });
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+        [Test]
+        public void WithArgumentsLegit()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/compile:1", "/nologo" });
+            VerifyResults(false, false, successMsg);
+        }
+
+        [Test]
+        public void WithArgumentsGarbage()
+        {
+            RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
+            VerifyResults(true, false, failMsg + " in line 0.");
+        }
+
+
+        private void RunCompilation(string dafnyFile, string[] args = null)
+        {
+            if (args == null)
+            {
+                args = new string[] { };
+            }
+            compilerResults = new CompilationService(dafnyFile, args).Compile().Result;
+        }
+
+        private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
+        {
+            if (compilerResults == null)
+            {
+                Assert.Fail("compilerResults are null - no results received!");
+            }
+            Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Mismatch");
+            Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
     }
 
