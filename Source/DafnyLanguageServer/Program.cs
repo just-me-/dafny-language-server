@@ -53,11 +53,13 @@ namespace DafnyLanguageServer
                     .WithHandler<DefinitionHandler>()
             );
 
+            var msgSender = new MessageSender(server);
+            msgSender.SendServerStarted("0.01");
             log.Information("Server Running");
 
             if (configReader.Error)
             {
-                server.Window.SendNotification("message", "Error while setting up config: " + configReader.ErrorMsg);
+                msgSender.SendWarning("Error while setting up config: " + configReader.ErrorMsg);
                 log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);
             }
 
@@ -71,8 +73,9 @@ namespace DafnyLanguageServer
             }
             catch
             {
-                log.Error("Couldn't redirect output stream");
-                server.Window.SendNotification("ERROR", "Couldn't redirect output stream");
+                const string msg = "Could not redirect output stream.";
+                msgSender.SendError(msg);
+                log.Error(msg);
             }
 
             log.Information("Server Closed");

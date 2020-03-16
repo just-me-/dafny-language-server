@@ -49,6 +49,7 @@ namespace DafnyLanguageServer.Handler
                     (int)request.Position.Character
                 );
                 var parentClass = symbols.GetParentForWord(word);
+                
                 return (symbols is null) ?
                     new CompletionList() :
                     ConvertListToCompletionresponse(symbols.GetList(parentClass), request);
