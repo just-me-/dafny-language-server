@@ -54,7 +54,8 @@ namespace DafnyLanguageServer
             );
 
             var msgSender = new MessageSender(server);
-            msgSender.SendServerStarted("0.01");
+            var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+            msgSender.SendServerStarted(dafnyVersion);
             log.Information("Server Running");
 
             if (configReader.Error)
