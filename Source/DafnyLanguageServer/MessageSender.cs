@@ -55,8 +55,5 @@ namespace DafnyLanguageServer
         {
             SendMessage("activeVerifiyingDocument", filepath);
         }
-
-        // public static DafnyMissing: string = "dafnymissing";
-
     }
 }
