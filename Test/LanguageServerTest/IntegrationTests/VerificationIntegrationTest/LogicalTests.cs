@@ -6,6 +6,9 @@ using OmniSharp.Extensions.LanguageServer.Client;
 using TestCommons;
 using Files = TestCommons.Paths;
 
+
+
+
 namespace VerificationIntegrationTest
 {
 
@@ -13,8 +16,8 @@ namespace VerificationIntegrationTest
     public class Tests
     {
         public TestSetupManager m = new TestSetupManager("Verification");
-        private bool diagnosticsHaveArrived = false;
         private List<string> diagnosticList;
+        private readonly System.Threading.EventWaitHandle waitHandle = new System.Threading.AutoResetEvent(false);
 
         [SetUp]
         public void Setup()
@@ -25,7 +28,7 @@ namespace VerificationIntegrationTest
             PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
             {
                 diagnosticList = diagList.ToStringList();
-                diagnosticsHaveArrived = true;
+                waitHandle.Set();
             };
 
             m.Client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
@@ -100,29 +103,10 @@ namespace VerificationIntegrationTest
             CollectionAssert.AreEquivalent(expct, diagnosticList);
         }
 
-
-        private void WaitForDiangostics()
-        {
-
-            double waitedTime = 0.1;
-            while (!diagnosticsHaveArrived && waitedTime < 5)
-            {
-                Thread.Sleep(100);
-                waitedTime += 0.1;
-            }
-
-            diagnosticsHaveArrived = false;
-
-            if (waitedTime >= 5)
-            {
-                throw new Exception("Waited 5 seconds for diagnostics, but they didn't arrive");
-            }
-        }
-
         private void SendRequestAndAwaitDiagnostics(string file)
         {
             m.Client.TextDocument.DidOpen(file, "dfy");
-            WaitForDiangostics();
+            waitHandle.WaitOne();
         }
     }
 
