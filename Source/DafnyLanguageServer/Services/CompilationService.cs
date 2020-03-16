@@ -51,7 +51,6 @@ namespace DafnyLanguageServer.Services
                 var argsAsList = CompilationArgs.ToList();
                 argsAsList.Add(DfyFile);
                 var finalArgs = argsAsList.ToArray();
-
                 
                 Thread thread = new Thread(() =>
                 {

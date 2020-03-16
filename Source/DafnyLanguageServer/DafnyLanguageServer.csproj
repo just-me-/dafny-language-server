@@ -185,6 +185,7 @@
     <Compile Include="ConfigReader.cs" />
     <Compile Include="ContentManager\BufferManager.cs" />
     <Compile Include="Handler\CodeLensHandler.cs" />
+    <Compile Include="MessageSender.cs" />
     <Compile Include="Services\CompilationService.cs" />
     <Compile Include="Handler\CompletionHandler.cs" />
     <Compile Include="Handler\CounterExampleHandler.cs" />

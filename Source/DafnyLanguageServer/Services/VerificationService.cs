@@ -12,16 +12,17 @@ namespace DafnyLanguageServer.Services
     public class VerificationService
     {
         private readonly ILanguageServer _router;
+        private readonly MessageSender _msgSender; 
 
         public VerificationService(ILanguageServer router)
         {
             _router = router;
+            _msgSender = new MessageSender(router);
         }
 
         public void Verify(DafnyFile file)
         {
-            // inform plugin that current document is in progress - for statusbar
-            _router.Window.SendNotification("activeVerifiyingDocument", file.Filepath);
+            _msgSender.SendCurrentDocumentInProcess(file.Filepath);
             try
             {
                 var errors = file.DafnyTranslationUnit.GetErrors();
@@ -33,18 +34,12 @@ namespace DafnyLanguageServer.Services
                     Diagnostics = new Container<Diagnostic>(diagnostics)
                 };
                 _router.Document.PublishDiagnostics(p);
-                SendErrornumberToClient(diagnostics.Count);
+                _msgSender.SendErrornumber(diagnostics.Count);
             } catch (Exception e)
             {
                 Console.WriteLine("There was an error: " + e);
             }
         }
-
-        private void SendErrornumberToClient(int counted)
-        {
-            _router.Window.SendNotification("updateStatusbar", counted);
-        }
-
 
         public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode)
         {

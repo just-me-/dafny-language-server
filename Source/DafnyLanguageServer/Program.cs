@@ -21,9 +21,6 @@ namespace DafnyLanguageServer
 
             var configReader = new ConfigReader(args);
 
-
-
-
             ILogger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
@@ -33,8 +30,6 @@ namespace DafnyLanguageServer
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //configReader.PrintState();
-
-            
 
             log.Information("Server Starting");
 
@@ -56,14 +51,16 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
-                    
             );
 
+            var msgSender = new MessageSender(server);
+            var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+            msgSender.SendServerStarted(dafnyVersion);
             log.Information("Server Running");
 
             if (configReader.Error)
             {
-                server.Window.SendNotification("message", "Error while setting up config: " + configReader.ErrorMsg);
+                msgSender.SendWarning("Error while setting up config: " + configReader.ErrorMsg);
                 log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);
             }
 
@@ -77,12 +74,12 @@ namespace DafnyLanguageServer
             }
             catch
             {
-                log.Error("Couldn't redirect output stream");
-                server.Window.SendNotification("message", "Couldn't redirect output stream");
+                const string msg = "Could not redirect output stream.";
+                msgSender.SendError(msg);
+                log.Error(msg);
             }
 
             log.Information("Server Closed");
-
         }
 
         static void ConfigureServices(IServiceCollection services)
@@ -90,7 +87,5 @@ namespace DafnyLanguageServer
             services.AddSingleton<BufferManager>();
             services.AddLogging();
         }
-
-        
     }
 }
