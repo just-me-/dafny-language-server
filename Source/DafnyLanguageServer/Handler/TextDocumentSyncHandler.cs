@@ -72,10 +72,15 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
         {
-            // evt nicht der optimale Ort + Version noch "von unten holen"
-            _router.Window.SendNotification("serverStarted", "0.01");
+            InformClientThatServerHasStartedForFile();
             UpdateBufferAndVerifyFile(request.TextDocument.Uri, request.TextDocument.Text);
             return Unit.Task;
+        }
+
+        private void InformClientThatServerHasStartedForFile()
+        {
+            const string dafnyVersion = "0.01"; 
+            _router.Window.SendNotification("serverStarted", dafnyVersion);
         }
 
         public Task<Unit> Handle(DidCloseTextDocumentParams request, CancellationToken cancellationToken)

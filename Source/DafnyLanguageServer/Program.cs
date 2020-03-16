@@ -21,9 +21,6 @@ namespace DafnyLanguageServer
 
             var configReader = new ConfigReader(args);
 
-
-
-
             ILogger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
@@ -33,8 +30,6 @@ namespace DafnyLanguageServer
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //configReader.PrintState();
-
-            
 
             log.Information("Server Starting");
 
@@ -56,7 +51,6 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
-                    
             );
 
             log.Information("Server Running");
@@ -78,11 +72,10 @@ namespace DafnyLanguageServer
             catch
             {
                 log.Error("Couldn't redirect output stream");
-                server.Window.SendNotification("message", "Couldn't redirect output stream");
+                server.Window.SendNotification("ERROR", "Couldn't redirect output stream");
             }
 
             log.Information("Server Closed");
-
         }
 
         static void ConfigureServices(IServiceCollection services)
@@ -90,7 +83,5 @@ namespace DafnyLanguageServer
             services.AddSingleton<BufferManager>();
             services.AddLogging();
         }
-
-        
     }
 }

@@ -45,7 +45,6 @@ namespace DafnyLanguageServer.Services
             _router.Window.SendNotification("updateStatusbar", counted);
         }
 
-
         public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode)
         {
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
