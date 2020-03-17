@@ -171,7 +171,7 @@ namespace CompileHandlerTest
         }
 
 
-        private void VerifyResultsLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = null)
+        private void VerifyResultsLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = "")
         {
             if (compilerResults == null)
             {
@@ -179,10 +179,7 @@ namespace CompileHandlerTest
             }
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
-            if (expectedMessage != null)
-            {
-                Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
-            }
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
         }
     }
 
