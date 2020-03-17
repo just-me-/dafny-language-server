@@ -30,7 +30,6 @@ namespace GotoIntegrationTest
         //[Test]
         public void MidWord()
         {
-            string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, l, 24);
             SpecificVerificationWithGoalInSameFile();
 
@@ -39,7 +38,6 @@ namespace GotoIntegrationTest
         //[Test]
         public void RightMost()
         {
-            string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, l, 28);
             SpecificVerificationWithGoalInSameFile();
         }
@@ -47,7 +45,6 @@ namespace GotoIntegrationTest
         //[Test]
         public void RightMostAfterBracket()
         {
-            string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, l, 30);
             SpecificVerificationWithGoalInSameFile();
         }
