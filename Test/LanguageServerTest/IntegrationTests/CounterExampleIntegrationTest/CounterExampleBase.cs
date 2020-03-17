@@ -12,6 +12,8 @@ namespace CounterExampleIntegrationTest
     public class CounterExampleBase : IntegrationTestBase
     {
         protected CounterExampleResults counterExampleResults;
+        protected List<string> resultsAsString => counterExampleResults.CounterExamples.ToStringList();
+
         protected const string keyword = "counterExample";
 
         public CounterExampleBase() : base("CounterExample")
@@ -30,32 +32,18 @@ namespace CounterExampleIntegrationTest
             {
                 DafnyFile = file
             };
-            Client.TextDocument.DidOpen(file, "dfy");  //notiz für später / dafny translation unit etc: das counter example will, dass das file geöffnet ist! drum mussten wir da auch iwo mal explizit ne eigenen DTU machen - kann das sein??
+            Client.TextDocument.DidOpen(file, "dfy");
             counterExampleResults = Client.SendRequest<CounterExampleResults>(keyword, counterExampleParams, CancellationSource.Token).Result;
         }
 
-        //todo auch mit string vergleich machen ticket 217
-
-        //todo Future Envy ticket 115
-        protected void CheckResult()
+        protected void VerifyResults(List<string> expectation)
         {
             if (counterExampleResults == null)
             {
                 Assert.Fail("No Counter Example Message provided by server");
             }
+            CollectionAssert.AreEquivalent(expectation, resultsAsString);
 
-
-            foreach (CounterExampleResult ce in counterExampleResults.CounterExamples)
-            {
-                var line = ce.Line;
-                var col = ce.Col;
-                foreach (KeyValuePair<string, string> kvp in ce.Variables)
-                {
-                    var key = kvp.Key;
-                    var val = kvp.Value;
-                    //In case needed for later with detailled check
-                }
-            }
         }
 
     }

@@ -14,7 +14,7 @@ namespace CounterExampleIntegrationTest
         public void PostconditionFullfilled()
         {
             GetCounterExamples(Files.ce_ok);
-            Assert.AreEqual(0, counterExampleResults.CounterExamples.Count);
+            CollectionAssert.IsEmpty(counterExampleResults.CounterExamples);
         }
 
 
@@ -22,14 +22,23 @@ namespace CounterExampleIntegrationTest
         public void ViolatedWith1CounterExamples()
         {
             GetCounterExamples(Files.ce_fail1);
-            Assert.AreEqual(1, counterExampleResults.CounterExamples.Count);
+            List<string> expecation = new List<string>()
+            {
+                "L4 C19: inp1=((- 160)); more=((- 320)); "
+            };
+            VerifyResults(expecation);
         }
 
         [Test]
         public void ViolatedWith2CounterExamples()
         {
             GetCounterExamples(Files.ce_fail2);
-            Assert.AreEqual(2, counterExampleResults.CounterExamples.Count);
+            List<string> expecation = new List<string>()
+            {
+                "L4 C22: inp1=((- 24)); inp2=0 ;less=(**less#0); more=((- 24))'1; ",
+                "L5 C22: inp1=((- 24)); inp2=0; less=((- 24))'2; more=((- 24))'1; "
+            };
+            VerifyResults(expecation);
         }
 
     }

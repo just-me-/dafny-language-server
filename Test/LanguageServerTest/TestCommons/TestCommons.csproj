@@ -105,6 +105,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj">
+      <Project>{6D4E722B-FC78-4989-A239-13887C8751F2}</Project>
+      <Name>DafnyLanguageServer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
