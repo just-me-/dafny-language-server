@@ -27,15 +27,42 @@ namespace GotoIntegrationTest
             goneTo = Client.TextDocument.Definition(file, line - 1, col - 1).Result;
         }
 
-        protected void VerifyResult(string expectedFile, int expectedLine, int expectedCol)
+        protected void VerifyResult(string expectedFile, int expLine, int expCol)
         {
             long line = goneTo.FirstOrDefault().Location.Range.Start.Line;
             long col = goneTo.FirstOrDefault().Location.Range.Start.Character;
             Uri uri = goneTo.FirstOrDefault().Location.Uri;
 
-            Assert.AreEqual(expectedLine, line + 1);  //adding 1 here to get rid of the 0 indexing.
-            Assert.AreEqual(expectedCol, col + 1 - 1);    //same, but removing one again because cursor is one off to the right in current implementation   todo fixen Ticket 71
+            Assert.AreEqual(expLine, line + 1);  //adding 1 here to get rid of the 0 indexing.
+            Assert.AreEqual(expCol, col + 1 - 1);    //same, but removing one again because cursor is one off to the right in current implementation   todo fixen Ticket 71
             Assert.AreEqual(new Uri(expectedFile), uri);
         }
+
+
+        protected int expectedLine;
+        protected int expectedChar;
+        protected string file;
+
+        protected GoToBase(int expectedLine, int expectedChar, string file)
+        {
+            this.expectedLine = expectedLine;
+            this.expectedChar = expectedChar;
+            this.file = file;
+        }
+
+        public GoToBase()
+        {
+        }
+
+        protected void SpecificVerificationWithGoalInSameFile()
+        {
+            if (expectedChar == 0 || expectedLine == 0 || file is null)
+            {
+                throw new ArgumentException("Need to set expectation class variables to use specific verificatoin");
+            }
+            VerifyResult(file, expectedLine, expectedChar);
+        }
+
+
     }
 }
