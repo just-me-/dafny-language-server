@@ -35,7 +35,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_fail2);
             List<string> expecation = new List<string>()
             {
-                "L4 C22: inp1=((- 24)); inp2=0 ;less=(**less#0); more=((- 24))'1; ",
+                "L4 C22: inp1=((- 24)); inp2=0; less=(**less#0); more=((- 24))'1; ", 
                 "L5 C22: inp1=((- 24)); inp2=0; less=((- 24))'2; more=((- 24))'1; "
             };
             VerifyResults(expecation);
