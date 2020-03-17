@@ -64,7 +64,7 @@ namespace CompileIntegrationTest
             }
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
-            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), $"Msg not contained:  Expected: {expectedMessage}. Is: {compilerResults.Message}");
         }
 
 
