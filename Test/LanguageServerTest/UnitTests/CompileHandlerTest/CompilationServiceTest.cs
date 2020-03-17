@@ -1,3 +1,4 @@
+using System;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Services;
 using NUnit.Framework;
@@ -7,6 +8,8 @@ using Files = TestCommons.Paths;
 
 namespace CompileHandlerTest
 {
+    [TestFixture]
+    [Category("Unit")]
     public class CompileHandlerTests
     {
         private CompilerResults compilerResults;
@@ -129,7 +132,7 @@ namespace CompileHandlerTest
         public void WithArgumentsNoCompile()
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "/compile:0" });
-            VerifyResults(true, false, failMsg + " in line 0.");
+            VerifyResultsLoosely(true, false);
         }
 
         [Test]
@@ -143,7 +146,7 @@ namespace CompileHandlerTest
         public void WithArgumentsGarbage()
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
-            VerifyResults(true, false, failMsg + " in line 0.");
+            VerifyResultsLoosely(true, false);
         }
 
 
@@ -165,6 +168,18 @@ namespace CompileHandlerTest
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Mismatch");
             Assert.AreEqual(expectedMessage, compilerResults.Message);
+        }
+
+
+        private void VerifyResultsLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = "")
+        {
+            if (compilerResults == null)
+            {
+                Assert.Fail("compilerResults are null - no results received!");
+            }
+            Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), $"Message not contained. Expected: {expectedMessage}. Is: {compilerResults.Message}");
         }
     }
 

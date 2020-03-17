@@ -3,6 +3,8 @@ using NUnit.Framework;
 
 namespace CompletionHandlerTest
 {
+    [TestFixture]
+    [Category("Unit")]
     public class CompletionTests
     {
         private FileSymboltable symbolTable = new FileSymboltable(new DafnyTranslationUnitFakeForCompletions());

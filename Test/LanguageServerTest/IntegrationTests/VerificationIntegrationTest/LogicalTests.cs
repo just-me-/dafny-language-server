@@ -1,51 +1,18 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Client;
-using TestCommons;
 using Files = TestCommons.Paths;
-
-
-
 
 namespace VerificationIntegrationTest
 {
 
     [TestFixture]
-    public class Tests
+    public class LogicalTests : VerificationBase
     {
-        public TestSetupManager m = new TestSetupManager("Verification");
-        private List<string> diagnosticList;
-        private readonly System.Threading.EventWaitHandle waitHandle = new System.Threading.AutoResetEvent(false);
-
-        [SetUp]
-        public void Setup()
-        {
-            m.Setup();
-            diagnosticList = default;
-
-            PublishDiagnosticsHandler diagnosticsHandler = (uri, diagList) =>
-            {
-                diagnosticList = diagList.ToStringList();
-                waitHandle.Set();
-            };
-
-            m.Client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            m.TearDown();
-        }
-
 
         [Test]
         public void NoDiagnostics1()
         {
             SendRequestAndAwaitDiagnostics(Files.vc_good);
-
             CollectionAssert.IsEmpty(diagnosticList);
         }
 
@@ -53,9 +20,7 @@ namespace VerificationIntegrationTest
         public void NoDiagnostics2()
         {
             SendRequestAndAwaitDiagnostics(Files.vc_noensure);
-
             CollectionAssert.IsEmpty(diagnosticList);
-
         }
 
 
@@ -69,7 +34,7 @@ namespace VerificationIntegrationTest
                 "R[L6 C15 - L6 C23] - Error - assertion violation - Hint: =="    //Todo dieses hint teil ist ja auch übelst behindert. das == wird ja underlined.
             };
 
-            CollectionAssert.AreEquivalent(expct, diagnosticList);
+            VerifyResults(expct);
         }
 
         [Test]
@@ -83,9 +48,7 @@ namespace VerificationIntegrationTest
                 "R[L3 C0 - L3 C1] - Error - A postcondition might not hold on this return path. - Hint: {"
             };
 
-
-
-            CollectionAssert.AreEquivalent(expct, diagnosticList);
+            VerifyResults(expct);
         }
 
         [Test]
@@ -100,14 +63,10 @@ namespace VerificationIntegrationTest
                 "R[L6 C15 - L6 C23] - Error - assertion violation - Hint: =="
             };
 
-            CollectionAssert.AreEquivalent(expct, diagnosticList);
+            VerifyResults(expct);
         }
 
-        private void SendRequestAndAwaitDiagnostics(string file)
-        {
-            m.Client.TextDocument.DidOpen(file, "dfy");
-            waitHandle.WaitOne();
-        }
+
     }
 
 }

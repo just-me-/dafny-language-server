@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,24 +7,25 @@ using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using Serilog;
 using Serilog.Extensions.Logging;
+using NUnit.Framework;
 using Files = TestCommons.Paths;
 
 namespace TestCommons
 {
-    public class TestSetupManager
+    [Category("Integration")]
+    public class IntegrationTestBase
     {
-        public LanguageClient Client { get; private set; }
-        public CancellationTokenSource CancellationSource { get; private set; }
+        protected LanguageClient Client { get; private set; }
+        protected CancellationTokenSource CancellationSource { get; set; }
 
         private readonly string name;
         private ServerProcess server;
-        private ILogger log;
-        private SerilogLoggerFactory LoggerFactory;
+        protected ILogger log;
+        protected SerilogLoggerFactory LoggerFactory;
 
+        public IntegrationTestBase(string name) => this.name = name;
 
-        public TestSetupManager(string name) => this.name = name;
-
-
+        [SetUp]
         public void Setup()
         {
             CancellationSource = new CancellationTokenSource();
@@ -53,9 +55,7 @@ namespace TestCommons
             log.Information("*** Language server has been successfully initialized.");
         }
 
-
-        
-
+        [TearDown]
         public void TearDown()
         {
             log.Information("Shutting down client...");
