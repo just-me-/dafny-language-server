@@ -9,7 +9,7 @@ namespace CounterExampleIntegrationTest
     [TestFixture]
     public class Tests
     {
-        public TestSetupManager m = new TestSetupManager("CounterExample");
+        public IntegrationTestBase m = new IntegrationTestBase("CounterExample");
         private CounterExampleResults counterExampleResults;
         private const string keyword = "counterExample";
 

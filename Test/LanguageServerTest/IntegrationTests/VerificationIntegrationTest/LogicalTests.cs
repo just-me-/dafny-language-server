@@ -15,7 +15,7 @@ namespace VerificationIntegrationTest
     [TestFixture]
     public class Tests
     {
-        public TestSetupManager m = new TestSetupManager("Verification");
+        public IntegrationTestBase m = new IntegrationTestBase("Verification");
         private List<string> diagnosticList;
         private readonly System.Threading.EventWaitHandle waitHandle = new System.Threading.AutoResetEvent(false);
 

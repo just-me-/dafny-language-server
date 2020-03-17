@@ -13,7 +13,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class Tests
     {
-        public TestSetupManager m = new TestSetupManager("GoTo");
+        public IntegrationTestBase m = new IntegrationTestBase("GoTo");
         private LocationOrLocationLinks goneTo;
 
         [SetUp]
