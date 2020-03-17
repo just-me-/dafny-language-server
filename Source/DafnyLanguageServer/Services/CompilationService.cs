@@ -73,6 +73,12 @@ namespace DafnyLanguageServer.Services
                 string threadOutput = sw.ToString();
                 threadOutput = threadOutput.Replace("\r", "");
 
+                Console.WriteLine(threadOutput);
+                if (threadOutput == " in line 0.")
+                {
+                    threadOutput = "Could not parse document. Please check the input and try again.";
+                }
+
                 if (threadOutput.Contains("Compiled assembly into") && threadOutput.Contains(".exe"))
                 {
                     return new CompilerResults
@@ -100,12 +106,24 @@ namespace DafnyLanguageServer.Services
                     int.TryParse(m.Groups[2].Value, out int col);
                     string error = m.Groups[3].ToString();
 
-                    return new CompilerResults
+                    if (m.Success)
                     {
-                        Error = true,
-                        Message = $"Compilation failed: {error} in line {line}.",
-                        Executable = false
-                    };
+                        return new CompilerResults
+                        {
+                            Error = true,
+                            Message = $"Compilation failed: {error} in line {line}.",
+                            Executable = false
+                        };
+                    }
+                    else
+                    {
+                        return new CompilerResults
+                        {
+                            Error = true,
+                            Message = $"Compilation failed: {threadOutput}",
+                            Executable = false
+                        };
+                    }
                 }
             });
         }

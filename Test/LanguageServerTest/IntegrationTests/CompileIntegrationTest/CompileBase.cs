@@ -56,6 +56,17 @@ namespace CompileIntegrationTest
             Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
 
+        protected void VerifyLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = "")
+        {
+            if (compilerResults == null)
+            {
+                Assert.Fail("compilerResults are null - no results received!");
+            }
+            Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
+        }
+
 
     }
 }
