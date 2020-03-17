@@ -179,7 +179,7 @@ namespace CompileHandlerTest
             }
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
-            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), "Message not contained");
         }
     }
 
