@@ -146,7 +146,7 @@ namespace CompileHandlerTest
         public void WithArgumentsGarbage()
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
-            VerifyResultsLoosely(true, false, "unknown switch");
+            VerifyResultsLoosely(true, false);
         }
 
 
@@ -179,7 +179,7 @@ namespace CompileHandlerTest
             }
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
-            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), "Message not contained");
+            Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), $"Message not contained. Expected: {expectedMessage}. Is: {compilerResults.Message}");
         }
     }
 

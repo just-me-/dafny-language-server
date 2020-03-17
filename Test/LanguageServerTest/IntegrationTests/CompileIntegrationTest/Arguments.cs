@@ -29,7 +29,7 @@ namespace CompileIntegrationTest
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "/bababutz sagt das kind!" });
             Console.WriteLine(compilerResults.Message);
-            VerifyLoosely(true, false, "unknown switch");
+            VerifyLoosely(true, false);
         }
 
         [Test]
