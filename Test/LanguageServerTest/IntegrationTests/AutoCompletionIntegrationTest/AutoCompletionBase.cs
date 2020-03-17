@@ -14,9 +14,8 @@ namespace AutoCompletionIntegrationTest
     {
         private CompletionList completions;
 
-        public AutoCompletionBase()
+        public AutoCompletionBase() : base("AutoCompletion")
         {
-            name = "AutoCompletion";
         }
 
         [SetUp]

@@ -14,9 +14,8 @@ namespace CounterExampleIntegrationTest
         protected CounterExampleResults counterExampleResults;
         protected const string keyword = "counterExample";
 
-        public CounterExampleBase()
+        public CounterExampleBase() : base("CounterExample")
         {
-            name = "CounterExample";
         }
 
         [SetUp]

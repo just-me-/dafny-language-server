@@ -17,9 +17,8 @@ namespace CompileIntegrationTest
         protected const string successMsg = "Compilation successful";
         protected const string failMsg = "Compilation failed: ";
 
-        public CompileBase()
+        public CompileBase() : base("Compile")
         {
-            name = "Compile";
         }
 
         [SetUp]

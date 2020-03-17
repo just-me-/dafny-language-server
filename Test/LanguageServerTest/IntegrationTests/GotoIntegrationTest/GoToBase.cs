@@ -43,14 +43,14 @@ namespace GotoIntegrationTest
         protected int expectedChar;
         protected string file;
 
-        protected GoToBase(int expectedLine, int expectedChar, string file)
+        protected GoToBase(int expectedLine, int expectedChar, string file) : base("GoTo")
         {
             this.expectedLine = expectedLine;
             this.expectedChar = expectedChar;
             this.file = file;
         }
 
-        public GoToBase()
+        public GoToBase() : base("GoTo")
         {
         }
 

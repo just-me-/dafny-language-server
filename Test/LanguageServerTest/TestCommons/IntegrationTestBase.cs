@@ -14,13 +14,15 @@ namespace TestCommons
 {
     public class IntegrationTestBase
     {
-        public LanguageClient Client { get; private set; }
-        public CancellationTokenSource CancellationSource { get; private set; }
+        protected LanguageClient Client { get; private set; }
+        protected CancellationTokenSource CancellationSource { get; set; }
 
-        protected string name;
-        protected ServerProcess server;
+        private readonly string name;
+        private ServerProcess server;
         protected ILogger log;
         protected SerilogLoggerFactory LoggerFactory;
+
+        public IntegrationTestBase(string name) => this.name = name;
 
         [SetUp]
         public void Setup()
