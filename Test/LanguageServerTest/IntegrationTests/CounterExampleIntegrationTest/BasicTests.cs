@@ -7,6 +7,7 @@ using Files = TestCommons.Paths;
 namespace CounterExampleIntegrationTest
 {
     [TestFixture]
+    [Category("Integration")]
     public class BasicTests : CounterExampleBase
     {
 

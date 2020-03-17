@@ -12,6 +12,7 @@ using Files = TestCommons.Paths;
 
 namespace TestCommons
 {
+    [Category("Integration")]
     public class IntegrationTestBase
     {
         protected LanguageClient Client { get; private set; }

@@ -60,7 +60,9 @@ namespace Tests
         public void DotGraph() { throw new NotImplementedException(); }
     }
 
-    public class UnitTests
+    [TestFixture]
+    [Category("Unit")]
+    public class CounterExmapleUnitTests
     {
         [Test]
         public void NoCounterExample()

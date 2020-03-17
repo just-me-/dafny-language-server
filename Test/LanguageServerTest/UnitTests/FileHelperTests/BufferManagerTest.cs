@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace ContentManagerTests
 {
+    [TestFixture]
+    [Category("Unit")]
     internal class BufferManagerTests
     {
         private BufferManager b;

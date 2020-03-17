@@ -7,6 +7,8 @@ using Files = TestCommons.Paths;
 
 namespace CompileHandlerTest
 {
+    [TestFixture]
+    [Category("Unit")]
     public class CompileHandlerTests
     {
         private CompilerResults compilerResults;
