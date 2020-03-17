@@ -1,3 +1,4 @@
+using System;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Services;
 using NUnit.Framework;
@@ -169,6 +170,7 @@ namespace CompileHandlerTest
             Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
 
+
         private void VerifyResultsLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = "")
         {
             if (compilerResults == null)
@@ -176,7 +178,7 @@ namespace CompileHandlerTest
                 Assert.Fail("compilerResults are null - no results received!");
             }
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
-            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Mismatch");
+            Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
             Assert.IsTrue(compilerResults.Message.Contains(expectedMessage));
         }
     }
