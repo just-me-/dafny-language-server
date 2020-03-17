@@ -9,7 +9,7 @@ namespace CompileIntegrationTest
     public class RegularTests
     {
 
-        public TestSetupManager m = new TestSetupManager("Compilation");
+        public IntegrationTestBase m = new IntegrationTestBase("Compilation");
         private CompilerResults compilerResults;
         private const string compileKeyword = "compile";
         private const string successMsg = "Compilation successful";
