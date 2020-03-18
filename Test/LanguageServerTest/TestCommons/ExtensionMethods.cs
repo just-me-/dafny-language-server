@@ -44,7 +44,7 @@ namespace TestCommons
                 return null;
             }
             string result = $"L{ce.Line} C{ce.Col}: ";
-            result = ce.Variables.Aggregate(result, (current, kvp) => current + $"{kvp.Key}={kvp.Value}; ");
+            result = ce.Variables.Aggregate(result, (current, kvp) => current + $"{kvp.Key} = {kvp.Value}; ");
             return result;
         }
 

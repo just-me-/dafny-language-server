@@ -154,13 +154,13 @@ namespace Tests
             const int col1 = 1;
             const int row1 = 31;
             string[] vars1 = { "myVar", "a", "b" };
-            string[] vals1 = { "myVal", "-2", "((3))" };
+            string[] vals1 = { "myVal", "-2", "3" };
 
 
             const int col2 = 211;
             const int row2 = 2123;
             string[] vars2 = { "abc", "def", "ghi" };
-            string[] vals2 = { "0", "((-23))", "#less'1" };
+            string[] vals2 = { "0", "-23", "#less'1" };
 
 
             const int col3 = 22;
