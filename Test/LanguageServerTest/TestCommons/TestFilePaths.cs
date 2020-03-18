@@ -36,6 +36,11 @@ namespace TestCommons
         public static readonly string ce_fail2 = CreateTestfilePath("counterExample/postcondition_violation_2.dfy");
         public static readonly string ce_ok = CreateTestfilePath("counterExample/postcondition_fullfilled.dfy");
         public static readonly string ce_2meth = CreateTestfilePath("counterExample/two_methods.dfy");
+        public static readonly string ce_float = CreateTestfilePath("counterExample/float.dfy");
+        public static readonly string ce_bool = CreateTestfilePath("counterExample/bool.dfy");
+        public static readonly string ce_string = CreateTestfilePath("counterExample/string.dfy");
+        public static readonly string ce_set = CreateTestfilePath("counterExample/set.dfy");
+        public static readonly string ce_sequence = CreateTestfilePath("counterExample/sequence.dfy");
 
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");

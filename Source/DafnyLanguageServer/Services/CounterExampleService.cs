@@ -51,11 +51,25 @@ namespace DafnyLanguageServer.Services
                             int value = int.Parse(match.Groups[2].Value);
                             value = isNegative ? -value : value;
                             currentCounterExample.Variables.Add(variable.Name, value.ToString());
+                            continue;
                         }
-                        else
+
+                        //float parsing
+                        regex = @"\(+(-?) ?(\d+\.\d+)\)+"; //to parse like ((- 24.0)) or ((0.0))
+                        matchCollection = Regex.Matches(variable.Value, regex);
+                        if (matchCollection.Count == 1)
                         {
-                            currentCounterExample.Variables.Add(variable.Name, variable.Value);
+                            var match = matchCollection[0];
+                            bool isNegative = match.Groups[1].Value == "-";
+                            float value = float.Parse(match.Groups[2].Value);
+                            value = isNegative ? -value : value;
+                            currentCounterExample.Variables.Add(variable.Name,
+                                value.ToString(CultureInfo.CurrentCulture));
+                            continue;
                         }
+
+                        currentCounterExample.Variables.Add(variable.Name, variable.Value);
+                        
                         
                     }
 
