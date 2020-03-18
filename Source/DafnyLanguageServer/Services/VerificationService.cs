@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.Services
                     Diagnostics = new Container<Diagnostic>(diagnostics)
                 };
                 _router.Document.PublishDiagnostics(p);
-                _msgSender.SendErrornumber(diagnostics.Count);
+                _msgSender.SendCountedErrors(diagnostics.Count);
             } catch (Exception e)
             {
                 Console.WriteLine("There was an error: " + e);

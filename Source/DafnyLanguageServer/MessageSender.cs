@@ -46,7 +46,7 @@ namespace DafnyLanguageServer
             SendMessage("serverStarted", dafnyVersion);
         }
 
-        public void SendErrornumber(int countedErrors)
+        public void SendCountedErrors(int countedErrors)
         {
             SendMessage("updateStatusbar", countedErrors.ToString());
         }
