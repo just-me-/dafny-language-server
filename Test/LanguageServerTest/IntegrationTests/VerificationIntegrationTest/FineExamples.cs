@@ -10,6 +10,21 @@ namespace VerificationIntegrationTest
     {
 
         [Test]
+        public void NoDiagnostics1()
+        {
+            SendRequestAndAwaitDiagnostics(Files.vc_good);
+            CollectionAssert.IsEmpty(diagnosticList);
+        }
+
+        [Test]
+        public void NoDiagnostics2()
+        {
+            SendRequestAndAwaitDiagnostics(Files.vc_noensure);
+            CollectionAssert.IsEmpty(diagnosticList);
+        }
+
+
+        [Test]
         public void AssertionFail()
         {
             SendRequestAndAwaitDiagnostics(Files.vc_assertion);
