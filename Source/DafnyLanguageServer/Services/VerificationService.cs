@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.DafnyAccess;
 using Microsoft.Boogie;
@@ -41,8 +42,13 @@ namespace DafnyLanguageServer.Services
             }
         }
 
-        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode)
+        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode = null)
         {
+            if (sourcecode is null)
+            {
+                sourcecode = File.ReadAllText(filepath);
+            }
+
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
 
             foreach (ErrorInformation e in errors)
