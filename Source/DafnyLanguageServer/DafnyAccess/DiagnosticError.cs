@@ -31,13 +31,13 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public static DiagnosticError ConvertToErrorInformation(this ErrorMessage eMsg)
         {
-            return new DiagnosticError(eMsg.token, eMsg.message);
+            return new DiagnosticError(eMsg.token, "Syntax Error: " + eMsg.message);
         }
 
         public static DiagnosticError ConvertToErrorInformation(this ErrorInformation eInfo)
         {
             if (eInfo is null) return null;
-            return new DiagnosticError(eInfo.Tok, eInfo.Msg)
+            return new DiagnosticError(eInfo.Tok, "Logical Error: " + eInfo.Msg)
             {
            
                 Aux = eInfo.Aux  //todo evtl clonen wegen refernezen zeug? ne oder?

@@ -68,9 +68,13 @@ namespace DafnyLanguageServer.Services
             int col = e.Tok.col - 1;
             int length = FileHelper.GetLineLength(sourcecode, line) - col;
 
+            if (e.Msg.EndsWith("."))
+            {
+                e.Msg = e.Msg.Substring(0, e.Msg.Length - 1);
+            }
             Diagnostic d = new Diagnostic
             {
-                Message = e.Msg + " - Hint: " + e.Tok.val,
+                Message = e.Msg + $" at [ {e.Tok.val} ]",
                 Range = FileHelper.CreateRange(line, col, length),
                 Severity = DiagnosticSeverity.Error,
                 Source = filepath
@@ -83,6 +87,7 @@ namespace DafnyLanguageServer.Services
             List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
             for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
             {
+                string auxmessage = e.Aux[i].Msg;
                 int auxline = e.Aux[i].Tok.line - 1;
                 int auxcol = e.Aux[i].Tok.col - 1;
                 int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
@@ -104,8 +109,6 @@ namespace DafnyLanguageServer.Services
                         Uri = null
                     };
                 }
-
-                string auxmessage = e.Aux[i].Msg;
 
                 DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
                 {

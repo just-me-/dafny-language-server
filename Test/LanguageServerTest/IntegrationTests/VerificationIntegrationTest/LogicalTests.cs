@@ -31,7 +31,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L6 C15 - L6 C23] - Error - assertion violation - Hint: =="    //Todo dieses hint teil ist ja auch übelst behindert. das == wird ja underlined.
+                "R[L6 C15 - L6 C23] - Error - Logical Error: assertion violation at [ == ]"
             };
 
             VerifyResults(expct);
@@ -44,8 +44,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L2 C16 - L2 C26] - Warning - This is the postcondition that might not hold.",
-                "R[L3 C0 - L3 C1] - Error - A postcondition might not hold on this return path. - Hint: {"
+                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at [ { ] Related Information: R[L2 C16 - L2 C26] This is the postcondition that might not hold."
             };
 
             VerifyResults(expct);
@@ -58,9 +57,8 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L2 C16 - L2 C26] - Warning - This is the postcondition that might not hold.",
-                "R[L3 C0 - L3 C1] - Error - A postcondition might not hold on this return path. - Hint: {",
-                "R[L6 C15 - L6 C23] - Error - assertion violation - Hint: =="
+                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at [ { ] Related Information: R[L2 C16 - L2 C26] This is the postcondition that might not hold.",
+                "R[L6 C15 - L6 C23] - Error - Logical Error: assertion violation at [ == ]"
             };
 
             VerifyResults(expct);
