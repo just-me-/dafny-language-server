@@ -61,34 +61,6 @@ namespace DafnyLanguageServer.Services
             return diagnostics;
         }
 
-        private Container<DiagnosticRelatedInformation> GetRelatedInformationForAnError(string sourcecode, DiagnosticError e)
-        {
-            List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
-            for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
-            {
-                int auxline = e.Aux[i].Tok.line - 1;
-                int auxcol = e.Aux[i].Tok.col - 1;
-                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
-                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
-                Location auxlocation = new Location()
-                {
-                    Range = auxrange,
-                    Uri = File.Exists(e.Aux[i].Tok.filename) ? new Uri(e.Aux[i].Tok.filename) : null
-                };
-
-                string auxmessage = e.Aux[i].Msg;
-
-                DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
-                {
-                    Location = auxlocation,
-                    Message = auxmessage
-                };
-
-                relatedInformations.Add(relatedDiagnostic);
-            }
-
-            return new Container<DiagnosticRelatedInformation>(relatedInformations);
-        }
 
         private Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
         {
@@ -104,6 +76,47 @@ namespace DafnyLanguageServer.Services
                 Source = filepath
             };
             return d;
+        }
+
+        private Container<DiagnosticRelatedInformation> GetRelatedInformationForAnError(string sourcecode, DiagnosticError e)
+        {
+            List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
+            for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
+            {
+                int auxline = e.Aux[i].Tok.line - 1;
+                int auxcol = e.Aux[i].Tok.col - 1;
+                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
+                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+                Location auxlocation;
+                try
+                {
+                    auxlocation = new Location()
+                    {
+                        Range = auxrange,
+                        Uri = new Uri(e.Aux[i].Tok.filename)
+                    };
+                }
+                catch
+                {
+                    auxlocation = new Location()
+                    {
+                        Range = auxrange,
+                        Uri = null
+                    };
+                }
+
+                string auxmessage = e.Aux[i].Msg;
+
+                DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
+                {
+                    Location = auxlocation,
+                    Message = auxmessage
+                };
+
+                relatedInformations.Add(relatedDiagnostic);
+            }
+
+            return new Container<DiagnosticRelatedInformation>(relatedInformations);
         }
     }
 }
