@@ -13,7 +13,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void SemiExpected()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_assertion);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_assertion);
 
             List<string> expct = new List<string>()
             {
@@ -27,7 +27,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void BracketExpected()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_assertion);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_assertion);
 
             List<string> expct = new List<string>()
             {
@@ -40,7 +40,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void CurlyExpected()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_assertion);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_assertion);
 
             List<string> expct = new List<string>()
             {

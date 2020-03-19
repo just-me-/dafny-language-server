@@ -12,7 +12,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void AssertionFail()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_assertion);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_assertion);
 
             List<string> expct = new List<string>()
             {
@@ -25,7 +25,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void PostConditionFail()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_postcondition);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_postcondition);
 
             List<string> expct = new List<string>()
             {
@@ -38,7 +38,7 @@ namespace VerificationIntegrationTest
         [Test]
         public void MultipleFails()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_multiplefails);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_multiplefails);
 
             List<string> expct = new List<string>()
             {

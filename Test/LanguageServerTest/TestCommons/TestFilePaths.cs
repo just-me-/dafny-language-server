@@ -14,7 +14,10 @@ namespace TestCommons
         public static readonly string dafnyExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/Dafny.exe"));
         public static readonly string langServExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/DafnyLanguageServer.exe"));
 
-        //Compile: Dafny Sourcefiles
+        /***DAFNY SOURCE FILES***/
+        /************************/
+
+        //Compile
         public static readonly string cp_fineDLL = CreateTestfilePath("compile/compiles_as_dll.dfy");
         public static readonly string cp_fineEXE = CreateTestfilePath("compile/compiles_as_exe.dfy");
         public static readonly string cp_assertion = CreateTestfilePath("compile/assertion_violation.dfy");
@@ -31,7 +34,7 @@ namespace TestCommons
         public static readonly string cp_out_dll = AddTestFolderPrefix("compile/compiles_as_dll.dll");
         public static readonly string cp_out_exe = AddTestFolderPrefix("compile/compiles_as_exe.exe");
 
-        //Counter Example Dafny Sourcefiles
+        //Counter Example
         public static readonly string ce_fail1 = CreateTestfilePath("counterExample/postcondition_violation_1.dfy");
         public static readonly string ce_fail2 = CreateTestfilePath("counterExample/postcondition_violation_2.dfy");
         public static readonly string ce_ok = CreateTestfilePath("counterExample/postcondition_fullfilled.dfy");
@@ -59,11 +62,24 @@ namespace TestCommons
         public static readonly string ac_ac = CreateTestfilePath("autocompletion/autocompletion.dfy");
 
         //Verification
-        public static readonly string vc_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
-        public static readonly string vc_good = CreateTestfilePath("verification/moreless_good.dfy");
-        public static readonly string vc_postcondition = CreateTestfilePath("verification/moreless_postcondition.dfy");
-        public static readonly string vc_noensure = CreateTestfilePath("verification/moreless_noensure.dfy");
-        public static readonly string vc_multiplefails = CreateTestfilePath("verification/moreless_manyfails.dfy");
+        public static readonly string vc_lo_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
+        public static readonly string vc_lo_good = CreateTestfilePath("verification/moreless_good.dfy");
+        public static readonly string vc_lo_postcondition = CreateTestfilePath("verification/moreless_postcondition.dfy");
+        public static readonly string vc_lo_noensure = CreateTestfilePath("verification/moreless_noensure.dfy");
+        public static readonly string vc_lo_multiplefails = CreateTestfilePath("verification/moreless_manyfails.dfy");
+
+        public static readonly string vc_sy_curly = CreateTestfilePath("verification/syntax_curlyexpected.dfy");
+        public static readonly string vc_sy_eof = CreateTestfilePath("verification/syntax_EOFexpected.dfy");
+        public static readonly string vc_sy_ns = CreateTestfilePath("verification/syntax_invalidNameSegment.dfy");
+        public static readonly string vc_sy_ns2 = CreateTestfilePath("verification/syntax_invalidNameSegment2.dfy");
+        public static readonly string vc_sy_suffix = CreateTestfilePath("verification/syntax_invalidSuffix.dfy");
+        public static readonly string vc_sy_parenthesis = CreateTestfilePath("verification/syntax_parenexpected.dfy");
+        public static readonly string vc_sy_bracer = CreateTestfilePath("verification/syntax_rbrace.dfy");
+        public static readonly string vc_sy_semi = CreateTestfilePath("verification/syntax_semi.dfy");
+
+        public static readonly string vc_se_args = CreateTestfilePath("verification/semantic_arguments.dfy");
+        public static readonly string vc_se_type = CreateTestfilePath("verification/semantic_undeclaredType.dfy");
+        public static readonly string vc_se_identifier = CreateTestfilePath("verification/semantic_identifier.dfy");
 
 
         private static string CreateTestfilePath(string s)

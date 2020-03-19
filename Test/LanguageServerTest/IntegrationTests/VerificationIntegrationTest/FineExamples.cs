@@ -12,14 +12,14 @@ namespace VerificationIntegrationTest
         [Test]
         public void NoDiagnostics1()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_good);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_good);
             CollectionAssert.IsEmpty(diagnosticList);
         }
 
         [Test]
         public void NoDiagnostics2()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_noensure);
+            SendRequestAndAwaitDiagnostics(Files.vc_lo_noensure);
             CollectionAssert.IsEmpty(diagnosticList);
         }
 
