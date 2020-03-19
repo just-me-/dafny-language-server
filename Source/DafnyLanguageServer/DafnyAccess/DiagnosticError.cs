@@ -19,6 +19,11 @@ namespace DafnyLanguageServer.DafnyAccess
             Tok = tok;
             Msg = msg;
         }
+
+        public virtual void AddAuxInfo(IToken tok, string msg, string category = null)
+        {
+            this.Aux.Add(new ErrorInformation.AuxErrorInfo(tok, msg, category));
+        }
     }
 
     public static class ConverterExtensions

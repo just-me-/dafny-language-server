@@ -14,7 +14,7 @@ namespace CompletionHandlerTest
             IsNice = isnice;
         }
 
-        public List<ErrorInformation> Errors { get; } = new List<ErrorInformation>();
+        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>();
 
         public bool Verify()
         {
@@ -73,7 +73,7 @@ namespace CompletionHandlerTest
             throw new NotImplementedException();
         }
 
-        public List<ErrorInformation> GetErrors()
+        public List<DiagnosticError> GetErrors()
         {
             throw new NotImplementedException();
         }

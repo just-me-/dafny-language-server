@@ -78,7 +78,7 @@ namespace DafnyLanguageServer.Services
                     Location auxlocation = new Location()
                     {
                         Range = auxrange,
-                        Uri = new Uri(e.Aux[i].Tok.filename)
+                        Uri = File.Exists(e.Aux[i].Tok.filename) ? new Uri(e.Aux[i].Tok.filename) : null
 
                     };
 

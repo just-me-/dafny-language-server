@@ -2,6 +2,7 @@
 using Microsoft.Boogie;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VerificationServiceTest
 {
@@ -16,7 +17,7 @@ namespace VerificationServiceTest
         public void setupExampleToken()
         {
             token = new Token();
-            token.filename = "FakedFile";
+            token.filename = "Random Filename";
             token.val = "This would be an error description";
             token.kind = token.pos = token.line = token.col = token.line = 3;
         }
@@ -46,14 +47,16 @@ namespace VerificationServiceTest
         public void TestDiagnosticSubError()
         {
             var errors = new List<FakeErrorObject>();
-            var info = new FakeErrorObject(token, "Msg");
-            info.AddAuxInfo(token, "SubMsg");
-            info.AddAuxInfo(token, "TraceData");
-            errors.Add(info);
+            var errorObject = new FakeErrorObject(token, "Msg");
+            errorObject.AddAuxInfo(token, "SubMsg");
+            errorObject.AddAuxInfo(token, "SubMsg2");
+            errorObject.AddAuxInfo(token, "TraceData");
+            errors.Add(errorObject);
 
             var diagnostics = verificationService.CreateDafnyDiagnostics(errors, token.filename, randomFakeSource);
 
-            Assert.AreEqual(2, diagnostics.Count);
+            Assert.AreEqual(1, diagnostics.Count);
+            Assert.AreEqual(2, diagnostics.FirstOrDefault().RelatedInformation.Count());
         }
     }
 }
