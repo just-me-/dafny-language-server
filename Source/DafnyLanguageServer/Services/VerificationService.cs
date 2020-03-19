@@ -53,51 +53,57 @@ namespace DafnyLanguageServer.Services
 
             foreach (DiagnosticError e in errors)
             {
-                int line = e.Tok.line - 1;
-                int col = e.Tok.col - 1;
-                int length = FileHelper.GetLineLength(sourcecode, line) - col;
-
-                Diagnostic d = new Diagnostic
-                {
-                    Message = e.Msg + " - Hint: " + e.Tok.val,
-                    Range = FileHelper.CreateRange(line, col, length),
-                    Severity = DiagnosticSeverity.Error,
-                    Source = filepath
-                };
-
-                //Set Related Information, mainly done for "This is the postcondition that might not hold"
-                //Omnisharp bög now fixed.
-                //todo extract method
-                List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
-                for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
-                {
-                    int auxline = e.Aux[i].Tok.line - 1;
-                    int auxcol = e.Aux[i].Tok.col - 1;
-                    int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
-                    Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
-                    Location auxlocation = new Location()
-                    {
-                        Range = auxrange,
-                        Uri = File.Exists(e.Aux[i].Tok.filename) ? new Uri(e.Aux[i].Tok.filename) : null
-
-                    };
-
-                    string auxmessage = e.Aux[i].Msg;
-
-                    DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
-                    {
-                        Location = auxlocation,
-                        Message =  auxmessage
-                    };
-
-                    relatedInformations.Add(relatedDiagnostic);
-                }
-                d.RelatedInformation = new Container<DiagnosticRelatedInformation>(relatedInformations);
-
+                var d = ConvertErrorToDiagnostic(filepath, sourcecode, e);
+                d.RelatedInformation = GetRelatedInformationForAnError(sourcecode, e);
                 diagnostics.Add(d);
             }
 
             return diagnostics;
+        }
+
+        private static Container<DiagnosticRelatedInformation> GetRelatedInformationForAnError(string sourcecode, DiagnosticError e)
+        {
+            List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
+            for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
+            {
+                int auxline = e.Aux[i].Tok.line - 1;
+                int auxcol = e.Aux[i].Tok.col - 1;
+                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
+                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+                Location auxlocation = new Location()
+                {
+                    Range = auxrange,
+                    Uri = File.Exists(e.Aux[i].Tok.filename) ? new Uri(e.Aux[i].Tok.filename) : null
+                };
+
+                string auxmessage = e.Aux[i].Msg;
+
+                DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
+                {
+                    Location = auxlocation,
+                    Message = auxmessage
+                };
+
+                relatedInformations.Add(relatedDiagnostic);
+            }
+
+            return new Container<DiagnosticRelatedInformation>(relatedInformations);
+        }
+
+        private static Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
+        {
+            int line = e.Tok.line - 1;
+            int col = e.Tok.col - 1;
+            int length = FileHelper.GetLineLength(sourcecode, line) - col;
+
+            Diagnostic d = new Diagnostic
+            {
+                Message = e.Msg + " - Hint: " + e.Tok.val,
+                Range = FileHelper.CreateRange(line, col, length),
+                Severity = DiagnosticSeverity.Error,
+                Source = filepath
+            };
+            return d;
         }
     }
 }
