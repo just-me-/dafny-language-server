@@ -11,7 +11,7 @@ namespace CounterExampleIntegrationTest
     {
 
 
-        //[Test]
+        [Test]
         public void WorkInProgress_FeierabendfürHeute()
         {
             GetCounterExamples(Files.ce_fail2);
