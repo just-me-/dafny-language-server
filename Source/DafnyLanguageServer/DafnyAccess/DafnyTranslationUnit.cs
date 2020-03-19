@@ -38,11 +38,23 @@ namespace DafnyLanguageServer.DafnyAccess
         private Microsoft.Dafny.Program dafnyProgram;
         private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
 
-        private List<ErrorInformation> _errors = new List<ErrorInformation>();
+        private List<DiagnosticError> _errors = new List<DiagnosticError>();
 
         private void AddErrorToList(ErrorInformation e)
         {
-            _errors.Add(e);
+            _errors.Add(e.ConvertToErrorInformation());
+        }
+
+        private void AddErrorToList(ErrorMessage e)
+        {
+            _errors.Add(e.ConvertToErrorInformation());
+        }
+
+        public List<DiagnosticError> GetErrors()
+        {
+            _errors = new List<DiagnosticError>();
+            Verify();
+            return _errors;
         }
 
         public DafnyTranslationUnit(string fname, string source) : this(fname, source, new string[] { }) { }
@@ -59,12 +71,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return Parse() && Resolve() && Translate() && Boogie();
         }
 
-        public List<ErrorInformation> GetErrors()
-        {
-            _errors = new List<ErrorInformation>();
-            Verify();
-            return _errors;
-        }
+
 
         private bool Parse()
         {
@@ -80,9 +87,8 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
                 {
-                    AddErrorToList(error.ConvertToErrorInformation());
+                    AddErrorToList(error);
                 }
-               
             }
 
             return success;

@@ -42,7 +42,7 @@ namespace DafnyLanguageServer.Services
             }
         }
 
-        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode = null)
+        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<DiagnosticError> errors, string filepath, string sourcecode = null)
         {
             if (sourcecode is null)
             {
@@ -51,7 +51,7 @@ namespace DafnyLanguageServer.Services
 
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
 
-            foreach (ErrorInformation e in errors)
+            foreach (DiagnosticError e in errors)
             {
                 int line = e.Tok.line - 1;
                 int col = e.Tok.col - 1;
