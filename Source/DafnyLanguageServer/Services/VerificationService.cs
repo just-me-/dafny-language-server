@@ -72,9 +72,19 @@ namespace DafnyLanguageServer.Services
             {
                 e.Msg = e.Msg.Substring(0, e.Msg.Length - 1);
             }
+
+            string msg;
+            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null)
+            {
+                msg = e.Msg;
+            }
+            else
+            {
+               msg = e.Msg + $" at [ {e.Tok.val} ]";
+            }
             Diagnostic d = new Diagnostic
             {
-                Message = e.Msg + $" at [ {e.Tok.val} ]",
+                Message = msg,
                 Range = FileHelper.CreateRange(line, col, length),
                 Severity = DiagnosticSeverity.Error,
                 Source = filepath
