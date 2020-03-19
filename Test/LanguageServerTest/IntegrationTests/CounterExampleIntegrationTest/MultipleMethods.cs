@@ -10,7 +10,7 @@ namespace CounterExampleIntegrationTest
     public class MultipleMethods : CounterExampleBase
     {
 
-
+        /*
         [Test]
         public void WorkInProgress_FeierabendfürHeute()
         {
@@ -22,6 +22,7 @@ namespace CounterExampleIntegrationTest
             };
             VerifyResults(expecation);
         }
+        */
 
     }
 }
