@@ -31,9 +31,12 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public static DiagnosticError ConvertToErrorInformation(this ErrorInformation eInfo)
         {
-            var result = new DiagnosticError(eInfo.Tok, eInfo.Msg);
-            result.Aux = eInfo.Aux;  //todo evtl clonen wegen refernezen zeug? ne oder?
-            return result;
+            if (eInfo is null) return null;
+            return new DiagnosticError(eInfo.Tok, eInfo.Msg)
+            {
+           
+                Aux = eInfo.Aux  //todo evtl clonen wegen refernezen zeug? ne oder?
+            };
         }
 
         public static List<DiagnosticError> ToDiagnosticErrorList<T>(this IEnumerable<T> source, Func<T, DiagnosticError> converter)
