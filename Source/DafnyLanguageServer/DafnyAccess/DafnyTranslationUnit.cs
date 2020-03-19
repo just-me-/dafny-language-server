@@ -80,8 +80,7 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
                 {
-                    var msg = error.message;
-                    var line = error.token.line;
+                    AddErrorToList(error.ConvertToErrorInformation());
                 }
                
             }
