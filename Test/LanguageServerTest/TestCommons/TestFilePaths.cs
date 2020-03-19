@@ -71,7 +71,7 @@ namespace TestCommons
         public static readonly string vc_sy_curly = CreateTestfilePath("verification/syntax_curlyexpected.dfy");
         public static readonly string vc_sy_eof = CreateTestfilePath("verification/syntax_EOFexpected.dfy");
         public static readonly string vc_sy_ns = CreateTestfilePath("verification/syntax_invalidNameSegment.dfy");
-        public static readonly string vc_sy_ns2 = CreateTestfilePath("verification/syntax_invalidNameSegment2.dfy");
+        public static readonly string vc_sy_update = CreateTestfilePath("verification/syntax_invalidUpdate.dfy");
         public static readonly string vc_sy_suffix = CreateTestfilePath("verification/syntax_invalidSuffix.dfy");
         public static readonly string vc_sy_parenthesis = CreateTestfilePath("verification/syntax_parenexpected.dfy");
         public static readonly string vc_sy_bracer = CreateTestfilePath("verification/syntax_rbrace.dfy");
