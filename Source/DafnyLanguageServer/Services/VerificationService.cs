@@ -61,7 +61,7 @@ namespace DafnyLanguageServer.Services
             return diagnostics;
         }
 
-        private static Container<DiagnosticRelatedInformation> GetRelatedInformationForAnError(string sourcecode, DiagnosticError e)
+        private Container<DiagnosticRelatedInformation> GetRelatedInformationForAnError(string sourcecode, DiagnosticError e)
         {
             List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
             for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
@@ -90,7 +90,7 @@ namespace DafnyLanguageServer.Services
             return new Container<DiagnosticRelatedInformation>(relatedInformations);
         }
 
-        private static Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
+        private Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
         {
             int line = e.Tok.line - 1;
             int col = e.Tok.col - 1;
