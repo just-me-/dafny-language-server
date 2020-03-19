@@ -78,9 +78,7 @@ namespace DafnyLanguageServer.DafnyAccess
             }
             else
             {
-                var bla = reporter.AllMessages[ErrorLevel.Error];
-                
-                foreach (var error in reporter.AllMessages[ErrorLevel.Error])
+                foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
                 {
                     var msg = error.message;
                     var line = error.token.line;

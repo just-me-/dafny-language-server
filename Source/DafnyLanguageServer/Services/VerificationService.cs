@@ -65,22 +65,35 @@ namespace DafnyLanguageServer.Services
                     Source = filepath
                 };
 
+                //Set Related Information, mainly done for "This is the postcondition that might not hold"
+                //Omnisharp bög now fixed.
+                //todo extract method
+                List<DiagnosticRelatedInformation> relatedInformations = new List<DiagnosticRelatedInformation>();
                 for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
                 {
                     int auxline = e.Aux[i].Tok.line - 1;
                     int auxcol = e.Aux[i].Tok.col - 1;
                     int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
-
-                    Diagnostic relatedDiagnostic = new Diagnostic
+                    Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+                    Location auxlocation = new Location()
                     {
-                        Message = e.Aux[i].Msg,
-                        Range = FileHelper.CreateRange(auxline, auxcol, auxlength),
-                        Severity = DiagnosticSeverity.Warning,
-                        Source = "The error: " + d.Message + " is the source of this warning!"
+                        Range = auxrange,
+                        Uri = new Uri(e.Aux[i].Tok.filename)
+
                     };
 
-                    diagnostics.Add(relatedDiagnostic);
+                    string auxmessage = e.Aux[i].Msg;
+
+                    DiagnosticRelatedInformation relatedDiagnostic = new DiagnosticRelatedInformation()
+                    {
+                        Location = auxlocation,
+                        Message =  auxmessage
+                    };
+
+                    relatedInformations.Add(relatedDiagnostic);
                 }
+                d.RelatedInformation = new Container<DiagnosticRelatedInformation>(relatedInformations);
+
                 diagnostics.Add(d);
             }
 
