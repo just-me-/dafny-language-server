@@ -51,6 +51,7 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
+                    
             );
 
             var msgSender = new MessageSender(server);
