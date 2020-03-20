@@ -73,9 +73,9 @@ namespace DafnyLanguageServer
                     await server.WaitForExit;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                const string msg = "Could not redirect output stream.";
+                string msg = "Could not redirect output stream. " + e.Message;
                 msgSender.SendError(msg);
                 log.Error(msg);
             }

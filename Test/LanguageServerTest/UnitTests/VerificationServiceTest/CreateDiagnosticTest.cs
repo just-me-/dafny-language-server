@@ -50,13 +50,12 @@ namespace VerificationServiceTest
             var errorObject = new FakeErrorObject(token, "Msg");
             errorObject.AddAuxInfo(token, "SubMsg");
             errorObject.AddAuxInfo(token, "SubMsg2");
-            errorObject.AddAuxInfo(token, "TraceData");
             errors.Add(errorObject);
 
             var diagnostics = verificationService.CreateDafnyDiagnostics(errors, token.filename, randomFakeSource);
 
-            Assert.AreEqual(1, diagnostics.Count);
-            Assert.AreEqual(2, diagnostics.FirstOrDefault().RelatedInformation.Count());
+            Assert.AreEqual(3, diagnostics.Count);
+            Assert.IsNull(diagnostics.FirstOrDefault()?.RelatedInformation, "Related Diagnostic should be separate");
         }
     }
 }
