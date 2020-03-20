@@ -27,7 +27,7 @@ namespace TestCommons
 
             string result = $"{diagItem.Range.ToCustomString()} - {severity} - {msg}";
 
-            if (diagItem.RelatedInformation != null && diagItem.RelatedInformation.Count() != 0)
+            if (diagItem.RelatedInformation != null && diagItem.RelatedInformation.Any())
             {
                 result += " Related Information: ";
                 foreach (var r in diagItem.RelatedInformation)
@@ -36,7 +36,6 @@ namespace TestCommons
                     string relatedPos = r.Location.Range.ToCustomString();
                     result += $"{relatedPos} {relatedMsg}";
                 }
-                
             }
 
             return result;
