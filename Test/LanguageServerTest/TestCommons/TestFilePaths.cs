@@ -77,9 +77,9 @@ namespace TestCommons
         public static readonly string vc_sy_bracer = CreateTestfilePath("verification/syntax_rbrace.dfy");
         public static readonly string vc_sy_semi = CreateTestfilePath("verification/syntax_semi.dfy");
 
-        public static readonly string vc_se_args = CreateTestfilePath("verification/semantic_arguments.dfy");
-        public static readonly string vc_se_type = CreateTestfilePath("verification/semantic_undeclaredType.dfy");
-        public static readonly string vc_se_identifier = CreateTestfilePath("verification/semantic_identifier.dfy");
+        public static readonly string vc_re_args = CreateTestfilePath("verification/resolver_arguments.dfy");
+        public static readonly string vc_re_type = CreateTestfilePath("verification/resolver_undeclaredType.dfy");
+        public static readonly string vc_re_identifier = CreateTestfilePath("verification/resolver_identifier.dfy");
 
 
         private static string CreateTestfilePath(string s)
