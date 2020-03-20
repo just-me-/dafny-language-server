@@ -39,7 +39,7 @@ namespace DafnyLanguageServer.Services
                 _msgSender.SendErrornumber(diagnostics.Count);
             } catch (Exception e)
             {
-                Console.WriteLine("There was an error: " + e);
+               _msgSender.SendError("Error while Verifying." + e.Message);
             }
         }
 
