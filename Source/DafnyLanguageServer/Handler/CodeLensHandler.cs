@@ -44,6 +44,10 @@ namespace DafnyLanguageServer.Handler
                 List<CodeLens> items = new List<CodeLens>();
 
                 var fileSymboltable = _bufferManager.GetSymboltable(request.TextDocument.Uri);
+                if (fileSymboltable is null)
+                {
+                    return new CodeLensContainer();
+                }
                 foreach (var symbol in fileSymboltable.GetFullList())
                 {
                     if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ||
