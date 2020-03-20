@@ -5,7 +5,7 @@ using Files = TestCommons.Paths;
 namespace VerificationIntegrationTest
 {
 
-    [TestFixture]
+    [TestFixture, Timeout(5000)]
     public class LogicalTests : VerificationBase
     {
 
