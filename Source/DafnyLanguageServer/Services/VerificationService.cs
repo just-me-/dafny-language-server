@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.DafnyAccess;
@@ -88,12 +89,14 @@ namespace DafnyLanguageServer.Services
             {
                msg = e.Msg + $" at [ {e.Tok.val} ]";
             }
+
+            string src = filepath.Split('/').Last();
             Diagnostic d = new Diagnostic
             {
                 Message = msg,
                 Range = FileHelper.CreateRange(line, col, length),
                 Severity = DiagnosticSeverity.Error,
-                Source = filepath
+                Source = src
             };
             return d;
         }
@@ -113,7 +116,7 @@ namespace DafnyLanguageServer.Services
                 int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
                 Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
 
-
+                string src = filepath.Split('/').Last();
                 Diagnostic relatedDiagnostic = new Diagnostic()
                 {
                     Message = auxmessage,
