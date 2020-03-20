@@ -12,7 +12,7 @@ namespace AutoCompletionIntegrationTest
 {
     public class AutoCompletionBase : IntegrationTestBase
     {
-        private CompletionList completions;
+        protected CompletionList completions;
 
         public AutoCompletionBase() : base("AutoCompletion")
         {
