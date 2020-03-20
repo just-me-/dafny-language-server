@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Runtime.CompilerServices;
 using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.DafnyAccess;
 using Microsoft.Boogie;
@@ -37,48 +39,93 @@ namespace DafnyLanguageServer.Services
                 _msgSender.SendErrornumber(diagnostics.Count);
             } catch (Exception e)
             {
-                Console.WriteLine("There was an error: " + e);
+               _msgSender.SendError("Error while Verifying." + e.Message);
             }
         }
 
-        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<ErrorInformation> errors, string filepath, string sourcecode)
+        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<DiagnosticError> errors, string filepath, string sourcecode = null)
         {
+            if (sourcecode is null)
+            {
+                sourcecode = File.ReadAllText(filepath);
+            }
+
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
 
-            foreach (ErrorInformation e in errors)
+            foreach (DiagnosticError e in errors)
             {
-                int line = e.Tok.line - 1;
-                int col = e.Tok.col - 1;
-                int length = FileHelper.GetLineLength(sourcecode, line) - col;
+                var mainDiagnostic = ConvertErrorToDiagnostic(filepath, sourcecode, e);
+                diagnostics.Add(mainDiagnostic);
 
-                Diagnostic d = new Diagnostic
+                var relateds = ExtractRelatedInformationOfAnError(filepath, sourcecode, e);
+                foreach (var r in relateds)
                 {
-                    Message = e.Msg + " - Hint: " + e.Tok.val,
-                    Range = FileHelper.CreateRange(line, col, length),
-                    Severity = DiagnosticSeverity.Error,
-                    Source = filepath
-                };
-
-                for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
-                {
-                    int auxline = e.Aux[i].Tok.line - 1;
-                    int auxcol = e.Aux[i].Tok.col - 1;
-                    int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
-
-                    Diagnostic relatedDiagnostic = new Diagnostic
-                    {
-                        Message = e.Aux[i].Msg,
-                        Range = FileHelper.CreateRange(auxline, auxcol, auxlength),
-                        Severity = DiagnosticSeverity.Warning,
-                        Source = "The error: " + d.Message + " is the source of this warning!"
-                    };
-
-                    diagnostics.Add(relatedDiagnostic);
+                    diagnostics.Add(r);
                 }
-                diagnostics.Add(d);
             }
 
             return diagnostics;
+        }
+
+
+        private Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
+        {
+            int line = e.Tok.line - 1;
+            int col = e.Tok.col - 1;
+            int length = FileHelper.GetLineLength(sourcecode, line) - col;
+
+            if (e.Msg.EndsWith("."))
+            {
+                e.Msg = e.Msg.Substring(0, e.Msg.Length - 1);
+            }
+
+            string msg;
+            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null)
+            {
+                msg = e.Msg;
+            }
+            else
+            {
+               msg = e.Msg + $" at [ {e.Tok.val} ]";
+            }
+            Diagnostic d = new Diagnostic
+            {
+                Message = msg,
+                Range = FileHelper.CreateRange(line, col, length),
+                Severity = DiagnosticSeverity.Error,
+                Source = filepath
+            };
+            return d;
+        }
+
+        private List<Diagnostic> ExtractRelatedInformationOfAnError(string filepath, string sourcecode, DiagnosticError e)
+        {
+            List<Diagnostic> relatedInformations = new List<Diagnostic>();
+            foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
+            {
+                if (aux.Category == "Execution trace")
+                {
+                    continue;
+                }
+                string auxmessage = aux.Msg;
+                int auxline = aux.Tok.line - 1;
+                int auxcol = aux.Tok.col - 1;
+                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
+                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+
+
+                Diagnostic relatedDiagnostic = new Diagnostic()
+                {
+                    Message = auxmessage,
+                    Range = auxrange,
+                    Severity = DiagnosticSeverity.Information,
+                    Source = filepath
+                };
+
+                relatedInformations.Add(relatedDiagnostic);
+            }
+
+            return relatedInformations;
         }
     }
 }

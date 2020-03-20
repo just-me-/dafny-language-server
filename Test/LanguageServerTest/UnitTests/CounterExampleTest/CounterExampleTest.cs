@@ -55,7 +55,7 @@ namespace Tests
         }
 
         public bool Verify() { throw new NotImplementedException(); }
-        public List<ErrorInformation> GetErrors() { throw new NotImplementedException(); }
+        public List<DiagnosticError> GetErrors() { throw new NotImplementedException(); }
         public List<SymbolTable.SymbolInformation> Symbols() { throw new NotImplementedException(); }
         public void DotGraph() { throw new NotImplementedException(); }
     }
