@@ -38,7 +38,7 @@ namespace DafnyLanguageServer.DafnyAccess
         private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
 
         #region ErrorReporting
-        private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
+        private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         private List<DiagnosticError> _errors = new List<DiagnosticError>();
         private void AddErrorToList(ErrorInformation e)
         {
@@ -62,8 +62,10 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public List<DiagnosticError> GetErrors()
         {
-            _errors = new List<DiagnosticError>();
+            _errors.Clear();
+            reporter = new ConsoleErrorReporter();
             Verify();
+            CollectErrorsFromReporter();
             return _errors;
         }
 
@@ -93,11 +95,6 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 dafnyProgram = new Microsoft.Dafny.Program(fname, module, builtIns, reporter);
             }
-            else
-            {
-                CollectErrorsFromReporter();
-            }
-
             return success;
 
         }
@@ -106,13 +103,7 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
             resolver.ResolveProgram(dafnyProgram);
-            var success = reporter.Count(ErrorLevel.Error) == 0;
-            if (!success)
-            {
-                CollectErrorsFromReporter();
-            }
-
-            return success;
+            return reporter.Count(ErrorLevel.Error) == 0;
         }
 
 
@@ -160,11 +151,10 @@ namespace DafnyLanguageServer.DafnyAccess
             return false;
         }
 
-        public List<SymbolTable.SymbolInformation> Symbols()  //Todo hier sollte nicht parse und so nochmal aufgerufen werden... das wird ja beim verify implizit schon geamcht. alle error sind dann doppel etc pp, diagnstoic wird glaub immer 2x geschickt etc p
+        public List<SymbolTable.SymbolInformation> Symbols()  //Todo ticket 119 hier sollte nicht parse und so nochmal aufgerufen werden... das wird ja beim verify implizit schon geamcht. alle error sind dann doppel etc pp, diagnstoic wird glaub immer 2x geschickt etc p
         {
             ServerUtils.ApplyArgs(args, reporter);
-            _errors = new List<DiagnosticError>();  //todo nur temp damit errors nicht doppelt
-            if (Parse() && Resolve())  //todo geht hier if (_errors.Count == 0) ?
+            if (Parse() && Resolve())  //todo geht hier if (_errors.Count == 0) ? 119
             {
                 var symbolTable = new SymbolTable(dafnyProgram);
                 return symbolTable.CalculateSymbols();
@@ -186,8 +176,7 @@ namespace DafnyLanguageServer.DafnyAccess
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
             try
             {
-                _errors = new List<DiagnosticError>(); //todo temp damit error nicht doppelt.
-                if (Parse() && Resolve() && Translate()) //todo imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
+                if (Parse() && Resolve() && Translate()) //todo 119 imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
                 {
                     var counterExampleProvider = new CounterExampleProvider();
                     List<CounterExampleProvider.CounterExample> counterExamples = new List<CounterExampleProvider.CounterExample>();
