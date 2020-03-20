@@ -34,12 +34,12 @@ namespace DafnyLanguageServer.DafnyAccess
         private readonly string source;
         private readonly string[] args;
 
-        private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         private Microsoft.Dafny.Program dafnyProgram;
         private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
 
+        #region ErrorReporting
+        private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         private List<DiagnosticError> _errors = new List<DiagnosticError>();
-
         private void AddErrorToList(ErrorInformation e)
         {
             _errors.Add(e.ConvertToErrorInformation());
@@ -49,6 +49,16 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             _errors.Add(e.ConvertToErrorInformation());
         }
+
+        private void CollectErrorsFromReporter()
+        {
+            foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
+            {
+                AddErrorToList(error);
+            }
+        }
+
+        #endregion
 
         public List<DiagnosticError> GetErrors()
         {
@@ -85,10 +95,7 @@ namespace DafnyLanguageServer.DafnyAccess
             }
             else
             {
-                foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
-                {
-                    AddErrorToList(error);
-                }
+                CollectErrorsFromReporter();
             }
 
             return success;
@@ -99,8 +106,16 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
             resolver.ResolveProgram(dafnyProgram);
-            return reporter.Count(ErrorLevel.Error) == 0;
+            var success = reporter.Count(ErrorLevel.Error) == 0;
+            if (!success)
+            {
+                CollectErrorsFromReporter();
+            }
+
+            return success;
         }
+
+
 
         private bool Translate()
         {
@@ -145,10 +160,11 @@ namespace DafnyLanguageServer.DafnyAccess
             return false;
         }
 
-        public List<SymbolTable.SymbolInformation> Symbols()
+        public List<SymbolTable.SymbolInformation> Symbols()  //Todo hier sollte nicht parse und so nochmal aufgerufen werden... das wird ja beim verify implizit schon geamcht. alle error sind dann doppel etc pp, diagnstoic wird glaub immer 2x geschickt etc p
         {
             ServerUtils.ApplyArgs(args, reporter);
-            if (Parse() && Resolve())
+            _errors = new List<DiagnosticError>();  //todo nur temp damit errors nicht doppelt
+            if (Parse() && Resolve())  //todo geht hier if (_errors.Count == 0) ?
             {
                 var symbolTable = new SymbolTable(dafnyProgram);
                 return symbolTable.CalculateSymbols();
@@ -170,7 +186,8 @@ namespace DafnyLanguageServer.DafnyAccess
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
             try
             {
-                if (Parse() && Resolve() && Translate())
+                _errors = new List<DiagnosticError>(); //todo temp damit error nicht doppelt.
+                if (Parse() && Resolve() && Translate()) //todo imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
                 {
                     var counterExampleProvider = new CounterExampleProvider();
                     List<CounterExampleProvider.CounterExample> counterExamples = new List<CounterExampleProvider.CounterExample>();
