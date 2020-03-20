@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.DafnyAccess;
@@ -101,21 +100,31 @@ namespace DafnyLanguageServer.Services
 
         private List<Diagnostic> ExtractRelatedInformationOfAnError(string filepath, string sourcecode, DiagnosticError e)
         {
-            return (from aux in e.Aux
-                    where aux.Category != "Related location"
-                    let auxmessage = aux.Msg
-                    let auxline = aux.Tok.line - 1
-                    let auxcol = aux.Tok.col - 1
-                    let auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol
-                    let auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength)
-                    select new Diagnostic()
-                    {
-                        Message = auxmessage,
-                        Range = auxrange,
-                        Severity = DiagnosticSeverity.Information,
-                        Source = filepath
-                    }
-                ).ToList();
+            List<Diagnostic> relatedInformations = new List<Diagnostic>();
+            foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
+            {
+                if (aux.Category == "Related location")
+                {
+                    continue;
+                }
+                string auxmessage = aux.Msg;
+                int auxline = aux.Tok.line - 1;
+                int auxcol = aux.Tok.col - 1;
+                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
+                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+
+                Diagnostic relatedDiagnostic = new Diagnostic()
+                {
+                    Message = auxmessage,
+                    Range = auxrange,
+                    Severity = DiagnosticSeverity.Information,
+                    Source = filepath
+                };
+
+                relatedInformations.Add(relatedDiagnostic);
+            }
+
+            return relatedInformations;
         }
     }
 }
