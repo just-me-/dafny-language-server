@@ -41,7 +41,7 @@ namespace TestCommons
 
             server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
-                Arguments = $"/log ../Logs/Test_{name}.txt /loglevel 1"
+                Arguments = $"/log ../Logs/Test_{name}.txt /loglevel 0"
             });
 
             Client = new LanguageClient(LoggerFactory, server);

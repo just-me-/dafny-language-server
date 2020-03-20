@@ -24,7 +24,7 @@ namespace DafnyLanguageServer
             ILogger log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
-                .WriteTo.File(configReader.LogFile, rollingInterval: RollingInterval.Day)
+                .WriteTo.File(configReader.LogFile, rollingInterval: RollingInterval.Day, fileSizeLimitBytes:1024*1024)
                 .CreateLogger();
 
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
@@ -46,6 +46,7 @@ namespace DafnyLanguageServer
                     .WithServices(ConfigureServices)
 
                     .WithHandler<TextDocumentSyncHandler>()
+                    .WithHandler<DidChangeWatchedFilesHandler>()
                     .WithHandler<CompletionHandler>()
                     .WithHandler<CompileHandler>()
                     .WithHandler<CounterExampleHandler>()
@@ -53,7 +54,6 @@ namespace DafnyLanguageServer
                     .WithHandler<DefinitionHandler>()
                     
             );
-
             var msgSender = new MessageSender(server);
             var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
             msgSender.SendServerStarted(dafnyVersion);

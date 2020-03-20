@@ -17,7 +17,8 @@ namespace DafnyLanguageServer.Handler
     {
         private readonly ILanguageServer _router;
         private readonly BufferManager _bufferManager;
-        private SynchronizationCapability _capability;
+        private SynchronizationCapability _capability; //needed by omnisharp
+
         private readonly DocumentSelector _documentSelector = new DocumentSelector(
             new DocumentFilter()
             {
