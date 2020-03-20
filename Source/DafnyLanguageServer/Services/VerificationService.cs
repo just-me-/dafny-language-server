@@ -101,17 +101,14 @@ namespace DafnyLanguageServer.Services
         private List<Diagnostic> ExtractRelatedInformationOfAnError(string filepath, string sourcecode, DiagnosticError e)
         {
             List<Diagnostic> relatedInformations = new List<Diagnostic>();
-            foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
+            for (int i = 0; i < e.Aux.Count - 1; i++) //ignore last element (trace)
             {
-                if (aux.Category == "Related location")
-                {
-                    continue;
-                }
-                string auxmessage = aux.Msg;
-                int auxline = aux.Tok.line - 1;
-                int auxcol = aux.Tok.col - 1;
+                string auxmessage = e.Aux[i].Msg;
+                int auxline = e.Aux[i].Tok.line - 1;
+                int auxcol = e.Aux[i].Tok.col - 1;
                 int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
                 Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+
 
                 Diagnostic relatedDiagnostic = new Diagnostic()
                 {
