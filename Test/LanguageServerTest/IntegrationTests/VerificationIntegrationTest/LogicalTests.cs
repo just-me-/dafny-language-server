@@ -29,9 +29,10 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at[ { ]",
+                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at [ { ]",
                 "R[L2 C16 - L2 C26] - Information - This is the postcondition that might not hold."
-                
+
+
             };
 
             VerifyResults(expct);
@@ -44,9 +45,9 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at[ { ]",
+                "R[L3 C0 - L3 C1] - Error - Logical Error: A postcondition might not hold on this return path at [ { ]",
                 "R[L2 C16 - L2 C26] - Information - This is the postcondition that might not hold.",
-                "R[L6 C15 - L6 C23] - Error - Logical Error: assertion violation at[ == ]" 
+                "R[L6 C15 - L6 C23] - Error - Logical Error: assertion violation at [ == ]"
             };
 
             VerifyResults(expct);
