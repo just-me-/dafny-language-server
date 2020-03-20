@@ -7,7 +7,6 @@ using Files = TestCommons.Paths;
 namespace CounterExampleIntegrationTest
 {
     [TestFixture]
-    [Category("Integration")]
     public class BasicTests : CounterExampleBase
     {
 
@@ -25,7 +24,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_fail1);
             List<string> expecation = new List<string>()
             {
-                "L4 C19: inp1=((- 160)); more=((- 320)); "
+                "L4 C19: inp1 = -160; more = -320; "
             };
             VerifyResults(expecation);
         }
@@ -36,8 +35,8 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_fail2);
             List<string> expecation = new List<string>()
             {
-                "L4 C22: inp1=((- 24)); inp2=0; less=(**less#0); more=((- 24))'1; ", 
-                "L5 C22: inp1=((- 24)); inp2=0; less=((- 24))'2; more=((- 24))'1; "
+                "L4 C22: inp1 = -24; inp2 = 0; less = (**less#0); more = -24; ",
+                "L5 C22: inp1 = -24; inp2 = 0; less = -24; more = -24; "
             };
             VerifyResults(expecation);
         }

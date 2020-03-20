@@ -27,11 +27,15 @@ namespace TestCommons
 
             string result = $"{diagItem.Range.ToCustomString()} - {severity} - {msg}";
 
-            if (diagItem.RelatedInformation != null)
+            if (diagItem.RelatedInformation != null && diagItem.RelatedInformation.Any())
             {
-                string relatedMsg = diagItem.RelatedInformation.FirstOrDefault()?.Message;
-                string relatedPos = diagItem.RelatedInformation.FirstOrDefault()?.Location.Range.ToCustomString();
-                result += $" / {relatedPos} - {relatedMsg}";
+                result += " Related Information: ";
+                foreach (var r in diagItem.RelatedInformation)
+                {
+                    string relatedMsg = r.Message;
+                    string relatedPos = r.Location.Range.ToCustomString();
+                    result += $"{relatedPos} {relatedMsg}";
+                }
             }
 
             return result;
@@ -44,7 +48,7 @@ namespace TestCommons
                 return null;
             }
             string result = $"L{ce.Line} C{ce.Col}: ";
-            result = ce.Variables.Aggregate(result, (current, kvp) => current + $"{kvp.Key}={kvp.Value}; ");
+            result = ce.Variables.Aggregate(result, (current, kvp) => current + $"{kvp.Key} = {kvp.Value}; ");
             return result;
         }
 

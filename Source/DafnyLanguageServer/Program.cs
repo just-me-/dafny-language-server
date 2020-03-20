@@ -31,7 +31,7 @@ namespace DafnyLanguageServer
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //configReader.PrintState();
 
-            log.Information("Server Starting");
+            log.Debug("Server Starting");
 
             var server = await LanguageServer.From(options =>
                 options
@@ -51,12 +51,13 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
+                    
             );
 
             var msgSender = new MessageSender(server);
             var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
             msgSender.SendServerStarted(dafnyVersion);
-            log.Information("Server Running");
+            log.Debug("Server Running");
 
             if (configReader.Error)
             {
@@ -72,14 +73,14 @@ namespace DafnyLanguageServer
                     await server.WaitForExit;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                const string msg = "Could not redirect output stream.";
+                string msg = "Could not redirect output stream. " + e.Message;
                 msgSender.SendError(msg);
                 log.Error(msg);
             }
 
-            log.Information("Server Closed");
+            log.Debug("Server Closed");
         }
 
         static void ConfigureServices(IServiceCollection services)

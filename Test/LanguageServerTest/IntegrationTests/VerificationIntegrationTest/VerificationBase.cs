@@ -14,6 +14,7 @@ namespace VerificationIntegrationTest
     {
         protected List<string> diagnosticList;
         private readonly System.Threading.EventWaitHandle waitHandle = new System.Threading.AutoResetEvent(false);
+        
 
         public VerificationBase() : base("Verification")
         {

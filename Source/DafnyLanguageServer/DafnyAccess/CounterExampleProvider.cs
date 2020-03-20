@@ -31,21 +31,10 @@ namespace DafnyLanguageServer.DafnyAccess
             using (var wr = new StreamReader(ModelBvd))
             {
                 var output = wr.ReadToEnd();
-                var models = ExtractModels(output);
-                _languageSpecificModels = BuildModels(models);
+                var models = ExtractModels(output);   //schaut im model.bvd was zwischen ***MODEL und ***ND MODEL Steht. nutzt dann boogie um das zu parsen.
+                _languageSpecificModels = BuildModels(models); //konvertiert sie noch iwie in nen anderes format.
             }
             return _languageSpecificModels;
-        }
-
-        private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
-        {
-            var list = new List<ILanguageSpecificModel>();
-            foreach (var model in modellist)
-            {
-                var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                list.Add(specifiedModel);
-            }
-            return list;
         }
 
         private List<Model> ExtractModels(string output)
@@ -65,30 +54,37 @@ namespace DafnyLanguageServer.DafnyAccess
             return models;
         }
 
-        private static T GetFieldValue<T>(object instance, string fieldName)
+        private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
         {
-            const BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-            var field = instance.GetType().GetField(fieldName, bindFlags);
-            return field == null ? default(T) : (T)field.GetValue(instance);
+            var list = new List<ILanguageSpecificModel>();
+            foreach (var model in modellist)
+            {
+                var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
+                list.Add(specifiedModel);
+            }
+            return list;
         }
+
+
 
         private CounterExample ConvertModels(List<ILanguageSpecificModel> specificModels)
         {
-            foreach (var languageSpecificModel in specificModels)
+            var counterExample = new CounterExample();  //leeres base model als result erstellen.
+
+            foreach (var languageSpecificModel in specificModels) //iteriere durch die liste der modelle
             {
-                var counterExample = new CounterExample();
-                foreach (var s in languageSpecificModel.States)  //sonar sagt macht hier immer nur eine iteration
+                foreach (var s in languageSpecificModel.States)  //geh durch die states der modells
                 {
                     var state = s as StateNode;
-                    if (state == null) continue;
+                    if (state == null) continue;  //nehme den state
 
                     var counterExampleState = new CounterExampleState
                     {
-                        Name = state.CapturedStateName
+                        Name = state.CapturedStateName //extrahiere name
                     };
-                    AddLineInformation(counterExampleState, state.CapturedStateName);
+                    AddLineInformation(counterExampleState, state.CapturedStateName);  //extrahiere line
 
-                    foreach (var variableNode in state.Vars)
+                    foreach (var variableNode in state.Vars) //extrahiere variablen.
                     {
                         counterExampleState.Variables.Add(new CounterExampleVariable
                         {
@@ -96,7 +92,7 @@ namespace DafnyLanguageServer.DafnyAccess
                             Value = variableNode.Value,
                             CanonicalName = languageSpecificModel.CanonicalName(variableNode.Element)
                         });
-                        GetExpansions(state, variableNode, counterExampleState, languageSpecificModel);
+                        GetExpansions(state, variableNode, counterExampleState, languageSpecificModel); //iwie connected variablen auch noch holen.
                     }
                     var index = counterExample.States.FindIndex(c => c.Column == counterExampleState.Column && c.Line == counterExampleState.Line);
                     if (index != -1)
@@ -108,10 +104,9 @@ namespace DafnyLanguageServer.DafnyAccess
                         counterExample.States.Add(counterExampleState);
                     }
                 }
-                return counterExample;
             }
+            return counterExample;
 
-            return new CounterExample();
         }
 
         private static void GetExpansions(StateNode state, ElementNode elementNode, CounterExampleState counterExampleState,
@@ -136,6 +131,13 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 Console.Error.WriteLine(e.Message);
             }
+        }
+
+        private static T GetFieldValue<T>(object instance, string fieldName)
+        {
+            const BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+            var field = instance.GetType().GetField(fieldName, bindFlags);
+            return field == null ? default(T) : (T)field.GetValue(instance);
         }
 
         private void AddLineInformation(CounterExampleState state, string stateCapturedStateName)
