@@ -1,19 +1,24 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace DafnyLanguageServer
 {
 
     public class ConfigReader
     {
+        private const string defaultCfgFile = "LanguageServerConfig.json";
+
         private string[] LaunchArguments { get; set; }
         private string AssemblyPath { get; set; }
+        private string ConfigFile { get; set; }
+
         public string RedirectedStreamFile { get; private set; }
         public string LogFile { get; private set; }
-
         public LogLevel Loglevel { get; private set; }
+
         public bool Error { get; private set; } = false;
         public string ErrorMsg { get; private set; } = "";
 
@@ -24,10 +29,26 @@ namespace DafnyLanguageServer
         {
             LaunchArguments = launchArguments;
             AssemblyPath = Path.GetDirectoryName(typeof(ConfigReader).Assembly.Location);
+            ConfigFile = Path.Combine(AssemblyPath, defaultCfgFile);
+            SetProperties();
+        }
+
+        public ConfigReader(string[] launchArguments, string configFile)
+        {
+            LaunchArguments = launchArguments;
+            AssemblyPath = Path.GetDirectoryName(typeof(ConfigReader).Assembly.Location);
+            ConfigFile = configFile;
+            SetProperties();
+        }
+
+        private void SetProperties()
+        {
             SetDefaults();
             ReadConfig();
             ReadArgs();
+            Validate();
             ImprovePathLayout();
+
         }
 
 
@@ -42,32 +63,45 @@ namespace DafnyLanguageServer
         {
             try
             {
-                string cfgFile = Path.Combine(AssemblyPath, "LanguageServerConfig.json");
-                if (!File.Exists(cfgFile))
+                if (!File.Exists(ConfigFile))
                 {
-                    throw new FileNotFoundException("Config file not found at: " + cfgFile);
+                    throw new FileNotFoundException("Config file not found at: " + ConfigFile);
                 }
-                
-                JObject cfg = JObject.Parse(File.ReadAllText(cfgFile));
+
+                JObject cfg = JObject.Parse(File.ReadAllText(ConfigFile));
 
                 var cfgLog = cfg["logging"]["log"];
+                var cfgStream = cfg["logging"]["stream"];
+                var cfgLevel = cfg["logging"]["loglevel"];
+
+
+
+                if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
+                {
+                    throw new ArgumentException("StreamRedirection and Log must not be the same files");
+                }
+
                 if (cfgLog != null)
                 {
-                    LogFile = Path.Combine(AssemblyPath, (string)cfgLog);
+                    LogFile = Path.Combine(AssemblyPath, (string) cfgLog);
                 }
 
-                var cfgStream = cfg["logging"]["stream"];
                 if (cfgStream != null)
                 {
-                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfgStream);
+
+                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string) cfgStream);
                 }
 
-                var cfgLevel = cfg["logging"]["loglevel"];
                 if (cfgLevel != null)
                 {
-                    Loglevel = (LogLevel)(int)cfgLevel;
+                    Loglevel = (LogLevel) (int) cfgLevel;
                 }
 
+            }
+            catch (NullReferenceException)
+            {
+                Error = true;
+                ErrorMsg += "\nError while parsing json config";
             }
             catch (Exception e)
             {
@@ -124,7 +158,20 @@ namespace DafnyLanguageServer
             LogFile = Path.GetFullPath(LogFile);
         }
 
-        internal void PrintState()
+        private void Validate()
+        {
+            if ((int)Loglevel < 0 || (int)Loglevel > 7)
+            {
+                Error = true;
+                ErrorMsg += "\nLoglevel exceeds limits. Must be between 0 and 7. Setting to default Loglevel 4";
+                Loglevel = LogLevel.Error;
+            }
+
+        
+        }
+    
+
+        public void PrintState()
         {
             Console.WriteLine($"Log: {LogFile}");
             Console.WriteLine($"Stream: {RedirectedStreamFile}");
