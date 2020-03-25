@@ -31,11 +31,13 @@ For the current processing an alternative Word document synchronization is more 
 ## VS Code Plugin Features
 If you would like to know which features are supported by the Visual Studio Code Plugin, please checkout the [VSCodePlugin-ReadMe in the seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin/-/blob/master/README.md). 
 
-## Server Launch Parameters
+## Server Launch Arguments
 
-* /log [relativePath]  relative Path to Logfile
-* lstream [relativePath]  relative Path to Console-Output
+* /log [relativePath]  relative Path o the DafnyLanguageServer.exe to store the Logfile
+* lstream [relativePath]  relative Path to the DafnyLanguageServer.exe to store the Console-Output
 * /loglevel [int]   minimum Loglevel.
+
+Note that absolute paths are not supported.
 
 Log Levels are:
 * 0 all
