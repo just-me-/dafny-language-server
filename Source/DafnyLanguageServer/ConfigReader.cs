@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Windows;
 
 namespace DafnyLanguageServer
 {
@@ -45,7 +46,9 @@ namespace DafnyLanguageServer
             SetDefaults();
             ReadConfig();
             ReadArgs();
+            Validate();
             ImprovePathLayout();
+
         }
 
 
@@ -77,13 +80,6 @@ namespace DafnyLanguageServer
                 {
                     throw new ArgumentException("StreamRedirection and Log must not be the same files");
                 }
-
-                if (cfgLevel != null && ((int)cfgLevel < 0 || (int)cfgLevel > 7))
-                {
-                    throw new ArgumentException("Log Level out of bounds. Must be between 0 and 7.");
-                }
-
-
 
                 if (cfgLog != null)
                 {
@@ -162,7 +158,20 @@ namespace DafnyLanguageServer
             LogFile = Path.GetFullPath(LogFile);
         }
 
-        internal void PrintState()
+        private void Validate()
+        {
+            if ((int)Loglevel < 0 || (int)Loglevel > 7)
+            {
+                Error = true;
+                ErrorMsg += "\nLoglevel exceeds limits. Must be between 0 and 7. Setting to default Loglevel 4";
+                Loglevel = LogLevel.Error;
+            }
+
+        
+        }
+    
+
+        public void PrintState()
         {
             Console.WriteLine($"Log: {LogFile}");
             Console.WriteLine($"Stream: {RedirectedStreamFile}");
