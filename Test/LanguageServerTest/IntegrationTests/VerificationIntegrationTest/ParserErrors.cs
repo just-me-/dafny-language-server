@@ -5,7 +5,7 @@ using Files = TestCommons.Paths;
 namespace VerificationIntegrationTest
 {
 
-    [TestFixture, Timeout(5000)]
+    [TestFixture, Timeout(10000)]
     public class ParserErrors : VerificationBase
     {
 
