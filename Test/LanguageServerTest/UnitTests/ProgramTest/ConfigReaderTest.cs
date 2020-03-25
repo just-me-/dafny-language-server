@@ -152,23 +152,6 @@ namespace ProgramTest
 
         }
 
-        [Test]
-        public void BackslashesEscaped()
-        {
-            string configFile = Files.cr_backslashesEscaped;
-            var cr = new ConfigReader(new string[] { }, configFile);
-
-            string expectedLogFile = defaultLog;
-            string expectedStreamFile = defaultStream;
-            LogLevel expectedLogLevel = LogLevel.Error;
-
-            cr.PrintState();
-
-            Assert.IsFalse(cr.Error);
-            Assert.AreEqual(expectedLogFile, cr.LogFile);
-            Assert.AreEqual(expectedStreamFile, cr.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, cr.Loglevel);
-        }
 
         [Test]
         public void Backslashes()

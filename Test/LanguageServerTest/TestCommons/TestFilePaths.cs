@@ -24,7 +24,6 @@ namespace TestCommons
         public static readonly string cr_otherEnding = CreateTestfilePath("configReader/otherEnding.json");
         public static readonly string cr_noEnding = CreateTestfilePath("configReader/noEnding.json");
         public static readonly string cr_backslashes = CreateTestfilePath("configReader/backslashes.json");
-        public static readonly string cr_backslashesEscaped = CreateTestfilePath("configReader/backslashesEscaped.json");
         public static readonly string cr_empty = CreateTestfilePath("configReader/empty.json");
         public static readonly string cr_nojsony = CreateTestfilePath("configReader/nojson.json");
 
