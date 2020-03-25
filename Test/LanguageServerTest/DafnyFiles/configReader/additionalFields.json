@@ -1,0 +1,9 @@
+{
+	"logging": {
+		"stuff": 355,
+		"stream": "../Logs/StreamRedirection.txt",
+		"log": "../Logs/Log.txt",
+		"loglevel": 4,
+		"stuffuf": "bla"
+	}
+}

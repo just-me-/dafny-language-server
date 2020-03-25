@@ -1,0 +1,7 @@
+{
+	"logging": {
+		"stream": "C:/MyStream.txt",
+		"log": "../Logs/Log.txt",
+		"loglevel": 4
+	}
+}

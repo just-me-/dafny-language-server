@@ -1,0 +1,7 @@
+{
+	"logging": {
+		"stream": "../Logs/StreamRedirection.log",
+		"log": "../Logs/Log.log",
+		"loglevel": 4
+	}
+}

@@ -14,6 +14,31 @@ namespace TestCommons
         public static readonly string dafnyExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/Dafny.exe"));
         public static readonly string langServExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/DafnyLanguageServer.exe"));
 
+        /***CONFIG READER TEST***/
+        /************************/
+        public static readonly string cr_default = CreateTestfilePath("configReader/default.json");
+        public static readonly string cr_fine = CreateTestfilePath("configReader/fine.json");
+        public static readonly string cr_missingFields = CreateTestfilePath("configReader/missingFields.json");
+        public static readonly string cr_additionalFields = CreateTestfilePath("configReader/additionalFields.json");
+        public static readonly string cr_otherEnding = CreateTestfilePath("configReader/otherEnding.json");
+        public static readonly string cr_backslashes = CreateTestfilePath("configReader/backslashes.json");
+        public static readonly string cr_empty = CreateTestfilePath("configReader/empty.json");
+        public static readonly string cr_nojsony = CreateTestfilePath("configReader/nojson.json");
+
+        public static readonly string cr_wrongLogLevel = CreateTestfilePath("configReader/wrongLogLevel.json");
+        public static readonly string cr_wrongLogLevelType = CreateTestfilePath("configReader/wrongLogLevelType.json");
+
+        public static readonly string cr_wrongStreamPath = CreateTestfilePath("configReader/wrongStreamPath.json");
+        public static readonly string cr_wrongStreamPathType = CreateTestfilePath("configReader/wrongStreamPathType.json");
+
+        public static readonly string cr_wrongLogPath = CreateTestfilePath("configReader/wrongLogPath.json");
+        public static readonly string cr_wrongLogPathType = CreateTestfilePath("configReader/wrongLogPathType.json");
+
+        public static readonly string cr_absoluteLogPath = CreateTestfilePath("configReader/absoluteLogPath.json");
+        public static readonly string cr_absoluteStreamPath = CreateTestfilePath("configReader/absoluteStreamPath.json");
+
+
+
         /***DAFNY SOURCE FILES***/
         /************************/
 
