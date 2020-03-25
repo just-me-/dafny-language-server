@@ -18,7 +18,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public CounterExample LoadCounterModel()
         {
-                var models = LoadModelFromFile();
+                List<ILanguageSpecificModel> models = LoadModelFromFile(); //bvd lesen, mit boogie parsen, mit boogie konvertieren.
                 return ConvertModels(models);
         }
 
@@ -26,12 +26,12 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             if (!File.Exists((ModelBvd)))
             {
-                throw new IOException("Model.bvd File is not existing");
+                throw new FileNotFoundException("Could not find counter model file, which should have been generated: " + ModelBvd);
             }
             using (var wr = new StreamReader(ModelBvd))
             {
-                var output = wr.ReadToEnd();
-                var models = ExtractModels(output);   //schaut im model.bvd was zwischen ***MODEL und ***ND MODEL Steht. nutzt dann boogie um das zu parsen.
+                string output = wr.ReadToEnd();
+                List<Model> models = ExtractModels(output);   //schaut im model.bvd was zwischen ***MODEL und ***ND MODEL Steht. nutzt dann boogie um das zu parsen.
                 _languageSpecificModels = BuildModels(models); //konvertiert sie noch iwie in nen anderes format.
             }
             return _languageSpecificModels;
@@ -42,14 +42,14 @@ namespace DafnyLanguageServer.DafnyAccess
             const string begin = "*** MODEL";
             const string end = "*** END_MODEL";
             var beginIndex = output.IndexOf(begin, StringComparison.Ordinal);
-            var endIndex = output.IndexOf(end, StringComparison.Ordinal);
+            var endIndex = output.LastIndexOf(end, StringComparison.Ordinal);
             if (beginIndex == -1 || endIndex == -1)
             {
                 return new List<Model>();
             }
 
-            var modelString = output.Substring(beginIndex, endIndex + end.Length - beginIndex);
-            var models = Model.ParseModels(new StringReader(modelString));
+            var modelString = output.Substring(beginIndex, endIndex + end.Length - beginIndex); //note hier wirda lles nach dem ersten modell abgesägt.
+            var models = Model.ParseModels(new StringReader(modelString)); //das Key Value teil offenbar mit boogie parseable.
 
             return models;
         }
@@ -60,7 +60,7 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (var model in modellist)
             {
                 var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                list.Add(specifiedModel);
+                list.Add(specifiedModel); //hier wird wohl iwie konvertiert einfach nach iwas.
             }
             return list;
         }
@@ -73,12 +73,12 @@ namespace DafnyLanguageServer.DafnyAccess
 
             foreach (var languageSpecificModel in specificModels) //iteriere durch die liste der modelle
             {
-                foreach (var s in languageSpecificModel.States)  //geh durch die states der modells
+                foreach (var s in languageSpecificModel.States)  //geh durch die states, also so initial etc pp
                 {
                     var state = s as StateNode;
                     if (state == null) continue;  //nehme den state
 
-                    var counterExampleState = new CounterExampleState
+                    var counterExampleState = new CounterExampleState        //neuen state
                     {
                         Name = state.CapturedStateName //extrahiere name
                     };
