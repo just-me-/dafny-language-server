@@ -1,7 +1,7 @@
 {
 	"logging": {
 		"stream": "..\Logs\StreamRedirection.txt",
-		"log": "..\Logs\log.txt",
+		"log": "..\Logs\Log.txt",
 		"loglevel": 4
 	}
 }

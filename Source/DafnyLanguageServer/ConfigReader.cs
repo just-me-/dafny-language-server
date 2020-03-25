@@ -64,27 +64,48 @@ namespace DafnyLanguageServer
                 {
                     throw new FileNotFoundException("Config file not found at: " + ConfigFile);
                 }
-                
+
                 JObject cfg = JObject.Parse(File.ReadAllText(ConfigFile));
 
                 var cfgLog = cfg["logging"]["log"];
+                var cfgStream = cfg["logging"]["stream"];
+                var cfgLevel = cfg["logging"]["loglevel"];
+
+
+
+                if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
+                {
+                    throw new ArgumentException("StreamRedirection and Log must not be the same files");
+                }
+
+                if (cfgLevel != null && ((int)cfgLevel < 0 || (int)cfgLevel > 7))
+                {
+                    throw new ArgumentException("Log Level out of bounds. Must be between 0 and 7.");
+                }
+
+
+
                 if (cfgLog != null)
                 {
-                    LogFile = Path.Combine(AssemblyPath, (string)cfgLog);
+                    LogFile = Path.Combine(AssemblyPath, (string) cfgLog);
                 }
 
-                var cfgStream = cfg["logging"]["stream"];
                 if (cfgStream != null)
                 {
-                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfgStream);
+
+                    RedirectedStreamFile = Path.Combine(AssemblyPath, (string) cfgStream);
                 }
 
-                var cfgLevel = cfg["logging"]["loglevel"];
                 if (cfgLevel != null)
                 {
-                    Loglevel = (LogLevel)(int)cfgLevel;
+                    Loglevel = (LogLevel) (int) cfgLevel;
                 }
 
+            }
+            catch (NullReferenceException)
+            {
+                Error = true;
+                ErrorMsg += "\nError while parsing json config";
             }
             catch (Exception e)
             {
