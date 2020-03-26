@@ -19,63 +19,7 @@ namespace DafnyLanguageServer.Services
         {
             return Task.Run(() =>
             {
-                var allCounterExamplesReturnContainer = new CounterExampleResults();
-                var models = _dafnyTranslationUnit.CounterExample();
-
-                if (models.Count == 0)
-                {
-                    return allCounterExamplesReturnContainer;
-                }
-
-                var states = models[0].States;
-
-                for (int i = 2; i < states.Count; i++)
-                {
-                    var entry = states[i];
-                    var variables = entry.Variables;
-
-                    CounterExample currentCounterExample = new CounterExample();
-
-                    currentCounterExample.Col = entry.Column;
-                    currentCounterExample.Line = entry.Line;
-
-                    foreach (var variable in variables)
-                    {
-                        //int parsing
-                        string regex = @"\(+(-?) ?(\d+)\)+"; //to parse like ((- 24)) or ((0))
-                        MatchCollection matchCollection = Regex.Matches(variable.Value, regex);
-                        if (matchCollection.Count == 1)
-                        {
-                            var match = matchCollection[0];
-                            bool isNegative = match.Groups[1].Value == "-";
-                            int value = int.Parse(match.Groups[2].Value);
-                            value = isNegative ? -value : value;
-                            currentCounterExample.Variables.Add(variable.Name, value.ToString());
-                            continue;
-                        }
-
-                        //float parsing
-                        regex = @"\(+(-?) ?(\d+\.\d+)\)+"; //to parse like ((- 24.0)) or ((0.0))
-                        matchCollection = Regex.Matches(variable.Value, regex);
-                        if (matchCollection.Count == 1)
-                        {
-                            var match = matchCollection[0];
-                            bool isNegative = match.Groups[1].Value == "-";
-                            float value = float.Parse(match.Groups[2].Value);
-                            value = isNegative ? -value : value;
-                            currentCounterExample.Variables.Add(variable.Name,
-                                value.ToString(CultureInfo.CurrentCulture));
-                            continue;
-                        }
-
-                        currentCounterExample.Variables.Add(variable.Name, variable.Value);
-                        
-                        
-                    }
-
-                    allCounterExamplesReturnContainer.CounterExamples.Add(currentCounterExample);
-                }
-                return allCounterExamplesReturnContainer;
+                return _dafnyTranslationUnit.CounterExample();
             });
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Boogie;
 using System.Collections.Generic;
+using DafnyLanguageServer.Handler;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -8,7 +9,7 @@ namespace DafnyLanguageServer.DafnyAccess
         bool Verify();
         List<DiagnosticError> GetErrors();
         List<SymbolTable.SymbolInformation> Symbols();
-        List<CounterExampleProvider.CounterExample> CounterExample();
+        CounterExampleResults CounterExample();
         void DotGraph();
     }
 }
