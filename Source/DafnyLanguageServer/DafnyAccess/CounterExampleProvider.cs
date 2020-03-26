@@ -93,8 +93,16 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (var variableNode in state.Vars) //extrahiere variablen.
             {
                 string name = variableNode.ShortName;
-                string value = ParseValue(variableNode.Value);
-                ce.Variables.Add(name, value);
+                string value = RemoveBrackets(variableNode.Value);
+                if (IsReference(value))
+                {
+                    value = "[Object Reference]";
+                }
+
+                if (!IsUnknown(value))
+                {
+                    ce.Variables.Add(name, value);
+                }
             }
 
             return ce;
@@ -120,12 +128,8 @@ namespace DafnyLanguageServer.DafnyAccess
                 ce.Col = 0;
             }
         }
-        private string ParseValue(string s)
-        {
-            s = RemoveBrackets(s);
-            s = 
-            return s;
-        }
+
+
 
         private string RemoveBrackets(string s)
         {
@@ -142,5 +146,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return s;
         }
 
+        bool IsUnknown(string s) => s.StartsWith("**");
+        bool IsReference(string s) => s.StartsWith("T@U!val!");
     }
 }
