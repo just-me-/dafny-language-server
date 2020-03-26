@@ -2,7 +2,9 @@
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -57,7 +59,7 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (var model in modellist)
             {
                 var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                specificModels.Add(specifiedModel); //hier wird wohl iwie konvertiert einfach nach iwas.
+                specificModels.Add(specifiedModel);
             }
             return specificModels;
         }
@@ -90,7 +92,9 @@ namespace DafnyLanguageServer.DafnyAccess
 
             foreach (var variableNode in state.Vars) //extrahiere variablen.
             {
-                ce.Variables.Add(variableNode.ShortName, variableNode.Value);
+                string name = variableNode.ShortName;
+                string value = ParseValue(variableNode.Value);
+                ce.Variables.Add(name, value);
             }
 
             return ce;
@@ -108,7 +112,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 var lineStr = m.Groups[3].ToString();
                 ce.Line = int.Parse(lineStr);
                 var columnStr = m.Groups[5].ToString();
-                ce.Col = int.Parse(columnStr);
+                ce.Col = int.Parse(columnStr);  //todo alwys 0. wo anders machen.
             }
             else
             {
@@ -116,6 +120,56 @@ namespace DafnyLanguageServer.DafnyAccess
                 ce.Col = 0;
             }
         }
+        private string ParseValue(string s)
+        {
+            s = RemoveBrackets(s);
+            s = ParseNumbers(s);
+            s = 
+            return s;
+        }
 
+        private string RemoveBrackets(string s)
+        {
+            var regex = @"\((.*)\)";   
+            var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var m = r.Match(s);
+
+            while (m.Success)
+            {
+                s = m.Groups[1].ToString();
+                m = r.Match(s);
+            }
+
+            return s;
+        }
+
+        private string ParseNumbers(string s)
+        {
+            //int parsing
+            string regex = @"(-?) ?(\d+)";
+            MatchCollection matchCollection = Regex.Matches(s, regex);
+            if (matchCollection.Count == 1)
+            {
+                var match = matchCollection[0];
+                bool isNegative = match.Groups[1].Value == "-";
+                int value = int.Parse(match.Groups[2].Value);
+                value = isNegative ? -value : value;
+                return value.ToString();
+            }
+
+            //float parsing
+            regex = @"(-?) ?(\d+\.\d+)";
+            matchCollection = Regex.Matches(s, regex);
+            if (matchCollection.Count == 1)
+            {
+                var match = matchCollection[0];
+                bool isNegative = match.Groups[1].Value == "-";
+                float value = float.Parse(match.Groups[2].Value);
+                value = isNegative ? -value : value;
+                return value.ToString();
+            }
+
+            return s;
+        }
     }
 }

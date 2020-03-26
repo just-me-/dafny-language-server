@@ -179,14 +179,10 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 if (Parse() && Resolve() && Translate()) //todo 119 imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
                 {
-                    var counterExampleProvider = new CounterExampleProvider();
-                    CounterExampleResults counterExampleList = new CounterExampleResults();
-                    foreach (var boogieProgram in boogiePrograms)
-                    {
-                        RemoveExistingModel();
-                        BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                        return counterExampleProvider.LoadCounterModel();
-                    }
+                    var boogieProgram = boogiePrograms.First(); //One CE is sufficient.
+                    RemoveExistingModel();
+                    BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
+                    return new CounterExampleProvider().LoadCounterModel();
                 }
             }
 
