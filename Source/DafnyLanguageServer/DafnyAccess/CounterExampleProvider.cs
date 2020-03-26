@@ -18,7 +18,6 @@ namespace DafnyLanguageServer.DafnyAccess
         public CounterExample LoadCounterModel()
         {
             string RawBVDContent = ReadModelFile(ModelBvd);
-            string trimmedBVDContent = TrimRawBVDContent(RawBVDContent);
             List<Model> models = ParseModels(RawBVDContent);
             List<ILanguageSpecificModel> specificModels = BuildModels(models);
 
@@ -34,19 +33,6 @@ namespace DafnyLanguageServer.DafnyAccess
 
             using var wr = new StreamReader(path);
             return wr.ReadToEnd();
-        }
-
-        private string TrimRawBVDContent(string rawBVDContent)
-        {
-            const string begin = "*** MODEL";
-            const string end = "*** END_MODEL";
-            var beginIndex = rawBVDContent.IndexOf(begin, StringComparison.Ordinal);
-            var endIndex = rawBVDContent.LastIndexOf(end, StringComparison.Ordinal);
-            if (beginIndex == -1 || endIndex == -1)
-            {
-                return "";
-            }
-            return rawBVDContent.Substring(beginIndex, endIndex - beginIndex + end.Length);
         }
 
         private List<Model> ParseModels(string modelString)
