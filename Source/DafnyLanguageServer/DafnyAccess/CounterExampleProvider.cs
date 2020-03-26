@@ -37,19 +37,18 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private List<Model> ParseModels(string modelString)
         {
-
             return Model.ParseModels(new StringReader(modelString));
         }
 
         private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
         {
-            var list = new List<ILanguageSpecificModel>();
+            var specificModels = new List<ILanguageSpecificModel>();
             foreach (var model in modellist)
             {
                 var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                list.Add(specifiedModel); //hier wird wohl iwie konvertiert einfach nach iwas.
+                specificModels.Add(specifiedModel); //hier wird wohl iwie konvertiert einfach nach iwas.
             }
-            return list;
+            return specificModels;
         }
 
 
