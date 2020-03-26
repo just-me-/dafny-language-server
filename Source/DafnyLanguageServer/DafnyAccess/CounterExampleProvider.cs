@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer.Handler;
+using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -22,9 +23,17 @@ namespace DafnyLanguageServer.DafnyAccess
             List<Model> models = ParseModels(RawBVDContent);
             List<ILanguageSpecificModel> specificModels = BuildModels(models);
 
+            var result = new CounterExampleResults();
+            foreach (var specificModel in specificModels)
+            {
+                StateNode relevantState = FindInitialState(specificModel);
+                CounterExample ce = ExtractCounterExampleFromState(relevantState);
 
-            return null;
+            }
+            return result;
         }
+
+
 
         private string ReadModelFile(string path)
         {
@@ -55,67 +64,56 @@ namespace DafnyLanguageServer.DafnyAccess
 
 
 
-        private CounterExample ConvertModels(List<ILanguageSpecificModel> specificModels)
+        private StateNode FindInitialState(ILanguageSpecificModel specificModel)  //todo verhebt das?
         {
-            var counterExample = new CounterExample();  //leeres base model als result erstellen.
-
-            foreach (var languageSpecificModel in specificModels) //iteriere durch die liste der modelle
+            foreach (IState s in specificModel.States)
             {
-                foreach (var s in languageSpecificModel.States)  //geh durch die states, also so initial etc pp
+                if (!(s is StateNode state))
                 {
-                    var state = s as StateNode;
-                    if (state == null) continue;  //nehme den state
-
-                    var counterExampleState = new CounterExampleState        //neuen state
-                    {
-                        Name = state.CapturedStateName //extrahiere name
-                    };
-                    AddLineInformation(counterExampleState, state.CapturedStateName);  //extrahiere line: das ist so wie g:\Dokumente\VisualStudio\BA\dafny-language-server\Test\LanguageServerTest\DafnyFiles\counterExample\two_methods.dfy(9,0): aber nur halt beim nicht-initial
-
-                    foreach (var variableNode in state.Vars) //extrahiere variablen.
-                    {
-                        counterExampleState.Variables.Add(new CounterExampleVariable
-                        {
-                            Name = variableNode.ShortName,
-                            Value = variableNode.Value,
-                            CanonicalName = languageSpecificModel.CanonicalName(variableNode.Element)
-                        });
-                    }
-                    var index = counterExample.States.FindIndex(c => c.Column == counterExampleState.Column && c.Line == counterExampleState.Line);
-                    if (index != -1)
-                    {
-                        counterExample.States[index] = counterExampleState;
-                    }
-                    else
-                    {
-                        counterExample.States.Add(counterExampleState);
-                    }
+                    continue;
                 }
-            }
-            return counterExample;
+                if (state.Name.Contains(":initial"))  //todo korrekt?
+                {
+                    return state;
+                }
+            } 
 
+            throw new InvalidOperationException("specific Model does not contain a :initial state");
+            
         }
 
- 
 
-        private void AddLineInformation(CounterExampleState state, string stateCapturedStateName)
+        private CounterExample ExtractCounterExampleFromState(StateNode state)
         {
-            if ("<initial>".Equals(stateCapturedStateName))
+            CounterExample ce = new CounterExample();
+            AddPosition(ce, state.CapturedStateName);
+
+            foreach (var variableNode in state.Vars) //extrahiere variablen.
             {
-                state.Line = 0;
-                state.Column = 0;
-                return;
+                ce.Variables.Add(variableNode.ShortName, variableNode.Value);
             }
 
-            var regex = ".*?(dfy)(\\()(\\d+)(,)(\\d+)(\\))";
+            return ce;
+        }
+
+
+        private void AddPosition(CounterExample ce, string stateCapturedStateName)
+        {
+
+            var regex = ".*?(dfy)(\\()(\\d+)(,)(\\d+)(\\))";   //todo net so behindert
             var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var m = r.Match(stateCapturedStateName);
             if (m.Success)
             {
                 var lineStr = m.Groups[3].ToString();
-                state.Line = int.Parse(lineStr);
+                ce.Line = int.Parse(lineStr);
                 var columnStr = m.Groups[5].ToString();
-                state.Column = int.Parse(columnStr);
+                ce.Col = int.Parse(columnStr);
+            }
+            else
+            {
+                ce.Line = 0;
+                ce.Col = 0;
             }
         }
 
