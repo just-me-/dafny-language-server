@@ -12,46 +12,47 @@ namespace DafnyLanguageServer.DafnyAccess
 {
     public class CounterExampleProvider
     {
-        private List<ILanguageSpecificModel> _languageSpecificModels;
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
         public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
 
         public CounterExample LoadCounterModel()
         {
-                List<ILanguageSpecificModel> models = LoadModelFromFile(); //bvd lesen, mit boogie parsen, mit boogie konvertieren.
-                return ConvertModels(models);
+            string RawBVDContent = ReadModelFile(ModelBvd);
+            string trimmedBVDContent = TrimRawBVDContent(RawBVDContent);
+            List<Model> models = ParseModels(RawBVDContent);
+            List<ILanguageSpecificModel> specificModels = BuildModels(models);
+
+            return null;
         }
 
-        private List<ILanguageSpecificModel> LoadModelFromFile()
+        private string ReadModelFile(string path)
         {
-            if (!File.Exists((ModelBvd)))
+            if (!File.Exists((path)))
             {
                 throw new FileNotFoundException("Could not find counter model file, which should have been generated: " + ModelBvd);
             }
-            using (var wr = new StreamReader(ModelBvd))
-            {
-                string output = wr.ReadToEnd();
-                List<Model> models = ExtractModels(output);   //schaut im model.bvd was zwischen ***MODEL und ***ND MODEL Steht. nutzt dann boogie um das zu parsen.
-                _languageSpecificModels = BuildModels(models); //konvertiert sie noch iwie in nen anderes format.
-            }
-            return _languageSpecificModels;
+
+            using var wr = new StreamReader(path);
+            return wr.ReadToEnd();
         }
 
-        private List<Model> ExtractModels(string output)
+        private string TrimRawBVDContent(string rawBVDContent)
         {
             const string begin = "*** MODEL";
             const string end = "*** END_MODEL";
-            var beginIndex = output.IndexOf(begin, StringComparison.Ordinal);
-            var endIndex = output.LastIndexOf(end, StringComparison.Ordinal);
+            var beginIndex = rawBVDContent.IndexOf(begin, StringComparison.Ordinal);
+            var endIndex = rawBVDContent.LastIndexOf(end, StringComparison.Ordinal);
             if (beginIndex == -1 || endIndex == -1)
             {
-                return new List<Model>();
+                return "";
             }
+            return rawBVDContent.Substring(beginIndex, endIndex - beginIndex + end.Length);
+        }
 
-            var modelString = output.Substring(beginIndex, endIndex + end.Length - beginIndex); //note hier wirda lles nach dem ersten modell abgesägt.
-            var models = Model.ParseModels(new StringReader(modelString)); //das Key Value teil offenbar mit boogie parseable.
+        private List<Model> ParseModels(string modelString)
+        {
 
-            return models;
+            return Model.ParseModels(new StringReader(modelString));
         }
 
         private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
@@ -82,7 +83,7 @@ namespace DafnyLanguageServer.DafnyAccess
                     {
                         Name = state.CapturedStateName //extrahiere name
                     };
-                    AddLineInformation(counterExampleState, state.CapturedStateName);  //extrahiere line
+                    AddLineInformation(counterExampleState, state.CapturedStateName);  //extrahiere line: das ist so wie g:\Dokumente\VisualStudio\BA\dafny-language-server\Test\LanguageServerTest\DafnyFiles\counterExample\two_methods.dfy(9,0): aber nur halt beim nicht-initial
 
                     foreach (var variableNode in state.Vars) //extrahiere variablen.
                     {
