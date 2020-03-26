@@ -32,7 +32,7 @@ namespace TestCommons
             CancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
 
             log = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -44,6 +44,7 @@ namespace TestCommons
                 Arguments = $"/log ../Logs/Test_{name}.txt /loglevel 0"
             });
 
+
             Client = new LanguageClient(LoggerFactory, server);
 
             Client.Initialize(
@@ -51,6 +52,9 @@ namespace TestCommons
                 initializationOptions: new { },
                 cancellationToken: CancellationSource.Token
             ).Wait();
+
+            Thread.Sleep(1000);
+
 
             log.Information("*** Language server has been successfully initialized.");
         }
