@@ -48,7 +48,7 @@ namespace DafnyLanguageServer.Handler
             // Counterexample needs a DafnyTranslationUnit with a right file name.
             // Uri to Filename conversion kinda fails so we just create a new DTU here.
             var dafnyTranslationUnit = new DafnyTranslationUnit(request.DafnyFile, file.Sourcecode);
-
+            //var dafnyTranslationUnit = file.DafnyTranslationUnit;
             return await Task.Run(() => dafnyTranslationUnit.CounterExample());
         }
 

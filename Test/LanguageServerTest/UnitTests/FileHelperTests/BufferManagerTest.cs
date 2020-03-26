@@ -69,10 +69,10 @@ namespace ContentManagerTests
         }
 
         [Test]
-        public void FilePathEqualsUriToString()
+        public void FilePathConversion()
         {
             DafnyFile f = b.GetFile(uri1);
-            Assert.AreEqual(uri1.ToString(), f.Filepath);
+            Assert.AreEqual(uri1.LocalPath, f.Filepath);  //this seems not really right, in windows i get /G:/blabla.txt  (leading slash).
         }
 
 
