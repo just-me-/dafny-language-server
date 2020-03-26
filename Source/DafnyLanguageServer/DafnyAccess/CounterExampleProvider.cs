@@ -123,7 +123,6 @@ namespace DafnyLanguageServer.DafnyAccess
         private string ParseValue(string s)
         {
             s = RemoveBrackets(s);
-            s = ParseNumbers(s);
             s = 
             return s;
         }
@@ -143,33 +142,5 @@ namespace DafnyLanguageServer.DafnyAccess
             return s;
         }
 
-        private string ParseNumbers(string s)
-        {
-            //int parsing
-            string regex = @"(-?) ?(\d+)";
-            MatchCollection matchCollection = Regex.Matches(s, regex);
-            if (matchCollection.Count == 1)
-            {
-                var match = matchCollection[0];
-                bool isNegative = match.Groups[1].Value == "-";
-                int value = int.Parse(match.Groups[2].Value);
-                value = isNegative ? -value : value;
-                return value.ToString();
-            }
-
-            //float parsing
-            regex = @"(-?) ?(\d+\.\d+)";
-            matchCollection = Regex.Matches(s, regex);
-            if (matchCollection.Count == 1)
-            {
-                var match = matchCollection[0];
-                bool isNegative = match.Groups[1].Value == "-";
-                float value = float.Parse(match.Groups[2].Value);
-                value = isNegative ? -value : value;
-                return value.ToString();
-            }
-
-            return s;
-        }
     }
 }
