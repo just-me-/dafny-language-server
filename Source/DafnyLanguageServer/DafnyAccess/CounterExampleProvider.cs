@@ -80,7 +80,6 @@ namespace DafnyLanguageServer.DafnyAccess
                             Value = variableNode.Value,
                             CanonicalName = languageSpecificModel.CanonicalName(variableNode.Element)
                         });
-                        GetExpansions(state, variableNode, counterExampleState, languageSpecificModel); //iwie connected variablen auch noch holen.
                     }
                     var index = counterExample.States.FindIndex(c => c.Column == counterExampleState.Column && c.Line == counterExampleState.Line);
                     if (index != -1)
@@ -97,36 +96,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         }
 
-        private static void GetExpansions(StateNode state, ElementNode elementNode, CounterExampleState counterExampleState,
-          ILanguageSpecificModel languageSpecificModel)
-        {
-            try
-            {
-                var dafnyModel = GetFieldValue<DafnyModel>(state, "dm");
-                var elt = GetFieldValue<Model.Element>(elementNode, "elt");
-                var extras = dafnyModel.GetExpansion(state, elt);
-                foreach (var el in extras)
-                {
-                    counterExampleState.Variables.Add(new CounterExampleVariable
-                    {
-                        Name = elementNode.Name + "." + el.Name,
-                        Value = el.Value,
-                        CanonicalName = languageSpecificModel.CanonicalName(el.Element)
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e.Message);
-            }
-        }
-
-        private static T GetFieldValue<T>(object instance, string fieldName)
-        {
-            const BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-            var field = instance.GetType().GetField(fieldName, bindFlags);
-            return field == null ? default(T) : (T)field.GetValue(instance);
-        }
+ 
 
         private void AddLineInformation(CounterExampleState state, string stateCapturedStateName)
         {
