@@ -14,7 +14,7 @@ namespace DafnyLanguageServer.Handler
         public string DafnyFile { get; set; }
     }
 
-    public class CounterExampleResult
+    public class CounterExample
     {
         public int Line { get; set; }
         public int Col { get; set; }
@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
 
     public class CounterExampleResults
     {
-        public List<CounterExampleResult> CounterExamples { get; } = new List<CounterExampleResult>();
+        public List<CounterExample> CounterExamples { get; } = new List<CounterExample>();
 
     }
 

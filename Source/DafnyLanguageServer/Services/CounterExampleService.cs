@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.Services
                     var entry = states[i];
                     var variables = entry.Variables;
 
-                    CounterExampleResult currentCounterExample = new CounterExampleResult();
+                    CounterExample currentCounterExample = new CounterExample();
 
                     currentCounterExample.Col = entry.Column;
                     currentCounterExample.Line = entry.Line;

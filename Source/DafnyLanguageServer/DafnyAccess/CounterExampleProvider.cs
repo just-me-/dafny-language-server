@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using DafnyLanguageServer.Handler;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -15,11 +16,12 @@ namespace DafnyLanguageServer.DafnyAccess
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
         public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
 
-        public CounterExample LoadCounterModel()
+        public CounterExampleResults LoadCounterModel()
         {
             string RawBVDContent = ReadModelFile(ModelBvd);
             List<Model> models = ParseModels(RawBVDContent);
             List<ILanguageSpecificModel> specificModels = BuildModels(models);
+
 
             return null;
         }
@@ -147,49 +149,5 @@ namespace DafnyLanguageServer.DafnyAccess
             }
         }
 
-        [Serializable]
-        [DataContract]
-        public class CounterExample
-        {
-            [DataMember]
-            public List<CounterExampleState> States { get; set; }
-
-            public CounterExample()
-            {
-                States = new List<CounterExampleState>();
-            }
-        }
-
-        [Serializable]
-        [DataContract]
-        public class CounterExampleState
-        {
-            [DataMember]
-            public List<CounterExampleVariable> Variables { get; set; }
-            [DataMember]
-            public string Name { get; set; }
-            [DataMember]
-            public int Line { get; set; }
-            [DataMember]
-            public int Column { get; set; }
-            public CounterExampleState()
-            {
-                Variables = new List<CounterExampleVariable>();
-            }
-        }
-
-        [Serializable]
-        [DataContract]
-        public class CounterExampleVariable
-        {
-            [DataMember]
-            public string Name { get; set; }
-            [DataMember]
-            public string RealName { get; set; }
-            [DataMember]
-            public string Value { get; set; }
-            [DataMember]
-            public string CanonicalName { get; set; }
-        }
     }
 }

@@ -185,7 +185,7 @@ namespace Tests
         }
 
 
-        private static void CompareCounterExampleWithExpectation(CounterExampleResult r, int col, int row, string[] vars, string[] vals)
+        private static void CompareCounterExampleWithExpectation(DafnyLanguageServer.Handler.CounterExample r, int col, int row, string[] vars, string[] vals)
         {
             Assert.AreEqual(col, r.Col,
                 "A column index is wrong in the provided counter example");
