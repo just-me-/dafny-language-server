@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DafnyLanguageServer.Handler;
 using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
@@ -165,7 +166,7 @@ namespace DafnyLanguageServer.DafnyAccess
             }
         }
 
-        public List<CounterExampleProvider.CounterExample> CounterExample()
+        public CounterExampleResults CounterExample()
         {
             if (!File.Exists(fname))
             {
@@ -179,15 +180,13 @@ namespace DafnyLanguageServer.DafnyAccess
                 if (Parse() && Resolve() && Translate()) //todo 119 imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
                 {
                     var counterExampleProvider = new CounterExampleProvider();
-                    List<CounterExampleProvider.CounterExample> counterExamples = new List<CounterExampleProvider.CounterExample>();
+                    CounterExampleResults counterExampleList = new CounterExampleResults();
                     foreach (var boogieProgram in boogiePrograms)
                     {
                         RemoveExistingModel();
                         BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                        var model = counterExampleProvider.LoadCounterModel();
-                        counterExamples.Add(model);
+                        return counterExampleProvider.LoadCounterModel();
                     }
-                    return counterExamples;
                 }
             }
 
@@ -196,7 +195,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 Console.WriteLine("Error while collecting models: " + e.Message);
             }
 
-            return new List<CounterExampleProvider.CounterExample>();
+            return new CounterExampleResults();
         }
 
         private void RemoveExistingModel()

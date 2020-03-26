@@ -2,6 +2,7 @@
 using Microsoft.Boogie;
 using System;
 using System.Collections.Generic;
+using DafnyLanguageServer.Handler;
 
 namespace CompletionHandlerTest
 {
@@ -59,13 +60,10 @@ namespace CompletionHandlerTest
             return symbols;
         }
 
-        public List<CounterExampleProvider.CounterExample> CounterExample()
+        public CounterExampleResults CounterExample()
         {
-            List<CounterExampleProvider.CounterExample> ces = new List<CounterExampleProvider.CounterExample>();
-            CounterExampleProvider.CounterExample ce = new CounterExampleProvider.CounterExample();
-            ces.Add(ce);
-
-            return ces;
+            return new CounterExampleResults();
+    
         }
 
         public void DotGraph()

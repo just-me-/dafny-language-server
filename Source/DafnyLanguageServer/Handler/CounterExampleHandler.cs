@@ -48,8 +48,8 @@ namespace DafnyLanguageServer.Handler
             // Counterexample needs a DafnyTranslationUnit with this current request DafnyFile path
             // therefore do not use file.DafnyTranslationUnit
             var dafnyTranslationUnit = new DafnyTranslationUnit(request.DafnyFile, file.Sourcecode);
-            
-            return Task.Run(() => dafnyTranslationUnit.CounterExample());
+
+            return await Task.Run(()=>dafnyTranslationUnit.CounterExample());
         }
 
     }

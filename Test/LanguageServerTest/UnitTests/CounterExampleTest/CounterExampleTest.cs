@@ -1,3 +1,6 @@
+/*
+ 
+
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Services;
@@ -7,10 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CounterExample = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExample;
-using CounterExamples = System.Collections.Generic.List<DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExample>;
-using CounterExampleState = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleState;
-using CounterExampleVariable = DafnyLanguageServer.DafnyAccess.CounterExampleProvider.CounterExampleVariable;
 using DafnyConsolePrinter = DafnyLanguageServer.DafnyAccess.DafnyConsolePrinter;
 using Files = TestCommons.Paths;
 
@@ -58,6 +57,10 @@ namespace Tests
         public List<DiagnosticError> GetErrors() { throw new NotImplementedException(); }
         public List<SymbolTable.SymbolInformation> Symbols() { throw new NotImplementedException(); }
         public void DotGraph() { throw new NotImplementedException(); }
+    }
+
+    internal class CounterExamples
+    {
     }
 
     [TestFixture]
@@ -263,3 +266,7 @@ namespace Tests
         }
     }
 }
+
+
+
+*/
