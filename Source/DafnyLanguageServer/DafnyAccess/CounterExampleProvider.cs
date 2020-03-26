@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.Handler;
 using Microsoft.Dafny;
 
@@ -18,6 +19,16 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
         public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
+
+        private string Source { get; }
+        public CounterExampleProvider(string source)
+        {
+            Source = source;
+        }
+
+        public CounterExampleProvider() : this("")
+        {
+        }
 
         public CounterExampleResults LoadCounterModel()
         {
@@ -112,15 +123,15 @@ namespace DafnyLanguageServer.DafnyAccess
         private void AddPosition(CounterExample ce, string stateCapturedStateName)
         {
 
-            var regex = ".*?(dfy)(\\()(\\d+)(,)(\\d+)(\\))";   //todo net so behindert
+            var regex = @".*dfy\((\d+),(\d+)\)";   //anything, then dfy(00,00)
             var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var m = r.Match(stateCapturedStateName);
             if (m.Success)
             {
-                var lineStr = m.Groups[3].ToString();
-                ce.Line = int.Parse(lineStr);
-                var columnStr = m.Groups[5].ToString();
-                ce.Col = int.Parse(columnStr);  //todo alwys 0. wo anders machen.
+                var lineStr = m.Groups[1].ToString();
+                int line = int.Parse(lineStr);
+                ce.Line = line;
+                ce.Col = FileHelper.GetLineLength(Source, line);
             }
             else
             {

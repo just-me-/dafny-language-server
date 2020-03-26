@@ -182,7 +182,7 @@ namespace DafnyLanguageServer.DafnyAccess
                     var boogieProgram = boogiePrograms.First(); //One CE is sufficient.
                     RemoveExistingModel();
                     BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                    return new CounterExampleProvider().LoadCounterModel();
+                    return new CounterExampleProvider(source).LoadCounterModel();
                 }
             }
 
