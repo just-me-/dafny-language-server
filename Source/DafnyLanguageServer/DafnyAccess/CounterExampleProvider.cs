@@ -28,7 +28,7 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 StateNode relevantState = FindInitialState(specificModel);
                 CounterExample ce = ExtractCounterExampleFromState(relevantState);
-
+                result.CounterExamples.Add(ce);
             }
             return result;
         }
@@ -72,7 +72,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 {
                     continue;
                 }
-                if (state.Name.Contains(":initial"))  //todo korrekt?
+                if (state.Name.Contains(":initial state"))  //todo korrekt?
                 {
                     return state;
                 }
