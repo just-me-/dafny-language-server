@@ -41,7 +41,10 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 StateNode relevantState = FindInitialState(specificModel);
                 CounterExample ce = ExtractCounterExampleFromState(relevantState);
-                result.CounterExamples.Add(ce);
+                if (ce.Variables.Count > 0)
+                {
+                    result.CounterExamples.Add(ce);
+                }
             }
             return result;
         }
@@ -157,7 +160,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return s;
         }
 
-        bool IsUnknown(string s) => s.StartsWith("**");
+        bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
         bool IsReference(string s) => s.StartsWith("T@U!val!");
     }
 }

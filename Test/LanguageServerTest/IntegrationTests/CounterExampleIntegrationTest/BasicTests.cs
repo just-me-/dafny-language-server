@@ -25,7 +25,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_fail1);
             List<string> expecation = new List<string>()
             {
-                "L4 C19: inp1 = -160; more = -320; "
+                "L3 C20: inp1 = - 160; "
             };
             VerifyResults(expecation);
         }
@@ -36,8 +36,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_fail2);
             List<string> expecation = new List<string>()
             {
-                "L4 C22: inp1 = -24; inp2 = 0; less = (**less#0); more = -24; ",
-                "L5 C22: inp1 = -24; inp2 = 0; less = -24; more = -24; "
+                "L3 C23: inp1 = - 24; inp2 = 0; "
             };
             VerifyResults(expecation);
         }
