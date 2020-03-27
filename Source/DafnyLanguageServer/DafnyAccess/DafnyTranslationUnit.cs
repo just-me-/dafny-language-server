@@ -137,10 +137,10 @@ namespace DafnyLanguageServer.DafnyAccess
             return false;
         }
 
-        public List<SymbolTable.SymbolInformation> Symbols()  //Todo ticket 119 hier sollte nicht parse und so nochmal aufgerufen werden... das wird ja beim verify implizit schon geamcht. alle error sind dann doppel etc pp, diagnstoic wird glaub immer 2x geschickt etc p
+        public List<SymbolTable.SymbolInformation> Symbols()
         {
             ServerUtils.ApplyArgs(args, reporter);
-            if (dafnyProgram != null)
+            if (Parse() && Resolve())
             {
                 var symbolTable = new SymbolTable(dafnyProgram);
                 return symbolTable.CalculateSymbols();
