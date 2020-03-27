@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.Handler;
@@ -58,8 +59,12 @@ namespace DafnyLanguageServer.DafnyAccess
                 throw new FileNotFoundException("Could not find counter model file, which should have been generated: " + ModelBvd);
             }
 
-            using var wr = new StreamReader(path);
-            return wr.ReadToEnd();
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.Default))
+            {
+                return sr.ReadToEnd();
+            }
+
         }
 
         private List<Model> ParseModels(string modelString)
