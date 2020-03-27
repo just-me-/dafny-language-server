@@ -1,5 +1,6 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
+using System.IO;
 
 namespace DafnyLanguageServer.ContentManager
 {
@@ -10,5 +11,7 @@ namespace DafnyLanguageServer.ContentManager
         public string Sourcecode { get; set; }
         public FileSymboltable Symboltable { get; set; }
         public IDafnyTranslationUnit DafnyTranslationUnit { get; set; }
+
+
     }
 }

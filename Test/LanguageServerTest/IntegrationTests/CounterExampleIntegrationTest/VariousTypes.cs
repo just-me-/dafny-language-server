@@ -17,7 +17,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_bool);
             List<string> expecation = new List<string>()
             {
-                "L4 C19: in1 = 14; out1 = false; "
+                "L3 C15: in1 = false; "
             };
             VerifyResults(expecation);
         }
@@ -28,7 +28,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_float);
             List<string> expecation = new List<string>()
             {
-                "L4 C21: inp1 = -24; out1 = -48; "
+                "L3 C22: inp1 = - 160.0; "
             };
             VerifyResults(expecation);
         }
@@ -39,8 +39,8 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_set);
             List<string> expecation = new List<string>()
             {
-                "L4 C20: in1 = (T@U!val!55); in1#0.[2] = false; out1 = (T@U!val!62); out1#0.[2] = true; "
-            };
+                "L3 C21: in1 = [Object Reference]; out1 = [Object Reference]; "
+        };
             VerifyResults(expecation);
         }
 
@@ -50,7 +50,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_sequence);
             List<string> expecation = new List<string>()
             {
-                "L4 C19: in1 = (T@U!val!55); out1 = false; "
+                "L3 C20: in1 = [Object Reference]; "
         };
             VerifyResults(expecation);
         }
@@ -61,7 +61,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_string);
             List<string> expecation = new List<string>()
             {
-                "L4 C22: in1 = [Length 2](T@U!val!55); out1 = true; "
+                "L3 C23: in1 = [Object Reference]; "
             };
             VerifyResults(expecation);
         }

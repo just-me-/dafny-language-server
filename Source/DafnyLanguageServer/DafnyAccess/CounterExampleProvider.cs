@@ -2,208 +2,170 @@
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
+using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.Handler;
+using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
     public class CounterExampleProvider
     {
-        private List<ILanguageSpecificModel> _languageSpecificModels;
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
         public static readonly string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
 
-        public CounterExample LoadCounterModel()
+        private string Source { get; }
+        public CounterExampleProvider(string source)
         {
-                var models = LoadModelFromFile();
-                return ConvertModels(models);
+            Source = source;
         }
 
-        private List<ILanguageSpecificModel> LoadModelFromFile()
+        public CounterExampleProvider() : this("")
         {
-            if (!File.Exists((ModelBvd)))
-            {
-                throw new IOException("Model.bvd File is not existing");
-            }
-            using (var wr = new StreamReader(ModelBvd))
-            {
-                var output = wr.ReadToEnd();
-                var models = ExtractModels(output);   //schaut im model.bvd was zwischen ***MODEL und ***ND MODEL Steht. nutzt dann boogie um das zu parsen.
-                _languageSpecificModels = BuildModels(models); //konvertiert sie noch iwie in nen anderes format.
-            }
-            return _languageSpecificModels;
         }
 
-        private List<Model> ExtractModels(string output)
+        public CounterExampleResults LoadCounterModel()
         {
-            const string begin = "*** MODEL";
-            const string end = "*** END_MODEL";
-            var beginIndex = output.IndexOf(begin, StringComparison.Ordinal);
-            var endIndex = output.IndexOf(end, StringComparison.Ordinal);
-            if (beginIndex == -1 || endIndex == -1)
+            string RawBVDContent = ReadModelFile(ModelBvd);
+            List<Model> models = ParseModels(RawBVDContent);
+            List<ILanguageSpecificModel> specificModels = BuildModels(models);
+
+            var result = new CounterExampleResults();
+            foreach (var specificModel in specificModels)
             {
-                return new List<Model>();
+                StateNode relevantState = FindInitialState(specificModel);
+                CounterExample ce = ExtractCounterExampleFromState(relevantState);
+                if (ce.Variables.Count > 0)
+                {
+                    result.CounterExamples.Add(ce);
+                }
+            }
+            return result;
+        }
+
+
+
+        private string ReadModelFile(string path)
+        {
+            if (!File.Exists((path)))
+            {
+                throw new FileNotFoundException("Could not find counter model file, which should have been generated: " + ModelBvd);
             }
 
-            var modelString = output.Substring(beginIndex, endIndex + end.Length - beginIndex);
-            var models = Model.ParseModels(new StringReader(modelString));
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.Default))
+            {
+                return sr.ReadToEnd();
+            }
 
-            return models;
+        }
+
+        private List<Model> ParseModels(string modelString)
+        {
+            return Model.ParseModels(new StringReader(modelString));
         }
 
         private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
         {
-            var list = new List<ILanguageSpecificModel>();
+            var specificModels = new List<ILanguageSpecificModel>();
             foreach (var model in modellist)
             {
                 var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                list.Add(specifiedModel);
+                specificModels.Add(specifiedModel);
             }
-            return list;
+            return specificModels;
         }
 
 
 
-        private CounterExample ConvertModels(List<ILanguageSpecificModel> specificModels)
+        private StateNode FindInitialState(ILanguageSpecificModel specificModel)  //todo verhebt das?
         {
-            var counterExample = new CounterExample();  //leeres base model als result erstellen.
-
-            foreach (var languageSpecificModel in specificModels) //iteriere durch die liste der modelle
+            foreach (IState s in specificModel.States)
             {
-                foreach (var s in languageSpecificModel.States)  //geh durch die states der modells
+                if (!(s is StateNode state))
                 {
-                    var state = s as StateNode;
-                    if (state == null) continue;  //nehme den state
+                    continue;
+                }
+                if (state.Name.Contains(":initial state"))  //todo korrekt?
+                {
+                    return state;
+                }
+            } 
 
-                    var counterExampleState = new CounterExampleState
-                    {
-                        Name = state.CapturedStateName //extrahiere name
-                    };
-                    AddLineInformation(counterExampleState, state.CapturedStateName);  //extrahiere line
+            throw new InvalidOperationException("specific Model does not contain a :initial state");
+            
+        }
 
-                    foreach (var variableNode in state.Vars) //extrahiere variablen.
-                    {
-                        counterExampleState.Variables.Add(new CounterExampleVariable
-                        {
-                            Name = variableNode.ShortName,
-                            Value = variableNode.Value,
-                            CanonicalName = languageSpecificModel.CanonicalName(variableNode.Element)
-                        });
-                        GetExpansions(state, variableNode, counterExampleState, languageSpecificModel); //iwie connected variablen auch noch holen.
-                    }
-                    var index = counterExample.States.FindIndex(c => c.Column == counterExampleState.Column && c.Line == counterExampleState.Line);
-                    if (index != -1)
-                    {
-                        counterExample.States[index] = counterExampleState;
-                    }
-                    else
-                    {
-                        counterExample.States.Add(counterExampleState);
-                    }
+
+        private CounterExample ExtractCounterExampleFromState(StateNode state)
+        {
+            CounterExample ce = new CounterExample();
+            AddPosition(ce, state.CapturedStateName);
+
+            foreach (var variableNode in state.Vars) //extrahiere variablen.
+            {
+                string name = variableNode.ShortName;
+                string value = RemoveBrackets(variableNode.Value);
+                if (IsReference(value))
+                {
+                    value = "[Object Reference]";
+                }
+
+                if (!IsUnknown(value))
+                {
+                    ce.Variables.Add(name, value);
                 }
             }
-            return counterExample;
 
+            return ce;
         }
 
-        private static void GetExpansions(StateNode state, ElementNode elementNode, CounterExampleState counterExampleState,
-          ILanguageSpecificModel languageSpecificModel)
-        {
-            try
-            {
-                var dafnyModel = GetFieldValue<DafnyModel>(state, "dm");
-                var elt = GetFieldValue<Model.Element>(elementNode, "elt");
-                var extras = dafnyModel.GetExpansion(state, elt);
-                foreach (var el in extras)
-                {
-                    counterExampleState.Variables.Add(new CounterExampleVariable
-                    {
-                        Name = elementNode.Name + "." + el.Name,
-                        Value = el.Value,
-                        CanonicalName = languageSpecificModel.CanonicalName(el.Element)
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e.Message);
-            }
-        }
 
-        private static T GetFieldValue<T>(object instance, string fieldName)
+        private void AddPosition(CounterExample ce, string stateCapturedStateName)
         {
-            const BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-            var field = instance.GetType().GetField(fieldName, bindFlags);
-            return field == null ? default(T) : (T)field.GetValue(instance);
-        }
 
-        private void AddLineInformation(CounterExampleState state, string stateCapturedStateName)
-        {
-            if ("<initial>".Equals(stateCapturedStateName))
-            {
-                state.Line = 0;
-                state.Column = 0;
-                return;
-            }
-
-            var regex = ".*?(dfy)(\\()(\\d+)(,)(\\d+)(\\))";
+            var regex = @".*dfy\((\d+),(\d+)\)";   //anything, then dfy(00,00)
             var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var m = r.Match(stateCapturedStateName);
             if (m.Success)
             {
-                var lineStr = m.Groups[3].ToString();
-                state.Line = int.Parse(lineStr);
-                var columnStr = m.Groups[5].ToString();
-                state.Column = int.Parse(columnStr);
+                var lineStr = m.Groups[1].ToString();
+                int line = int.Parse(lineStr);
+                ce.Line = line;
+                ce.Col = FileHelper.GetLineLength(Source, line);
             }
-        }
-
-        [Serializable]
-        [DataContract]
-        public class CounterExample
-        {
-            [DataMember]
-            public List<CounterExampleState> States { get; set; }
-
-            public CounterExample()
+            else
             {
-                States = new List<CounterExampleState>();
+                ce.Line = 0;
+                ce.Col = 0;
             }
         }
 
-        [Serializable]
-        [DataContract]
-        public class CounterExampleState
+
+
+        private string RemoveBrackets(string s)
         {
-            [DataMember]
-            public List<CounterExampleVariable> Variables { get; set; }
-            [DataMember]
-            public string Name { get; set; }
-            [DataMember]
-            public int Line { get; set; }
-            [DataMember]
-            public int Column { get; set; }
-            public CounterExampleState()
+            var regex = @"\((.*)\)";   
+            var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var m = r.Match(s);
+
+            while (m.Success)
             {
-                Variables = new List<CounterExampleVariable>();
+                s = m.Groups[1].ToString();
+                m = r.Match(s);
             }
+
+            return s;
         }
 
-        [Serializable]
-        [DataContract]
-        public class CounterExampleVariable
-        {
-            [DataMember]
-            public string Name { get; set; }
-            [DataMember]
-            public string RealName { get; set; }
-            [DataMember]
-            public string Value { get; set; }
-            [DataMember]
-            public string CanonicalName { get; set; }
-        }
+        private bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
+        private bool IsReference(string s) => s.StartsWith("T@U!val!");
     }
 }

@@ -14,7 +14,7 @@ namespace DafnyLanguageServer.Handler
         public string DafnyFile { get; set; }
     }
 
-    public class CounterExampleResult
+    public class CounterExample
     {
         public int Line { get; set; }
         public int Col { get; set; }
@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
 
     public class CounterExampleResults
     {
-        public List<CounterExampleResult> CounterExamples { get; } = new List<CounterExampleResult>();
+        public List<CounterExample> CounterExamples { get; } = new List<CounterExample>();
 
     }
 
@@ -45,11 +45,11 @@ namespace DafnyLanguageServer.Handler
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
             var file = _bufferManager.GetFile(request.DafnyFile);
-            // Counterexample needs a DafnyTranslationUnit with this current request DafnyFile path
-            // therefore do not use file.DafnyTranslationUnit
+            // Counterexample needs a DafnyTranslationUnit with a right file name.
+            // Uri to Filename conversion kinda fails so we just create a new DTU here.
             var dafnyTranslationUnit = new DafnyTranslationUnit(request.DafnyFile, file.Sourcecode);
-            var service = new CounterExampleService(dafnyTranslationUnit);
-            return await service.ProvideCounterExamples();
+            //var dafnyTranslationUnit = file.DafnyTranslationUnit;
+            return await Task.Run(() => dafnyTranslationUnit.CounterExample());
         }
 
     }

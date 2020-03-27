@@ -69,7 +69,7 @@ namespace ContentManagerTests
         }
 
         [Test]
-        public void FilePathEqualsUriToString()
+        public void FilePathConversion()
         {
             DafnyFile f = b.GetFile(uri1);
             Assert.AreEqual(uri1.ToString(), f.Filepath);

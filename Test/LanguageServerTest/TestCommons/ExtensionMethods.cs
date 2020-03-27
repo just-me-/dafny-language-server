@@ -41,7 +41,7 @@ namespace TestCommons
             return result;
         }
 
-        public static string ToCustomString(this CounterExampleResult ce)
+        public static string ToCustomString(this CounterExample ce)
         {
             if (ce == null)
             {
@@ -57,7 +57,7 @@ namespace TestCommons
             return GenericToStringList(source, ToCustomString);
         }
 
-        public static List<string> ToStringList(this List<CounterExampleResult> source)
+        public static List<string> ToStringList(this List<CounterExample> source)
         {
             return GenericToStringList(source, ToCustomString);
         }

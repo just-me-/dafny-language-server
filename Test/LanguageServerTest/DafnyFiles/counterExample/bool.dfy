@@ -1,5 +1,5 @@
-method floaty(in1: int) returns (out1: bool)
+method floaty(in1: bool) returns (out1: bool)
    ensures out1 == true
 {
-   out1 := in1 == 5;
+   out1 := in1;
 }
