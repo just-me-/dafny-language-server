@@ -165,7 +165,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return s;
         }
 
-        bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
-        bool IsReference(string s) => s.StartsWith("T@U!val!");
+        private bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
+        private bool IsReference(string s) => s.StartsWith("T@U!val!");
     }
 }

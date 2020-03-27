@@ -65,6 +65,8 @@ namespace TestCommons
         public static readonly string ce_sequence = CreateTestfilePath("counterExample/sequence.dfy");
         public static readonly string ce_2m = CreateTestfilePath("counterExample/two_methods.dfy");
         public static readonly string ce_2mc = CreateTestfilePath("counterExample/two_connected_methods.dfy");
+        public static readonly string ce_lp = CreateTestfilePath("counterExample/largerprogram.dfy");
+        public static readonly string ce_li = CreateTestfilePath("counterExample/loopinvariant.dfy");
 
 
         //Integration

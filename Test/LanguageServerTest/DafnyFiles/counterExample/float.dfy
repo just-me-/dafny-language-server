@@ -2,4 +2,4 @@ method floaty(inp1: real) returns (out1: real) //this example is only true if in
    ensures -1.0 <= out1 <= 1.0
 {
    out1 := 2.0 * inp1;
-}
+} 
