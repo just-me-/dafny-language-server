@@ -7,7 +7,7 @@ namespace DafnyLanguageServer.DafnyAccess
     public interface IDafnyTranslationUnit
     {
         bool Verify();
-        List<DiagnosticError> GetErrors();
+        List<DiagnosticError> Errors { get; }
         List<SymbolTable.SymbolInformation> Symbols();
         CounterExampleResults CounterExample();
         void DotGraph();

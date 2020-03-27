@@ -9,28 +9,21 @@ using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-    // needed cuz boogie needs an output stream - must not be null 
-    public class DafnyConsolePrinter : ConsolePrinter
-    {
-        public override void ReportBplError(IToken tok, string message, bool error, TextWriter tw, string category = null)
-        {
-            // Dafny has 0-indexed columns, but Boogie counts from 1
-            var realigned_tok = new Token(tok.line, tok.col - 1);
-            realigned_tok.kind = tok.kind;
-            realigned_tok.pos = tok.pos;
-            realigned_tok.val = tok.val;
-            realigned_tok.filename = tok.filename;
-            base.ReportBplError(realigned_tok, message, error, tw, category);
 
-            if (tok is NestedToken nt)
-            {
-                ReportBplError(nt.Inner, "Related location", false, tw);
-            }
-        }
-    }
 
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
+
+
+        public DafnyTranslationUnit(string fname, string source) : this(fname, source, new string[] { }) { }
+        public DafnyTranslationUnit(string fname, string source, string[] args)
+        {
+            this.fname = fname;
+            this.source = source;
+            this.args = args;
+        }
+
+
         private readonly string fname;
         private readonly string source;
         private readonly string[] args;
@@ -40,15 +33,18 @@ namespace DafnyLanguageServer.DafnyAccess
 
         #region ErrorReporting
         private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
-        private List<DiagnosticError> _errors = new List<DiagnosticError>();
+        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>();
+        
+
         private void AddErrorToList(ErrorInformation e)
         {
-            _errors.Add(e.ConvertToErrorInformation());
+
+            Errors.Add(e.ConvertToErrorInformation());
         }
 
         private void AddErrorToList(ErrorMessage e)
         {
-            _errors.Add(e.ConvertToErrorInformation());
+            Errors.Add(e.ConvertToErrorInformation());
         }
 
         private void CollectErrorsFromReporter()
@@ -61,27 +57,16 @@ namespace DafnyLanguageServer.DafnyAccess
 
         #endregion
 
-        public List<DiagnosticError> GetErrors()
-        {
-            _errors.Clear();
-            reporter = new ConsoleErrorReporter();
-            Verify();
-            CollectErrorsFromReporter();
-            return _errors;
-        }
 
-        public DafnyTranslationUnit(string fname, string source) : this(fname, source, new string[] { }) { }
-        public DafnyTranslationUnit(string fname, string source, string[] args)
-        {
-            this.fname = fname;
-            this.source = source;
-            this.args = args;
-        }
 
         public bool Verify()
         {
+            Errors.Clear();
+            reporter = new ConsoleErrorReporter();
             ServerUtils.ApplyArgs(args, reporter);
-            return Parse() && Resolve() && Translate() && Boogie();
+            bool success = Parse() && Resolve() && Translate() && Boogie();
+            CollectErrorsFromReporter();
+            return success;
         }
 
 
@@ -155,7 +140,7 @@ namespace DafnyLanguageServer.DafnyAccess
         public List<SymbolTable.SymbolInformation> Symbols()  //Todo ticket 119 hier sollte nicht parse und so nochmal aufgerufen werden... das wird ja beim verify implizit schon geamcht. alle error sind dann doppel etc pp, diagnstoic wird glaub immer 2x geschickt etc p
         {
             ServerUtils.ApplyArgs(args, reporter);
-            if (Parse() && Resolve())  //todo geht hier if (_errors.Count == 0) ? 119
+            if (dafnyProgram != null)
             {
                 var symbolTable = new SymbolTable(dafnyProgram);
                 return symbolTable.CalculateSymbols();

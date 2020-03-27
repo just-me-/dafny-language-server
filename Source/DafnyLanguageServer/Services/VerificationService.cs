@@ -28,7 +28,8 @@ namespace DafnyLanguageServer.Services
             _msgSender.SendCurrentDocumentInProcess(file.Filepath);
             try
             {
-                var errors = file.DafnyTranslationUnit.GetErrors();
+                file.DafnyTranslationUnit.Verify();
+                var errors = file.DafnyTranslationUnit.Errors;
                 var diagnostics = CreateDafnyDiagnostics(errors, file.Filepath, file.Sourcecode);
 
                 PublishDiagnosticsParams p = new PublishDiagnosticsParams
