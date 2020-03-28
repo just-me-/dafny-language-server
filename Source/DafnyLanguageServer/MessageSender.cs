@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DafnyLanguageServer
 {
-    /*
-     * This class provides for each client supported message an own function for an easy usage. 
-     */
+    /// <summary>
+    /// This class provides for each client supported message an own function for an easy usage. 
+    /// </summary>
     class MessageSender
     {
         private readonly ILanguageServer _router; 

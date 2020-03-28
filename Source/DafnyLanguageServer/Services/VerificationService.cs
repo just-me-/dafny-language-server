@@ -12,6 +12,9 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
 namespace DafnyLanguageServer.Services
 {
+    /// <summary>
+    /// This service is used by the <c>TextDocumentSyncHandler</c> to provide verification for Dafny files with <c>Verify</c>. 
+    /// </summary>
     public class VerificationService
     {
         private readonly ILanguageServer _router;

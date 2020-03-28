@@ -10,6 +10,10 @@ using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
 
 namespace DafnyLanguageServer.Handler
 {
+    /// <summary>
+    /// This handler provides auto completion as defined in the LSP.
+    /// There is additional information (like symbol type and parent class) added to each symbol if the DEBUG mode is used.
+    /// </summary>
     public class CompletionHandler : ICompletionHandler
     {
         private readonly ILanguageServer _router;

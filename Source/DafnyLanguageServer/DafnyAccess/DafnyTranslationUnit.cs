@@ -9,12 +9,11 @@ using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-
-
+    /// <summary>
+    /// This is the translation unit for Dafny files. It does verify, ... and anything else... This should be refactored todo 
+    /// </summary>
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
-
-
         public DafnyTranslationUnit(string fname, string source) : this(fname, source, new string[] { }) { }
         public DafnyTranslationUnit(string fname, string source, string[] args)
         {
@@ -22,7 +21,6 @@ namespace DafnyLanguageServer.DafnyAccess
             this.source = source;
             this.args = args;
         }
-
 
         private readonly string fname;
         private readonly string source;
@@ -34,7 +32,6 @@ namespace DafnyLanguageServer.DafnyAccess
         #region ErrorReporting
         private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>();
-        
 
         private void AddErrorToList(ErrorInformation e)
         {
@@ -54,10 +51,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 AddErrorToList(error);
             }
         }
-
         #endregion
-
-
 
         public bool Verify()
         {
@@ -68,8 +62,6 @@ namespace DafnyLanguageServer.DafnyAccess
             CollectErrorsFromReporter();
             return success;
         }
-
-
 
         private bool Parse()
         {
@@ -91,8 +83,6 @@ namespace DafnyLanguageServer.DafnyAccess
             resolver.ResolveProgram(dafnyProgram);
             return reporter.Count(ErrorLevel.Error) == 0;
         }
-
-
 
         private bool Translate()
         {

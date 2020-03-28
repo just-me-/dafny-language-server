@@ -9,6 +9,9 @@ using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
+    /// <summary>
+    /// This class provides the <c>SymbolTable</c> for Dafny files. 
+    /// </summary>
     public class SymbolTable
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;

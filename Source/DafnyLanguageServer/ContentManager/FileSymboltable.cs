@@ -6,6 +6,10 @@ using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
 
 namespace DafnyLanguageServer.ContentManager
 {
+    /// <summary>
+    /// This <c>FileSymboltable</c> provides all symbols that were found in a (valid) Dafny file.
+    /// This symbol list can be used for features like <c>AutoCompletion</c>. 
+    /// </summary>
     public class FileSymboltable
     {
         private readonly List<SymbolTable.SymbolInformation> _symbolTable;

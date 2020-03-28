@@ -6,6 +6,11 @@ using MediatR;
 
 namespace DafnyLanguageServer.Handler
 {
+    /// <summary>
+    /// This class provides an extension of the Language Server Protocol.
+    /// It gets triggered every time a client sends a <c>compile</c> command request.
+    /// This class creates a new <c>CompilationService</c> to provide compiled results. 
+    /// </summary>
     public class CompilerParams : IRequest<CompilerResults>
     {
         public string FileToCompile { get; set; }

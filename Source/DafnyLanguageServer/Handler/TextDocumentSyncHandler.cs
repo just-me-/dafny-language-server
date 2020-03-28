@@ -13,6 +13,12 @@ using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.Handler
 {
+    /// <summary>
+    ///  This Handler implements OmniSharps DocumentSyncHandler.
+    ///  It handles LSP-calls like when a document has been opened or an open document changes.
+    ///  Whenever this is the case, the intern <c>BufferManager</c> gets updated.
+    ///  An update of the buffer includes also a verify check for the Dafny source code in the file. 
+    /// </summary>
     internal class TextDocumentSyncHandler : ITextDocumentSyncHandler
     {
         private readonly ILanguageServer _router;

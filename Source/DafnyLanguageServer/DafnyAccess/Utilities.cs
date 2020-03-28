@@ -4,6 +4,9 @@ using System;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
+    /// <summary>
+    /// This class ... todo 
+    /// </summary>
     class Interaction
     {
         internal static string SUCCESS = "SUCCESS";

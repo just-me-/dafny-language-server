@@ -13,6 +13,12 @@ using ILogger = Serilog.ILogger;
 
 namespace DafnyLanguageServer
 {
+    /// <summary>
+    /// This class provides the <c>Main</c> function.
+    /// It starts the Omnisharp Language Server and registers all handlers as well as the services.
+    /// It does also use owr <c>ConfigReader</c> to provide customized settings for the server.
+    /// It also redirects the output stream. 
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)
@@ -42,11 +48,11 @@ namespace DafnyLanguageServer
                         .AddLanguageServer()
                         .SetMinimumLevel(configReader.Loglevel)
                     )
-
+                    // Service group 
                     .WithServices(ConfigureServices)
-
+                    // Handler group 
                     .WithHandler<TextDocumentSyncHandler>()
-                    .WithHandler<DidChangeWatchedFilesHandler>()
+                    //.WithHandler<DidChangeWatchedFilesHandler>()   // Todo rm io? 
                     .WithHandler<CompletionHandler>()
                     .WithHandler<CompileHandler>()
                     .WithHandler<CounterExampleHandler>()

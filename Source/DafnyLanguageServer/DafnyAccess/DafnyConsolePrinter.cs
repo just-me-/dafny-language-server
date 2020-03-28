@@ -9,6 +9,9 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
+    /// <summary>
+    /// This class ... todo 
+    /// </summary>
     public class DafnyConsolePrinter : ConsolePrinter
     {
         public override void ReportBplError(IToken tok, string message, bool error, TextWriter tw, string category = null)

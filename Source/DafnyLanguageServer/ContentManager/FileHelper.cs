@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace DafnyLanguageServer.ContentManager
 {
+    /// <summary>
+    /// This is a static class for general helper functions. This class will be refactored soon. 
+    /// </summary>
     public static class FileHelper
     {
         public static string GetCurrentWord(string code, int line, int character)

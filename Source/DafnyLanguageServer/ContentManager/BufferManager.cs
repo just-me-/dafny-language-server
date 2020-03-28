@@ -4,6 +4,12 @@ using System.Collections.Concurrent;
 
 namespace DafnyLanguageServer.ContentManager
 {
+    /// <summary>
+    /// This <c>BufferManager</c> buffers for every Dafny file a valid intermediate version.
+    /// The structure is key-value-based <c>URI, DafnyFile</c>.
+    /// This buffer is needed to have always a valid intermediate file version to provide features like <c>AutoCompletion</c> 
+    /// even if the current file state would not be valid Dafny code (eg the user is typing a new line in his Dafny source file.)
+    /// </summary>
     public class BufferManager : IBufferManager
     {
         private readonly ConcurrentDictionary<Uri, DafnyFile> _buffers = new ConcurrentDictionary<Uri, DafnyFile>();
