@@ -44,9 +44,7 @@ namespace TestCommons
                 Arguments = $"/log ../Logs/Test_{name}.txt /loglevel 0"
             });
 
-
             Client = new LanguageClient(LoggerFactory, server);
-
             Client.Initialize(
                 workspaceRoot: Files.testFilesPath,
                 initializationOptions: new { },
@@ -54,8 +52,6 @@ namespace TestCommons
             ).Wait();
 
             Thread.Sleep(1000);
-
-
             log.Information("*** Language server has been successfully initialized.");
         }
 
@@ -74,7 +70,5 @@ namespace TestCommons
             Client.Dispose();
             server.Dispose();
         }
-
-
     }
 }
