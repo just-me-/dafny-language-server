@@ -52,7 +52,7 @@ namespace DafnyLanguageServer
                     .WithServices(ConfigureServices)
                     // Handler group 
                     .WithHandler<TextDocumentSyncHandler>()
-                    //.WithHandler<DidChangeWatchedFilesHandler>()   // Todo rm io? 
+                    .WithHandler<DidChangeWatchedFilesHandler>()
                     .WithHandler<CompletionHandler>()
                     .WithHandler<CompileHandler>()
                     .WithHandler<CounterExampleHandler>()
