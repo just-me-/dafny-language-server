@@ -188,7 +188,7 @@
     <Compile Include="DafnyAccess\DiagnosticError.cs" />
     <Compile Include="Handler\CodeLensHandler.cs" />
     <Compile Include="Handler\WorkspaceHandlers.cs" />
-    <Compile Include="MessageSender.cs" />
+    <Compile Include="Services\MessageSenderService.cs" />
     <Compile Include="Services\CompilationService.cs" />
     <Compile Include="Handler\CompletionHandler.cs" />
     <Compile Include="Handler\CounterExampleHandler.cs" />

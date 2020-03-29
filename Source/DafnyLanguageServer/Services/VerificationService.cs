@@ -18,17 +18,17 @@ namespace DafnyLanguageServer.Services
     public class VerificationService
     {
         private readonly ILanguageServer _router;
-        private readonly MessageSender _msgSender; 
+        private readonly MessageSenderService _msgSenderService; 
 
         public VerificationService(ILanguageServer router)
         {
             _router = router;
-            _msgSender = new MessageSender(router);
+            _msgSenderService = new MessageSenderService(router);
         }
 
         public void Verify(DafnyFile file)
         {
-            _msgSender.SendCurrentDocumentInProcess(file.Filepath);
+            _msgSenderService.SendCurrentDocumentInProcess(file.Filepath);
             try
             {
                 file.DafnyTranslationUnit.Verify();
@@ -41,10 +41,10 @@ namespace DafnyLanguageServer.Services
                     Diagnostics = new Container<Diagnostic>(diagnostics)
                 };
                 _router.Document.PublishDiagnostics(p);
-                _msgSender.SendCountedErrors(diagnostics.Count);
+                _msgSenderService.SendCountedErrors(diagnostics.Count);
             } catch (Exception e)
             {
-               _msgSender.SendError("Error while Verifying." + e.Message);
+               _msgSenderService.SendError("Error while Verifying." + e.Message);
             }
         }
 
