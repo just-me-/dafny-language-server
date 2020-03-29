@@ -8,7 +8,7 @@ using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
 
-//Notiz: ALle failenden tests sind aukommentiert damit CI nicht ausrastet. Wird später gefixed im Milestone 5 wenn wir Symbol Table haben. Alle Todos Ticket 71
+//Notiz: Alle failenden tests sind aukommentiert damit CI nicht ausrastet. Wird später gefixed im Milestone 5 wenn wir Symbol Table haben. Alle Todos Ticket 71 todo
 {
     [TestFixture]
     public class ClassA : GoToBase
@@ -18,7 +18,6 @@ namespace GotoIntegrationTest
         }
 
         private const int l = 21;
-
 
         [Test]
         public void LeftMost()
@@ -285,7 +284,7 @@ namespace GotoIntegrationTest
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 15);
-            VerifyResult(file, 31, 8 + 2);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
+            VerifyResult(file, 31,  12);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
         }
 
         //[Test]
@@ -306,7 +305,7 @@ namespace GotoIntegrationTest
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 19);
-            VerifyResult(file, 32, 8 + 2);
+            VerifyResult(file, 32, 12);
         }
 
 

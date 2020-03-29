@@ -31,7 +31,7 @@ namespace GotoIntegrationTest
             Uri uri = goneTo.FirstOrDefault().Location.Uri;
 
             Assert.AreEqual(expLine, line + 1);  //adding 1 here to get rid of the 0 indexing.
-            Assert.AreEqual(expCol, col + 1 - 1);    //same, but removing one again because cursor is one off to the right in current implementation   todo fixen Ticket 71
+            Assert.AreEqual(expCol, col + 1);    //same
             Assert.AreEqual(new Uri(expectedFile), uri);
         }
 
