@@ -32,11 +32,8 @@ namespace TestCommons
         public static readonly string cr_wrongStreamPathType = CreateTestfilePath("configReader/wrongStreamPathType.json");
         public static readonly string cr_wrongLogPathType = CreateTestfilePath("configReader/wrongLogPathType.json");
 
-
-
         /***DAFNY SOURCE FILES***/
         /************************/
-
         //Compile
         public static readonly string cp_fineDLL = CreateTestfilePath("compile/compiles_as_dll.dfy");
         public static readonly string cp_fineEXE = CreateTestfilePath("compile/compiles_as_exe.dfy");
@@ -68,7 +65,6 @@ namespace TestCommons
         public static readonly string ce_lp = CreateTestfilePath("counterExample/largerprogram.dfy");
         public static readonly string ce_li = CreateTestfilePath("counterExample/loopinvariant.dfy");
 
-
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
         public static readonly string int_inexistant = AddTestFolderPrefix("IDONOTEXIST.dfy");
@@ -81,7 +77,15 @@ namespace TestCommons
         public static readonly string ic_includee = CreateTestfilePath("include/includee.dfy");
 
         //AutoCompletion
-        public static readonly string ac_ac = CreateTestfilePath("autocompletion/autocompletion.dfy");
+        public static readonly string ac_basic_var = CreateTestfilePath("autocompletion/basic_var.dfy");
+        public static readonly string ac_basic_var_class = CreateTestfilePath("autocompletion/basic_var_and_class.dfy");
+        public static readonly string ac_multiple_classes = CreateTestfilePath("autocompletion/basic_multiple_classes.dfy");
+        public static readonly string ac_empty = CreateTestfilePath("autocompletion/empty.dfy");
+        public static readonly string ac_c_empty = CreateTestfilePath("autocompletion/class_empty.dfy");
+        public static readonly string ac_c_one_method = CreateTestfilePath("autocompletion/class_one_method.dfy");
+        public static readonly string ac_c_multiple = CreateTestfilePath("autocompletion/class_multiple.dfy");
+        public static readonly string ac_c_in_class = CreateTestfilePath("autocompletion/class_in_class.dfy");
+        public static readonly string ac_c_partial = CreateTestfilePath("autocompletion/class_partial.dfy");
 
         //Verification
         public static readonly string vc_lo_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
@@ -103,7 +107,6 @@ namespace TestCommons
         public static readonly string vc_re_type = CreateTestfilePath("verification/resolver_undeclaredType.dfy");
         public static readonly string vc_re_identifier = CreateTestfilePath("verification/resolver_identifier.dfy");
 
-
         private static string CreateTestfilePath(string s)
         {
             var path = AddTestFolderPrefix(s);
@@ -115,7 +118,5 @@ namespace TestCommons
         }
 
         private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
-
-
     }
 }

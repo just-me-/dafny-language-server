@@ -8,6 +8,9 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
+    /// <summary>
+    /// This class ... todo 
+    /// </summary>
     public class DiagnosticError
     {
         public IToken Tok { get; set; }
@@ -48,7 +51,5 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             return source?.Select(converter).ToList();
         }
-
-
     }
 }

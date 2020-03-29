@@ -9,6 +9,10 @@ using DafnyLanguageServer.DafnyAccess;
 
 namespace DafnyLanguageServer.Handler
 {
+    /// <summary>
+    /// This class provides CodeLens information for VS Code.
+    /// This class is work in progress. The content of this huge class should be outsourced into a <c>CodeLensServiceProvider</c>. 
+    /// </summary>
     public class CodeLensHandler : ICodeLensHandler
     {
         private CodeLensCapability _capability;

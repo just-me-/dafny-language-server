@@ -9,6 +9,11 @@ using MediatR;
 
 namespace DafnyLanguageServer.Handler
 {
+    /// <summary>
+    /// This class provides an extension of the Language Server Protocol.
+    /// It gets triggered every time a client sends a <c>counterExample</c> command request.
+    /// This class creates a new <c>DafnyTranslationUnit</c> to provide counter example result. 
+    /// </summary>
     public class CounterExampleParams : IRequest<CounterExampleResults>
     {
         public string DafnyFile { get; set; }

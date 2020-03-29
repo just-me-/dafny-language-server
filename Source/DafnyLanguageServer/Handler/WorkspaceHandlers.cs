@@ -13,7 +13,12 @@ using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.Handler
 {
-
+    /// <summary>
+    /// This handler implements a file watcher for Dafny files in the client workspace like it is defined in the LSP.
+    /// This handler gets called qhenever a watched file gets changed from a third part program on the client side.
+    /// We do actually not handle those requests separately.
+    /// This watcher has been implemented to support the defined LSP and do not throw an "not implemented error" in case a Dafny file has been modified from another editor or program. 
+    /// </summary>
     internal class DidChangeWatchedFilesHandler : IDidChangeWatchedFilesHandler
     {
         private DidChangeWatchedFilesCapability _capability;       //Omnisharp field, lets leave it in.
@@ -43,8 +48,6 @@ namespace DafnyLanguageServer.Handler
         }
     }
 
-
-
     internal class DidChangeWatchedFilesRegistrationOptions
     {
         public FileSystemWatcher[] Watchers { get; set; }
@@ -55,5 +58,4 @@ namespace DafnyLanguageServer.Handler
         public string GlobPattern { get; set; }
         public int Kind { get; set; }
     }
-
 }

@@ -12,6 +12,9 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.Services
 {
+    /// <summary>
+    ///  This service is used by the <c>CompileHandler</c>. 
+    /// </summary>
     public class CompilationService
     {
 

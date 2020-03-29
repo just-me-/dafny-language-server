@@ -6,7 +6,9 @@ using System.Windows;
 
 namespace DafnyLanguageServer
 {
-
+    /// <summary>
+    /// This is a reader service for the server configuration file. It is used once by the server start up. 
+    /// </summary>
     public class ConfigReader
     {
         private const string defaultCfgFile = "LanguageServerConfig.json";
@@ -51,7 +53,6 @@ namespace DafnyLanguageServer
 
         }
 
-
         private void SetDefaults()
         {
             RedirectedStreamFile = Path.Combine(AssemblyPath, "../Logs/StreamRedirection.txt");
@@ -73,8 +74,6 @@ namespace DafnyLanguageServer
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
                 var cfgLevel = cfg["logging"]["loglevel"];
-
-
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
                 {
@@ -113,7 +112,6 @@ namespace DafnyLanguageServer
                 }
             }
         }
-
         private void ReadArgs()
         {
             try
@@ -151,13 +149,11 @@ namespace DafnyLanguageServer
                 }
             }
         }
-
         private void ImprovePathLayout()
         {
             RedirectedStreamFile = Path.GetFullPath(RedirectedStreamFile);
             LogFile = Path.GetFullPath(LogFile);
         }
-
         private void Validate()
         {
             if ((int)Loglevel < 0 || (int)Loglevel > 7)
@@ -169,7 +165,6 @@ namespace DafnyLanguageServer
 
         
         }
-    
 
         public void PrintState()
         {
