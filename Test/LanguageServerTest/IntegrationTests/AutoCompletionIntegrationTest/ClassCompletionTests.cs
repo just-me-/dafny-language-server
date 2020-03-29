@@ -61,15 +61,33 @@ namespace AutoCompletionIntegrationTest
                 "method_c",
             };
 
-            GetCompletions(Files.ac_ac, line, col);
+            GetCompletions(Files.ac_c_in_class, line, col);
             VerifyCompletions(exp, line, col);
         }
 
+        [Test]
+        public void PartialCorrect()
+        {
+            int line = 15;
+            int col = 15;
+            ArrayList exp = new ArrayList()
+            {
+                "my_match",
+            };
 
-        // eine methode vorschlagen nach .
-        // eine methode vorschlagen nach .me
-        // es gibt keine methode .
-        // es gibt methode aber passt nicht .meh
+            GetCompletions(Files.ac_c_partial, line, col);
+            VerifyCompletions(exp, line, col);
+        }
 
+        [Test]
+        public void PartialNotExists()
+        {
+            int line = 15;
+            int col = 15;
+            ArrayList exp = new ArrayList(){};
+
+            GetCompletions(Files.ac_c_partial, line, col);
+            VerifyCompletions(exp, line, col);
+        }
     }
 }
