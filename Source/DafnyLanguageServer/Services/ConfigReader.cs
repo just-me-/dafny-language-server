@@ -7,7 +7,7 @@ using System.Windows;
 namespace DafnyLanguageServer
 {
     /// <summary>
-    /// This is a reader for the server configuration file. 
+    /// This is a reader service for the server configuration file. It is used once by the server start up. 
     /// </summary>
     public class ConfigReader
     {
