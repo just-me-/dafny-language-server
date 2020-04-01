@@ -10,7 +10,8 @@ using Bpl = Microsoft.Boogie;
 namespace DafnyLanguageServer.DafnyAccess
 {
     /// <summary>
-    /// This is the translation unit for Dafny files. It does verify, ... and anything else... This should be refactored todo 
+    /// This is the translation unit for Dafny files. It calls parse, resolve, translate and Boogie's verification.
+    /// The results are provided within the Property "Errors"
     /// </summary>
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
@@ -152,7 +153,7 @@ namespace DafnyLanguageServer.DafnyAccess
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
             try
             {
-                if (Parse() && Resolve() && Translate()) //todo 119 imho auch nciht gut.... kann man das dafny program und boogie program nicht hier als klassenvariable speichern? 
+                if (Parse() && Resolve() && Translate()) //2
                 {
                     var boogieProgram = boogiePrograms.First(); //One CE is sufficient.
                     RemoveExistingModel();
@@ -163,7 +164,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             catch (Exception e)
             {
-                Console.WriteLine("Error while collecting models: " + e.Message);
+                Console.WriteLine("Error while collecting models: " + e.Message); //1
             }
 
             return new CounterExampleResults();
