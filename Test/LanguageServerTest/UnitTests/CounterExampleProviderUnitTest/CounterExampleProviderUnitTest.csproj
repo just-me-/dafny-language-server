@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -12,10 +12,12 @@
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.15.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
+    <ProjectReference Include="..\..\TestCommons\TestCommons.csproj" />
   </ItemGroup>
 
   <ItemGroup>

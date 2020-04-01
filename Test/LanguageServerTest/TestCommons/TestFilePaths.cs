@@ -71,6 +71,9 @@ namespace TestCommons
         public static readonly string ce_bool_bvd = CreateTestfilePath("counterExample/bool.bvd");
         public static readonly string ce_string_bvd = CreateTestfilePath("counterExample/string.bvd");
         public static readonly string ce_2m_bvd = CreateTestfilePath("counterExample/two_methods.bvd");
+        public static readonly string ce_2mc_bvd = CreateTestfilePath("counterExample/two_connected_methods.bvd");
+        public static readonly string ce_li_bvd = CreateTestfilePath("counterExample/loopinvariant.bvd");
+
 
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
