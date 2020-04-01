@@ -41,6 +41,10 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public CounterExampleResults LoadCounterModel()
         {
+            if (!File.Exists(ModelBvd))
+            {
+                return new CounterExampleResults();
+            }
             string RawBVDContent = ReadModelFile(ModelBvd);
             List<Model> models = ParseModels(RawBVDContent);
             List<ILanguageSpecificModel> specificModels = BuildModels(models);
@@ -60,11 +64,6 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private string ReadModelFile(string path)
         {
-            if (!File.Exists(path))
-            {
-                throw new FileNotFoundException("Could not find counter model file, which should have been generated: " + ModelBvd);
-            }
-
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var sr = new StreamReader(fs, Encoding.Default))
             {
