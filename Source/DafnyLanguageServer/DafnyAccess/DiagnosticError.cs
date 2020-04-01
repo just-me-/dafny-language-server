@@ -9,7 +9,9 @@ using Microsoft.Dafny;
 namespace DafnyLanguageServer.DafnyAccess
 {
     /// <summary>
-    /// This class ... todo 
+    /// This class represents Errors.
+    /// Dafny, as well as Boogi Errors can be converted into DiagnosticErrors.
+    /// These can be used to create Diagnostics.
     /// </summary>
     public class DiagnosticError
     {
@@ -43,7 +45,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return new DiagnosticError(eInfo.Tok, "Logical Error: " + eInfo.Msg)
             {
            
-                Aux = eInfo.Aux  //todo evtl clonen wegen refernezen zeug? ne oder?
+                Aux = eInfo.Aux
             };
         }
 
