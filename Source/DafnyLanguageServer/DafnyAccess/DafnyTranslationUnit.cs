@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DafnyLanguageServer.Handler;
+using DafnyServer;
 using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess

@@ -3,6 +3,8 @@ using Microsoft.Boogie;
 using System;
 using System.Collections.Generic;
 using DafnyLanguageServer.Handler;
+using DafnyServer;
+
 
 namespace CompletionHandlerTest
 {

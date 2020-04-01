@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
+using DafnyServer;
 
 namespace DafnyLanguageServer.ContentManager
 {

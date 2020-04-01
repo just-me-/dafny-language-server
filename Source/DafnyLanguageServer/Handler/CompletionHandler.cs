@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
+using DafnyServer;
 
 namespace DafnyLanguageServer.Handler
 {
