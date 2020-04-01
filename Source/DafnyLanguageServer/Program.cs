@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Serilog;
-using DafnyConsolePrinter = DafnyLanguageServer.DafnyAccess.DafnyConsolePrinter;
 using ILogger = Serilog.ILogger;
 
 namespace DafnyLanguageServer
@@ -23,7 +22,7 @@ namespace DafnyLanguageServer
     {
         static async Task Main(string[] args)
         {
-            ExecutionEngine.printer = new DafnyConsolePrinter();
+            ExecutionEngine.printer = new ConsolePrinter();
 
             var configReader = new ConfigReader(args);
 

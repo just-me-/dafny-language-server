@@ -184,7 +184,6 @@
   <ItemGroup>
     <Compile Include="Services\ConfigReader.cs" />
     <Compile Include="ContentManager\BufferManager.cs" />
-    <Compile Include="DafnyAccess\DafnyConsolePrinter.cs" />
     <Compile Include="DafnyAccess\DiagnosticError.cs" />
     <Compile Include="Handler\CodeLensHandler.cs" />
     <Compile Include="Handler\WorkspaceHandlers.cs" />
