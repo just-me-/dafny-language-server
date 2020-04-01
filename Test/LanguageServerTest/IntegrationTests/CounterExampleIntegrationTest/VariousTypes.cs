@@ -28,7 +28,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_float);
             List<string> expecation = new List<string>()
             {
-                "L3 C22: inp1 = - 160.0; "
+                "L3 C22: inp1 = -160.0; "
             };
             VerifyResults(expecation);
         }
