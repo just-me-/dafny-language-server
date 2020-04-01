@@ -65,6 +65,13 @@ namespace TestCommons
         public static readonly string ce_lp = CreateTestfilePath("counterExample/largerprogram.dfy");
         public static readonly string ce_li = CreateTestfilePath("counterExample/loopinvariant.dfy");
 
+        public static readonly string ce_fail1_bvd = CreateTestfilePath("counterExample/postcondition_violation_1.bvd");
+        public static readonly string ce_fail2_bvd = CreateTestfilePath("counterExample/postcondition_violation_2.bvd");
+        public static readonly string ce_float_bvd = CreateTestfilePath("counterExample/float.bvd");
+        public static readonly string ce_bool_bvd = CreateTestfilePath("counterExample/bool.bvd");
+        public static readonly string ce_string_bvd = CreateTestfilePath("counterExample/string.bvd");
+        public static readonly string ce_2m_bvd = CreateTestfilePath("counterExample/two_methods.bvd");
+
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
         public static readonly string int_inexistant = AddTestFolderPrefix("IDONOTEXIST.dfy");
