@@ -56,7 +56,7 @@ namespace CompletionHandlerTest
         public CounterExampleResults CounterExample()
         {
             return new CounterExampleResults();
-    
+
         }
 
         public void DotGraph()

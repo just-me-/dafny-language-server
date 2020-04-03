@@ -9,7 +9,7 @@ namespace DafnyLanguageServer.ContentManager
 {
     /// <summary>
     /// This <c>FileSymboltableProcessor</c> provides all symbols that were found in a (valid) Dafny file.
-    /// This symbol list can be used for features like <c>AutoCompletion</c>. 
+    /// This symbol list can be used for features like <c>AutoCompletion</c>.
     /// </summary>
     public class FileSymboltableProcessor
     {
