@@ -2,24 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
+using DafnyServer;
+using Microsoft.Boogie;
 
 namespace DafnyLanguageServer.ContentManager
 {
     /// <summary>
-    /// This <c>FileSymboltable</c> provides all symbols that were found in a (valid) Dafny file.
+    /// This <c>FileSymboltableProcessor</c> provides all symbols that were found in a (valid) Dafny file.
     /// This symbol list can be used for features like <c>AutoCompletion</c>. 
     /// </summary>
-    public class FileSymboltable
+    public class FileSymboltableProcessor
     {
         private readonly List<SymbolTable.SymbolInformation> _symbolTable;
         public bool HasEntries => (_symbolTable.Count > 0);
-        private readonly IDafnyTranslationUnit _translationUnit;
 
-        public FileSymboltable(IDafnyTranslationUnit translationUnit)
+        public FileSymboltableProcessor(List<SymbolTable.SymbolInformation> symbolTable)
         {
-            _translationUnit = translationUnit;
-            _symbolTable = GetSymbolList();
+            _symbolTable = symbolTable;
         }
 
         public List<SymbolTable.SymbolInformation> GetFullList()
@@ -69,11 +68,6 @@ namespace DafnyLanguageServer.ContentManager
         public string GetParentForWord(string word)
         {
             return word is null ? null : _symbolTable.FirstOrDefault(x => x.Name == word)?.ParentClass;
-        }
-
-        private List<SymbolTable.SymbolInformation> GetSymbolList()
-        {
-            return _translationUnit.Symbols();
         }
 
         private List<SymbolTable.SymbolInformation> RemoveDuplicates(List<SymbolTable.SymbolInformation> list)

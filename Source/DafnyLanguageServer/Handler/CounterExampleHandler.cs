@@ -40,21 +40,17 @@ namespace DafnyLanguageServer.Handler
     public class CounterExampleHandler : ICounterExample
     {
 
-        private readonly BufferManager _bufferManager;
+        private readonly WorkspaceManager _workspaceManager;
 
-        public CounterExampleHandler(BufferManager b)
+        public CounterExampleHandler(WorkspaceManager b)
         {
-            _bufferManager = b;
+            _workspaceManager = b;
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
-            var file = _bufferManager.GetFile(request.DafnyFile);
-            // Counterexample needs a DafnyTranslationUnit with a right file name.
-            // Uri to Filename conversion kinda fails so we just create a new DTU here.
-            var dafnyTranslationUnit = new DafnyTranslationUnit(request.DafnyFile, file.Sourcecode);
-            //var dafnyTranslationUnit = file.DafnyTranslationUnit;
-            return await Task.Run(() => dafnyTranslationUnit.CounterExample());
+            var file = _workspaceManager.GetFileRepository(request.DafnyFile);
+            return await Task.Run(() => file.CounterExample());
         }
 
     }

@@ -7,7 +7,7 @@ namespace CompletionHandlerTest
     [Category("Unit")]
     public class CompletionTests
     {
-        private FileSymboltable symbolTable = new FileSymboltable(new DafnyTranslationUnitFakeForCompletions());
+        private FileSymboltableProcessor symbolTable =  new FileSymboltableProcessor(new DafnyTranslationUnitFakeForCompletions().Symbols());
 
         [Test]
         public void FullList()

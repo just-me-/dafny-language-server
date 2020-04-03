@@ -8,7 +8,7 @@ namespace ContentManagerTests
     [Category("Unit")]
     internal class BufferManagerTests
     {
-        private BufferManager b;
+        private WorkspaceManager b;
         readonly Uri uri1 = new Uri(@"C:\file1.txt");
         readonly Uri uri2 = new Uri(@"C:\file2.txt");
         readonly Uri unregisteredUri = new Uri(@"C:\file3.txt");
@@ -26,9 +26,9 @@ namespace ContentManagerTests
         [SetUp]
         public void createBuffer()
         {
-            b = new BufferManager();
-            b.UpdateBuffer(uri1, source1);
-            b.UpdateBuffer(uri2, source2);
+            b = new WorkspaceManager();
+            b.UpdateFile(uri1, source1);
+            b.UpdateFile(uri2, source2);
         }
 
         [Test]
@@ -40,53 +40,53 @@ namespace ContentManagerTests
         [Test]
         public void GetAllFilesEmpty()
         {
-            BufferManager t = new BufferManager();
+            WorkspaceManager t = new WorkspaceManager();
             Assert.IsTrue(t.GetAllFiles().IsEmpty);
         }
 
         [Test]
         public void GetFileRegular()
         {
-            DafnyFile f = b.GetFile(uri1);
-            Assert.AreEqual(uri1, f.Uri);
-            Assert.AreEqual(source1, f.Sourcecode);
+            FileRepository f = b.GetFileRepository(uri1);
+            Assert.AreEqual(uri1, f.PhysicalFile.Uri);
+            Assert.AreEqual(source1, f.PhysicalFile.Sourcecode);
         }
 
         [Test]
         public void GetFileInexistant()
         {
-            DafnyFile f = b.GetFile(unregisteredUri);
-            Assert.AreEqual(unregisteredUri, f.Uri);
-            Assert.IsTrue(f.Sourcecode is null); //todo: sinnvoll?
+            FileRepository f = b.GetFileRepository(unregisteredUri);
+            Assert.AreEqual(unregisteredUri, f.PhysicalFile.Uri);
+            Assert.IsTrue(f.PhysicalFile.Sourcecode is null); //todo: sinnvoll?
         }
 
         [Test]
         public void GetFileByString()
         {
-            DafnyFile f = b.GetFile(uri1.ToString());
-            Assert.AreEqual(uri1, f.Uri);
-            Assert.AreEqual(source1, f.Sourcecode);
+            FileRepository f = b.GetFileRepository(uri1.ToString());
+            Assert.AreEqual(uri1, f.PhysicalFile.Uri);
+            Assert.AreEqual(source1, f.PhysicalFile.Sourcecode);
         }
 
         [Test]
         public void FilePathConversion()
         {
-            DafnyFile f = b.GetFile(uri1);
-            Assert.AreEqual(uri1.ToString(), f.Filepath);
+            FileRepository f = b.GetFileRepository(uri1);
+            Assert.AreEqual("C:\\file1.txt", f.PhysicalFile.Filepath);
         }
 
 
         [Test]
         public void GetSourceCode()
         {
-            string s = b.GetSourceCodeAsText(uri1);
+            string s = b.GetFileRepository(uri1).PhysicalFile.Sourcecode;
             Assert.AreEqual(source1, s);
         }
 
         [Test]
         public void GetSourceCodeUnknownUri()
         {
-            string s = b.GetSourceCodeAsText(unregisteredUri);
+            string s = b.GetFileRepository(unregisteredUri).PhysicalFile.Sourcecode;
             Assert.AreEqual(null, s);
         }
 
@@ -94,7 +94,7 @@ namespace ContentManagerTests
         [Test]
         public void GetSymbolTableRegular()
         {
-            FileSymboltable s = this.b.GetSymboltable(uri1);
+            FileSymboltableProcessor s = this.b.GetFileRepository(uri1).SymboleProcessor();
             Assert.IsTrue(s.HasEntries);
             var a = s.GetList();
             Assert.AreEqual("MultipleReturns", a[0].Name);
@@ -104,7 +104,7 @@ namespace ContentManagerTests
         [Test]
         public void GetSymbolTableEmpty()
         {
-            FileSymboltable s2 = this.b.GetSymboltable(uri2);
+            FileSymboltableProcessor s2 = this.b.GetFileRepository(uri2).SymboleProcessor();
             Assert.IsTrue(s2.HasEntries);
             var a = s2.GetList();
             Assert.IsEmpty(a);

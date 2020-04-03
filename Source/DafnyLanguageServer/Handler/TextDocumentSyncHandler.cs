@@ -16,16 +16,17 @@ namespace DafnyLanguageServer.Handler
     /// <summary>
     ///  This Handler implements OmniSharps DocumentSyncHandler.
     ///  It handles LSP-calls like when a document has been opened or an open document changes.
-    ///  Whenever this is the case, the intern <c>BufferManager</c> gets updated.
-    ///  An update of the buffer includes also a verify check for the Dafny source code in the file. 
+    ///  Whenever this is the case, the intern <c>WorkspaceManager</c> gets updated.
+    ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository. 
     /// </summary>
     internal class TextDocumentSyncHandler : ITextDocumentSyncHandler
     {
         private readonly ILanguageServer _router;
-        private readonly BufferManager _bufferManager;
+        private readonly WorkspaceManager _workspaceManager;
         private SynchronizationCapability _capability; //needed by omnisharp
 
         private readonly DocumentSelector _documentSelector = new DocumentSelector(
+            // todo #234
             new DocumentFilter()
             {
                 Pattern = "**/*.dfy"
@@ -33,10 +34,10 @@ namespace DafnyLanguageServer.Handler
         );
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
-        public TextDocumentSyncHandler(ILanguageServer router, BufferManager bufferManager)
+        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         {
             _router = router;
-            _bufferManager = bufferManager;
+            _workspaceManager = workspaceManager;
         }
 
         public TextDocumentChangeRegistrationOptions GetRegistrationOptions()
@@ -53,33 +54,24 @@ namespace DafnyLanguageServer.Handler
             return new TextDocumentAttributes(uri, "");
         }
 
-        private DafnyFile UpdateBuffer(Uri uri, string text)
+        /// <summary>
+        /// Updates file and sends error to the client with the diagnostics service
+        /// </summary>
+        private void UpdateFileAndSendDiagnostics(Uri uri, string text)
         {
-            DafnyFile file = _bufferManager.UpdateBuffer(uri, text);
-            return file;
-        }
-
-        private void Verify(DafnyFile file)
-        {
-            var verificationService = new VerificationService(_router);
-            verificationService.Verify(file);
-        }
-
-        private void UpdateBufferAndVerifyFile(Uri uri, string text)
-        {
-            var file = UpdateBuffer(uri, text);
-            Verify(file);
+            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
+            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
         }
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateBufferAndVerifyFile(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
             return Unit.Task;
         }
 
         public Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateBufferAndVerifyFile(request.TextDocument.Uri, request.TextDocument.Text);
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.TextDocument.Text);
             return Unit.Task;
         }
 

@@ -13,31 +13,29 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 namespace DafnyLanguageServer.Services
 {
     /// <summary>
-    /// This service is used by the <c>TextDocumentSyncHandler</c> to provide verification for Dafny files with <c>Verify</c>. 
+    /// This service is used by the <c>TextDocumentSyncHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
     /// </summary>
-    public class VerificationService
+    public class DiagnosticsService
     {
         private readonly ILanguageServer _router;
         private readonly MessageSenderService _msgSenderService; 
 
-        public VerificationService(ILanguageServer router)
+        public DiagnosticsService(ILanguageServer router)
         {
             _router = router;
             _msgSenderService = new MessageSenderService(router);
         }
 
-        public void Verify(DafnyFile file)
+        public void SendDiagnostics(FileRepository fileRepository)
         {
-            _msgSenderService.SendCurrentDocumentInProcess(file.Filepath);
+            _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
             try
             {
-                file.DafnyTranslationUnit.Verify();
-                var errors = file.DafnyTranslationUnit.Errors;
-                var diagnostics = CreateDafnyDiagnostics(errors, file.Filepath, file.Sourcecode);
-
+                var errors = fileRepository.Result.Errors;
+                var diagnostics = CreateDafnyDiagnostics(errors, fileRepository.PhysicalFile);
                 PublishDiagnosticsParams p = new PublishDiagnosticsParams
                 {
-                    Uri = file.Uri,
+                    Uri = fileRepository.PhysicalFile.Uri,
                     Diagnostics = new Container<Diagnostic>(diagnostics)
                 };
                 _router.Document.PublishDiagnostics(p);
@@ -48,36 +46,28 @@ namespace DafnyLanguageServer.Services
             }
         }
 
-        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<DiagnosticError> errors, string filepath, string sourcecode = null)
+        public Collection<Diagnostic> CreateDafnyDiagnostics(IEnumerable<DiagnosticError> errors, PhysicalFile file)
         {
-            if (sourcecode is null)
-            {
-                sourcecode = File.ReadAllText(filepath);
-            }
-
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
-
             foreach (DiagnosticError e in errors)
             {
-                var mainDiagnostic = ConvertErrorToDiagnostic(filepath, sourcecode, e);
+                var mainDiagnostic = ConvertErrorToDiagnostic(file, e);
                 diagnostics.Add(mainDiagnostic);
 
-                var relateds = ExtractRelatedInformationOfAnError(filepath, sourcecode, e);
+                var relateds = ExtractRelatedInformationOfAnError(file, e);
                 foreach (var r in relateds)
                 {
                     diagnostics.Add(r);
                 }
             }
-
             return diagnostics;
         }
 
-
-        private Diagnostic ConvertErrorToDiagnostic(string filepath, string sourcecode, DiagnosticError e)
+        private Diagnostic ConvertErrorToDiagnostic(PhysicalFile file, DiagnosticError e)
         {
             int line = e.Tok.line - 1;
             int col = e.Tok.col - 1;
-            int length = FileHelper.GetLineLength(sourcecode, line) - col;
+            int length = FileHelper.GetLineLength(file.Sourcecode, line) - col;
 
             if (e.Msg.EndsWith("."))
             {
@@ -94,7 +84,7 @@ namespace DafnyLanguageServer.Services
                msg = e.Msg + $" at [ {e.Tok.val} ]";
             }
 
-            string src = filepath.Split('/').Last();
+            string src = file.Filepath.Split('/').Last();
             Diagnostic d = new Diagnostic
             {
                 Message = msg,
@@ -105,7 +95,7 @@ namespace DafnyLanguageServer.Services
             return d;
         }
 
-        private List<Diagnostic> ExtractRelatedInformationOfAnError(string filepath, string sourcecode, DiagnosticError e)
+        private List<Diagnostic> ExtractRelatedInformationOfAnError(PhysicalFile file, DiagnosticError e)
         {
             List<Diagnostic> relatedInformations = new List<Diagnostic>();
             foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
@@ -117,21 +107,20 @@ namespace DafnyLanguageServer.Services
                 string auxmessage = aux.Msg;
                 int auxline = aux.Tok.line - 1;
                 int auxcol = aux.Tok.col - 1;
-                int auxlength = FileHelper.GetLineLength(sourcecode, auxline) - auxcol;
+                int auxlength = FileHelper.GetLineLength(file.Sourcecode, auxline) - auxcol;
                 Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
 
-                string src = filepath.Split('/').Last();
+                string src = file.Filepath.Split('/').Last();
                 Diagnostic relatedDiagnostic = new Diagnostic()
                 {
                     Message = auxmessage,
                     Range = auxrange,
                     Severity = DiagnosticSeverity.Information,
-                    Source = filepath
+                    Source = file.Filepath
                 };
 
                 relatedInformations.Add(relatedDiagnostic);
             }
-
             return relatedInformations;
         }
     }

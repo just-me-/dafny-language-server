@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using SymbolTable = DafnyLanguageServer.DafnyAccess.SymbolTable;
+using DafnyServer;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.Handler
     public class CompletionHandler : ICompletionHandler
     {
         private readonly ILanguageServer _router;
-        private readonly BufferManager _bufferManager;
+        private readonly WorkspaceManager _workspaceManager;
         private CompletionCapability _capability;
 
         private readonly DocumentSelector _documentSelector = new DocumentSelector(
@@ -27,10 +27,10 @@ namespace DafnyLanguageServer.Handler
             }
         );
 
-        public CompletionHandler(ILanguageServer router, BufferManager bufferManager)
+        public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         {
             _router = router;
-            _bufferManager = bufferManager;
+            _workspaceManager = workspaceManager;
         }
 
         public CompletionRegistrationOptions GetRegistrationOptions()
@@ -46,9 +46,9 @@ namespace DafnyLanguageServer.Handler
         {
             return await Task.Run(() =>
             {
-                var symbols = _bufferManager.GetSymboltable(request.TextDocument.Uri);
+                var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                 var word = FileHelper.GetCurrentWord(
-                    _bufferManager.GetSourceCodeAsText(request.TextDocument.Uri),
+                    _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
                     (int)request.Position.Line,
                     (int)request.Position.Character
                 );

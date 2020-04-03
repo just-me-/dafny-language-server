@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.Handler
     {
         private DefinitionCapability _capability;
         private readonly ILanguageServer _router;
-        private readonly BufferManager _bufferManager;
+        private readonly WorkspaceManager _workspaceManager;
 
         private readonly DocumentSelector _documentSelector = new DocumentSelector(
             new DocumentFilter()
@@ -26,10 +26,10 @@ namespace DafnyLanguageServer.Handler
             }
         );
 
-        public DefinitionHandler(ILanguageServer router, BufferManager bufferManager)
+        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         {
             _router = router;
-            _bufferManager = bufferManager;
+            _workspaceManager = workspaceManager;
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()
@@ -45,9 +45,9 @@ namespace DafnyLanguageServer.Handler
             return await Task.Run(() =>
             {
                 List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-                var symbols = _bufferManager.GetSymboltable(request.TextDocument.Uri);
+                var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                 var word = FileHelper.GetFollowingWord(
-                    _bufferManager.GetSourceCodeAsText(request.TextDocument.Uri),
+                    _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
                     (int)request.Position.Line,
                     (int)request.Position.Character
                 );
