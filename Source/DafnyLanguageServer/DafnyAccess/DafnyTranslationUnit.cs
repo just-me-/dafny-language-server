@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DafnyLanguageServer.ContentManager;
 using DafnyLanguageServer.Handler;
+using DafnyServer;
 using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
@@ -15,28 +17,32 @@ namespace DafnyLanguageServer.DafnyAccess
     /// </summary>
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
-        public DafnyTranslationUnit(string fname, string source) : this(fname, source, new string[] { }) { }
-        public DafnyTranslationUnit(string fname, string source, string[] args)
+        public DafnyTranslationUnit(PhysicalFile file) : this(file, new string[] { }) { }
+        public DafnyTranslationUnit(PhysicalFile file, string[] args)
         {
-            this.fname = fname;
-            this.source = source;
+            if (file == null) 
+                throw new ArgumentNullException("file must be set");
+
+            this.file = file;
             this.args = args;
         }
 
-        private readonly string fname;
-        private readonly string source;
-        private readonly string[] args;
+        // Keep track of the process state  todo #148
+        private TranslationStatus status = TranslationStatus.Virgin;
 
-        private Microsoft.Dafny.Program dafnyProgram;
-        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
+        private readonly PhysicalFile file;
+        private readonly string[] args;
+        private bool dirtyInstance = false; // only use once! 
+
+        private Microsoft.Dafny.Program dafnyProgram; // behalten 
+        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;  // behalten 
 
         #region ErrorReporting
         private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
-        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>();
+        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>(); // behaltem
 
         private void AddErrorToList(ErrorInformation e)
         {
-
             Errors.Add(e.ConvertToErrorInformation());
         }
 
@@ -54,44 +60,91 @@ namespace DafnyLanguageServer.DafnyAccess
         }
         #endregion
 
-        public bool Verify()
+        private void checkInstance()
         {
-            Errors.Clear();
-            reporter = new ConsoleErrorReporter();
-            ServerUtils.ApplyArgs(args, reporter);
-            bool success = Parse() && Resolve() && Translate() && Boogie();
-            CollectErrorsFromReporter();
-            return success;
+            if (dirtyInstance)
+            {
+                throw new Exception("You can this instance only use once!");
+            }
+            dirtyInstance = true;
         }
 
+        /// <summary>
+        ///  Calls Pars, Resolve, Translate and Boogie.
+        /// Makes sure, that it gets only called once per class instance. 
+        /// </summary>
+        /// <returns></returns>
+        public TranslationResult Verify()
+        {
+            checkInstance();
+
+            // Apply args for counter example 
+            var listArgs = args.ToList();
+            listArgs.Add("/mv:" + CounterExampleProvider.ModelBvd);
+            ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
+
+            if (Parse() && Resolve() && Translate() && Boogie())
+                status = TranslationStatus.Boogied;
+
+            CollectErrorsFromReporter();
+
+            var result = new TranslationResult
+            {
+                Errors = Errors,
+                BoogiePrograms = boogiePrograms,
+                DafnyProgram = dafnyProgram,
+                // Keep track of the process state todo #148
+                TranslationStatus = status
+            };
+            return result;
+        }
+
+        /// <summary>
+        /// Calls Dafny parser.
+        /// </summary>
         private bool Parse()
         {
             ModuleDecl module = new LiteralModuleDecl(new Microsoft.Dafny.DefaultModuleDecl(), null);
             BuiltIns builtIns = new BuiltIns();
-            var success = (Microsoft.Dafny.Parser.Parse(source, fname, fname, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
+            var success = (Microsoft.Dafny.Parser.Parse(file.Sourcecode, file.Filepath, file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
                            Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(reporter)) == null);
             if (success)
             {
-                dafnyProgram = new Microsoft.Dafny.Program(fname, module, builtIns, reporter);
+                dafnyProgram = new Microsoft.Dafny.Program(file.Filepath, module, builtIns, reporter);
+                status = TranslationStatus.Parsed;
             }
             return success;
-
         }
 
+        /// <summary>
+        ///  Calls Dany resolver 
+        /// </summary>
         private bool Resolve()
         {
             var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
             resolver.ResolveProgram(dafnyProgram);
-            return reporter.Count(ErrorLevel.Error) == 0;
+
+            bool success = (reporter.Count(ErrorLevel.Error) == 0); 
+            if (success) status = TranslationStatus.Resolved;
+            return success;
         }
 
+        /// <summary>
+        ///  Translates Dafny programs into Boogie programs
+        /// </summary>
         private bool Translate()
         {
             boogiePrograms = Translator.Translate(dafnyProgram, reporter,
-                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = fname });
+                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = file.Filepath });
+            status = TranslationStatus.Translated;
             return true;
         }
 
+        /// <summary>
+        /// In case there are multiple Boogie programs,
+        /// verify them all. 
+        /// </summary>
+        /// <returns></returns>
         private bool Boogie()
         {
             foreach (var boogieProgram in boogiePrograms)
@@ -104,8 +157,13 @@ namespace DafnyLanguageServer.DafnyAccess
             return true;
         }
 
+        /// <summary>
+        /// Prove correctness with Boogie for a single Boogie program.  
+        /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
+            CounterExampleProvider.RemoveExistingFileModel();
+
             if (boogieProgram.Resolve() == 0 && boogieProgram.Typecheck() == 0)
             {
                 ExecutionEngine.EliminateDeadVariables(boogieProgram);
@@ -124,79 +182,7 @@ namespace DafnyLanguageServer.DafnyAccess
                         return true;
                 }
             }
-            
             return false;
-        }
-
-        public List<SymbolTable.SymbolInformation> Symbols()
-        {
-            ServerUtils.ApplyArgs(args, reporter);
-            if (Parse() && Resolve())
-            {
-                var symbolTable = new SymbolTable(dafnyProgram);
-                return symbolTable.CalculateSymbols();
-            }
-            else
-            {
-                return new List<SymbolTable.SymbolInformation>();
-            }
-        }
-
-        public CounterExampleResults CounterExample()
-        {
-            if (!File.Exists(fname))
-            {
-                throw new FileNotFoundException("CounterExample requires a valid filename. Invalid Path: " + fname);
-            }
-            var listArgs = args.ToList();
-            listArgs.Add("/mv:" + CounterExampleProvider.ModelBvd);
-            ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
-            try
-            {
-                if (Parse() && Resolve() && Translate()) //2
-                {
-                    var boogieProgram = boogiePrograms.First(); //One CE is sufficient.
-                    RemoveExistingModel();
-                    BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                    return new CounterExampleProvider(source).LoadCounterModel();
-                }
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine("Error while collecting models: " + e.Message); //1
-            }
-
-            return new CounterExampleResults();
-        }
-
-        private void RemoveExistingModel()
-        {
-            if (File.Exists(CounterExampleProvider.ModelBvd))
-            {
-                File.Delete(CounterExampleProvider.ModelBvd);
-            }
-        }
-
-        public void DotGraph()
-        {
-            ServerUtils.ApplyArgs(args, reporter);
-
-            if (Parse() && Resolve() && Translate())
-            {
-                foreach (var boogieProgram in boogiePrograms)
-                {
-                    BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-
-                    foreach (var impl in boogieProgram.Item2.Implementations)
-                    {
-                        using (StreamWriter sw = new StreamWriter(fname + impl.Name + ".dot"))
-                        {
-                            sw.Write(boogieProgram.Item2.ProcessLoops(impl).ToDot());
-                        }
-                    }
-                }
-            }
         }
     }
 }

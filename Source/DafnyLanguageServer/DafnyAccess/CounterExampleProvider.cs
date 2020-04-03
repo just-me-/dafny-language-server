@@ -28,9 +28,9 @@ namespace DafnyLanguageServer.DafnyAccess
         public static string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
 
         private string Source { get; }
-        public CounterExampleProvider(string source)
+        public CounterExampleProvider(PhysicalFile file)
         {
-            Source = source;
+            Source = file.Sourcecode;
         }
 
         public CounterExampleProvider(string source, string modelFile)
@@ -168,5 +168,14 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private static bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
         private static bool IsReference(string s) => s.StartsWith("T@U!val!");
+        public static void RemoveExistingFileModel()
+        {
+            if (File.Exists(ModelBvd))
+            {
+                File.Delete(ModelBvd);
+            }
+        }
     }
+
+    
 }

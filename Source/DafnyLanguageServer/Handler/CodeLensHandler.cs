@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
+using DafnyServer;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -17,7 +18,7 @@ namespace DafnyLanguageServer.Handler
     {
         private CodeLensCapability _capability;
         private readonly ILanguageServer _router;
-        private readonly BufferManager _bufferManager;
+        private readonly WorkspaceManager _workspaceManager;
 
         private readonly DocumentSelector _documentSelector = new DocumentSelector(
             new DocumentFilter()
@@ -26,10 +27,10 @@ namespace DafnyLanguageServer.Handler
             }
         );
 
-        public CodeLensHandler(ILanguageServer router, BufferManager bufferManager)
+        public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         {
             _router = router;
-            _bufferManager = bufferManager;
+            _workspaceManager = workspaceManager;
         }
 
         public CodeLensRegistrationOptions GetRegistrationOptions()
@@ -47,7 +48,7 @@ namespace DafnyLanguageServer.Handler
             {
                 List<CodeLens> items = new List<CodeLens>();
 
-                var fileSymboltable = _bufferManager.GetSymboltable(request.TextDocument.Uri);
+                var fileSymboltable = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                 if (fileSymboltable is null)
                 {
                     return new CodeLensContainer();
@@ -59,9 +60,9 @@ namespace DafnyLanguageServer.Handler
                         symbol.SymbolType == SymbolTable.SymbolInformation.Type.Method)
                     {
                         var symbolReferencecounter = symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ? 1 : 0;
-                        foreach (var fileBuffers in _bufferManager.GetAllFiles().Values)
+                        foreach (var fileBuffers in _workspaceManager.GetAllFiles().Values)
                         {
-                            foreach (var filesSymboltable in fileBuffers.Symboltable.GetFullList())
+                            foreach (var filesSymboltable in fileBuffers.SymboleProcessor().GetFullList())
                             {
                                 if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class)
                                 {

@@ -3,23 +3,16 @@ using Microsoft.Boogie;
 using System;
 using System.Collections.Generic;
 using DafnyLanguageServer.Handler;
+using DafnyServer;
+using DafnyLanguageServer.ContentManager;
 
 namespace CompletionHandlerTest
 {
     public class DafnyTranslationUnitFakeForCompletions : IDafnyTranslationUnit
     {
-        public bool IsNice;
-
-        public DafnyTranslationUnitFakeForCompletions(bool isnice = true)
+        public TranslationResult Verify()
         {
-            IsNice = isnice;
-        }
-
-        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>();
-
-        public bool Verify()
-        {
-            return IsNice;
+            return null;
         }
 
         public List<SymbolTable.SymbolInformation> Symbols()
@@ -75,5 +68,6 @@ namespace CompletionHandlerTest
         {
             throw new NotImplementedException();
         }
+
     }
 }

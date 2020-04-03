@@ -1,6 +1,8 @@
 ﻿using Microsoft.Boogie;
 using System.Collections.Generic;
 using DafnyLanguageServer.Handler;
+using DafnyServer;
+using DafnyLanguageServer.ContentManager;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -9,10 +11,6 @@ namespace DafnyLanguageServer.DafnyAccess
     /// </summary>
     public interface IDafnyTranslationUnit
     {
-        bool Verify();
-        List<DiagnosticError> Errors { get; }
-        List<SymbolTable.SymbolInformation> Symbols();
-        CounterExampleResults CounterExample();
-        void DotGraph();
+        TranslationResult Verify();
     }
 }

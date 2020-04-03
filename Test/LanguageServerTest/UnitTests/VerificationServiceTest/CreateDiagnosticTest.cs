@@ -1,8 +1,10 @@
-﻿using DafnyLanguageServer.Services;
+﻿using System;
+using DafnyLanguageServer.Services;
 using Microsoft.Boogie;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DafnyLanguageServer.ContentManager;
 
 namespace VerificationServiceTest
 {
@@ -10,8 +12,17 @@ namespace VerificationServiceTest
     public class CreateDiagnosticTest
     {
         private static readonly string randomFakeSource = "aa\naa\naa\naa\n";
-        private static VerificationService verificationService = new VerificationService(null); //todo Ticket#281
+        private static DiagnosticsService diagnosticsService = new DiagnosticsService(null); //todo Ticket#281
         private Token token;
+
+        private PhysicalFile createFakeFile(string name, string code)
+        {
+            return new PhysicalFile()
+            {
+                Filepath = name,
+                Sourcecode = code
+            };
+        }
 
         [SetUp]
         public void setupExampleToken()
@@ -26,7 +37,7 @@ namespace VerificationServiceTest
         public void TestDiagnosticNoErrors()
         {
             var errors = new List<FakeErrorObject>();
-            var diagnostics = verificationService.CreateDafnyDiagnostics(errors, "NotExistingFile", randomFakeSource);
+            var diagnostics = diagnosticsService.CreateDafnyDiagnostics(errors, createFakeFile("NotExistingFile", randomFakeSource));
             Assert.AreEqual(0, diagnostics.Count);
         }
 
@@ -37,7 +48,7 @@ namespace VerificationServiceTest
             var info = new FakeErrorObject(token, "Msg");
             errors.Add(info);
 
-            var diagnostics = verificationService.CreateDafnyDiagnostics(errors, token.filename, randomFakeSource);
+            var diagnostics = diagnosticsService.CreateDafnyDiagnostics(errors, createFakeFile(token.filename, randomFakeSource));
 
             Assert.AreEqual(1, diagnostics.Count);
             Assert.AreEqual(token.filename, diagnostics[0].Source);
@@ -52,7 +63,7 @@ namespace VerificationServiceTest
             errorObject.AddAuxInfo(token, "SubMsg2");
             errors.Add(errorObject);
 
-            var diagnostics = verificationService.CreateDafnyDiagnostics(errors, token.filename, randomFakeSource);
+            var diagnostics = diagnosticsService.CreateDafnyDiagnostics(errors, createFakeFile(token.filename, randomFakeSource));
 
             Assert.AreEqual(3, diagnostics.Count);
             Assert.IsNull(diagnostics.FirstOrDefault()?.RelatedInformation, "Related Diagnostic should be separate");

@@ -18,7 +18,7 @@ namespace DafnyServer {
     }
 
     public List<SymbolInformation> CalculateSymbols() {
-      foreach (var module in _dafnyProgram.Modules()) {
+        foreach (var module in _dafnyProgram.Modules()) {
         AddMethods(module, _information);
         AddFields(module, _information);
         AddClasses(module, _information);
