@@ -87,7 +87,6 @@ namespace DafnyLanguageServer
 
                 if (cfgStream != null)
                 {
-
                     RedirectedStreamFile = Path.Combine(AssemblyPath, (string) cfgStream);
                 }
 
@@ -162,8 +161,6 @@ namespace DafnyLanguageServer
                 ErrorMsg += "\nLoglevel exceeds limits. Must be between 0 and 7. Setting to default Loglevel 4";
                 Loglevel = LogLevel.Error;
             }
-
-        
         }
 
         public void PrintState()
