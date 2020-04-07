@@ -14,23 +14,13 @@ namespace DafnyLanguageServer.Handler
     /// This class provides CodeLens information for VS Code.
     /// This class is work in progress. The content of this huge class should be outsourced into a <c>CodeLensServiceProvider</c>. 
     /// </summary>
-    public class CodeLensHandler : ICodeLensHandler
+    public class CodeLensHandler : LspBasicHandler, ICodeLensHandler
     {
         private CodeLensCapability _capability;
-        private readonly ILanguageServer _router;
-        private readonly WorkspaceManager _workspaceManager;
-
-        private readonly DocumentSelector _documentSelector = new DocumentSelector(
-            new DocumentFilter()
-            {
-                Pattern = "**/*.dfy"
-            }
-        );
 
         public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager)
+            : base(router, workspaceManager)
         {
-            _router = router;
-            _workspaceManager = workspaceManager;
         }
 
         public CodeLensRegistrationOptions GetRegistrationOptions()
@@ -40,6 +30,10 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 ResolveProvider = false
             };
+        }
+        public void SetCapability(CodeLensCapability capability)
+        {
+            _capability = capability;
         }
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
@@ -91,11 +85,6 @@ namespace DafnyLanguageServer.Handler
                 }
                 return new CodeLensContainer(items);
             });
-        }
-
-        public void SetCapability(CodeLensCapability capability)
-        {
-            _capability = capability;
         }
     }
 }

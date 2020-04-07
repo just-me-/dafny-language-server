@@ -19,25 +19,17 @@ namespace DafnyLanguageServer.Handler
     ///  Whenever this is the case, the intern <c>WorkspaceManager</c> gets updated.
     ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository. 
     /// </summary>
-    internal class TextDocumentSyncHandler : ITextDocumentSyncHandler
+    internal class TextDocumentSyncHandler : LspBasicHandler, ITextDocumentSyncHandler
     {
         private readonly ILanguageServer _router;
         private readonly WorkspaceManager _workspaceManager;
         private SynchronizationCapability _capability; //needed by omnisharp
 
-        private readonly DocumentSelector _documentSelector = new DocumentSelector(
-            // todo #234
-            new DocumentFilter()
-            {
-                Pattern = "**/*.dfy"
-            }
-        );
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
+            : base(router, workspaceManager)
         {
-            _router = router;
-            _workspaceManager = workspaceManager;
         }
 
         public TextDocumentChangeRegistrationOptions GetRegistrationOptions()
@@ -47,6 +39,10 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 SyncKind = Change
             };
+        }
+        public void SetCapability(SynchronizationCapability capability)
+        {
+            _capability = capability;
         }
 
         public TextDocumentAttributes GetTextDocumentAttributes(Uri uri)
@@ -83,11 +79,6 @@ namespace DafnyLanguageServer.Handler
         public Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
         {
             return Unit.Task;
-        }
-
-        public void SetCapability(SynchronizationCapability capability)
-        {
-            _capability = capability;
         }
 
         TextDocumentRegistrationOptions IRegistration<TextDocumentRegistrationOptions>.GetRegistrationOptions()

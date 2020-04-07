@@ -15,9 +15,24 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class DefinitionHandler : LspBasicHandler, IDefinitionHandler
     {
+        private DefinitionCapability _capability;
+
         public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         : base(router, workspaceManager)
         {
+        }
+
+        public  TextDocumentRegistrationOptions GetRegistrationOptions()
+        {
+            return new TextDocumentRegistrationOptions
+            {
+                DocumentSelector = _documentSelector
+            };
+        }
+
+        public  void SetCapability(DefinitionCapability capability)
+        {
+            _capability = capability;
         }
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)

@@ -16,10 +16,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionHandler : LspBasicHandler, ICompletionHandler
     {
-        private readonly ILanguageServer _router;
-        private readonly WorkspaceManager _workspaceManager;
         private CompletionCapability _capability;
-
         
         public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
             : base(router, workspaceManager)
@@ -33,6 +30,11 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 ResolveProvider = false
             };
+        }
+
+        public void SetCapability(CompletionCapability capability)
+        {
+            _capability = capability;
         }
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
