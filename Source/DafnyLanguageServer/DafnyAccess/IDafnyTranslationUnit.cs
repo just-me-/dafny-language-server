@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DafnyLanguageServer.Handler;
 using DafnyServer;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 
 namespace DafnyLanguageServer.DafnyAccess
 {

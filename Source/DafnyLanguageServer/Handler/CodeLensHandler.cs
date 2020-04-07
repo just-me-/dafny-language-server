@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;

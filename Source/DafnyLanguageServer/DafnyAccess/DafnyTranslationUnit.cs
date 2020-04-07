@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using DafnyServer;
 using Bpl = Microsoft.Boogie;

@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

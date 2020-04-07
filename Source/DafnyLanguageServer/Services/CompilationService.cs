@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using System;
 using System.Diagnostics;

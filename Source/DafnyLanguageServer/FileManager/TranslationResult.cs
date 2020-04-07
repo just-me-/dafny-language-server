@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using MSBoodie = Microsoft.Boogie;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     public class TranslationResult
     {

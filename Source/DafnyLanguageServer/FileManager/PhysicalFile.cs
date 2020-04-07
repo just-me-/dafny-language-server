@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This class represents a physical Dafny file. The content of this file is not buffered.

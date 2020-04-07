@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Services;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
