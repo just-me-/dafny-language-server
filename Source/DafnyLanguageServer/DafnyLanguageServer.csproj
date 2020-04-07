@@ -186,6 +186,7 @@
     <Compile Include="FileManager\TranslationResult.cs" />
     <Compile Include="DafnyAccess\TranslationStatus.cs" />
     <Compile Include="DafnyLanguageServer.cs" />
+    <Compile Include="Handler\LspBasicHandler.cs" />
     <Compile Include="Services\ConfigReader.cs" />
     <Compile Include="FileManager\WorkspaceManager.cs" />
     <Compile Include="DafnyAccess\DiagnosticError.cs" />
