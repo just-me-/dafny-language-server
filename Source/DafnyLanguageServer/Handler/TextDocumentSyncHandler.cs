@@ -21,8 +21,6 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class TextDocumentSyncHandler : LspBasicHandler, ITextDocumentSyncHandler
     {
-        private readonly ILanguageServer _router;
-        private readonly WorkspaceManager _workspaceManager;
         private SynchronizationCapability _capability; //needed by omnisharp
 
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
