@@ -60,11 +60,6 @@ namespace DafnyLanguageServer.DafnyAccess
             }
         }
 
-        public class Position
-        {
-            // col start end
-            // line 
-        }
 
         public enum Type
         {
