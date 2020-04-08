@@ -49,6 +49,8 @@ namespace DafnyLanguageServer.DafnyAccess
             List<Model> models = ParseModels(RawBVDContent);
             List<ILanguageSpecificModel> specificModels = BuildModels(models);
 
+            // hier splitten
+
             var result = new CounterExampleResults();
             foreach (var specificModel in specificModels)
             {
