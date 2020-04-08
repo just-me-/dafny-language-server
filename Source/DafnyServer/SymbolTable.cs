@@ -36,6 +36,7 @@ namespace DafnyServer {
           var predicateSymbol = new SymbolInformation {
             Module = predicate.EnclosingClass.Module.Name,
             Name = predicate.Name,
+            Parent = predicate.EnclosingClass,
             ParentClass = predicate.EnclosingClass.Name,
             SymbolType = SymbolInformation.Type.Predicate,
             StartToken = predicate.tok,
@@ -49,6 +50,7 @@ namespace DafnyServer {
             Module = fn.EnclosingClass.Module.Name,
             Name = fn.Name,
             ParentClass = fn.EnclosingClass.Name,
+            Parent = fn.EnclosingClass,
             SymbolType = SymbolInformation.Type.Function,
             StartToken = fn.tok,
             EndColumn = fn.BodyEndTok.col,
@@ -67,6 +69,7 @@ namespace DafnyServer {
             Module = m.EnclosingClass.Module.Name,
             Name = m.Name,
             ParentClass = m.EnclosingClass.Name,
+            Parent = m.EnclosingClass,
             SymbolType = SymbolInformation.Type.Method,
             StartToken = m.tok,
             Ensures = ParseContracts(m.Ens),
@@ -91,6 +94,7 @@ namespace DafnyServer {
         var fieldSymbol = new SymbolInformation {
           Module = fs.EnclosingClass.Module.Name,
           Name = fs.Name,
+          Parent = fs.EnclosingClass,
           ParentClass = fs.EnclosingClass.Name,
           SymbolType = SymbolInformation.Type.Field,
           StartToken = fs.tok,
@@ -151,6 +155,7 @@ namespace DafnyServer {
                 information.Add(new SymbolInformation {
                   Name = name,
                   ParentClass = userType.ResolvedClass.CompileName,
+                  Parent = userType.ResolvedClass,
                   Module = userType.ResolvedClass.Module.CompileName,
                   SymbolType = SymbolInformation.Type.Definition,
                   StartToken = method.BodyStartTok,
@@ -211,6 +216,7 @@ namespace DafnyServer {
         information.Add(new SymbolInformation {
           Name = callStmt.Method.CompileName,
           ParentClass = userType.ResolvedClass.CompileName,
+          Parent = userType.ResolvedClass,
           Module = userType.ResolvedClass.Module.CompileName,
           Call = reveiverName + "." + callStmt.MethodSelect.Member,
           SymbolType = SymbolInformation.Type.Call,
@@ -235,6 +241,7 @@ namespace DafnyServer {
         information.Add(new SymbolInformation {
           Name = exprDotName.SuffixName,
           ParentClass = type.ResolvedClass.CompileName,
+          Parent = type.ResolvedClass,
           Module = type.ResolvedClass.Module.CompileName,
           Call = designator + "." + exprDotName.SuffixName,
           SymbolType = SymbolInformation.Type.Call,
@@ -368,7 +375,9 @@ namespace DafnyServer {
     public class SymbolInformation {
       [DataMember(Name = "Module")]
       public string Module { get; set; }
-      [DataMember(Name = "Name")]
+      [DataMember(Name = "Parent")]
+      public TopLevelDecl Parent { get; set; }
+      [DataMember(Name = "ParentClass")]
       public string Name { get; set; }
       [DataMember(Name = "ParentClass")]
       public string ParentClass { get; set; }
@@ -419,7 +428,7 @@ namespace DafnyServer {
         }
       }
 
-      public enum Type {
+            public enum Type {
         Class,
         Method,
         Function,
