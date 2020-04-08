@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This interface is used for dependency injection. Therefore <c>WorkspaceManagers</c> are more isolated for easy test writing. 

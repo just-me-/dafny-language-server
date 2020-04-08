@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using Microsoft.Dafny;
 

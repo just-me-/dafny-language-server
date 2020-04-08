@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This <c>WorkspaceManager</c> buffers for every Dafny file a valid intermediate version.

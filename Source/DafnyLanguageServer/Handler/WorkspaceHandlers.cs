@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Services;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
     {
         private DidChangeWatchedFilesCapability _capability;       //Omnisharp field, lets leave it in.
 
-        public object GetRegistrationOptions()                     //Omnisharp "not yet implemented": https://github.com/OmniSharp/csharp-language-server-protocol/issues/197
+        public object GetRegistrationOptions()                     //Omnisharp "not yet implemented": https://github.com/OmniSharp/csharp-language-server-protocol/issues/197 #4234 should work now
         {
             return new DidChangeWatchedFilesRegistrationOptions
             {

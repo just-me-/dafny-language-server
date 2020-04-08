@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Services;
 using OmniSharp.Extensions.JsonRpc;

@@ -1,5 +1,5 @@
 ﻿using System;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 using NUnit.Framework;
 
 namespace ContentManagerTests

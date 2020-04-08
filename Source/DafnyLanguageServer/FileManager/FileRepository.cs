@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using Type = Microsoft.Dafny.Type;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This class represents a buffered version of a Dafny file.

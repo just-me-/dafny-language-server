@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.ContentManager;
+﻿using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -14,23 +14,13 @@ namespace DafnyLanguageServer.Handler
     /// This handler provides auto completion as defined in the LSP.
     /// There is additional information (like symbol type and parent class) added to each symbol if the DEBUG mode is used.
     /// </summary>
-    public class CompletionHandler : ICompletionHandler
+    public class CompletionHandler : LspBasicHandler, ICompletionHandler
     {
-        private readonly ILanguageServer _router;
-        private readonly WorkspaceManager _workspaceManager;
         private CompletionCapability _capability;
-
-        private readonly DocumentSelector _documentSelector = new DocumentSelector(
-            new DocumentFilter()
-            {
-                Pattern = "**/*.dfy"
-            }
-        );
-
+        
         public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
+            : base(router, workspaceManager)
         {
-            _router = router;
-            _workspaceManager = workspaceManager;
         }
 
         public CompletionRegistrationOptions GetRegistrationOptions()
@@ -40,6 +30,11 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 ResolveProvider = false
             };
+        }
+
+        public void SetCapability(CompletionCapability capability)
+        {
+            _capability = capability;
         }
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
@@ -90,11 +85,5 @@ namespace DafnyLanguageServer.Handler
             }
             return new CompletionList(complitionItems);
         }
-
-        public void SetCapability(CompletionCapability capability)
-        {
-            _capability = capability;
-        }
-
     }
 }

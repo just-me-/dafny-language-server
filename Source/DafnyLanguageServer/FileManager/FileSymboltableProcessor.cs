@@ -5,7 +5,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using DafnyServer;
 using Microsoft.Boogie;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This <c>FileSymboltableProcessor</c> provides all symbols that were found in a (valid) Dafny file.

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
 using Microsoft.Boogie;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;

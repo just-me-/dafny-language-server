@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using DafnyLanguageServer.ContentManager;
+using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -13,31 +13,26 @@ namespace DafnyLanguageServer.Handler
     /// This handler provides the <c>go to definition</c> position for symbols.
     /// This class is work in progress. The content of this huge class should be outsourced into a <c>GoToDefinitionServiceProvider</c>. 
     /// </summary>
-    public class DefinitionHandler : IDefinitionHandler
+    public class DefinitionHandler : LspBasicHandler, IDefinitionHandler
     {
         private DefinitionCapability _capability;
-        private readonly ILanguageServer _router;
-        private readonly WorkspaceManager _workspaceManager;
-
-        private readonly DocumentSelector _documentSelector = new DocumentSelector(
-            new DocumentFilter()
-            {
-                Pattern = "**/*.dfy"
-            }
-        );
 
         public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
+        : base(router, workspaceManager)
         {
-            _router = router;
-            _workspaceManager = workspaceManager;
         }
 
-        public TextDocumentRegistrationOptions GetRegistrationOptions()
+        public  TextDocumentRegistrationOptions GetRegistrationOptions()
         {
             return new TextDocumentRegistrationOptions
             {
                 DocumentSelector = _documentSelector
             };
+        }
+
+        public  void SetCapability(DefinitionCapability capability)
+        {
+            _capability = capability;
         }
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
@@ -80,11 +75,6 @@ namespace DafnyLanguageServer.Handler
                 }
                 return new LocationOrLocationLinks(links);
             });
-        }
-
-        public void SetCapability(DefinitionCapability capability)
-        {
-            _capability = capability;
         }
     }
 }

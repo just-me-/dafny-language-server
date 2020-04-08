@@ -2,7 +2,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace DafnyLanguageServer.ContentManager
+namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This is a static class for general helper functions. This class will be refactored soon. 
