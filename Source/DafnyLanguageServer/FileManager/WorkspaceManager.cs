@@ -19,6 +19,13 @@ namespace DafnyLanguageServer.FileManager
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
             fileRepository.UpdateFile(sourceCodeOfFile);
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
+            
+            //Generate new fancy Symbol Table for Testing:
+            if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
+            {
+                new MetaDafnySymboltableBaem(fileRepository.Result.DafnyProgram); //#fancy.
+            }
+
             return fileRepository;
         }
 
