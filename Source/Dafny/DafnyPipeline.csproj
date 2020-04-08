@@ -36,7 +36,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-	<LangVersion>7.3</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -178,6 +178,7 @@
     <Compile Include="cce.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AllStatementTypes.cd" />
     <None Include="Dafny.atg" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Microsoft.Dafny.Statement" Collapsed="true">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgEAAAAAAAAAAAAQDQAAAIEAAAAAAQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Dafny.PredicateStmt" Collapsed="true">
+    <Position X="8.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAACAAQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.PrintStmt" Collapsed="true">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAQAAAEAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.RevealStmt" Collapsed="true">
+    <Position X="12.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAABAQAAAAAQAAAAQAAABAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.BreakStmt" Collapsed="true">
+    <Position X="15" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAAAQCAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.ProduceStmt" Collapsed="true">
+    <Position X="17.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAADAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.VarDeclStmt" Collapsed="true">
+    <Position X="19.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAADAAABAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.LetStmt" Collapsed="true">
+    <Position X="21.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAQAAQCAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.ConcreteUpdateStatement" Collapsed="true">
+    <Position X="24" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.AssignStmt" Collapsed="true">
+    <Position X="26.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAADAAAAAAAAAABQQAQBAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.CallStmt" Collapsed="true">
+    <Position X="28.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAACAAAAEAAAAAAQQIAAEAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.BlockStmt" Collapsed="true">
+    <Position X="30.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAABAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.IfStmt" Collapsed="true">
+    <Position X="33" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAABAAAAAAAADAAAAAAAAAAAAcAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.AlternativeStmt" Collapsed="true">
+    <Position X="35.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAADAAAAAAAAAAAQQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.LoopStmt" Collapsed="true">
+    <Position X="37.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAABAAAAAAAAAACAAAQAQAAAAAAQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.ForallStmt" Collapsed="true">
+    <Position X="39.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIAAAAgAABACBAAAAABAADAAAAAAACAAAAQAAAACgA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.ModifyStmt" Collapsed="true">
+    <Position X="42" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAADAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.CalcStmt" Collapsed="true">
+    <Position X="44.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAQAAAAAAAAAAAAAATAAAAABAACAAQQAUAICAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.MatchStmt" Collapsed="true">
+    <Position X="46.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAkAAAAIAAARAAADEAAAAAAAAAAQQAAEAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.SkeletonStatement" Collapsed="true">
+    <Position X="48.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAgAAAAAAFAAAgCAAAAAAAAIACAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.ReturnStmt" Collapsed="true">
+    <Position X="16.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.YieldStmt" Collapsed="true">
+    <Position X="18.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.AssignSuchThatStmt" Collapsed="true">
+    <Position X="21.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgCAAEAAAAAACAAAAAAAAgA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.UpdateStmt" Collapsed="true">
+    <Position X="24" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAACBAAAAAAAQAAAAQAAAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Dafny.AssignOrReturnStmt" Collapsed="true">
+    <Position X="26.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAABAAAAAAAQAAAAQAQAAAAA=</HashCode>
+      <FileName>DafnyAst.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
