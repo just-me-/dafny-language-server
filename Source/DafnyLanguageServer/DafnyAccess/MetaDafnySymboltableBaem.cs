@@ -16,95 +16,160 @@ namespace DafnyLanguageServer.DafnyAccess
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         private DafnyProgram DafnyProgram { get; }
 
+        private ModuleDefinition CurrentModule { get; set; }
+
         public MetaDafnySymboltableBaem(DafnyProgram dafnyProgram)
         {
             DafnyProgram = dafnyProgram;
-            GenerateSymboltable();
-        }
 
-
-        public void GenerateSymboltable()
-        {
-            foreach (var module in DafnyProgram.Modules())
+            foreach (var module in dafnyProgram.Modules())
             {
-                AddClasses(module);
-                //AddMethods(module);
-                //AddFields(module);
-            }
-        }
-
-        private void AddClasses(ModuleDefinition module)
-        {
-            var allTopLevelDeclarations = ModuleDefinition.AllClasses(module.TopLevelDecls).Where(e => e != null);
-            var werbinich = allTopLevelDeclarations.ToList();
-
-            foreach (var classDecl in allTopLevelDeclarations)
-            {
-                var symbol = new SymbolInformation()
+                CurrentModule = module;
+                var allClasses = ModuleDefinition.AllClasses(module.TopLevelDecls);
+                foreach (ClassDecl cd in allClasses)
                 {
-                    Module = module,
-                    Name = classDecl.Name,
-                    Position = new TokenPosition()
-                    {
-                        Token = classDecl.tok,
-                        BodyStartToken = classDecl.BodyStartTok,
-                        BodyEndToken = classDecl.BodyEndTok
-                    },
-                    Type = Type.Class
-                };
-                symbol.DeclarationOrigin = symbol;
-
-                symbol.Children = new List<SymbolInformation>();
-
-                foreach (var member in classDecl.Members)
-                {
-                    var symbolForMember = new SymbolInformation()
-                    {
-                        Module = module,
-                        Name = member.Name,
-                        Type = member is Field ? Type.Field : Type.Method, //evtl constructor noch berücksichtigen ticket 1566
-                        Parent = symbol,
-                        Position = new TokenPosition()
-                        {
-                            Token = member.tok,
-                            BodyStartToken = member.BodyStartTok,
-                            BodyEndToken = member.BodyEndTok
-                        }
-                    };
-                    symbolForMember.DeclarationOrigin = symbolForMember;   //für membersymbol fehlt: children usages
-
-                    var werbinichdennunichweissesnicht = member.SubExpressions.ToList();
-                    if (member is Method memberAsMethod)
-                    {
-                        var x = memberAsMethod.Body.Body;
-                        foreach (var stmt in memberAsMethod.Body.Body)
-                        {
-  
-                            if (stmt is VarDeclStmt declaration)
-                            {
-                                var symbolForStatement = new SymbolInformation()
-                                {
-                                    //... mega deep
-                                };
-                            }
-                        }
-                    }
-                    symbol.Children.Add(symbolForMember);
-
-
+                    HandleClass(cd);
                 }
+            }
+        }
+
+        public void HandleClass(ClassDecl classDecl)
+        {
+            var classSymbol = new SymbolInformation()
+            {
+                Module = CurrentModule,
+                Name = classDecl.Name,
+                Position = new TokenPosition()
+                {
+                    Token = classDecl.tok,
+                    BodyStartToken = classDecl.BodyStartTok,
+                    BodyEndToken = classDecl.BodyEndTok
+                },
+                Type = Type.Class
+            };
+            classSymbol.DeclarationOrigin = classSymbol;
+            classSymbol.Children = new List<SymbolInformation>();     //für class symbol fehlt: usages
+
+            foreach (var member in classDecl.Members)
+            {
+                HandleClassMemberDeklaration(member, classSymbol);
 
             }
+        }
 
+        public void HandleClassMemberDeklaration(MemberDecl member, SymbolInformation parent)
+        {
+            switch (member)
+            {
+                case Field memberAsField:
+                {
+                    HandleField(memberAsField, parent);
+                    break;
+                }
+                case Method memberAsMethod:
+                    //memberAsMethod.accept(new SymbolTableGeneratorWithVisitor()); //so, oder?=? warum keine accept method?
 
+                    
+                    HandleMethod(memberAsMethod, parent);
+                    break;
+            }
+        }
+
+        public void HandleField(Field memberAsField, SymbolInformation parent)
+        {
+            var fieldSymbol = new SymbolInformation()
+            {
+                Module = CurrentModule,
+                Name = memberAsField.Name,
+                Type = Type.Field,
+                Parent = parent,
+                Position = new TokenPosition()
+                {
+                    Token = memberAsField.tok,
+                    BodyStartToken = memberAsField.BodyStartTok,
+                    BodyEndToken = memberAsField.BodyEndTok
+                }
+            };
+            fieldSymbol.DeclarationOrigin = fieldSymbol;   //für membersymbol fehlt: children, usages
+            parent.Children.Add(fieldSymbol);
+            SymbolTable.Add(fieldSymbol);
+            
+        }
+
+        public void HandleMethod(Method memberAsMethod, SymbolInformation parent)
+        {
+            var methodSymbol = new SymbolInformation()
+            {
+                Module = CurrentModule,
+                Name = memberAsMethod.Name,
+                Type = Type.Field,
+                Parent = parent,
+                Position = new TokenPosition()
+                {
+                    Token = memberAsMethod.tok,
+                    BodyStartToken = memberAsMethod.BodyStartTok,
+                    BodyEndToken = memberAsMethod.BodyEndTok
+                }
+            };
+
+            methodSymbol.DeclarationOrigin = methodSymbol;   //für membersymbol fehlt: children, usages
+            parent.Children.Add(methodSymbol);
+            SymbolTable.Add(methodSymbol);
+
+            //kucken was dinger sind:
+            var substat = memberAsMethod.Body.SubStatements.ToList();
+            var subexpr = memberAsMethod.Body.SubExpressions.ToList();
+            foreach (Statement statement in memberAsMethod.Body.Body)  //substatements besser?
+            {
+                HandleStatement(statement, methodSymbol);
+            }
         }
 
 
-        
+        public void HandleStatement(Statement s, SymbolInformation parent)
+        {
+            //todo
+            switch (s)
+            {
+                case VarDeclStmt vds:
+                    break;
 
+                case ConcreteUpdateStatement us:
+                    break;
+
+                case ProduceStmt us:
+                    break;
+
+                case AssignStmt asgns:
+                    break;
+
+                case BlockStmt bs:
+                    foreach (Statement subStatement in bs.Body)
+                    {
+                        HandleStatement(subStatement, parent);
+                    }
+
+                    break;
+
+                case CalcStmt bs:
+                    break;
+
+                case PrintStmt bs:
+                    break;
+
+                //more?
+
+            }
+        }
 
     }
 
+
+    public class SymbolTableGeneratorWithVisitor : TopDownVisitor<List<SymbolInformation>> {
+       
+
+
+    }
     public class SymbolInformation
     {
         public TokenPosition Position { get; set; }

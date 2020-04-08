@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCommons", "..\Test\Lang
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgramTest", "..\Test\LanguageServerTest\UnitTests\ProgramTest\ProgramTest.csproj", "{112E7353-C042-459C-9437-FC8C856F3E5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CounterExampleProviderUnitTest", "..\Test\LanguageServerTest\UnitTests\CounterExampleProviderUnitTest\CounterExampleProviderUnitTest.csproj", "{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CounterExampleProviderUnitTest", "..\Test\LanguageServerTest\UnitTests\CounterExampleProviderUnitTest\CounterExampleProviderUnitTest.csproj", "{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
