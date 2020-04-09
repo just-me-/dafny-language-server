@@ -30,7 +30,7 @@ namespace DafnyServer {
       foreach (
           var clbl in
           ModuleDefinition.AllCallables(module.TopLevelDecls).Where(e => e != null && !(e.Tok is IncludeToken))) {
-
+                
         if (clbl is Predicate) {
           var predicate = clbl as Predicate;
           var predicateSymbol = new SymbolInformation {

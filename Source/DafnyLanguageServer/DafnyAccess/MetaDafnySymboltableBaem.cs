@@ -119,6 +119,8 @@ namespace DafnyLanguageServer.DafnyAccess
             SymbolTable.Add(methodSymbol);
 
             //todo argumente handlen
+            
+
 
             //kucken was dinger sind:
             var substat = memberAsMethod.Body.SubStatements.ToList();
@@ -133,7 +135,7 @@ namespace DafnyLanguageServer.DafnyAccess
         public void HandleStatement(Statement s, SymbolInformation parent)
         {
             
-            switch (s)  
+            switch (s)  //alle die mit visitor umgehen.
             {
                 case VarDeclStmt vds:
                     HandleVarDeclStmt(vds, parent);
@@ -212,7 +214,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 };
                 parent.Children.Add(expressionSymbol);
                 expressionSymbol.Children = null; // cant have children
-                var declaration = FindDeclaration(e, parent);
+                var declaration = FindDeclaration(expressionSymbol, parent);
                 expressionSymbol.DeclarationOrigin = declaration;
                 declaration.Usages.Add(expressionSymbol);
             }
@@ -241,29 +243,32 @@ namespace DafnyLanguageServer.DafnyAccess
                         };
                         parent.Children.Add(expressionSymbol);
                         expressionSymbol.Children = null; // cant have children
-                        //var declaration = FindDeclaration(expressionSymbol, parent);
-                        //expressionSymbol.DeclarationOrigin = declaration;
-                        //declaration.Usages.Add(expressionSymbol);
+                        var declaration = FindDeclaration(expressionSymbol, parent);
+                        expressionSymbol.DeclarationOrigin = declaration;
+                        declaration.Usages.Add(expressionSymbol);
                     }
+                    //hier halt alle ifs dank visitordings skippen
                     //...nm is liste, dann hat es da expr, dort ist name und tok. tok is auch eins höher.
                 }
             }
 
         }
 
-        private SymbolInformation FindDeclaration(Expression e, SymbolInformation parent)
+        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation parent)
         {
             foreach (SymbolInformation s in parent.Children)
             {
-                if (s.Name == e.tok.val && s.IsDeclaration) return s;
+                if (s.Name == target.Name && s.IsDeclaration) return s;
             }
             //if symbol not found in current scope, search parent
             if (parent.Parent != null) { 
-                return FindDeclaration(e, parent.Parent);
+                return FindDeclaration(target, parent.Parent);
             }
             else
             {
-                throw new ArgumentOutOfRangeException("Symbol Declaration not found");
+                //fujnzt noch nicht, z.b. bei methjodenargumenten.
+                //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
+                return new SymbolInformation();
             }
         }
     }
@@ -277,6 +282,9 @@ namespace DafnyLanguageServer.DafnyAccess
     public class SymbolInformation
     {
         public TokenPosition Position { get; set; }
+
+        public int Line => Position.Token.line;
+        public int Col => Position.Token.col;
         public string Name { get; set; }
 
         //evt wieder weg
