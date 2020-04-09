@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using DafnyProgram = Microsoft.Dafny.Program;
+using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -116,6 +118,8 @@ namespace DafnyLanguageServer.DafnyAccess
             parent.Children.Add(methodSymbol);
             SymbolTable.Add(methodSymbol);
 
+            //todo argumente handlen
+
             //kucken was dinger sind:
             var substat = memberAsMethod.Body.SubStatements.ToList();
             var subexpr = memberAsMethod.Body.SubExpressions.ToList();
@@ -128,13 +132,15 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public void HandleStatement(Statement s, SymbolInformation parent)
         {
-            //todo
-            switch (s)
+            
+            switch (s)  
             {
                 case VarDeclStmt vds:
+                    HandleVarDeclStmt(vds, parent);
                     break;
 
                 case ConcreteUpdateStatement us:
+                    HandleUpdateStatment(us, parent);
                     break;
 
                 case ProduceStmt us:
@@ -157,11 +163,109 @@ namespace DafnyLanguageServer.DafnyAccess
                 case PrintStmt bs:
                     break;
 
-                //more?
+                //more.... if, while etc pp
 
             }
         }
 
+        public void HandleVarDeclStmt(VarDeclStmt vds, SymbolInformation parent)
+        {
+            foreach (var localVar in vds.Locals)
+            {
+                var variableSymbol = new SymbolInformation()
+                {
+                    Module = CurrentModule,
+                    Name = localVar.Name,     //es gäbe unique name - evtl geiler wegen shadowing
+                    Type = Type.Variable,
+                    Parent = parent,
+                    Position = new TokenPosition()
+                    {
+                        Token = localVar.Tok,
+                        BodyStartToken = localVar.Tok,
+                        BodyEndToken = localVar.EndTok
+                    }
+                };
+                variableSymbol.DeclarationOrigin = variableSymbol;  //hier fehlen usages
+                variableSymbol.Children = null;
+                SymbolTable.Add(variableSymbol);
+                parent.Children.Add(variableSymbol);
+            }
+            HandleUpdateStatment(vds.Update, parent);
+        }
+
+        public void HandleUpdateStatment(ConcreteUpdateStatement us, SymbolInformation parent)
+        {
+            foreach (Expression e in us.Lhss)
+            {
+                var expressionSymbol = new SymbolInformation()
+                {
+                    Module = CurrentModule,
+                    Name = e.tok.val,
+                    Type = Type.Variable,
+                    Parent = parent,
+                    Position = new TokenPosition()
+                    {
+                        Token = e.tok,
+                        BodyStartToken = e.tok,
+                        BodyEndToken = e.tok
+                    }
+                };
+                parent.Children.Add(expressionSymbol);
+                expressionSymbol.Children = null; // cant have children
+                var declaration = FindDeclaration(e, parent);
+                expressionSymbol.DeclarationOrigin = declaration;
+                declaration.Usages.Add(expressionSymbol);
+            }
+
+            if (us is UpdateStmt uss)
+            {
+
+                //what is uss.rhs?
+                foreach (var rx in uss.Rhss)
+                {
+                    if (rx is LiteralExpr) continue;
+                    if (rx is ExprRhs re)
+                    {
+                        var expressionSymbol = new SymbolInformation()
+                        {
+                            Module = CurrentModule,
+                            Name = re.Tok.val, //gabs da kein name?
+                            Type = Type.Variable,
+                            Parent = parent,
+                            Position = new TokenPosition()
+                            {
+                                Token = re.Tok,
+                                BodyStartToken = re.Tok,
+                                BodyEndToken = re.Tok
+                            }
+                        };
+                        parent.Children.Add(expressionSymbol);
+                        expressionSymbol.Children = null; // cant have children
+                        //var declaration = FindDeclaration(expressionSymbol, parent);
+                        //expressionSymbol.DeclarationOrigin = declaration;
+                        //declaration.Usages.Add(expressionSymbol);
+                    }
+                    //...nm is liste, dann hat es da expr, dort ist name und tok. tok is auch eins höher.
+                }
+            }
+
+        }
+
+        private SymbolInformation FindDeclaration(Expression e, SymbolInformation parent)
+        {
+            foreach (SymbolInformation s in parent.Children)
+            {
+                if (s.Name == e.tok.val && s.IsDeclaration) return s;
+            }
+            //if symbol not found in current scope, search parent
+            if (parent.Parent != null) { 
+                return FindDeclaration(e, parent.Parent);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Symbol Declaration not found");
+            }
+        }
     }
 
 
@@ -179,10 +283,10 @@ namespace DafnyLanguageServer.DafnyAccess
         public ModuleDefinition Module { get; set; }
 
         public Type Type { get; set; }
-        public SymbolInformation Parent { get; set; }  
+        public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
-        public List<SymbolInformation> Children { get; set; }
-        public List<SymbolInformation> Usages { get; set; }
+        public List<SymbolInformation> Children { get; set; } = new List<SymbolInformation>();
+        public List<SymbolInformation> Usages { get; set; } = new List<SymbolInformation>();
         public bool IsDeclaration => DeclarationOrigin == this;
     }
 
@@ -193,6 +297,7 @@ namespace DafnyLanguageServer.DafnyAccess
         Method,
         Function,
         Field,
+        Variable,
         Call,
         Definition,
         Predicate
