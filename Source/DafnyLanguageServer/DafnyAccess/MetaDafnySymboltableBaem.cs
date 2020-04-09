@@ -183,8 +183,7 @@ namespace DafnyLanguageServer.DafnyAccess
         public SymbolInformation DeclarationOrigin { get; set; }
         public List<SymbolInformation> Children { get; set; }
         public List<SymbolInformation> Usages { get; set; }
-
-
+        public bool IsDeclaration => DeclarationOrigin == this;
     }
 
 
