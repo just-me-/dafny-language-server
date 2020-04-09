@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using DafnyProgram = Microsoft.Dafny.Program;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 
-namespace DafnyLanguageServer.DafnyAccess
+namespace DafnyLanguageServer.SymbolTable
 {
 
 
     public class MetaDafnySymboltableBaem
     {
-        public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
+        public List<NewSymbolInformation> SymbolTable { get; set; } = new List<NewSymbolInformation>();
         private DafnyProgram DafnyProgram { get; }
 
         private ModuleDefinition CurrentModule { get; set; }
@@ -37,7 +33,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         public void HandleClass(ClassDecl classDecl)
         {
-            var classSymbol = new SymbolInformation()
+            var classSymbol = new NewSymbolInformation()
             {
                 Module = CurrentModule,
                 Name = classDecl.Name,
@@ -50,16 +46,15 @@ namespace DafnyLanguageServer.DafnyAccess
                 Type = Type.Class
             };
             classSymbol.DeclarationOrigin = classSymbol;
-            classSymbol.Children = new List<SymbolInformation>();     //für class symbol fehlt: usages
+            classSymbol.Children = new List<NewSymbolInformation>();     //für class symbol fehlt: usages
 
             foreach (var member in classDecl.Members)
             {
                 HandleClassMemberDeklaration(member, classSymbol);
-
             }
         }
 
-        public void HandleClassMemberDeklaration(MemberDecl member, SymbolInformation parent)
+        public void HandleClassMemberDeklaration(MemberDecl member, NewSymbolInformation parent)
         {
             switch (member)
             {
@@ -70,16 +65,14 @@ namespace DafnyLanguageServer.DafnyAccess
                 }
                 case Method memberAsMethod:
                     //memberAsMethod.accept(new SymbolTableGeneratorWithVisitor()); //so, oder?=? warum keine accept method?
-
-                    
                     HandleMethod(memberAsMethod, parent);
                     break;
             }
         }
 
-        public void HandleField(Field memberAsField, SymbolInformation parent)
+        public void HandleField(Field memberAsField, NewSymbolInformation parent)
         {
-            var fieldSymbol = new SymbolInformation()
+            var fieldSymbol = new NewSymbolInformation()
             {
                 Module = CurrentModule,
                 Name = memberAsField.Name,
@@ -98,9 +91,9 @@ namespace DafnyLanguageServer.DafnyAccess
             
         }
 
-        public void HandleMethod(Method memberAsMethod, SymbolInformation parent)
+        public void HandleMethod(Method memberAsMethod, NewSymbolInformation parent)
         {
-            var methodSymbol = new SymbolInformation()
+            var methodSymbol = new NewSymbolInformation()
             {
                 Module = CurrentModule,
                 Name = memberAsMethod.Name,
@@ -132,7 +125,7 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
 
-        public void HandleStatement(Statement s, SymbolInformation parent)
+        public void HandleStatement(Statement s, NewSymbolInformation parent)
         {
             
             switch (s)  //alle die mit visitor umgehen.
@@ -170,11 +163,11 @@ namespace DafnyLanguageServer.DafnyAccess
             }
         }
 
-        public void HandleVarDeclStmt(VarDeclStmt vds, SymbolInformation parent)
+        public void HandleVarDeclStmt(VarDeclStmt vds, NewSymbolInformation parent)
         {
             foreach (var localVar in vds.Locals)
             {
-                var variableSymbol = new SymbolInformation()
+                var variableSymbol = new NewSymbolInformation()
                 {
                     Module = CurrentModule,
                     Name = localVar.Name,     //es gäbe unique name - evtl geiler wegen shadowing
@@ -195,11 +188,11 @@ namespace DafnyLanguageServer.DafnyAccess
             HandleUpdateStatment(vds.Update, parent);
         }
 
-        public void HandleUpdateStatment(ConcreteUpdateStatement us, SymbolInformation parent)
+        public void HandleUpdateStatment(ConcreteUpdateStatement us, NewSymbolInformation parent)
         {
             foreach (Expression e in us.Lhss)
             {
-                var expressionSymbol = new SymbolInformation()
+                var expressionSymbol = new NewSymbolInformation()
                 {
                     Module = CurrentModule,
                     Name = e.tok.val,
@@ -225,10 +218,9 @@ namespace DafnyLanguageServer.DafnyAccess
                 //what is uss.rhs?
                 foreach (var rx in uss.Rhss)
                 {
-                    if (rx is LiteralExpr) continue;
                     if (rx is ExprRhs re)
                     {
-                        var expressionSymbol = new SymbolInformation()
+                        var expressionSymbol = new NewSymbolInformation()
                         {
                             Module = CurrentModule,
                             Name = re.Tok.val, //gabs da kein name?
@@ -254,9 +246,9 @@ namespace DafnyLanguageServer.DafnyAccess
 
         }
 
-        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation parent)
+        private NewSymbolInformation FindDeclaration(NewSymbolInformation target, NewSymbolInformation parent)
         {
-            foreach (SymbolInformation s in parent.Children)
+            foreach (NewSymbolInformation s in parent.Children)
             {
                 if (s.Name == target.Name && s.IsDeclaration) return s;
             }
@@ -268,53 +260,11 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 //fujnzt noch nicht, z.b. bei methjodenargumenten.
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-                return new SymbolInformation();
+                return new NewSymbolInformation();
             }
         }
     }
 
 
-    public class SymbolTableGeneratorWithVisitor : TopDownVisitor<List<SymbolInformation>> {
-       
-
-
-    }
-    public class SymbolInformation
-    {
-        public TokenPosition Position { get; set; }
-
-        public int Line => Position.Token.line;
-        public int Col => Position.Token.col;
-        public string Name { get; set; }
-
-        //evt wieder weg
-        public ModuleDefinition Module { get; set; }
-
-        public Type Type { get; set; }
-        public SymbolInformation Parent { get; set; }
-        public SymbolInformation DeclarationOrigin { get; set; }
-        public List<SymbolInformation> Children { get; set; } = new List<SymbolInformation>();
-        public List<SymbolInformation> Usages { get; set; } = new List<SymbolInformation>();
-        public bool IsDeclaration => DeclarationOrigin == this;
-    }
-
-
-    public enum Type
-    {
-        Class,
-        Method,
-        Function,
-        Field,
-        Variable,
-        Call,
-        Definition,
-        Predicate
-    }
-
-    public class TokenPosition
-    {
-        public IToken BodyStartToken { get; set; }
-        public IToken BodyEndToken { get; set; }
-        public IToken Token { get; set; }
-    }
+    
 }

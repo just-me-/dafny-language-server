@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Type = Microsoft.Dafny.Type;
+using SymbolInformation = DafnyServer.SymbolTable.SymbolInformation;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -33,17 +34,17 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
-        private List<SymbolTable.SymbolInformation> Symboltable()
+        private List<SymbolInformation> Symboltable()
         {
             if (Result.TranslationStatus >= TranslationStatus.Resolved && Result.DafnyProgram != null) //todo
             {
                 Type.ResetScopes();
-                var symbolTable = new SymbolTable(Result.DafnyProgram);
+                var symbolTable = new DafnyServer.SymbolTable(Result.DafnyProgram);
                 return symbolTable.CalculateSymbols();
             }
             else
             {
-                return new List<SymbolTable.SymbolInformation>();
+                return new List<SymbolInformation>();
             }
         }
 

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyServer;
+using SymbolInformation = DafnyServer.SymbolTable.SymbolInformation;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -49,20 +50,20 @@ namespace DafnyLanguageServer.Handler
                 }
                 foreach (var symbol in fileSymboltable.GetFullList())
                 {
-                    if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ||
-                        symbol.SymbolType == SymbolTable.SymbolInformation.Type.Function ||
-                        symbol.SymbolType == SymbolTable.SymbolInformation.Type.Method)
+                    if (symbol.SymbolType == SymbolInformation.Type.Class ||
+                        symbol.SymbolType == SymbolInformation.Type.Function ||
+                        symbol.SymbolType == SymbolInformation.Type.Method)
                     {
-                        var symbolReferencecounter = symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ? 1 : 0;
+                        var symbolReferencecounter = symbol.SymbolType == SymbolInformation.Type.Class ? 1 : 0;
                         foreach (var fileBuffers in _workspaceManager.GetAllFiles().Values)
                         {
                             foreach (var filesSymboltable in fileBuffers.SymboleProcessor().GetFullList())
                             {
-                                if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class)
+                                if (symbol.SymbolType == SymbolInformation.Type.Class)
                                 {
                                     // not working well yet - ticket #40
                                     if (filesSymboltable.ParentClass == symbol.Name
-                                        && filesSymboltable.SymbolType == SymbolTable.SymbolInformation.Type.Definition
+                                        && filesSymboltable.SymbolType == SymbolInformation.Type.Definition
                                         && filesSymboltable.Module is null)
                                         symbolReferencecounter++;
                                 }

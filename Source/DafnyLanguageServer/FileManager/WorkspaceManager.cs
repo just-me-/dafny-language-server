@@ -1,6 +1,7 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
 using System.Collections.Concurrent;
+using DafnyLanguageServer.SymbolTable;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -23,7 +24,10 @@ namespace DafnyLanguageServer.FileManager
             //Generate new fancy Symbol Table for Testing:
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
-                new MetaDafnySymboltableBaem(fileRepository.Result.DafnyProgram); //#fancy.
+                new SymbolTableGenerator(fileRepository.Result.DafnyProgram);
+
+                //new MetaDafnySymboltableBaem(fileRepository.Result.DafnyProgram); //#fancy.
+
             }
 
             return fileRepository;
