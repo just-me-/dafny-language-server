@@ -15,11 +15,10 @@ namespace DafnyLanguageServer.DafnyAccess
     /// </summary>
     public class CounterExampleModelFileTranslator
     {
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleModelFileTranslator).Assembly.Location);
-        public static readonly string ModelBvdDefault = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
+        
         public string ModelBvd;
 
-        public CounterExampleModelFileTranslator() : this(ModelBvdDefault)
+        public CounterExampleModelFileTranslator() : this(CounterExampleDefaultModelFile.FilePath)
         {
         }
 
@@ -65,14 +64,6 @@ namespace DafnyLanguageServer.DafnyAccess
                 specificModels.Add(specifiedModel);
             }
             return specificModels;
-        }
-
-        public static void ClearDefaultModelFile()
-        {
-            if (File.Exists(ModelBvdDefault))
-            {
-                File.Delete(ModelBvdDefault);
-            }
         }
     }
 }
