@@ -2,12 +2,14 @@ using DafnyLanguageServer.DafnyAccess;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace CounterExampleProviderUnitTest
 {
+    [TestFixture]
     public class BVDChecks
     {
         [Test]
@@ -16,11 +18,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_fail1_bvd;
             var file = Files.ce_fail1;
 
-            var src = File.ReadAllText(file);
+            var physFile = new PhysicalFile {Sourcecode = File.ReadAllText(file)};
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            var provider = new CounterExampleModelFileTranslator(src, model);
-
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -36,10 +37,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_fail2_bvd;
             var file = Files.ce_fail2;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -55,10 +56,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_string_bvd;
             var file = Files.ce_string;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -74,10 +75,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_li_bvd;
             var file = Files.ce_li;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -93,10 +94,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_bool_bvd;
             var file = Files.ce_bool;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -112,10 +113,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_float_bvd;
             var file = Files.ce_float;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -131,10 +132,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_2m_bvd;
             var file = Files.ce_2m;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
@@ -152,10 +153,10 @@ namespace CounterExampleProviderUnitTest
             var model = Files.ce_2mc_bvd;
             var file = Files.ce_2mc;
 
-            var src = File.ReadAllText(file);
-            var provider = new CounterExampleModelFileTranslator(src, model);
+            var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
+            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var result = new CounterExampleExtractor(physFile, models).Extract();
 
-            CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
 
             List<string> expectation = new List<string>()
