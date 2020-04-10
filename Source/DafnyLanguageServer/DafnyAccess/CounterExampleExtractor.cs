@@ -1,58 +1,33 @@
-﻿using Microsoft.Boogie;
-using Microsoft.Boogie.ModelViewer;
-using Microsoft.Boogie.ModelViewer.Dafny;
-using System;
-using System.CodeDom;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
-using Microsoft.Dafny;
+using Microsoft.Boogie.ModelViewer;
+using Microsoft.Boogie.ModelViewer.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-    /// <summary>
-    /// This class provides counter examples.
-    /// It analyzes the file 'model.bvd' and extracts its information.
-    /// To generate a model.bvd, one needs to compile with the argument /mv:[PathtoModel.bvd]
-    /// The .bvd can also be injected for unit testing.
-    /// </summary>
-    public class CounterExampleProvider
+    class CounterExampleExtractor
     {
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
-        public static string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
 
         private string Source { get; }
-        public CounterExampleProvider(PhysicalFile file)
+        private List<ILanguageSpecificModel> Models { get; }
+
+        public CounterExampleExtractor(PhysicalFile file, List<ILanguageSpecificModel> models)
         {
             Source = file.Sourcecode;
+            Models = models;
         }
 
-        public CounterExampleProvider(string source, string modelFile)
+        public CounterExampleResults ExtractCounterExamples()
         {
-            Source = source;
-            ModelBvd = modelFile;
-        }
-
-        public CounterExampleResults LoadCounterModel()
-        {
-            if (!File.Exists(ModelBvd))
-            {
-                return new CounterExampleResults();
-            }
-            string RawBVDContent = ReadModelFile(ModelBvd);
-            List<Model> models = ParseModels(RawBVDContent);
-            List<ILanguageSpecificModel> specificModels = BuildModels(models);
-
-            // hier splitten
-
             var result = new CounterExampleResults();
-            foreach (var specificModel in specificModels)
+            foreach (var specificModel in Models)
             {
                 StateNode relevantState = FindInitialState(specificModel);
                 CounterExample ce = ExtractCounterExampleFromState(relevantState);
@@ -61,32 +36,10 @@ namespace DafnyLanguageServer.DafnyAccess
                     result.CounterExamples.Add(ce);
                 }
             }
+
             return result;
-        }
 
-        private string ReadModelFile(string path)
-        {
-            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var sr = new StreamReader(fs, Encoding.Default))
-            {
-                return sr.ReadToEnd();
-            }
-        }
 
-        private List<Model> ParseModels(string modelString)
-        {
-            return Model.ParseModels(new StringReader(modelString));
-        }
-
-        private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
-        {
-            var specificModels = new List<ILanguageSpecificModel>();
-            foreach (var model in modellist)
-            {
-                var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
-                specificModels.Add(specifiedModel);
-            }
-            return specificModels;
         }
 
         private StateNode FindInitialState(ILanguageSpecificModel specificModel)
@@ -101,7 +54,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 {
                     return state;
                 }
-            } 
+            }
 
             throw new InvalidOperationException("specific Model does not contain a :initial state");
         }
@@ -163,21 +116,9 @@ namespace DafnyLanguageServer.DafnyAccess
             return s;
         }
 
-        private static string RemoveSpaceAfterMinus(string s)
-        {
-            return s.Replace("- ", "-");
-        }
-
+        private static string RemoveSpaceAfterMinus(string s) => s.Replace("- ", "-");
         private static bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
         private static bool IsReference(string s) => s.StartsWith("T@U!val!");
-        public static void RemoveExistingFileModel()
-        {
-            if (File.Exists(ModelBvd))
-            {
-                File.Delete(ModelBvd);
-            }
-        }
-    }
 
-    
+    }
 }

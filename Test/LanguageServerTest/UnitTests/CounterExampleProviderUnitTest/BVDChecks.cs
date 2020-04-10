@@ -17,7 +17,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_fail1;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -36,7 +36,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_fail2;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -55,7 +55,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_string;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -74,7 +74,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_li;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -93,7 +93,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_bool;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -112,7 +112,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_float;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -131,7 +131,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_2m;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -152,7 +152,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_2mc;
 
             var src = File.ReadAllText(file);
-            var provider = new CounterExampleProvider(src, model);
+            var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
             List<string> resultAsString = result.CounterExamples.ToStringList();
