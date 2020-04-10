@@ -4,6 +4,7 @@ using DafnyServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CounterExampleProvider = DafnyLanguageServer.Services.CounterExampleProvider;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.FileManager
@@ -65,7 +66,7 @@ namespace DafnyLanguageServer.FileManager
                 {
                     //var boogieProgram = boogiePrograms.First(); // One CE is sufficient.
                     //BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                    return new DafnyAccess.CounterExampleProvider(PhysicalFile).LoadCounterModel();
+                    return new CounterExampleProvider(PhysicalFile).LoadCounterModel();
                 }
             }
 

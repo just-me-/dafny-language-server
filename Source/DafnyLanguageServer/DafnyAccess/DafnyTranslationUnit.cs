@@ -6,8 +6,10 @@ using System.IO;
 using System.Linq;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.Services;
 using DafnyServer;
 using Bpl = Microsoft.Boogie;
+using CounterExampleProvider = DafnyLanguageServer.Services.CounterExampleProvider;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -80,7 +82,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             // Apply args for counter example 
             var listArgs = args.ToList();
-            listArgs.Add("/mv:" + CounterExampleProvider.ModelBvd);
+            listArgs.Add("/mv:" + CounterExampleDefaultModelFile.FilePath);
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
 
             if (Parse() && Resolve() && Translate() && Boogie())
@@ -162,7 +164,7 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
-            CounterExampleProvider.RemoveExistingFileModel();
+            CounterExampleDefaultModelFile.ClearDefaultModelFile();
 
             if (boogieProgram.Resolve() == 0 && boogieProgram.Typecheck() == 0)
             {

@@ -196,7 +196,7 @@
     <Compile Include="Services\CompilationService.cs" />
     <Compile Include="Handler\CompletionHandler.cs" />
     <Compile Include="Handler\CounterExampleHandler.cs" />
-    <Compile Include="DafnyAccess\CounterExampleProvider.cs" />
+    <Compile Include="Services\CounterExampleProvider.cs" />
     <Compile Include="DafnyAccess\DafnyTranslationUnit.cs" />
     <Compile Include="DafnyAccess\IDafnyTranslationUnit.cs" />
     <Compile Include="DafnyAccess\Utilities.cs" />
