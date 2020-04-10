@@ -4,6 +4,7 @@ using DafnyServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DafnyLanguageServer.Services.CounterExample;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.FileManager

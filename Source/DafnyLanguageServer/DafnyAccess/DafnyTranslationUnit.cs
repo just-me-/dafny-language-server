@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.Services.CounterExample;
 using DafnyServer;
 using Bpl = Microsoft.Boogie;
 

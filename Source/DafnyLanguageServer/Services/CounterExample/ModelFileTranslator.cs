@@ -1,11 +1,11 @@
-﻿using Microsoft.Boogie;
-using Microsoft.Boogie.ModelViewer;
-using Microsoft.Boogie.ModelViewer.Dafny;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.Boogie;
+using Microsoft.Boogie.ModelViewer;
+using Microsoft.Boogie.ModelViewer.Dafny;
 
-namespace DafnyLanguageServer.DafnyAccess
+namespace DafnyLanguageServer.Services.CounterExample
 {
     /// <summary>
     /// The .bvd file is the so-called model file.

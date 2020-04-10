@@ -6,7 +6,7 @@ using DafnyLanguageServer.Handler;
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 
-namespace DafnyLanguageServer.DafnyAccess
+namespace DafnyLanguageServer.Services.CounterExample
 {
     /// <summary>
     /// This class extracts counter examples from a given list of
@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (var specificModel in Models)
             {
                 StateNode relevantState = FindInitialState(specificModel);
-                CounterExample ce = ExtractCounterExampleFromState(relevantState);
+                Handler.CounterExample ce = ExtractCounterExampleFromState(relevantState);
                 if (ce.Variables.Count > 0)
                 {
                     result.CounterExamples.Add(ce);
@@ -56,9 +56,9 @@ namespace DafnyLanguageServer.DafnyAccess
             throw new InvalidOperationException("specific Model does not contain a :initial state");
         }
 
-        private CounterExample ExtractCounterExampleFromState(StateNode state)
+        private Handler.CounterExample ExtractCounterExampleFromState(StateNode state)
         {
-            CounterExample ce = new CounterExample();
+            Handler.CounterExample ce = new Handler.CounterExample();
             AddPosition(ce, state.CapturedStateName);
 
             foreach (var variableNode in state.Vars)
@@ -79,7 +79,7 @@ namespace DafnyLanguageServer.DafnyAccess
             return ce;
         }
 
-        private void AddPosition(CounterExample ce, string stateCapturedStateName)
+        private void AddPosition(Handler.CounterExample ce, string stateCapturedStateName)
         {
 
             const string regex = @".*dfy\((\d+),(\d+)\)";   //anything, then dfy(00,00)
