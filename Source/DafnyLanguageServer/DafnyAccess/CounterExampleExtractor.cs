@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using Microsoft.Boogie.ModelViewer;
@@ -12,9 +8,13 @@ using Microsoft.Boogie.ModelViewer.Dafny;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-    class CounterExampleExtractor
+    /// <summary>
+    /// This class extracts counter examples from a given list of
+    /// ILanguageSpecificModels. It will omit variables of referencial style
+    /// or unknown variables.
+    /// </summary>
+    public class CounterExampleExtractor
     {
-
         private string Source { get; }
         private List<ILanguageSpecificModel> Models { get; }
 
@@ -36,10 +36,7 @@ namespace DafnyLanguageServer.DafnyAccess
                     result.CounterExamples.Add(ce);
                 }
             }
-
             return result;
-
-
         }
 
         private StateNode FindInitialState(ILanguageSpecificModel specificModel)

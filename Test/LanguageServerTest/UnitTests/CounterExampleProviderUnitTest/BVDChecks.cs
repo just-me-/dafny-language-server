@@ -17,6 +17,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_fail1;
 
             var src = File.ReadAllText(file);
+
             var provider = new CounterExampleModelFileTranslator(src, model);
 
             CounterExampleResults result = provider.LoadCounterModel();

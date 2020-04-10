@@ -80,7 +80,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             // Apply args for counter example 
             var listArgs = args.ToList();
-            listArgs.Add("/mv:" + CounterExampleModelFileTranslator.ModelBvd);
+            listArgs.Add("/mv:" + CounterExampleModelFileTranslator.ModelBvdDefault);
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
 
             if (Parse() && Resolve() && Translate() && Boogie())
