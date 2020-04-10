@@ -19,9 +19,8 @@ namespace DafnyLanguageServer.DafnyAccess
         public static readonly string ModelBvdDefault = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
         public string ModelBvd;
 
-        public CounterExampleModelFileTranslator()
+        public CounterExampleModelFileTranslator() : this(ModelBvdDefault)
         {
-            ModelBvd = ModelBvdDefault;
         }
 
         public CounterExampleModelFileTranslator(string modelFile)

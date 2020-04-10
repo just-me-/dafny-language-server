@@ -24,7 +24,7 @@ namespace DafnyLanguageServer.DafnyAccess
             Models = models;
         }
 
-        public CounterExampleResults ExtractCounterExamples()
+        public CounterExampleResults Extract()
         {
             var result = new CounterExampleResults();
             foreach (var specificModel in Models)
