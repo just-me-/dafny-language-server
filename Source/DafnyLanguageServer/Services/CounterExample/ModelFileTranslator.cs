@@ -13,16 +13,16 @@ namespace DafnyLanguageServer.DafnyAccess
     /// The model file contains information about counter examples.
     /// This class reads the .bvd file and translates it to a list of specificModels.
     /// </summary>
-    public class CounterExampleModelFileTranslator
+    public class ModelFileTranslator
     {
         
         public string ModelBvd;
 
-        public CounterExampleModelFileTranslator() : this(CounterExampleDefaultModelFile.FilePath)
+        public ModelFileTranslator() : this(DefaultModelFile.FilePath)
         {
         }
 
-        public CounterExampleModelFileTranslator(string modelFile)
+        public ModelFileTranslator(string modelFile)
         {
             ModelBvd = modelFile;
         }

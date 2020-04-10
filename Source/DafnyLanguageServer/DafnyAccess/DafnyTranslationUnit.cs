@@ -80,7 +80,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             // Apply args for counter example 
             var listArgs = args.ToList();
-            listArgs.Add("/mv:" + CounterExampleDefaultModelFile.FilePath);
+            listArgs.Add("/mv:" + DefaultModelFile.FilePath);
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
 
             if (Parse() && Resolve() && Translate() && Boogie())
@@ -162,7 +162,7 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
-            CounterExampleDefaultModelFile.ClearDefaultModelFile();
+            DefaultModelFile.ClearDefaultModelFile();
 
             if (boogieProgram.Resolve() == 0 && boogieProgram.Typecheck() == 0)
             {

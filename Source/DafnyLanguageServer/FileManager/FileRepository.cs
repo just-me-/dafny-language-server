@@ -65,7 +65,7 @@ namespace DafnyLanguageServer.FileManager
                 {
                     //var boogieProgram = boogiePrograms.First(); // One CE is sufficient.
                     //BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
-                    var models = new CounterExampleModelFileTranslator().Translate();
+                    var models = new ModelFileTranslator().Translate();
                     var result = new CounterExampleExtractor(PhysicalFile, models).Extract();
                     return result;
                 }
