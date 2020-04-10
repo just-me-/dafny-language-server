@@ -2918,8 +2918,7 @@ namespace Microsoft.Dafny {
     string Name { get; }
   }
 
-  public abstract class Declaration : INamedRegion, IAttributeBearingDeclaration
-  {
+  public abstract class Declaration : AstElement, INamedRegion, IAttributeBearingDeclaration {
     [ContractInvariantMethod]
     void ObjectInvariant() {
       Contract.Invariant(tok != null);
@@ -6067,7 +6066,7 @@ namespace Microsoft.Dafny {
 
   // ------------------------------------------------------------------------------------------------------
 
-  public abstract class Statement : IAttributeBearingDeclaration
+  public abstract class Statement : AstElement, IAttributeBearingDeclaration
   {
     public readonly IToken Tok;
     public readonly IToken EndTok;  // typically a terminating semi-colon or end-curly-brace
@@ -7975,8 +7974,7 @@ namespace Microsoft.Dafny {
 
   // ------------------------------------------------------------------------------------------------------
   [DebuggerDisplay("{Printer.ExprToString(this)}")]
-  public abstract class Expression
-  {
+  public abstract class Expression : AstElement {
     public readonly IToken tok;
     [ContractInvariantMethod]
     void ObjectInvariant() {
@@ -11360,5 +11358,69 @@ namespace Microsoft.Dafny {
       Contract.Requires(stmt != null);
       return true;  // by default, visit the sub-parts with the same "st"
     }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // Visitor Stuff
+  public abstract class AstElement {
+    public virtual void Accept(Visitor v) {
+      v.Visit(this);
+      v.Leave(this);
+    }
+  }
+
+  public abstract class Visitor
+  {
+
+    public abstract void Visit(AstElement o);
+    public abstract void Leave(AstElement o);
+
+    //public abstract void Visit(Declaration o);
+    //public abstract void Leave(Declaration o);
+
+    //public abstract void Visit(ClassDecl o);
+    //public abstract void Leave(ClassDecl o);
+
+    //public abstract void Visit(MemberDecl o);
+    //public abstract void Leave(MemberDecl o);
+
+    //public abstract void Visit(Field o);
+    //public abstract void Leave(Field o);
+
+    //public abstract void Visit(Method o);
+    //public abstract void Leave(Method o);
+
+    //public abstract void Visit(NonglobalVariable o);
+    //public abstract void Leave(NonglobalVariable o);
+
+    //public abstract void Visit(BlockStmt o);
+    //public abstract void Leave(BlockStmt o);
+
+    ////public abstract void Visit(VarDeclStmt o);
+    ////public abstract void Leave(VarDeclStmt o);
+
+    //public abstract void Visit(ConcreteUpdateStatement o);
+    //public abstract void Leave(ConcreteUpdateStatement o);
+    //public abstract void Visit(LocalVariable o);
+    //public abstract void Leave(LocalVariable o);
+    //public abstract void Visit(Expression o);
+    //public abstract void Leave(Expression o);
+
+    //public abstract void Visit(UpdateStmt o);
+    //public abstract void Leave(UpdateStmt o);
+
+    //public abstract void Visit(AssignOrReturnStmt o);
+    //public abstract void Leave(AssignOrReturnStmt o);
+
+
+    //public abstract void Visit(AssignSuchThatStmt o);
+    //public abstract void Leave(AssignSuchThatStmt o);
+
+    //public abstract void Visit(AssignmentRhs o);
+    //public abstract void Leave(AssignmentRhs o);
+
+
+
+
   }
 }
