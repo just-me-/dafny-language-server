@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.Services.CounterExample;
 using TestCommons;
 using Files = TestCommons.Paths;
 
@@ -19,7 +20,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_fail1;
 
             var physFile = new PhysicalFile {Sourcecode = File.ReadAllText(file)};
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -38,7 +39,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_fail2;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -57,7 +58,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_string;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -76,7 +77,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_li;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -95,7 +96,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_bool;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -114,7 +115,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_float;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -133,7 +134,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_2m;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
@@ -154,7 +155,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_2mc;
 
             var physFile = new PhysicalFile { Sourcecode = File.ReadAllText(file) };
-            var models = new CounterExampleModelFileTranslator(model).Translate();
+            var models = new ModelFileTranslator(model).Translate();
             var result = new CounterExampleExtractor(physFile, models).Extract();
 
             List<string> resultAsString = result.CounterExamples.ToStringList();
