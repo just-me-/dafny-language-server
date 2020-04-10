@@ -2918,7 +2918,7 @@ namespace Microsoft.Dafny {
     string Name { get; }
   }
 
-  public abstract class Declaration : AstElement, INamedRegion, IAttributeBearingDeclaration {
+  public abstract class Declaration : IAstElement, INamedRegion, IAttributeBearingDeclaration {
     [ContractInvariantMethod]
     void ObjectInvariant() {
       Contract.Invariant(tok != null);
@@ -2939,6 +2939,12 @@ namespace Microsoft.Dafny {
           Contract.Assert(false);  // unexpected compile target
           return name;
       }
+    }
+
+    public virtual void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
     }
 
     public IToken tok;
@@ -3855,6 +3861,14 @@ namespace Microsoft.Dafny {
       Contract.Invariant(cce.NonNullElements(Members));
       Contract.Invariant(TraitsTyp != null);
       Contract.Invariant(TraitsObj != null);
+    }
+
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var member in this.Members) {
+        member.Accept(v);
+      }
+      v.Leave(this);
     }
 
     public ClassDecl(IToken tok, string name, ModuleDefinition module,
@@ -5186,7 +5200,7 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public abstract class NonglobalVariable : IVariable {
+  public abstract class NonglobalVariable : IVariable, IAstElement {
     public readonly IToken tok;
     readonly string name;
 
@@ -5195,6 +5209,10 @@ namespace Microsoft.Dafny {
       Contract.Invariant(tok != null);
       Contract.Invariant(name != null);
       Contract.Invariant(type != null);
+    }
+    public virtual void Accept(Visitor v) {
+      v.Visit(this);
+      v.Leave(this);
     }
 
     public string Name {
@@ -5411,6 +5429,12 @@ namespace Microsoft.Dafny {
     public bool ContainsQuantifier {
       set { containsQuantifier = value; }
       get { return containsQuantifier;  }
+    }
+
+    public override void Accept(Visitor v)
+    {
+      //todo for later
+      base.Accept(v);
     }
 
     public override IEnumerable<Expression> SubExpressions {
@@ -5750,6 +5774,18 @@ namespace Microsoft.Dafny {
       }
     }
 
+    public override void Accept(Visitor v)          //braucht es diese abstrakten dinger???
+    {
+      v.Visit(this);
+      foreach (var arg in this.Ins) //ich glaube, das sind die argumente
+      {
+        arg.Accept(v);
+      }
+
+      this.Body.Accept(v);
+
+      v.Leave(this);
+    }
 
     [ContractInvariantMethod]
     void ObjectInvariant() {
@@ -6066,7 +6102,7 @@ namespace Microsoft.Dafny {
 
   // ------------------------------------------------------------------------------------------------------
 
-  public abstract class Statement : AstElement, IAttributeBearingDeclaration
+  public abstract class Statement : IAstElement, IAttributeBearingDeclaration
   {
     public readonly IToken Tok;
     public readonly IToken EndTok;  // typically a terminating semi-colon or end-curly-brace
@@ -6080,6 +6116,12 @@ namespace Microsoft.Dafny {
       set {
         attributes = value;
       }
+    }
+
+    public virtual void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
     }
 
     [ContractInvariantMethod]
@@ -6405,9 +6447,14 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public abstract class AssignmentRhs
+  public abstract class AssignmentRhs : IAstElement
   {
     public readonly IToken Tok;
+
+    public virtual void Accept(Visitor v) {
+      v.Visit(this);
+      v.Leave(this);
+    }
 
     private Attributes attributes;
     public Attributes Attributes
@@ -6469,6 +6516,9 @@ namespace Microsoft.Dafny {
       get {
         yield return Expr;
       }
+    }
+    public override void Accept(Visitor v) {
+      this.Expr.Accept(v);
     }
   }
 
@@ -6636,6 +6686,13 @@ namespace Microsoft.Dafny {
       Update = update;
     }
 
+    public override void Accept(Visitor v) {
+      foreach (var localVar in this.Locals) {
+        localVar.Accept(v);
+      }
+      this.Update.Accept(v);
+    }
+
     public override IEnumerable<Statement> SubStatements {
       get { if (Update != null) { yield return Update; } }
     }
@@ -6694,6 +6751,13 @@ namespace Microsoft.Dafny {
       Contract.Requires(cce.NonNullElements(lhss));
       Lhss = lhss;
     }
+
+    public override void Accept(Visitor v) {
+      foreach (Expression e in this.Lhss) {
+        e.Accept(v);
+      }
+      this.Accept(v);
+    }
   }
 
   public class AssignSuchThatStmt : ConcreteUpdateStatement
@@ -6709,6 +6773,10 @@ namespace Microsoft.Dafny {
     {
       public override PoolVirtues Virtues => PoolVirtues.Enumerable | PoolVirtues.IndependentOfAlloc | PoolVirtues.IndependentOfAlloc_or_ExplicitAlloc;
       public override int Preference() => 1;
+    }
+
+    public override void Accept(Visitor v) {
+      this.Expr.Accept(v);
     }
 
     /// <summary>
@@ -6775,6 +6843,11 @@ namespace Microsoft.Dafny {
       Rhss = rhss;
       CanMutateKnownState = mutate;
     }
+    public override void Accept(Visitor v) {
+      foreach (AssignmentRhs rhs in this.Rhss) {
+        rhs.Accept(v);
+      }
+    }
   }
 
   public class AssignOrReturnStmt : ConcreteUpdateStatement
@@ -6806,6 +6879,10 @@ namespace Microsoft.Dafny {
       Contract.Requires(rhs != null);
       Rhs = rhs;
       ExpectToken = expectToken;
+    }
+
+    public override void Accept(Visitor v) {
+      this.Rhs.Accept(v);
     }
   }
 
@@ -6889,7 +6966,7 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public class LocalVariable : IVariable, IAttributeBearingDeclaration {
+  public class LocalVariable : IAstElement, IAttributeBearingDeclaration {
     public readonly IToken Tok;
     public readonly IToken EndTok;  // typically a terminating semi-colon or end-curly-brace
     readonly string name;
@@ -6915,6 +6992,12 @@ namespace Microsoft.Dafny {
         ((InferredTypeProxy)type).KeepConstraints = true;
       }
       this.IsGhost = isGhost;
+    }
+
+    public virtual void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
     }
 
     public string Name {
@@ -7061,6 +7144,11 @@ namespace Microsoft.Dafny {
     public virtual void AppendStmt(Statement s) {
       Contract.Requires(s != null);
       Body.Add(s);
+    }
+    public override void Accept(Visitor v) {
+      foreach (Statement stmt in this.Body) {
+        stmt.Accept(v);
+      }
     }
   }
 
@@ -7974,7 +8062,7 @@ namespace Microsoft.Dafny {
 
   // ------------------------------------------------------------------------------------------------------
   [DebuggerDisplay("{Printer.ExprToString(this)}")]
-  public abstract class Expression : AstElement {
+  public abstract class Expression : IAstElement {
     public readonly IToken tok;
     [ContractInvariantMethod]
     void ObjectInvariant() {
@@ -7985,6 +8073,11 @@ namespace Microsoft.Dafny {
     public bool WasResolved()
     {
       return Type != null;
+    }
+
+    public virtual void Accept(Visitor v) {
+      v.Visit(this);
+      v.Leave(this);
     }
 
     public Expression Resolved {
@@ -11362,18 +11455,16 @@ namespace Microsoft.Dafny {
 
   // ------------------------------------------------------------------------------------
   // Visitor Stuff
-  public abstract class AstElement {
-    public virtual void Accept(Visitor v) {
-      v.Visit(this);
-      v.Leave(this);
-    }
+  public interface IAstElement
+  {
+    void Accept(Visitor v);
   }
 
   public abstract class Visitor
   {
 
-    public abstract void Visit(AstElement o);
-    public abstract void Leave(AstElement o);
+    public abstract void Visit(IAstElement o);
+    public abstract void Leave(IAstElement o);
 
     //public abstract void Visit(Declaration o);
     //public abstract void Leave(Declaration o);
@@ -11418,9 +11509,19 @@ namespace Microsoft.Dafny {
 
     //public abstract void Visit(AssignmentRhs o);
     //public abstract void Leave(AssignmentRhs o);
+  }
 
+  public class OurVisitor : Visitor
+  {
+    //todo
+    public override void Visit(IAstElement o)
+    {
+      throw new NotImplementedException();
+    }
 
-
-
+    public override void Leave(IAstElement o)
+    {
+      throw new NotImplementedException();
+    }
   }
 }
