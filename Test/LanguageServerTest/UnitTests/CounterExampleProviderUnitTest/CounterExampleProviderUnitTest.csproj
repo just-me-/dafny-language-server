@@ -24,9 +24,6 @@
     <Reference Include="BoogieExecutionEngine">
       <HintPath>..\..\..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
     </Reference>
-    <Reference Include="BoogieModelViewer">
-      <HintPath>..\..\..\..\..\boogie\Binaries\BoogieModelViewer.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
