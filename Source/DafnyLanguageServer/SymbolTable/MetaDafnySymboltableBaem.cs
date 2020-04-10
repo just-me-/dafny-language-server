@@ -9,6 +9,7 @@ namespace DafnyLanguageServer.SymbolTable
 {
 
 
+    //Do not use
     public class MetaDafnySymboltableBaem
     {
         public List<NewSymbolInformation> SymbolTable { get; set; } = new List<NewSymbolInformation>();
@@ -35,7 +36,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var classSymbol = new NewSymbolInformation()
             {
-                Module = CurrentModule,
                 Name = classDecl.Name,
                 Position = new TokenPosition()
                 {
@@ -74,7 +74,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var fieldSymbol = new NewSymbolInformation()
             {
-                Module = CurrentModule,
                 Name = memberAsField.Name,
                 Type = Type.Field,
                 Parent = parent,
@@ -95,7 +94,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var methodSymbol = new NewSymbolInformation()
             {
-                Module = CurrentModule,
                 Name = memberAsMethod.Name,
                 Type = Type.Field,
                 Parent = parent,
@@ -169,7 +167,6 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 var variableSymbol = new NewSymbolInformation()
                 {
-                    Module = CurrentModule,
                     Name = localVar.Name,     //es gäbe unique name - evtl geiler wegen shadowing
                     Type = Type.Variable,
                     Parent = parent,
@@ -194,7 +191,6 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 var expressionSymbol = new NewSymbolInformation()
                 {
-                    Module = CurrentModule,
                     Name = e.tok.val,
                     Type = Type.Variable,
                     Parent = parent,
@@ -214,7 +210,6 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (us is UpdateStmt uss)
             {
-
                 //what is uss.rhs?
                 foreach (var rx in uss.Rhss)
                 {
@@ -222,7 +217,6 @@ namespace DafnyLanguageServer.SymbolTable
                     {
                         var expressionSymbol = new NewSymbolInformation()
                         {
-                            Module = CurrentModule,
                             Name = re.Tok.val, //gabs da kein name?
                             Type = Type.Variable,
                             Parent = parent,

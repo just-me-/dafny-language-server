@@ -15,19 +15,13 @@ namespace DafnyLanguageServer.SymbolTable
         public int Line => Position.Token.line;
         public int Col => Position.Token.col;
         public string Name { get; set; }
-
-        //evt wieder weg
-        public ModuleDefinition Module { get; set; }
-
         public Type Type { get; set; }
         public NewSymbolInformation Parent { get; set; }
         public NewSymbolInformation DeclarationOrigin { get; set; }
         public List<NewSymbolInformation> Children { get; set; } = new List<NewSymbolInformation>();
         public List<NewSymbolInformation> Usages { get; set; } = new List<NewSymbolInformation>();
         public bool IsDeclaration => DeclarationOrigin == this;
-
     }
-
 
     public enum Type
     {

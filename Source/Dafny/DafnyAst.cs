@@ -4535,6 +4535,12 @@ namespace Microsoft.Dafny {
       IsUserMutable = isUserMutable;
       Type = type;
     }
+
+    public override void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
+    }
   }
 
   public class SpecialFunction : Function, ICodeContext, ICallable
@@ -6843,7 +6849,7 @@ namespace Microsoft.Dafny {
       Rhss = rhss;
       CanMutateKnownState = mutate;
     }
-    public override void Accept(Visitor v) {
+    public override void Accept(Visitor v) { //TODO lhs
       foreach (AssignmentRhs rhs in this.Rhss) {
         rhs.Accept(v);
       }
@@ -6966,7 +6972,7 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public class LocalVariable : IAstElement, IAttributeBearingDeclaration {
+  public class LocalVariable : IVariable, IAttributeBearingDeclaration, IAstElement {
     public readonly IToken Tok;
     public readonly IToken EndTok;  // typically a terminating semi-colon or end-curly-brace
     readonly string name;
@@ -11466,62 +11472,28 @@ namespace Microsoft.Dafny {
     public abstract void Visit(IAstElement o);
     public abstract void Leave(IAstElement o);
 
-    //public abstract void Visit(Declaration o);
-    //public abstract void Leave(Declaration o);
+    public abstract void Visit(ClassDecl o);
+    public abstract void Leave(ClassDecl o);
 
-    //public abstract void Visit(ClassDecl o);
-    //public abstract void Leave(ClassDecl o);
+    public abstract void Visit(Field o);
+    public abstract void Leave(Field o);
 
-    //public abstract void Visit(MemberDecl o);
-    //public abstract void Leave(MemberDecl o);
+    public abstract void Visit(Method o);
+    public abstract void Leave(Method o);
 
-    //public abstract void Visit(Field o);
-    //public abstract void Leave(Field o);
+    public abstract void Visit(NonglobalVariable o);
+    public abstract void Leave(NonglobalVariable o);
 
-    //public abstract void Visit(Method o);
-    //public abstract void Leave(Method o);
+    public abstract void Visit(LocalVariable o);
+    public abstract void Leave(LocalVariable o);
 
-    //public abstract void Visit(NonglobalVariable o);
-    //public abstract void Leave(NonglobalVariable o);
+    public abstract void Visit(BlockStmt o);
+    public abstract void Leave(BlockStmt o);
 
-    //public abstract void Visit(BlockStmt o);
-    //public abstract void Leave(BlockStmt o);
+    public abstract void Visit(Expression o);  //Expression sollte feingranularer sein. [so literal expression zB]
+    public abstract void Leave(Expression o);
 
-    ////public abstract void Visit(VarDeclStmt o);
-    ////public abstract void Leave(VarDeclStmt o);
-
-    //public abstract void Visit(ConcreteUpdateStatement o);
-    //public abstract void Leave(ConcreteUpdateStatement o);
-    //public abstract void Visit(LocalVariable o);
-    //public abstract void Leave(LocalVariable o);
-    //public abstract void Visit(Expression o);
-    //public abstract void Leave(Expression o);
-
-    //public abstract void Visit(UpdateStmt o);
-    //public abstract void Leave(UpdateStmt o);
-
-    //public abstract void Visit(AssignOrReturnStmt o);
-    //public abstract void Leave(AssignOrReturnStmt o);
-
-
-    //public abstract void Visit(AssignSuchThatStmt o);
-    //public abstract void Leave(AssignSuchThatStmt o);
-
-    //public abstract void Visit(AssignmentRhs o);
-    //public abstract void Leave(AssignmentRhs o);
-  }
-
-  public class OurVisitor : Visitor
-  {
-    //todo
-    public override void Visit(IAstElement o)
-    {
-      throw new NotImplementedException();
-    }
-
-    public override void Leave(IAstElement o)
-    {
-      throw new NotImplementedException();
-    }
+    public abstract void Visit(AssignmentRhs o);
+    public abstract void Leave(AssignmentRhs o);
   }
 }

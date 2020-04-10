@@ -10,23 +10,16 @@ namespace DafnyLanguageServer.SymbolTable
     class SymbolTableGeneratorVisitor : Visitor
     {
         public List<NewSymbolInformation> SymbolTable { get; set; } = new List<NewSymbolInformation>();
-
         public NewSymbolInformation ParentScope { get; set; }
 
-
-        public override void Visit(Declaration o)
-        {
-            throw new NotImplementedException();
+        public override void Visit(IAstElement o) {
         }
 
-        public override void Leave(Declaration o)
-        {
-            throw new NotImplementedException();
+        public override void Leave(IAstElement o) {
         }
 
         public override void Visit(ClassDecl o)
         {
-            
             var classSymbol = new NewSymbolInformation()
             {
                 Name = o.Name,
@@ -41,26 +34,11 @@ namespace DafnyLanguageServer.SymbolTable
             classSymbol.DeclarationOrigin = classSymbol;  //für class symbol fehlt: usages
             ParentScope = classSymbol;
             SymbolTable.Add(classSymbol);
-
-
         }
-
-
-
 
         public override void Leave(ClassDecl o)
         {
             ParentScope = ParentScope.Parent;
-        }
-
-        public override void Visit(MemberDecl o)
-        {
-            throw new NotImplementedException("This should be overwritten");
-        }
-
-        public override void Leave(MemberDecl o) 
-        {
-            throw new NotImplementedException("This should be overwritten");
         }
 
         public override void Visit(Field o)
@@ -108,15 +86,14 @@ namespace DafnyLanguageServer.SymbolTable
             ParentScope = methodSymbol;
         }
 
-
         public override void Leave(Method o)
         {
             ParentScope = ParentScope.Parent;
         }
 
-
-
-
+        /// <summary>
+        /// Nonglobal Variables are things like Method Parameters.
+        /// </summary>
         public override void Visit(NonglobalVariable o)
         {
             var symbol = new NewSymbolInformation()
@@ -137,7 +114,8 @@ namespace DafnyLanguageServer.SymbolTable
             SymbolTable.Add(symbol);
         }
 
-        public override void Leave(NonglobalVariable o)   //todo evtl outs noch kcuken
+        public override void Leave(NonglobalVariable o)   
+          //todo evtl outs noch kcuken
         { 
         }
 
@@ -161,13 +139,10 @@ namespace DafnyLanguageServer.SymbolTable
             SymbolTable.Add(symbol);
         }
 
-        public override void Leave(LocalVariable o)
-        {
+        public override void Leave(LocalVariable o) {
         }
 
-
-
-        public override void Visit(BlockStmt o)
+    public override void Visit(BlockStmt o)
         {
             //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket 46548
         }
@@ -176,18 +151,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             //todo siehe oben
         }
-
-        public override void Visit(ConcreteUpdateStatement o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Leave(ConcreteUpdateStatement o)
-        {
-            throw new NotImplementedException();
-        }
-
-   
+  
 
         public override void Visit(Expression o)
         {
@@ -216,36 +180,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-        public override void Visit(UpdateStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Leave(UpdateStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Visit(AssignOrReturnStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Leave(AssignOrReturnStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Visit(AssignSuchThatStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Leave(AssignSuchThatStmt o)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Visit(AssignmentRhs o)
         {
             var symbol = new NewSymbolInformation()
@@ -269,11 +203,13 @@ namespace DafnyLanguageServer.SymbolTable
             SymbolTable.Add(symbol);
         }
 
+
         public override void Leave(AssignmentRhs o)
         {
-            throw new NotImplementedException();
         }
 
+
+        //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs.
         private NewSymbolInformation FindDeclaration(NewSymbolInformation target, NewSymbolInformation scope)  //evtl bei leave iwie
         {
             foreach (NewSymbolInformation s in scope.Children)
