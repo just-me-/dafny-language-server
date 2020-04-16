@@ -186,20 +186,19 @@
     <Compile Include="FileManager\TranslationResult.cs" />
     <Compile Include="DafnyAccess\TranslationStatus.cs" />
     <Compile Include="DafnyLanguageServer.cs" />
+    <Compile Include="HandlerServices\CompilationService.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
-    <Compile Include="Services\ConfigReader.cs" />
+    <Compile Include="ProgramServices\ConfigReader.cs" />
     <Compile Include="FileManager\WorkspaceManager.cs" />
-    <Compile Include="DafnyAccess\DiagnosticError.cs" />
+    <Compile Include="DafnyAccess\DiagnosticElement.cs" />
     <Compile Include="Handler\CodeLensHandler.cs" />
     <Compile Include="Handler\WorkspaceHandlers.cs" />
-    <Compile Include="Services\MessageSenderService.cs" />
-    <Compile Include="Services\CompilationService.cs" />
+    <Compile Include="ProgramServices\MessageSenderService.cs" />
     <Compile Include="Handler\CompletionHandler.cs" />
     <Compile Include="Handler\CounterExampleHandler.cs" />
-    <Compile Include="Services\CounterExampleProvider.cs" />
+    <Compile Include="HandlerServices\CounterExampleProvider.cs" />
     <Compile Include="DafnyAccess\DafnyTranslationUnit.cs" />
     <Compile Include="DafnyAccess\IDafnyTranslationUnit.cs" />
-    <Compile Include="DafnyAccess\Utilities.cs" />
     <Compile Include="FileManager\FileRepository.cs" />
     <Compile Include="Handler\DefinitionHandler.cs" />
     <Compile Include="FileManager\FileHelper.cs" />
@@ -209,7 +208,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handler\CompileHandler.cs" />
     <Compile Include="Handler\TextDocumentSyncHandler.cs" />
-    <Compile Include="Services\DiagnosticsService.cs" />
+    <Compile Include="HandlerServices\DiagnosticsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

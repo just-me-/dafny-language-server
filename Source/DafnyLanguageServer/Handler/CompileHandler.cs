@@ -1,7 +1,8 @@
-﻿using DafnyLanguageServer.Services;
-using OmniSharp.Extensions.JsonRpc;
+﻿using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.HandlerServices;
 using MediatR;
 
 namespace DafnyLanguageServer.Handler
@@ -29,10 +30,19 @@ namespace DafnyLanguageServer.Handler
 
     public class CompileHandler : ICompile
     {
+
+
+        private readonly WorkspaceManager _workspaceManager;
+
+        public CompileHandler(WorkspaceManager b)
+        {
+            _workspaceManager = b;
+        }
+
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
         {
-            CompilationService cs = new CompilationService(request.FileToCompile, request.CompilationArguments);
-            return await cs.Compile();
+            FileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
+            return await Task.Run(() => f.Compile(request.CompilationArguments), cancellationToken);
         }
     }
 }

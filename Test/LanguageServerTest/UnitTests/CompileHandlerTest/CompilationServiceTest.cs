@@ -1,20 +1,22 @@
 using System;
-using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.Services;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using DafnyLanguageServer.DafnyAccess;
+using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.HandlerServices;
+using Microsoft.Boogie;
+using NUnit.Framework;
 using Files = TestCommons.Paths;
 
-namespace CompileHandlerTest
+namespace CompilationServiceTest
 {
     [TestFixture]
     [Category("Unit")]
-    public class CompileHandlerTests
+    public class CompilationServiceTest
     {
         private CompilerResults compilerResults;
-        private const string successMsg = "Compilation successful";
-        private const string failMsg = "Compilation failed: ";
+        private const string failurePrefix = CompilationService.failurePrefix;
 
         [SetUp]
         public void DeleteFiles()
@@ -40,92 +42,91 @@ namespace CompileHandlerTest
         public void SuccessWithExeAsResult()
         {
             RunCompilation(Files.cp_fineEXE);
-            VerifyResults(false, true, successMsg);
+            VerifyResults(false, true, "Compiled assembly into compiles_as_exe.exe");
         }
 
         [Test]
         public void SuccessWithDllAsResult()
         {
             RunCompilation(Files.cp_fineDLL);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into compiles_as_dll.dll");
         }
 
         [Test]
         public void FailureAssertionViolation()
         {
             RunCompilation(Files.cp_assertion);
-            VerifyResults(true, false, failMsg + "assertion violation in line 7.");
+            VerifyResults(true, false, failurePrefix + "[L7:C13] Logical Error: assertion violation");
         }
 
         [Test]
         public void FailurePostconditionViolation()
         {
             RunCompilation(Files.cp_postcondition);
-            VerifyResults(true, false, failMsg + "BP5003: A postcondition might not hold on this return path. in line 4.");
+            VerifyResults(true, false, failurePrefix + "[L4:C1] Logical Error: A postcondition might not hold on this return path.");
         }
 
         [Test]
         public void FailureSyntaxErrorUnknownIdentifier()
         {
             RunCompilation(Files.cp_identifier);
-            VerifyResults(true, false, failMsg + "unresolved identifier: bruder in line 8.");
+            VerifyResults(true, false, failurePrefix + "[L8:C4] Syntax Error: unresolved identifier: bruder");
         }
 
         [Test]
         public void FailureSyntaxErrorSemiExpected()
         {
             RunCompilation(Files.cp_semiexpected);
-            VerifyResults(true, false, failMsg + "semicolon expected in line 7.");
+            VerifyResults(true, false, failurePrefix + "[L7:C4] Syntax Error: semicolon expected");
         }
 
         [Test]
         public void Included_File()
         {
             RunCompilation(Files.ic_basic);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into basic.dll");
         }
 
 
         [Test]
         public void Inexistant_File()
         {
-            RunCompilation(Files.int_inexistant);
-            VerifyResults(true, false, failMsg + "Dafny Source File does not exist");
+            Assert.Throws<FileNotFoundException>(() => RunCompilation(Files.int_inexistant));
         }
 
         [Test]
         public void Empty_File()
         {
             RunCompilation(Files.cp_empty);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into empty.dll");
         }
 
         [Test]
         public void Otherlang_Java()
         {
             RunCompilation(Files.cp_otherlang_java);
-            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files");
         }
 
         [Test]
         public void Otherlang_Java_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_java_dfyending);
-            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: EOF expected");
         }
 
         [Test]
         public void Otherlang_Py()
         {
             RunCompilation(Files.cp_otherlang_py);
-            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files");
         }
 
         [Test]
         public void Otherlang_Py_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_py_dfyending);
-            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: EOF expected");
         }
 
         [Test]
@@ -139,7 +140,7 @@ namespace CompileHandlerTest
         public void WithArgumentsLegit()
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "/compile:1", "/nologo" });
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into compiles_as_dll.dll");
         }
 
         [Test]
@@ -150,13 +151,32 @@ namespace CompileHandlerTest
         }
 
 
-        private void RunCompilation(string dafnyFile, string[] args = null)
+        private void RunCompilation(string filePath, string[] args = null)
         {
+            
             if (args == null)
             {
                 args = new string[] { };
             }
-            compilerResults = new CompilationService(dafnyFile, args).Compile().Result;
+
+            var physFile = new PhysicalFile()
+            {
+                Filepath = filePath,
+                Sourcecode = File.ReadAllText(filePath),
+                Uri = new Uri(filePath)
+            };
+
+            ExecutionEngine.printer = new ConsolePrinter();
+
+            var results = new DafnyTranslationUnit(physFile).Verify();
+
+            var repo = new FileRepository()
+            {
+                PhysicalFile = physFile,
+                Result = results
+            };
+
+            compilerResults = new CompilationService(repo, args).Compile();
         }
 
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)

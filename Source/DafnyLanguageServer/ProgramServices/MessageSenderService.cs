@@ -1,11 +1,6 @@
 ﻿using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DafnyLanguageServer
+namespace DafnyLanguageServer.ProgramServices
 {
     /// <summary>
     /// This service provides for each client supported message an own function for an easy usage.

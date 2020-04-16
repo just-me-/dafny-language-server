@@ -9,7 +9,7 @@ using Microsoft.Boogie;
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 
-namespace DafnyLanguageServer.Services
+namespace DafnyLanguageServer.HandlerServices
 {
 
     public static class CounterExampleDefaultModelFile

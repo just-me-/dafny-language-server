@@ -1,5 +1,4 @@
 ﻿using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.Services;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -10,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.HandlerServices;
 
 namespace DafnyLanguageServer.Handler
 {

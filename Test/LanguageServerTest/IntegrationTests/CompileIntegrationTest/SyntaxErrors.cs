@@ -11,14 +11,14 @@ namespace CompileIntegrationTest
         public void FailureSyntaxErrorUnknownIdentifier()
         {
             RunCompilation(Files.cp_identifier);
-            VerifyResults(true, false, failMsg + "unresolved identifier: bruder in line 8.");
+            VerifyResults(true, false, failPrefix + "[L8:C4] Syntax Error: unresolved identifier: bruder");
         }
 
         [Test]
         public void FailureSyntaxErrorSemiExpected()
         {
             RunCompilation(Files.cp_semiexpected);
-            VerifyResults(true, false, failMsg + "semicolon expected in line 7.");
+            VerifyResults(true, false, failPrefix + "[L7:C4] Syntax Error: semicolon expected");
         }
 
 
