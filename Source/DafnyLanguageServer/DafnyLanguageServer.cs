@@ -6,6 +6,7 @@ using OmniSharp.Extensions.LanguageServer.Server;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using DafnyLanguageServer.ProgramServices;
 using Serilog;
 using ILogger = Serilog.ILogger;
 

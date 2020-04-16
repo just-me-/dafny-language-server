@@ -6,63 +6,64 @@ using System.IO;
 using System.Linq;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.Services;
+using DafnyLanguageServer.HandlerServices;
 using DafnyServer;
 using Bpl = Microsoft.Boogie;
-using CounterExampleProvider = DafnyLanguageServer.Services.CounterExampleProvider;
+using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
     /// <summary>
     /// This is the translation unit for Dafny files. It calls parse, resolve, translate and Boogie's verification.
-    /// The results are provided within the Property "Errors"
+    /// The results are provided within the Property "DiagnosticElements"
     /// </summary>
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
-        public DafnyTranslationUnit(PhysicalFile file) : this(file, new string[] { }) { }
-        public DafnyTranslationUnit(PhysicalFile file, string[] args)
+        public DafnyTranslationUnit(PhysicalFile file)
         {
-            if (file == null) 
-                throw new ArgumentNullException("file must be set");
-
-            this.file = file;
-            this.args = args;
+            this.file = file ?? throw new InvalidOperationException("Internal Error constructing DTU: File must be set");
         }
 
-        // Keep track of the process state  todo #148
+
         private TranslationStatus status = TranslationStatus.Virgin;
-
+        private bool dirtyInstance = false; // can only verify once per dafnyProgram
         private readonly PhysicalFile file;
-        private readonly string[] args;
-        private bool dirtyInstance = false; // only use once! 
+        private Microsoft.Dafny.Program dafnyProgram;
+        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
 
-        private Microsoft.Dafny.Program dafnyProgram; // behalten 
-        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;  // behalten 
 
         #region ErrorReporting
-        private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
-        public List<DiagnosticError> Errors { get; } = new List<DiagnosticError>(); // behaltem
+        private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
+        public List<DiagnosticElement> DiagnosticElements { get; } = new List<DiagnosticElement>();
+        private bool HasErrors { get; set; }
 
-        private void AddErrorToList(ErrorInformation e)
+        private void AddBoogieErrorToList(ErrorInformation e)
         {
-            Errors.Add(e.ConvertToErrorInformation());
+            DiagnosticElements.Add(e.ConvertToErrorInformation());
+            HasErrors = true;
         }
 
-        private void AddErrorToList(ErrorMessage e)
+        private void CollectDiagnosticsFromReporter()
         {
-            Errors.Add(e.ConvertToErrorInformation());
-        }
-
-        private void CollectErrorsFromReporter()
-        {
-            foreach (ErrorMessage error in reporter.AllMessages[ErrorLevel.Error])
+            foreach (ErrorMessage e in reporter.AllMessages[ErrorLevel.Error])
             {
-                AddErrorToList(error);
+                DiagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
+                HasErrors = true;
+            }
+
+            foreach (ErrorMessage w in reporter.AllMessages[ErrorLevel.Warning])
+            {
+                DiagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
+            }
+
+            foreach (ErrorMessage i in reporter.AllMessages[ErrorLevel.Info])
+            {
+                DiagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
             }
         }
         #endregion
 
-        private void checkInstance()
+        private void CheckInstance()
         {
             if (dirtyInstance)
             {
@@ -72,37 +73,46 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        ///  Calls Pars, Resolve, Translate and Boogie.
-        /// Makes sure, that it gets only called once per class instance. 
+        ///  This method verifies Dafny Code. First, it checks if this instance is fresh.
+        /// Next, it sets up default options with the tweak to generate the model file, which is needed for counter examples.
+        /// then, it tries to parse, resolve, translate and boogie the code, aborting whenever it fails.
+        /// Then, errors are collected and provided in the Property "Error".
+        /// The results are compilats are then returned in the Wrapper Class "TranslationResult".
         /// </summary>
         /// <returns></returns>
         public TranslationResult Verify()
         {
-            checkInstance();
+            CheckInstance();
+            SetUpDafnyOptions();
 
-            // Apply args for counter example 
-            var listArgs = args.ToList();
-            listArgs.Add("/mv:" + CounterExampleDefaultModelFile.FilePath);
-            ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
+            var succeeded = Parse() && Resolve() && Translate() && Boogie();
 
-            if (Parse() && Resolve() && Translate() && Boogie())
-                status = TranslationStatus.Boogied;
+            CollectDiagnosticsFromReporter();
 
-            CollectErrorsFromReporter();
-
+            if (succeeded && !HasErrors)
+            {
+                status = TranslationStatus.Verified;
+            }
             var result = new TranslationResult
             {
-                Errors = Errors,
+                DiagnosticElements = DiagnosticElements,
                 BoogiePrograms = boogiePrograms,
                 DafnyProgram = dafnyProgram,
-                // Keep track of the process state todo #148
                 TranslationStatus = status
             };
             return result;
         }
 
+        private void SetUpDafnyOptions()
+        {
+            DafnyOptions.Install(new DafnyOptions(reporter));
+            DafnyOptions.Clo.ApplyDefaultOptions();
+            DafnyOptions.O.ModelViewFile = CounterExampleDefaultModelFile.FilePath;
+
+        }
+
         /// <summary>
-        /// Calls Dafny parser.
+        /// Calls Dafny parser. Will find Lexer DiagnosticElements.
         /// </summary>
         private bool Parse()
         {
@@ -119,16 +129,20 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        ///  Calls Dany resolver 
+        ///  Calls Dany resolver. Will find semantic errors.
         /// </summary>
         private bool Resolve()
         {
             var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
             resolver.ResolveProgram(dafnyProgram);
 
-            bool success = (reporter.Count(ErrorLevel.Error) == 0); 
-            if (success) status = TranslationStatus.Resolved;
-            return success;
+            bool success = (reporter.Count(ErrorLevel.Error) == 0);
+            if (success)
+            {
+                status = TranslationStatus.Resolved;
+            }
+        
+        return success;
         }
 
         /// <summary>
@@ -143,8 +157,7 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        /// In case there are multiple Boogie programs,
-        /// verify them all. 
+        /// Just calls BoogieOnce for each of the Boogie Programs.
         /// </summary>
         /// <returns></returns>
         private bool Boogie()
@@ -160,7 +173,7 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        /// Prove correctness with Boogie for a single Boogie program.  
+        /// Prove correctness with Boogie for a single Boogie program. Finds logical errors.
         /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
@@ -176,11 +189,12 @@ namespace DafnyLanguageServer.DafnyAccess
                 var ps = new PipelineStatistics();
                 var stringteil = "ServerProgram_" + moduleName;
                 var time = DateTime.UtcNow.Ticks.ToString();
-                var a = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddErrorToList, time);
+                var a = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddBoogieErrorToList, time);
                 switch (a)
                 {
                     case PipelineOutcome.Done:
                     case PipelineOutcome.VerificationCompleted:
+                        status = TranslationStatus.Boogied;
                         return true;
                 }
             }

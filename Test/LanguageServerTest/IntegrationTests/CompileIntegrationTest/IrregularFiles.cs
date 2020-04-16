@@ -11,14 +11,14 @@ namespace CompileIntegrationTest
         public void Inexistant_File()
         {
             RunCompilation(Files.int_inexistant);
-            VerifyResults(true, false, failMsg + "Dafny Source File does not exist");
+            VerifyLoosely(true, false, "Could not locate file");
         }
 
         [Test]
         public void Empty_File()
         {
             RunCompilation(Files.cp_empty);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into empty.dll");
         }
 
     }

@@ -12,28 +12,28 @@ namespace CompileIntegrationTest
         public void Java()
         {
             RunCompilation(Files.cp_otherlang_java);
-            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+            VerifyResults(true, false, failPrefix + "Can only compile .dfy files");
         }
 
         [Test]
         public void Java_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_java_dfyending);
-            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: EOF expected");
         }
 
         [Test]
         public void Py()
         {
             RunCompilation(Files.cp_otherlang_py);
-            VerifyResults(true, false, failMsg + "Can only compile .dfy files");
+            VerifyResults(true, false, failPrefix + "Can only compile .dfy files");
         }
 
         [Test]
         public void Py_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_py_dfyending);
-            VerifyResults(true, false, failMsg + "EOF expected in line 1.");
+            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: EOF expected");
         }
 
 

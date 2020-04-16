@@ -117,6 +117,11 @@ namespace TestCommons
         public static readonly string vc_re_type = CreateTestfilePath("verification/resolver_undeclaredType.dfy");
         public static readonly string vc_re_identifier = CreateTestfilePath("verification/resolver_identifier.dfy");
 
+        public static readonly string vc_warning = CreateTestfilePath("verification/include_includer_warning.dfy");
+
+
+        
+
         private static string CreateTestfilePath(string s)
         {
             var path = AddTestFolderPrefix(s);

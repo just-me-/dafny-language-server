@@ -1,6 +1,5 @@
 ﻿using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.Services;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;

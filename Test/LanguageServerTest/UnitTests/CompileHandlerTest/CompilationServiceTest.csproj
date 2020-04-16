@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -23,6 +23,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
     <ProjectReference Include="..\..\TestCommons\TestCommons.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BoogieExecutionEngine">
+      <HintPath>..\..\..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

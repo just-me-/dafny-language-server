@@ -7,7 +7,7 @@ namespace DafnyLanguageServer.FileManager
 {
     public class TranslationResult
     {
-        public List<DiagnosticError> Errors { get; set;  } = new List<DiagnosticError>();
+        public List<DiagnosticElement> DiagnosticElements { get; set;  } = new List<DiagnosticElement>();
 
         public Microsoft.Dafny.Program DafnyProgram { get; set; }
         public IEnumerable<Tuple<string, MSBoodie.Program>> BoogiePrograms { get; set; }

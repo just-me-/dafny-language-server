@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.IO;
-using System.Windows;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
-namespace DafnyLanguageServer
+namespace DafnyLanguageServer.ProgramServices
 {
     /// <summary>
     /// This is a reader service for the server configuration file. It is used once by the server start up. 

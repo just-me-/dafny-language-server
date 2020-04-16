@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DafnyServer", "DafnyServer\DafnyServer.csproj", "{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompileHandlerTest", "..\Test\LanguageServerTest\UnitTests\CompileHandlerTest\CompileHandlerTest.csproj", "{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompilationServiceTest", "..\Test\LanguageServerTest\UnitTests\CompileHandlerTest\CompilationServiceTest.csproj", "{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompletionHandlerTest", "..\Test\LanguageServerTest\UnitTests\CompletionHandlerTest\CompletionHandlerTest.csproj", "{ECC14F2B-938A-460C-9347-54C410766500}"
 EndProject
@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCommons", "..\Test\Lang
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgramTest", "..\Test\LanguageServerTest\UnitTests\ProgramTest\ProgramTest.csproj", "{112E7353-C042-459C-9437-FC8C856F3E5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CounterExampleProviderUnitTest", "..\Test\LanguageServerTest\UnitTests\CounterExampleProviderUnitTest\CounterExampleProviderUnitTest.csproj", "{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CounterExampleProviderUnitTest", "..\Test\LanguageServerTest\UnitTests\CounterExampleProviderUnitTest\CounterExampleProviderUnitTest.csproj", "{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

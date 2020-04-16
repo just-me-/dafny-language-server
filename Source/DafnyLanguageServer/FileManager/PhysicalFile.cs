@@ -1,6 +1,8 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -13,8 +15,26 @@ namespace DafnyLanguageServer.FileManager
     public class PhysicalFile
     {
         public Uri Uri { get; set; }
-        // note that his can not be just a toString of the Uri 
-        public string Filepath { get; set; }
+        private string _filepath;
+        public string Filepath
+        {
+            //for some reason, Uri.LocalPath sometimes puts a "/" in front of windows paths.
+            //we need to correct this here.
+            get
+            {
+                var windowsCorrectionPattern = @"/\w:[/\\].*";  //finds /C:/blabla  and /C:\blabla
+                var match = Regex.Match(_filepath, windowsCorrectionPattern);
+                if (match.Success)
+                {
+                    return _filepath.Substring(1);
+                }
+                return _filepath;
+            }
+            set => _filepath = value;
+        }
+
+        public string FileName => Path.GetFileName(Filepath);
+
         public string Sourcecode { get; set; }
     }
 }

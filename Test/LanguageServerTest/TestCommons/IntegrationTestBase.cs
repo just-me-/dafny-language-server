@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Client;
@@ -32,7 +33,7 @@ namespace TestCommons
             CancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
 
             log = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -51,8 +52,9 @@ namespace TestCommons
                 cancellationToken: CancellationSource.Token
             ).Wait();
 
-            Thread.Sleep(1000);
-            log.Information("*** Language server has been successfully initialized.");
+            log.Information("Language server has been successfully initialized.");
+            log.Information("Running Test: " + Assembly.GetExecutingAssembly().FullName);
+
         }
 
         [TearDown]

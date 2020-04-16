@@ -12,14 +12,14 @@ namespace CompileIntegrationTest
         public void FailureAssertionViolation()
         {
             RunCompilation(Files.cp_assertion);
-            VerifyResults(true, false, failMsg + "assertion violation in line 7.");
+            VerifyResults(true, false, failPrefix + "[L7:C13] Logical Error: assertion violation");
         }
 
         [Test]
         public void FailurePostconditionViolation()
         {
             RunCompilation(Files.cp_postcondition);
-            VerifyResults(true, false, failMsg + "BP5003: A postcondition might not hold on this return path. in line 4.");
+            VerifyResults(true, false, failPrefix + "[L4:C1] Logical Error: A postcondition might not hold on this return path");
         }
 
 

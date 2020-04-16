@@ -64,7 +64,7 @@ namespace CompletionHandlerTest
             throw new NotImplementedException();
         }
 
-        public List<DiagnosticError> GetErrors()
+        public List<DiagnosticElement> GetErrors()
         {
             throw new NotImplementedException();
         }

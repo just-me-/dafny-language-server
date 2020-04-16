@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.Services;
+using DafnyLanguageServer.HandlerServices;
 using TestCommons;
 using Files = TestCommons.Paths;
 

@@ -4,7 +4,9 @@ using DafnyServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CounterExampleProvider = DafnyLanguageServer.Services.CounterExampleProvider;
+using System.Threading.Tasks;
+using DafnyLanguageServer.HandlerServices;
+using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.FileManager
@@ -18,7 +20,7 @@ namespace DafnyLanguageServer.FileManager
     public class FileRepository
     {
         public PhysicalFile PhysicalFile { get; set; }
-        public TranslationResult Result { get; private set; }
+        public TranslationResult Result { get; set; }
 
         public void UpdateFile(string sourceCodeOfFile)
         {
@@ -55,30 +57,40 @@ namespace DafnyLanguageServer.FileManager
 
         public CounterExampleResults CounterExample()
         {
-            if (!File.Exists(PhysicalFile.Filepath)) // #313 todo
+            if (!File.Exists(PhysicalFile.Filepath))
             {
-                // throw new FileNotFoundException("CounterExample requires a valid filename. Invalid Path: " + PhysicalFile.Filepath);
+                throw new FileNotFoundException("CounterExample requires a valid filename. Invalid Path: " + PhysicalFile.Filepath);
             }
             
             try
             {
                 if (Result.TranslationStatus >= TranslationStatus.Translated)
                 {
-                    //var boogieProgram = boogiePrograms.First(); // One CE is sufficient.
-                    //BoogieOnce(boogieProgram.Item1, boogieProgram.Item2);
                     return new CounterExampleProvider(PhysicalFile).LoadCounterModel();
                 }
             }
 
             catch (Exception e)
             {
-                Console.WriteLine("Error while collecting models: " + e.Message);
+                throw new InvalidOperationException("Error while collecting models. " + e.Message);
+
             }
 
             return new CounterExampleResults();
         }
-        
 
 
+        public CompilerResults Compile(string[] requestCompilationArguments)
+        {
+            try
+            {
+
+                return new CompilationService(this, requestCompilationArguments).Compile();
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Error while executing compilation. " + e.Message);
+            }
+        }
     }
 }

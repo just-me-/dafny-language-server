@@ -12,6 +12,7 @@ namespace DafnyLanguageServer.DafnyAccess
         Parsed, 
         Resolved, 
         Translated, 
-        Boogied
+        Boogied,
+        Verified
     }
 }

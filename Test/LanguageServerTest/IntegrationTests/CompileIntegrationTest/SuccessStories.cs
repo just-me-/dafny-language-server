@@ -12,21 +12,21 @@ namespace CompileIntegrationTest
         public void SuccessWithExeAsResult()
         {
             RunCompilation(Files.cp_fineEXE);
-            VerifyResults(false, true, successMsg);
+            VerifyResults(false, true, "Compiled assembly into compiles_as_exe.exe");
         }
 
         [Test]
         public void SuccessWithDllAsResult()
         {
             RunCompilation(Files.cp_fineDLL);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into compiles_as_dll.dll");
         }
 
         [Test]
         public void Included_File()
         {
             RunCompilation(Files.ic_basic);
-            VerifyResults(false, false, successMsg);
+            VerifyResults(false, false, "Compiled assembly into basic.dll");
         }
 
     }
