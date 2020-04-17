@@ -54,8 +54,6 @@ namespace TestCommons
                 cancellationToken: CancellationSource.Token
             ).Wait();
 
-            Thread.Sleep(500);
-
             MyLog.Information("Language server has been successfully initialized.");
             MyLog.Information($"Running {Name} Test");
 
@@ -74,9 +72,6 @@ namespace TestCommons
 
             Client.Dispose();
             Server.Dispose();
-
-            Thread.Sleep(500);
-
         }
     }
 }
