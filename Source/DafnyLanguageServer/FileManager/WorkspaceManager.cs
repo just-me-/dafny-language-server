@@ -24,7 +24,9 @@ namespace DafnyLanguageServer.FileManager
             //Generate new fancy Symbol Table for Testing:
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
-                new SymbolTableGenerator(fileRepository.Result.DafnyProgram);
+                var temp = new SymbolTableGenerator(fileRepository.Result.DafnyProgram);
+                var symboltables = temp.SymbolTables; //das ändert sich noch, is ja pro klasse eine table im moment.
+                //würde hie rdann aber so schreiben filerepo.symboltable = TableGenerator.GetTable oder sowas.
 
             }
 
