@@ -11,10 +11,25 @@ namespace DafnyLanguageServer.SymbolTable
     {
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         public SymbolInformation ParentScope { get; set; }
+        public string CurrentModule { get; set; }
+        public SymbolInformation CurrentClass { get; set; }
+
+
 
         public override void Visit(IAstElement o) { }
 
         public override void Leave(IAstElement o) { }
+
+        public override void Visit(ModuleDefinition o)
+        {
+            CurrentModule = o.Name; //falls wir das mal doch brauchen.
+            //muss man hier symbol machen und als parent setzen?
+        }
+
+        public override void Leave(ModuleDefinition o)
+        {
+            CurrentModule = "undefined";
+        }
 
         public override void Visit(ClassDecl o)
         {
@@ -32,11 +47,18 @@ namespace DafnyLanguageServer.SymbolTable
             classSymbol.DeclarationOrigin = classSymbol;  //für class symbol fehlt: usages
             ParentScope = classSymbol;
             SymbolTable.Add(classSymbol);
+
+            CurrentClass = classSymbol;
+
+            //todo evtl heir alle member kurz definieren, weil eine decl auch nach der nutzung kommen kann.
+            //dafür dann unten bei field, method defintiion etc muss man das dann net mehr machen.
+            //lassen wir aber erstmal. erstmal das einfache.
         }
 
         public override void Leave(ClassDecl o)
         {
             ParentScope = ParentScope.Parent;
+            CurrentClass = CurrentClass.Parent;
         }
 
         public override void Visit(Field o)

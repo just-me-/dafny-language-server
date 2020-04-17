@@ -3432,7 +3432,7 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public class ModuleDefinition : INamedRegion, IAttributeBearingDeclaration
+  public class ModuleDefinition : INamedRegion, IAttributeBearingDeclaration, IAstElement
   {
     public readonly IToken tok;
     public IToken BodyStartTok = Token.NoToken;
@@ -3528,6 +3528,16 @@ namespace Microsoft.Dafny {
       IsBuiltinName = isBuiltinName;
       IsToBeVerified = isToBeVerified;
       IsToBeCompiled = isToBeCompiled;
+    }
+
+    public void Accept(Visitor v)
+    {
+        v.Visit(this);
+        foreach (var class1 in AllClasses(TopLevelDecls))
+        {
+            class1.Accept(v);
+        }
+        v.Leave(this);
     }
 
     VisibilityScope visibilityScope;
@@ -6339,6 +6349,15 @@ namespace Microsoft.Dafny {
 
       Args = args;
     }
+
+    public override void Accept(Visitor v)
+    {
+        foreach (var expr in this.Args)
+        {
+            expr.Accept(v);
+        }
+    }
+
     public override IEnumerable<Expression> SubExpressions {
       get {
         foreach (var e in base.SubExpressions) { yield return e; }
@@ -9551,6 +9570,13 @@ namespace Microsoft.Dafny {
 
   public class BinaryExpr : Expression
   {
+
+      public override void Accept(Visitor v)
+      {
+          E0.Accept(v);
+          E1.Accept(v);
+      }
+
     public enum Opcode {
       Iff,
       Imp,
@@ -11563,5 +11589,7 @@ namespace Microsoft.Dafny {
 
         #endregion
 
-    }
+        public abstract void Leave(ModuleDefinition o);
+        public abstract void Visit(ModuleDefinition o);
+  }
 }

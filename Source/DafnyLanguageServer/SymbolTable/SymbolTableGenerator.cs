@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Dafny;
@@ -10,7 +11,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolTableGenerator
     {
         private Microsoft.Dafny.Program dafnyProgram;
-        public List<List<SymbolInformation>> SymbolTables { get; set; } = new List<List<SymbolInformation>>();
+        public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();
 
         public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -22,16 +23,12 @@ namespace DafnyLanguageServer.SymbolTable
         {
             foreach (var module in dafnyProgram.Modules())
             {
-                var allClasses = ModuleDefinition.AllClasses(module.TopLevelDecls);
-                foreach (ClassDecl cd in allClasses)
-                {
-                    var visitor = new VisitorThatGeneratesSymbolTable();
-                    cd.Accept(visitor);
+                var visitor = new VisitorThatGeneratesSymbolTable();
+                module.Accept(visitor);
 
-                    SymbolTables.Add(visitor.SymbolTable);
+                SymbolTables.Add(module.Name, visitor.SymbolTable);
 
-                    string debugMe = CreateReadOut(visitor.SymbolTable);
-                }
+                string debugMe = CreateReadOut(visitor.SymbolTable);
             }
         }
 
