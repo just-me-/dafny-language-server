@@ -74,6 +74,9 @@ namespace TestCommons
 
             Client.Dispose();
             Server.Dispose();
+
+            Thread.Sleep(500);
+
         }
     }
 }

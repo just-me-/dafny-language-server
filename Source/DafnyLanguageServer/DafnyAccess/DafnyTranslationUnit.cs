@@ -21,9 +21,8 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         public DafnyTranslationUnit(PhysicalFile file)
         {
-            this.file = file ?? throw new InvalidOperationException("Internal Error constructing DTU: File must be set");
+            this.file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
         }
-
 
         private TranslationStatus status = TranslationStatus.Virgin;
         private bool dirtyInstance = false; // can only verify once per dafnyProgram
@@ -31,16 +30,16 @@ namespace DafnyLanguageServer.DafnyAccess
         private Microsoft.Dafny.Program dafnyProgram;
         private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
 
-
         #region ErrorReporting
         private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
+        private bool hasErrors;
         public List<DiagnosticElement> DiagnosticElements { get; } = new List<DiagnosticElement>();
-        private bool HasErrors { get; set; }
+
 
         private void AddBoogieErrorToList(ErrorInformation e)
         {
             DiagnosticElements.Add(e.ConvertToErrorInformation());
-            HasErrors = true;
+            hasErrors = true;
         }
 
         private void CollectDiagnosticsFromReporter()
@@ -48,7 +47,7 @@ namespace DafnyLanguageServer.DafnyAccess
             foreach (ErrorMessage e in reporter.AllMessages[ErrorLevel.Error])
             {
                 DiagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
-                HasErrors = true;
+                hasErrors = true;
             }
 
             foreach (ErrorMessage w in reporter.AllMessages[ErrorLevel.Warning])
@@ -89,7 +88,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             CollectDiagnosticsFromReporter();
 
-            if (succeeded && !HasErrors)
+            if (succeeded && !hasErrors)
             {
                 status = TranslationStatus.Verified;
             }

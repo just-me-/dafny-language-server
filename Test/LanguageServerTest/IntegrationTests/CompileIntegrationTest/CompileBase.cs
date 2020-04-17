@@ -45,10 +45,17 @@ namespace CompileIntegrationTest
             Client.TextDocument.DidOpen(testfile, "dfy");
             compilerResults = Client.SendRequest<CompilerResults>(compileKeyword, compilerParams, CancellationSource.Token).Result;
 
-            //Manual Debug stuff:
-            Console.WriteLine("Error = \t" + compilerResults.Error);
-            Console.WriteLine("Exec = \t" + compilerResults.Executable);
-            Console.WriteLine("Msg = \t" + compilerResults.Message);
+            PrintResults();
+        }
+
+        private void PrintResults()
+        {
+            StringBuilder debugMsg = new StringBuilder();
+            debugMsg.AppendLine("Printing Compilation Test Results:");
+            debugMsg.AppendLine("Error = \t" + compilerResults.Error);
+            debugMsg.AppendLine("Exec = \t" + compilerResults.Executable);
+            debugMsg.AppendLine("Msg = \t" + compilerResults.Message);
+            MyLog.Debug(debugMsg.ToString());
         }
 
 
