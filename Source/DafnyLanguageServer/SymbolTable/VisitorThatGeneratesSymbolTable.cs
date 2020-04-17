@@ -117,6 +117,7 @@ namespace DafnyLanguageServer.SymbolTable
         { 
         }
 
+        //local variable are just locally defined vars: var bla:=2
         public override void Visit(LocalVariable o)
         {
             var symbol = new SymbolInformation()
@@ -151,7 +152,47 @@ namespace DafnyLanguageServer.SymbolTable
         {
             //todo siehe oben
         }
-  
+
+        //I encountered these when a declStatemnt is used, within the declartion's update statement, the left side is then a ghost thing.
+        public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar
+        public override void Leave(AutoGhostIdentifierExpr e) { }
+
+        public override void Visit(LiteralExpr e) { } //do nth
+        public override void Leave(LiteralExpr e) { }
+
+        public override void Visit(ApplySuffix e) { } //klammern nach einem methoden-call: do nth, visitor leitet das weiter ans namesegment und co.
+        public override void Leave(ApplySuffix e) { }
+
+        //Name Segment are identifiers, also from methods vor example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
+        public override void Visit(NameSegment e)
+        {
+            var symbol = new SymbolInformation()
+            {
+                Name = e.Name,
+                Type = Type.Variable,  //könnte auch methode sein, wissen wir jetzt halt net mehr, is aber eh bei definitionen wichitger schätz ich ma.
+                Parent = ParentScope,
+                Position = new TokenPosition()
+                {
+                    Token = e.tok,
+                    BodyStartToken = e.tok,
+                    BodyEndToken = e.tok
+                }
+            };
+            symbol.Children = null;
+            var declaration = FindDeclaration(symbol, ParentScope);
+            declaration.Usages.Add(symbol);
+
+            symbol.DeclarationOrigin = declaration;
+            symbol.Usages = null;
+            symbol.Children = null;
+            symbol.Parent = ParentScope;
+
+            SymbolTable.Add(symbol);
+        }
+
+        public override void Leave(NameSegment e)
+        {
+        }
 
         public override void Visit(Expression o)
         {

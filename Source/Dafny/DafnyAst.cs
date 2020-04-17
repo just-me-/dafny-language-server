@@ -5783,9 +5783,14 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v)
     {
       v.Visit(this);
-      foreach (var arg in this.Ins) //das sind die argumente
+      foreach (Formal arg in this.Ins) //das sind die argumente
       {
         arg.Accept(v);
+      }
+
+      foreach (Formal outParam in this.Outs)  //das sind die out values, also so method x() returns (ICHBINSOEINER: int, ICHAUCH: string) {...} //können wir auch als definitionen hernehmen.
+      {
+          outParam.Accept(v);
       }
 
       //todo hier müssten auch out variablen sein, ma kucken noch späte.r
@@ -8726,7 +8731,13 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public LiteralExpr(IToken tok)
+    public override void Accept(Visitor v)
+    {
+        v.Visit(this); //does nothin'
+        v.Leave(this);
+    }
+
+        public LiteralExpr(IToken tok)
       : base(tok) {  // represents the Dafny literal "null"
       Contract.Requires(tok != null);
       this.Value = null;
@@ -8928,6 +8939,12 @@ namespace Microsoft.Dafny {
   {
     public AutoGhostIdentifierExpr(IToken tok, string name)
       : base(tok, name) { }
+
+    public override void Accept(Visitor v)
+    {
+        v.Visit(this); //does nothing since already handled elsewhere.
+        v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -11229,6 +11246,12 @@ namespace Microsoft.Dafny {
       Name = name;
       OptTypeArguments = optTypeArguments;
     }
+
+    public override void Accept(Visitor v)
+    {
+        v.Visit(this);
+        v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -11272,6 +11295,16 @@ namespace Microsoft.Dafny {
       Contract.Requires(lhs != null);
       Contract.Requires(cce.NonNullElements(args));
       Args = args;
+    }
+
+    public override void Accept(Visitor v)
+    {
+        this.Lhs.Accept(v);
+        
+        foreach (var expression in this.Args)
+        {
+            expression.Accept(v);// todo hard untestet... ka was da so für expr kommen
+        }
     }
   }
 
@@ -11500,10 +11533,27 @@ namespace Microsoft.Dafny {
     public abstract void Visit(BlockStmt o);
     public abstract void Leave(BlockStmt o);
 
-    public abstract void Visit(Expression o);  //Expression sollte feingranularer sein. [so literal expression zB]
-    public abstract void Leave(Expression o);
-
     public abstract void Visit(AssignmentRhs o);
     public abstract void Leave(AssignmentRhs o);
-  }
+
+
+
+
+        #region expressions
+        public abstract void Visit(Expression o);  //Expression sollte feingranularer sein. [so literal expression zB]
+        public abstract void Leave(Expression o);
+
+
+        public abstract void Visit(AutoGhostIdentifierExpr e);
+        public abstract void Leave(AutoGhostIdentifierExpr e);
+        public abstract void Visit(LiteralExpr e);
+        public abstract void Leave(LiteralExpr e);
+        public abstract void Visit(ApplySuffix e);
+        public abstract void Leave(ApplySuffix e);
+        public abstract void Visit(NameSegment e);
+        public abstract void Leave(NameSegment e);
+
+        #endregion
+
+    }
 }

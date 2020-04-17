@@ -12,8 +12,8 @@ namespace DafnyLanguageServer.SymbolTable
     {
         public TokenPosition Position { get; set; }
 
-        public int Line => Position.Token.line;
-        public int Col => Position.Token.col;
+        public int? Line => Position?.Token.line;
+        public int? Col => Position?.Token.col;
         public string Name { get; set; }
         public Type Type { get; set; }
         public SymbolInformation Parent { get; set; }
@@ -24,7 +24,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override string ToString()
         {
-            return $"[L{Line}:C{Col}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : [L{DeclarationOrigin?.Line}]{DeclarationOrigin?.Name} | C : {Children?.Count} | U : {Usages?.Count}";
+            return $"[L{Line}:C{Col}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
         }
     }
 
