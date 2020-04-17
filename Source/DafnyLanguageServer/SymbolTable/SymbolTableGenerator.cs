@@ -29,8 +29,21 @@ namespace DafnyLanguageServer.SymbolTable
                     cd.Accept(visitor);
 
                     SymbolTables.Add(visitor.SymbolTable);
+
+                    string debugMe = CreateReadOut(visitor.SymbolTable);
                 }
             }
+        }
+
+        private static string CreateReadOut(List<SymbolInformation> visitorSymbolTable)
+        {
+            StringBuilder b = new StringBuilder();
+            foreach (var symbol in visitorSymbolTable)
+            {
+                b.AppendLine(symbol.ToString());
+            }
+
+            return b.ToString();
         }
     }
 }

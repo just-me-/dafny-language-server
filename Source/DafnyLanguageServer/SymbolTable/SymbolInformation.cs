@@ -21,6 +21,11 @@ namespace DafnyLanguageServer.SymbolTable
         public List<SymbolInformation> Children { get; set; } = new List<SymbolInformation>();
         public List<SymbolInformation> Usages { get; set; } = new List<SymbolInformation>();
         public bool IsDeclaration => DeclarationOrigin == this;
+
+        public override string ToString()
+        {
+            return $"[L{Line}:C{Col}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : [L{DeclarationOrigin?.Line}]{DeclarationOrigin?.Name} | C : {Children?.Count} | U : {Usages?.Count}";
+        }
     }
 
     public enum Type

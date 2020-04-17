@@ -134,6 +134,7 @@ namespace DafnyLanguageServer.SymbolTable
             symbol.Children = null;
             symbol.DeclarationOrigin = symbol;
             symbol.Parent = ParentScope;
+            ParentScope.Children.Add(symbol);
             SymbolTable.Add(symbol);
         }
 
@@ -154,6 +155,15 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
+            //if we already know the symbol by a vardeclstatemnt, skip it.
+            foreach (var symbol in SymbolTable)
+            {
+                if (symbol.Line == o.tok.line && symbol.Col == o.tok.col)
+                {
+                    return;
+                }
+            }
+
             //todo zu grobgranular
             var expressionSymbol = new SymbolInformation()
             {
@@ -167,7 +177,6 @@ namespace DafnyLanguageServer.SymbolTable
                     BodyEndToken = o.tok
                 }
             };
-            ParentScope.Children.Add(expressionSymbol);
             expressionSymbol.Children = null; // cant have children
 
             var declaration = FindDeclaration(expressionSymbol, ParentScope);
@@ -194,7 +203,6 @@ namespace DafnyLanguageServer.SymbolTable
                     BodyEndToken = o.Tok
                 }
             };
-            ParentScope.Children.Add(symbol);
             symbol.Children = null; // cant have children
 
             var declaration = FindDeclaration(symbol, ParentScope);
@@ -227,7 +235,10 @@ namespace DafnyLanguageServer.SymbolTable
 
                 //damit es nicht immer crashed erstmal soft-mässiges handling here:
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-                return new SymbolInformation();
+                return new SymbolInformation()
+                {
+                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*"
+                };
             }
         }
 
