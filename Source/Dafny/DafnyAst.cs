@@ -6452,6 +6452,14 @@ namespace Microsoft.Dafny {
       Contract.Requires(tok != null);
       Contract.Requires(endTok != null);
     }
+
+    public override void Accept(Visitor v)
+    {
+        foreach (AssignmentRhs rhs in this.rhss)
+        {
+            rhs.Accept(v);
+        }
+    }
   }
 
   public class YieldStmt : ProduceStmt
@@ -11303,7 +11311,7 @@ namespace Microsoft.Dafny {
         
         foreach (var expression in this.Args)
         {
-            expression.Accept(v);// todo hard untestet... ka was da so für expr kommen
+            expression.Accept(v); //name segments, binary exprs, etc.
         }
     }
   }

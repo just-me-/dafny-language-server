@@ -90,7 +90,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Nonglobal Variables are things like Method Parameters.
+        /// Nonglobal Variables are Method Parameters. Base Class is Formal.
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
@@ -109,6 +109,7 @@ namespace DafnyLanguageServer.SymbolTable
             symbol.Children = null;
             symbol.DeclarationOrigin = symbol;
             symbol.Parent = ParentScope;
+            ParentScope.Children.Add(symbol);
             SymbolTable.Add(symbol);
         }
 
