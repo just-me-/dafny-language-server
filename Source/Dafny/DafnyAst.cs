@@ -11460,7 +11460,9 @@ namespace Microsoft.Dafny {
   }
 
   // ------------------------------------------------------------------------------------
-  // Visitor Stuff
+  //                               Visitor Stuff
+  // ------------------------------------------------------------------------------------
+
   public interface IAstElement
   {
     void Accept(Visitor v);

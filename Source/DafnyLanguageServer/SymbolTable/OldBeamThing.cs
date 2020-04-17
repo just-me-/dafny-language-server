@@ -10,14 +10,14 @@ namespace DafnyLanguageServer.SymbolTable
 
 
     //Do not use
-    public class MetaDafnySymboltableBaem
+    class OldBeamThing
     {
-        public List<NewSymbolInformation> SymbolTable { get; set; } = new List<NewSymbolInformation>();
+        public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         private DafnyProgram DafnyProgram { get; }
 
         private ModuleDefinition CurrentModule { get; set; }
 
-        public MetaDafnySymboltableBaem(DafnyProgram dafnyProgram)
+        public OldBeamThing(DafnyProgram dafnyProgram)
         {
             DafnyProgram = dafnyProgram;
 
@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public void HandleClass(ClassDecl classDecl)
         {
-            var classSymbol = new NewSymbolInformation()
+            var classSymbol = new SymbolInformation()
             {
                 Name = classDecl.Name,
                 Position = new TokenPosition()
@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 Type = Type.Class
             };
             classSymbol.DeclarationOrigin = classSymbol;
-            classSymbol.Children = new List<NewSymbolInformation>();     //für class symbol fehlt: usages
+            classSymbol.Children = new List<SymbolInformation>();     //für class symbol fehlt: usages
 
             foreach (var member in classDecl.Members)
             {
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        public void HandleClassMemberDeklaration(MemberDecl member, NewSymbolInformation parent)
+        public void HandleClassMemberDeklaration(MemberDecl member, SymbolInformation parent)
         {
             switch (member)
             {
@@ -70,9 +70,9 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        public void HandleField(Field memberAsField, NewSymbolInformation parent)
+        public void HandleField(Field memberAsField, SymbolInformation parent)
         {
-            var fieldSymbol = new NewSymbolInformation()
+            var fieldSymbol = new SymbolInformation()
             {
                 Name = memberAsField.Name,
                 Type = Type.Field,
@@ -90,9 +90,9 @@ namespace DafnyLanguageServer.SymbolTable
             
         }
 
-        public void HandleMethod(Method memberAsMethod, NewSymbolInformation parent)
+        public void HandleMethod(Method memberAsMethod, SymbolInformation parent)
         {
-            var methodSymbol = new NewSymbolInformation()
+            var methodSymbol = new SymbolInformation()
             {
                 Name = memberAsMethod.Name,
                 Type = Type.Field,
@@ -123,7 +123,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-        public void HandleStatement(Statement s, NewSymbolInformation parent)
+        public void HandleStatement(Statement s, SymbolInformation parent)
         {
             
             switch (s)  //alle die mit visitor umgehen.
@@ -161,11 +161,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        public void HandleVarDeclStmt(VarDeclStmt vds, NewSymbolInformation parent)
+        public void HandleVarDeclStmt(VarDeclStmt vds, SymbolInformation parent)
         {
             foreach (var localVar in vds.Locals)
             {
-                var variableSymbol = new NewSymbolInformation()
+                var variableSymbol = new SymbolInformation()
                 {
                     Name = localVar.Name,     //es gäbe unique name - evtl geiler wegen shadowing
                     Type = Type.Variable,
@@ -185,11 +185,11 @@ namespace DafnyLanguageServer.SymbolTable
             HandleUpdateStatment(vds.Update, parent);
         }
 
-        public void HandleUpdateStatment(ConcreteUpdateStatement us, NewSymbolInformation parent)
+        public void HandleUpdateStatment(ConcreteUpdateStatement us, SymbolInformation parent)
         {
             foreach (Expression e in us.Lhss)
             {
-                var expressionSymbol = new NewSymbolInformation()
+                var expressionSymbol = new SymbolInformation()
                 {
                     Name = e.tok.val,
                     Type = Type.Variable,
@@ -215,7 +215,7 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     if (rx is ExprRhs re)
                     {
-                        var expressionSymbol = new NewSymbolInformation()
+                        var expressionSymbol = new SymbolInformation()
                         {
                             Name = re.Tok.val, //gabs da kein name?
                             Type = Type.Variable,
@@ -240,9 +240,9 @@ namespace DafnyLanguageServer.SymbolTable
 
         }
 
-        private NewSymbolInformation FindDeclaration(NewSymbolInformation target, NewSymbolInformation parent)
+        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation parent)
         {
-            foreach (NewSymbolInformation s in parent.Children)
+            foreach (SymbolInformation s in parent.Children)
             {
                 if (s.Name == target.Name && s.IsDeclaration) return s;
             }
@@ -254,7 +254,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 //fujnzt noch nicht, z.b. bei methjodenargumenten.
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-                return new NewSymbolInformation();
+                return new SymbolInformation();
             }
         }
     }

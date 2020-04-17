@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyServer;
-using SymbolInformation = DafnyServer.SymbolTable.SymbolInformation;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -56,7 +55,7 @@ namespace DafnyLanguageServer.Handler
             });
         }
 
-        public CompletionList ConvertListToCompletionresponse(List<SymbolInformation> symbols, CompletionParams request)
+        public CompletionList ConvertListToCompletionresponse(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbols, CompletionParams request)
         {
             var complitionItems = new List<CompletionItem>();
             foreach (var symbol in symbols)

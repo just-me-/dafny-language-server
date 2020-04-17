@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -118,8 +118,8 @@
       <HintPath>..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
     </Reference>
     <Reference Include="BoogieGraph">
-		<HintPath>..\..\..\boogie\Binaries\BoogieGraph.dll</HintPath>
-	</Reference>
+      <HintPath>..\..\..\boogie\Binaries\BoogieGraph.dll</HintPath>
+    </Reference>
     <Reference Include="BoogieParserHelper">
       <HintPath>..\..\..\boogie\Binaries\BoogieParserHelper.dll</HintPath>
     </Reference>
@@ -142,7 +142,7 @@
   <ItemGroup>
     <Compile Include="CounterExampleProvider.cs" />
     <Compile Include="DafnyHelper.cs" />
-    <Compile Include="SymbolTable.cs" />
+    <Compile Include="OldSymbolTable.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="VerificationTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

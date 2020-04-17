@@ -26,8 +26,6 @@ namespace DafnyLanguageServer.FileManager
             {
                 new SymbolTableGenerator(fileRepository.Result.DafnyProgram);
 
-                //new MetaDafnySymboltableBaem(fileRepository.Result.DafnyProgram); //#fancy.
-
             }
 
             return fileRepository;

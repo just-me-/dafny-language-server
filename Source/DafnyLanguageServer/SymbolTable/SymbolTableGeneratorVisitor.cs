@@ -7,10 +7,10 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    class SymbolTableGeneratorVisitor : Visitor
+    public class SymbolTableGeneratorVisitor : Visitor
     {
-        public List<NewSymbolInformation> SymbolTable { get; set; } = new List<NewSymbolInformation>();
-        public NewSymbolInformation ParentScope { get; set; }
+        public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
+        public SymbolInformation ParentScope { get; set; }
 
         public override void Visit(IAstElement o) {
         }
@@ -20,7 +20,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ClassDecl o)
         {
-            var classSymbol = new NewSymbolInformation()
+            var classSymbol = new SymbolInformation()
             {
                 Name = o.Name,
                 Position = new TokenPosition()
@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Field o)
         {
-            var fieldSymbol = new NewSymbolInformation()
+            var fieldSymbol = new SymbolInformation()
             {
                 Name = o.Name,
                 Type = Type.Field,
@@ -66,7 +66,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Method o)
         {
-            var methodSymbol = new NewSymbolInformation()
+            var methodSymbol = new SymbolInformation()
             {
                 Name = o.Name,
                 Type = Type.Field,
@@ -96,7 +96,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
-            var symbol = new NewSymbolInformation()
+            var symbol = new SymbolInformation()
             {
                 Name = o.Name,
                 Type = Type.Variable,
@@ -121,7 +121,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(LocalVariable o)
         {
-            var symbol = new NewSymbolInformation()
+            var symbol = new SymbolInformation()
             {
                 Name = o.Name, //höätte auch son unique name und so.
                 Type = Type.Variable,
@@ -155,7 +155,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
-            var expressionSymbol = new NewSymbolInformation()
+            var expressionSymbol = new SymbolInformation()
             {
                 Name = o.tok.val,
                 Type = Type.Variable,
@@ -182,7 +182,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(AssignmentRhs o)
         {
-            var symbol = new NewSymbolInformation()
+            var symbol = new SymbolInformation()
             {
                 Name = o.Tok.val,
                 Type = Type.Variable,
@@ -210,9 +210,9 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs.
-        private NewSymbolInformation FindDeclaration(NewSymbolInformation target, NewSymbolInformation scope)  //evtl bei leave iwie
+        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
         {
-            foreach (NewSymbolInformation s in scope.Children)
+            foreach (SymbolInformation s in scope.Children)
             {
                 if (s.Name == target.Name && s.IsDeclaration) return s;
             }
@@ -225,7 +225,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 //fujnzt noch nicht, z.b. bei methjodenargumenten.
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-                return new NewSymbolInformation();
+                return new SymbolInformation();
             }
         }
 

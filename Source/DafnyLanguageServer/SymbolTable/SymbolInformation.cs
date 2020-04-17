@@ -8,7 +8,7 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    public class NewSymbolInformation
+    public class SymbolInformation
     {
         public TokenPosition Position { get; set; }
 
@@ -16,10 +16,10 @@ namespace DafnyLanguageServer.SymbolTable
         public int Col => Position.Token.col;
         public string Name { get; set; }
         public Type Type { get; set; }
-        public NewSymbolInformation Parent { get; set; }
-        public NewSymbolInformation DeclarationOrigin { get; set; }
-        public List<NewSymbolInformation> Children { get; set; } = new List<NewSymbolInformation>();
-        public List<NewSymbolInformation> Usages { get; set; } = new List<NewSymbolInformation>();
+        public SymbolInformation Parent { get; set; }
+        public SymbolInformation DeclarationOrigin { get; set; }
+        public List<SymbolInformation> Children { get; set; } = new List<SymbolInformation>();
+        public List<SymbolInformation> Usages { get; set; } = new List<SymbolInformation>();
         public bool IsDeclaration => DeclarationOrigin == this;
     }
 

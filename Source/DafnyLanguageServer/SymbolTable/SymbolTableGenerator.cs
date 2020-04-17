@@ -9,7 +9,16 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public class SymbolTableGenerator
     {
+        private Microsoft.Dafny.Program dafnyProgram;
+        public List<List<SymbolInformation>> SymbolTables { get; set; } = new List<List<SymbolInformation>>();
+
         public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)
+        {
+            this.dafnyProgram = dafnyProgram;
+            GenerateTable();
+        }
+
+        public void GenerateTable()
         {
             foreach (var module in dafnyProgram.Modules())
             {
@@ -18,6 +27,8 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     var visitor = new SymbolTableGeneratorVisitor();
                     cd.Accept(visitor);
+
+                    SymbolTables.Add(visitor.SymbolTable);
                 }
             }
         }
