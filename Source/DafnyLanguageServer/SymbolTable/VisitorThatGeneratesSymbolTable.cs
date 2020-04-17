@@ -7,16 +7,14 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    public class SymbolTableGeneratorVisitor : Visitor
+    public class VisitorThatGeneratesSymbolTable : Visitor
     {
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         public SymbolInformation ParentScope { get; set; }
 
-        public override void Visit(IAstElement o) {
-        }
+        public override void Visit(IAstElement o) { }
 
-        public override void Leave(IAstElement o) {
-        }
+        public override void Leave(IAstElement o) { }
 
         public override void Visit(ClassDecl o)
         {
@@ -145,6 +143,7 @@ namespace DafnyLanguageServer.SymbolTable
     public override void Visit(BlockStmt o)
         {
             //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket 46548
+            //..> BlockStmt als eigenes special-symbol handhaben, welches dann parent sein kann.
         }
 
         public override void Leave(BlockStmt o)
@@ -155,6 +154,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
+            //todo zu grobgranular
             var expressionSymbol = new SymbolInformation()
             {
                 Name = o.tok.val,
@@ -209,7 +209,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-        //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs.
+        //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs. [glaub das ist wegen Left hand side vergessen]
         private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
         {
             foreach (SymbolInformation s in scope.Children)
@@ -224,6 +224,8 @@ namespace DafnyLanguageServer.SymbolTable
             else
             {
                 //fujnzt noch nicht, z.b. bei methjodenargumenten.
+
+                //damit es nicht immer crashed erstmal soft-mässiges handling here:
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
                 return new SymbolInformation();
             }

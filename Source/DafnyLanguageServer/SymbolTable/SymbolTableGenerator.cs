@@ -25,7 +25,7 @@ namespace DafnyLanguageServer.SymbolTable
                 var allClasses = ModuleDefinition.AllClasses(module.TopLevelDecls);
                 foreach (ClassDecl cd in allClasses)
                 {
-                    var visitor = new SymbolTableGeneratorVisitor();
+                    var visitor = new VisitorThatGeneratesSymbolTable();
                     cd.Accept(visitor);
 
                     SymbolTables.Add(visitor.SymbolTable);

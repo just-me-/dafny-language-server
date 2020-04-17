@@ -6696,7 +6696,9 @@ namespace Microsoft.Dafny {
       foreach (var localVar in this.Locals) {
         localVar.Accept(v);
       }
+
       this.Update.Accept(v);
+
     }
 
     public override IEnumerable<Statement> SubStatements {
@@ -6758,12 +6760,6 @@ namespace Microsoft.Dafny {
       Lhss = lhss;
     }
 
-    public override void Accept(Visitor v) {
-      foreach (Expression e in this.Lhss) {
-        e.Accept(v);
-      }
-      this.Accept(v);
-    }
   }
 
   public class AssignSuchThatStmt : ConcreteUpdateStatement
@@ -6849,11 +6845,18 @@ namespace Microsoft.Dafny {
       Rhss = rhss;
       CanMutateKnownState = mutate;
     }
-    public override void Accept(Visitor v) { //TODO lhs
-      foreach (AssignmentRhs rhs in this.Rhss) {
-        rhs.Accept(v);
+    public override void Accept(Visitor v) {
+        //lhs müsste man eig nur wenn es kein vardecl is, aber besser im visit das iwie handlen schätz ich.
+      foreach (var lhs in this.Lhss)
+      {
+          lhs.Accept(v);
       }
-    }
+
+      foreach (AssignmentRhs rhs in this.Rhss)
+      {
+          rhs.Accept(v);
+      }
+        }
   }
 
   public class AssignOrReturnStmt : ConcreteUpdateStatement

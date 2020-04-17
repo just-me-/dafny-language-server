@@ -213,7 +213,7 @@
     <Compile Include="Services\DiagnosticsService.cs" />
     <Compile Include="SymbolTable\SymbolInformation.cs" />
     <Compile Include="SymbolTable\SymbolTableGenerator.cs" />
-    <Compile Include="SymbolTable\SymbolTableGeneratorVisitor.cs" />
+    <Compile Include="SymbolTable\VisitorThatGeneratesSymbolTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
