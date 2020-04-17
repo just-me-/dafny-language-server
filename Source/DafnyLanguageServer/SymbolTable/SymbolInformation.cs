@@ -30,6 +30,7 @@ namespace DafnyLanguageServer.SymbolTable
 
     public enum Type
     {
+        Module,
         Class,
         Method,
         Function,

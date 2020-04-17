@@ -6594,6 +6594,18 @@ namespace Microsoft.Dafny {
   /// </summary>
   public class TypeRhs : AssignmentRhs
   {
+
+      public override void Accept(Visitor v)
+      {
+          v.Visit(this);
+          foreach (var arg in this.Arguments)    //new MyClass(a, b, c) -> visit all args
+          {
+              arg.Accept(v);
+          }
+          this.InitCall.Accept(v); //nmet sicher was das is.
+          //hätte noch so array sachen. für später. vgl oben den langen kommentar.
+          v.Leave(this);
+      }
     /// <summary>
     /// If ArrayDimensions != null, then the TypeRhs represents "new EType[ArrayDimensions]",
     ///     ElementInit is non-null to represent "new EType[ArrayDimensions] (elementInit)",
@@ -11591,5 +11603,7 @@ namespace Microsoft.Dafny {
 
         public abstract void Leave(ModuleDefinition o);
         public abstract void Visit(ModuleDefinition o);
+        public abstract void Visit(TypeRhs e);
+        public abstract void Leave(TypeRhs e);
   }
 }

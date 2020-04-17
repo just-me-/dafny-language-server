@@ -11,7 +11,7 @@ namespace DafnyLanguageServer.SymbolTable
     {
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         public SymbolInformation ParentScope { get; set; }
-        public string CurrentModule { get; set; }
+        public SymbolInformation CurrentModule { get; set; }
         public SymbolInformation CurrentClass { get; set; }
 
 
@@ -22,13 +22,31 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ModuleDefinition o)
         {
-            CurrentModule = o.Name; //falls wir das mal doch brauchen.
-            //muss man hier symbol machen und als parent setzen?
+            var symbol = new SymbolInformation()
+            {
+                Name = o.Name,
+                Type = Type.Module,
+                Position = new TokenPosition()
+                {
+                    Token = o.tok,
+                    BodyStartToken = o.BodyStartTok,
+                    BodyEndToken = o.BodyEndTok
+                }
+
+            };
+            symbol.DeclarationOrigin = symbol;
+            symbol.Usages = null;
+            SymbolTable.Add(symbol);
+
+            ParentScope = symbol;
+            CurrentModule = symbol;
+
         }
 
         public override void Leave(ModuleDefinition o)
         {
-            CurrentModule = "undefined";
+            CurrentModule = null;
+            ParentScope = null;
         }
 
         public override void Visit(ClassDecl o)
@@ -44,7 +62,9 @@ namespace DafnyLanguageServer.SymbolTable
                 },
                 Type = Type.Class
             };
-            classSymbol.DeclarationOrigin = classSymbol;  //für class symbol fehlt: usages
+            classSymbol.Parent = ParentScope;
+            ParentScope.Children.Add(classSymbol);
+            classSymbol.DeclarationOrigin = classSymbol;
             ParentScope = classSymbol;
             SymbolTable.Add(classSymbol);
 
@@ -175,6 +195,40 @@ namespace DafnyLanguageServer.SymbolTable
         {
             //todo siehe oben
         }
+
+        public override void Visit(TypeRhs e)
+        {
+            UserDefinedType t = null;
+            if (e.Type is UserDefinedType type)   //naja was kann denn sonst noch komen???
+                t = type;
+
+            var symbol = new SymbolInformation()
+            {
+                
+                Name = t.Name, 
+                Type = Type.Class,
+                Parent = ParentScope,
+                Position = new TokenPosition()
+                {
+                    Token = t.tok,
+                    BodyStartToken = e.Tok,
+                    BodyEndToken = t.tok
+                }
+            };
+            symbol.Children = null;
+            symbol.Usages = null;
+            symbol.Parent = ParentScope;
+
+            //ctor der basisklasse usages +1
+            //Declaration bei classdecl setzen.
+            var declaration = FindDeclaration(symbol, ParentScope);
+            declaration.Usages.Add(symbol);
+
+            symbol.DeclarationOrigin = declaration; //müsste eig den ctor nehmen vlt aber, naja, geht auch so (und ist einfacher9.
+
+            SymbolTable.Add(symbol);
+        } 
+        public override void Leave(TypeRhs e) { }
 
         //I encountered these when a declStatemnt is used, within the declartion's update statement, the left side is then a ghost thing.
         public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar
