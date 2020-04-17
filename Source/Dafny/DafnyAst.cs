@@ -5780,15 +5780,20 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)          //braucht es diese abstrakten dinger???
+    public override void Accept(Visitor v)
     {
       v.Visit(this);
-      foreach (var arg in this.Ins) //ich glaube, das sind die argumente
+      foreach (var arg in this.Ins) //das sind die argumente
       {
         arg.Accept(v);
       }
 
-      this.Body.Accept(v);
+      //todo hier müssten auch out variablen sein, ma kucken noch späte.r
+
+      foreach (var stmt in this.Body.Body)
+      {
+          stmt.Accept(v);
+      }
 
       v.Leave(this);
     }
