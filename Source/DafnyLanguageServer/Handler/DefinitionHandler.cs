@@ -6,6 +6,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -17,8 +18,8 @@ namespace DafnyLanguageServer.Handler
     {
         private DefinitionCapability _capability;
 
-        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-        : base(router, workspaceManager)
+        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        : base(router, workspaceManager, loggingFactory)
         {
         }
 

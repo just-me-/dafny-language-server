@@ -32,10 +32,35 @@ namespace DafnyLanguageServer
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //configReader.PrintState();
 
-            log = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+            var loggerconfig = new LoggerConfiguration();
+
+            switch (configReader.Loglevel)
+            {
+                case LogLevel.Trace:
+                    loggerconfig.MinimumLevel.Verbose();
+                    break;
+                case LogLevel.Debug:
+                    loggerconfig.MinimumLevel.Debug();
+                    break;
+                case LogLevel.Information:
+                    loggerconfig.MinimumLevel.Information();
+                    break;
+                case LogLevel.Warning:
+                    loggerconfig.MinimumLevel.Warning();
+                    break;
+                case LogLevel.Error:
+                default:
+                    loggerconfig.MinimumLevel.Error();
+                    break;
+                case LogLevel.Critical:
+                    loggerconfig.MinimumLevel.Fatal();
+                    break;
+
+            }
+
+            log = loggerconfig
                 .Enrich.FromLogContext()
-                .WriteTo.File(configReader.LogFile, rollingInterval: RollingInterval.Day, fileSizeLimitBytes: 1024 * 1024)
+                .WriteTo.File(configReader.LogFile, fileSizeLimitBytes: 1024 * 1024)
                 .CreateLogger();
         }
         public async Task StartServer()
@@ -49,7 +74,6 @@ namespace DafnyLanguageServer
                     .ConfigureLogging(x => x
                         .AddSerilog(log)
                         .AddLanguageServer()
-                        .SetMinimumLevel(configReader.Loglevel)
                     )
                     // Service group 
                     .WithServices(ConfigureServices)
@@ -61,6 +85,7 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensHandler>()
                     .WithHandler<DefinitionHandler>()
+                    .WithHandler<ShutdownHandler>()
             );
 
             CreateMsgSender(server); 

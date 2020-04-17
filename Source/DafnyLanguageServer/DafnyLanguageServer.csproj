@@ -187,6 +187,7 @@
     <Compile Include="DafnyAccess\TranslationStatus.cs" />
     <Compile Include="DafnyLanguageServer.cs" />
     <Compile Include="HandlerServices\CompilationService.cs" />
+    <Compile Include="Handler\ShutdownHandler.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
     <Compile Include="ProgramServices\ConfigReader.cs" />
     <Compile Include="FileManager\WorkspaceManager.cs" />

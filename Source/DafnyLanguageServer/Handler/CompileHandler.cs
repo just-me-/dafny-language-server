@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.HandlerServices;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -33,10 +34,12 @@ namespace DafnyLanguageServer.Handler
 
 
         private readonly WorkspaceManager _workspaceManager;
+        private readonly ILogger _log;
 
-        public CompileHandler(WorkspaceManager b)
+        public CompileHandler(WorkspaceManager b, ILoggerFactory lg)
         {
             _workspaceManager = b;
+            _log = lg.CreateLogger("");
         }
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)

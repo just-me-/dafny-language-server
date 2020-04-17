@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyServer;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -18,8 +19,8 @@ namespace DafnyLanguageServer.Handler
     {
         private CodeLensCapability _capability;
 
-        public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-            : base(router, workspaceManager)
+        public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+            : base(router, workspaceManager, loggingFactory)
         {
         }
 

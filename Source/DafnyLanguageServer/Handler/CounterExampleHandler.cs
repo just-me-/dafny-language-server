@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -40,10 +41,12 @@ namespace DafnyLanguageServer.Handler
     {
 
         private readonly WorkspaceManager _workspaceManager;
+        private readonly ILogger _log;
 
-        public CounterExampleHandler(WorkspaceManager b)
+        public CounterExampleHandler(WorkspaceManager b, ILoggerFactory loggerFactory)
         {
             _workspaceManager = b;
+            _log = loggerFactory.CreateLogger("");
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)

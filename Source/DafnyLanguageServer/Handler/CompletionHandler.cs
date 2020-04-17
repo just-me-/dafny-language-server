@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyServer;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -18,8 +19,8 @@ namespace DafnyLanguageServer.Handler
     {
         private CompletionCapability _capability;
         
-        public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-            : base(router, workspaceManager)
+        public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+            : base(router, workspaceManager, loggingFactory)
         {
         }
 

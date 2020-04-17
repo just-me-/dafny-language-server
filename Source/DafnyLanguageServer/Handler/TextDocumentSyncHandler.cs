@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -25,8 +26,8 @@ namespace DafnyLanguageServer.Handler
 
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
-        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-            : base(router, workspaceManager)
+        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+            : base(router, workspaceManager, loggingFactory)
         {
         }
 
@@ -53,6 +54,10 @@ namespace DafnyLanguageServer.Handler
         /// </summary>
         private void UpdateFileAndSendDiagnostics(Uri uri, string text)
         {
+            //todo ticket 154 - paar sinnvolle logs machen.
+            //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
+            log.LogError("Hallo???");
+
             FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
             new DiagnosticsService(_router).SendDiagnostics(fileRepository);
         }
