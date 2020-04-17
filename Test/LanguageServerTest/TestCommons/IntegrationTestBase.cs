@@ -19,12 +19,12 @@ namespace TestCommons
         protected LanguageClient Client { get; private set; }
         protected CancellationTokenSource CancellationSource { get; set; }
 
-        private readonly string name;
-        private ServerProcess server;
-        protected ILogger log;
-        protected SerilogLoggerFactory LoggerFactory;
+        private string Name { get; }
+        private ServerProcess Server { get; set; }
+        protected ILogger MyLog { get; set; }
+        protected SerilogLoggerFactory LoggerFactory { get; set; }
 
-        public IntegrationTestBase(string name) => this.name = name;
+        public IntegrationTestBase(string name) => this.Name = name;
 
         [SetUp]
         public void Setup()
@@ -32,45 +32,48 @@ namespace TestCommons
             CancellationSource = new CancellationTokenSource();
             CancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
 
-            log = new LoggerConfiguration()
+            MyLog = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
 
-            LoggerFactory = new SerilogLoggerFactory(log);
+            LoggerFactory = new SerilogLoggerFactory(MyLog);
 
-            server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
+            Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
             {
-                Arguments = $"/log ../Logs/Test_{name}.txt /loglevel 0"
+                Arguments = $"/log ../Logs/Test_{Name}.txt /loglevel 0"
             });
 
-            Client = new LanguageClient(LoggerFactory, server);
+            //Note: Client will log to console, but server always logs to file.
+
+            Client = new LanguageClient(LoggerFactory, Server);
             Client.Initialize(
                 workspaceRoot: Files.testFilesPath,
                 initializationOptions: new { },
                 cancellationToken: CancellationSource.Token
             ).Wait();
 
-            log.Information("Language server has been successfully initialized.");
-            log.Information("Running Test: " + Assembly.GetExecutingAssembly().FullName);
+            Thread.Sleep(500);
+
+            MyLog.Information("Language server has been successfully initialized.");
+            MyLog.Information($"Running {Name} Test");
 
         }
 
         [TearDown]
         public void TearDown()
         {
-            log.Information("Shutting down client...");
-            //client.Shutdown().Wait();   Why exception?? würd mich schon noch wunder nehmen...
+            MyLog.Information("Shutting down client...");
             Task.WhenAny(Client.Shutdown());
-            log.Information("Client shutdown is complete.");
+            MyLog.Information("Client shutdown is complete.");
 
-            log.Information("Shutting down server...");
-            server.Stop().Wait();
-            log.Information("Server shutdown is complete.");
+            MyLog.Information("Shutting down server...");
+            Server.Stop().Wait();
+            MyLog.Information("Server shutdown is complete.");
 
             Client.Dispose();
-            server.Dispose();
+            Server.Dispose();
         }
     }
 }
