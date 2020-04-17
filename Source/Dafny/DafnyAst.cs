@@ -8878,6 +8878,12 @@ namespace Microsoft.Dafny {
       Contract.Requires(tok != null);
     }
 
+    public override void Accept(Visitor v)
+    {
+        v.Visit(this);
+        v.Leave(this);
+    }
+
     /// <summary>
     /// This constructor creates a ThisExpr and sets its Type field to denote the receiver type
     /// of member "m". This constructor is intended to be used by post-resolution code that needs
@@ -11321,6 +11327,15 @@ namespace Microsoft.Dafny {
       this.SuffixName = suffixName;
       OptTypeArguments = optTypeArguments;
     }
+
+    public override void Accept(Visitor v)
+    {
+        this.Lhs.Accept(v); //registers left side, which is expr.
+
+        //creates symbol for right side:
+        v.Visit(this);
+        v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -11573,15 +11588,19 @@ namespace Microsoft.Dafny {
     public abstract void Visit(NonglobalVariable o);
     public abstract void Leave(NonglobalVariable o);
 
-    public abstract void Visit(LocalVariable o);
+    public abstract void Visit(LocalVariable o);                                   //do not auto format this code!!!
     public abstract void Leave(LocalVariable o);
 
     public abstract void Visit(BlockStmt o);
     public abstract void Leave(BlockStmt o);
 
-    public abstract void Visit(AssignmentRhs o);
+        #region rhs
+        public abstract void Visit(AssignmentRhs o);
     public abstract void Leave(AssignmentRhs o);
 
+    public abstract void Visit(TypeRhs e);
+    public abstract void Leave(TypeRhs e);
+        #endregion
 
 
 
@@ -11599,11 +11618,17 @@ namespace Microsoft.Dafny {
         public abstract void Visit(NameSegment e);
         public abstract void Leave(NameSegment e);
 
-        #endregion
 
         public abstract void Leave(ModuleDefinition o);
         public abstract void Visit(ModuleDefinition o);
-        public abstract void Visit(TypeRhs e);
-        public abstract void Leave(TypeRhs e);
-  }
+
+        public abstract void Visit(ExprDotName e);
+        public abstract void Leave(ExprDotName e);
+        public abstract void Visit(ThisExpr e);
+        public abstract void Leave(ThisExpr e);
+        //more todo
+
+        #endregion
+
+    }
 }

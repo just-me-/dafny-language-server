@@ -246,7 +246,7 @@ namespace DafnyLanguageServer.SymbolTable
             var symbol = new SymbolInformation()
             {
                 Name = e.Name,
-                Type = Type.Variable,  //könnte auch methode sein, wissen wir jetzt halt net mehr, is aber eh bei definitionen wichitger schätz ich ma.
+                //Type = Type.Variable,  //könnte auch methode sein, wissen wir jetzt halt net mehr, is aber eh bei definitionen wichitger schätz ich ma. erstma steriehcen.
                 Parent = ParentScope,
                 Position = new TokenPosition()
                 {
@@ -268,6 +268,76 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public override void Leave(NameSegment e)
+        {
+        }
+
+        public override void Visit(ExprDotName e)
+        {
+            
+            var symbol = new SymbolInformation()
+            {
+                Name = e.SuffixName,
+                Parent = ParentScope,
+                Position = new TokenPosition()
+                {
+                    Token = e.tok, //nimmt den ganze, net nur den suffix.
+                    BodyStartToken = e.tok,
+                    BodyEndToken = e.tok
+                }
+            };
+            symbol.Children = null;
+            symbol.Usages = null;
+            symbol.Parent = ParentScope;
+
+            
+            string definingClassName = e.Lhs.Type.ToString();
+            var definingClass = FindDeclaration(definingClassName, ParentScope);  //klappt ads?? dann wär ich ja ein kleines genius der progrmamierkunst.
+
+            var declaration = FindDeclaration(symbol, definingClass);
+            declaration.Usages.Add(symbol);
+
+            symbol.DeclarationOrigin = declaration;
+
+            SymbolTable.Add(symbol);
+        }
+
+        public override void Leave(ExprDotName e)
+        {
+        }
+
+        public override void Visit(ThisExpr e)
+        {
+            //we could also just do nothing, then you couldn't click on "this." for goto def or so.
+            //maybe even better cause many this names may cause trouble or such, i don't know.
+
+            var symbol = new SymbolInformation()
+            {
+                Name = "this",
+                Parent = ParentScope,
+                Position = new TokenPosition()
+                {
+                    Token = e.tok, //nimmt den ganze, net nur den suffix.
+                    BodyStartToken = e.tok,
+                    BodyEndToken = e.tok
+                }
+            };
+            symbol.Children = null;
+            symbol.Usages = null;
+            symbol.Parent = ParentScope;
+
+            
+            string definingClassName = e.Type.ToString();
+            var definingClass = FindDeclaration(definingClassName, ParentScope);  //klappt ads?? dann wär ich ja ein kleines genius der progrmamierkunst. (es klappt)
+
+            var declaration = definingClass;
+            //declaration.Usages.Add(symbol);  //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
+
+            symbol.DeclarationOrigin = declaration;
+
+            SymbolTable.Add(symbol);
+        }
+
+        public override void Leave(ThisExpr e)
         {
         }
 
@@ -336,11 +406,12 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs. [glaub das ist wegen Left hand side vergessen]
-        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
+
+        private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
         {
             foreach (SymbolInformation s in scope.Children)
             {
-                if (s.Name == target.Name && s.IsDeclaration) return s;
+                if (s.Name == target && s.IsDeclaration) return s;
             }
             //if symbol not found in current scope, search scope
             if (scope.Parent != null)
@@ -358,6 +429,10 @@ namespace DafnyLanguageServer.SymbolTable
                     Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*"
                 };
             }
+        }
+        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
+        {
+            return FindDeclaration(target.Name, scope);
         }
 
 
