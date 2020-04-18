@@ -41,7 +41,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
 
@@ -74,7 +73,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
 
@@ -109,7 +107,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: false,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
         }
@@ -134,7 +131,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
 
@@ -167,7 +163,6 @@ namespace DafnyLanguageServer.SymbolTable
                     addUsageAtDeclaration: false,
 
                     canHaveChildren: false,
-                    setAsChildInParent: true,
                     canBeUsed: true
                     );
         }
@@ -192,7 +187,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: false,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
 
@@ -235,7 +229,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -276,7 +269,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -306,7 +298,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -338,7 +329,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,    //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -366,7 +356,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -394,7 +383,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
 
@@ -446,8 +434,6 @@ namespace DafnyLanguageServer.SymbolTable
             bool addUsageAtDeclaration,
 
             bool canHaveChildren,
-            bool setAsChildInParent,
-
             bool canBeUsed,
 
             bool addToSymbolTable = true
@@ -455,8 +441,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             SymbolInformation result = new SymbolInformation();
             result.Name = name;
+            result.Parent = SurroundingScope; //is null for modules
 
-            //Type
             if (type != null)
             {
                 result.Type = (Type) type;
@@ -469,7 +455,6 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Type = Type.Undefined;
             }
 
-            //Position
             result.Position = new TokenPosition()
             {
                 Token = positionAsToken,
@@ -477,18 +462,12 @@ namespace DafnyLanguageServer.SymbolTable
                 BodyEndToken = bodyEndPosAsToken ?? positionAsToken
             };
 
-            //Decl und Usages
             if (canBeUsed)
             {
                 result.Usages = new List<SymbolInformation>();
             }
 
-
-
-
             PerformArgChecks(isDeclaration, declarationSymbol, addUsageAtDeclaration);
-
-
             if (isDeclaration)
             {
                 result.DeclarationOrigin = result;
@@ -497,24 +476,17 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 result.DeclarationOrigin = declarationSymbol;
             }
-
-            if (addUsageAtDeclaration) //todo entspricht eig !isDecl, oder?
+            if (addUsageAtDeclaration) //entspräche !isdecl, ausser bei "this"
             {
                 declarationSymbol.Usages.Add(result);
             }
 
-            //Parent and Children
-            if (result.Type != Type.Module)
-            {
-                result.Parent = SurroundingScope;
-            }
-
-            if (canHaveChildren) //todo verienfachbar? hmm, glaubs doch rechts peizfisch (field net, method ja, blockstmt ja, localvar ne)
+            if (canHaveChildren)
             {
                 result.Children = new List<SymbolInformation>();
             }
 
-            if (setAsChildInParent) //todo entspricht das isDeclaration?
+            if (isDeclaration && type != Type.Module) //all decls, except for top level modules, are a child
             {
                 SurroundingScope.Children.Add(result);
             }
