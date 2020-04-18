@@ -24,8 +24,8 @@ namespace DafnyLanguageServer.DafnyAccess
     /// </summary>
     public class CounterExampleProvider
     {
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
-        public static string ModelBvd = Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
+        private static readonly string _assemblyPath = Path.GetDirectoryName(typeof(CounterExampleProvider).Assembly.Location);
+        public static string ModelBvd = Path.GetFullPath(Path.Combine(_assemblyPath, "../model.bvd"));
 
         private string Source { get; }
         public CounterExampleProvider(PhysicalFile file)
@@ -100,7 +100,6 @@ namespace DafnyLanguageServer.DafnyAccess
                     return state;
                 }
             } 
-
             throw new InvalidOperationException("specific Model does not contain a :initial state");
         }
 
@@ -129,8 +128,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private void AddPosition(CounterExample ce, string stateCapturedStateName)
         {
-
-            const string regex = @".*dfy\((\d+),(\d+)\)";   //anything, then dfy(00,00)
+            const string regex = @".*dfy\((\d+),(\d+)\)"; // anything, then dfy(00,00)
             var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var m = r.Match(stateCapturedStateName);
             if (m.Success)
@@ -149,7 +147,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private static string RemoveBrackets(string s)
         {
-            const string regex = @"\((.*)\)";       //anything surrounded by brackets at the beginning and the end
+            const string regex = @"\((.*)\)"; // anything surrounded by brackets at the beginning and the end
             var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var m = r.Match(s);
 

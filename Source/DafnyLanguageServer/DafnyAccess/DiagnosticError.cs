@@ -33,7 +33,6 @@ namespace DafnyLanguageServer.DafnyAccess
 
     public static class ConverterExtensions
     {
-
         public static DiagnosticError ConvertToErrorInformation(this ErrorMessage eMsg)
         {
             return new DiagnosticError(eMsg.token, "Syntax Error: " + eMsg.message);
@@ -44,7 +43,6 @@ namespace DafnyLanguageServer.DafnyAccess
             if (eInfo is null) return null;
             return new DiagnosticError(eInfo.Tok, "Logical Error: " + eInfo.Msg)
             {
-           
                 Aux = eInfo.Aux
             };
         }
