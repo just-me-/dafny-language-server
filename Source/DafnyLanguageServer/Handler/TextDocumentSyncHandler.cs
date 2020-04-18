@@ -19,10 +19,8 @@ namespace DafnyLanguageServer.Handler
     ///  Whenever this is the case, the intern <c>WorkspaceManager</c> gets updated.
     ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository. 
     /// </summary>
-    internal class TextDocumentSyncHandler : LspBasicHandler, ITextDocumentSyncHandler
+    internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        private SynchronizationCapability _capability; //needed by omnisharp
-
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
@@ -37,10 +35,6 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 SyncKind = Change
             };
-        }
-        public void SetCapability(SynchronizationCapability capability)
-        {
-            _capability = capability;
         }
 
         public TextDocumentAttributes GetTextDocumentAttributes(Uri uri)

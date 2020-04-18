@@ -13,10 +13,8 @@ namespace DafnyLanguageServer.Handler
     /// This handler provides the <c>go to definition</c> position for symbols.
     /// This class is work in progress. The content of this huge class should be outsourced into a <c>GoToDefinitionServiceProvider</c>. 
     /// </summary>
-    public class DefinitionHandler : LspBasicHandler, IDefinitionHandler
+    public class DefinitionHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
     {
-        private DefinitionCapability _capability;
-
         public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         : base(router, workspaceManager)
         {
@@ -28,11 +26,6 @@ namespace DafnyLanguageServer.Handler
             {
                 DocumentSelector = _documentSelector
             };
-        }
-
-        public  void SetCapability(DefinitionCapability capability)
-        {
-            _capability = capability;
         }
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)

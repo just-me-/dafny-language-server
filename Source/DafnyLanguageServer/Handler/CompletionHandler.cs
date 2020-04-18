@@ -14,10 +14,8 @@ namespace DafnyLanguageServer.Handler
     /// This handler provides auto completion as defined in the LSP.
     /// There is additional information (like symbol type and parent class) added to each symbol if the DEBUG mode is used.
     /// </summary>
-    public class CompletionHandler : LspBasicHandler, ICompletionHandler
+    public class CompletionHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
-        private CompletionCapability _capability;
-        
         public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
             : base(router, workspaceManager)
         {
@@ -30,11 +28,6 @@ namespace DafnyLanguageServer.Handler
                 DocumentSelector = _documentSelector,
                 ResolveProvider = false
             };
-        }
-
-        public void SetCapability(CompletionCapability capability)
-        {
-            _capability = capability;
         }
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
