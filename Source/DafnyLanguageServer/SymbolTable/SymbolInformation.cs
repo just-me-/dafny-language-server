@@ -18,8 +18,8 @@ namespace DafnyLanguageServer.SymbolTable
         public Type Type { get; set; }
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
-        public List<SymbolInformation> Children { get; set; } = new List<SymbolInformation>();
-        public List<SymbolInformation> Usages { get; set; } = new List<SymbolInformation>();
+        public List<SymbolInformation> Children { get; set; }
+        public List<SymbolInformation> Usages { get; set; }
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public override string ToString()
@@ -38,7 +38,8 @@ namespace DafnyLanguageServer.SymbolTable
         Variable,
         Call,
         Definition,
-        Predicate
+        Predicate,
+        Undefined
     }
 
     public class TokenPosition

@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie;
 using Microsoft.Dafny;
+using Serilog.Sinks.File;
+using LiteralExpr = Microsoft.Dafny.LiteralExpr;
+using LocalVariable = Microsoft.Dafny.LocalVariable;
+using Visitor = Microsoft.Dafny.Visitor;
 
 namespace DafnyLanguageServer.SymbolTable
 {
     public class VisitorThatGeneratesSymbolTable : Visitor
     {
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
-        public SymbolInformation ParentScope { get; set; }
+        public SymbolInformation SurroundingScope { get; set; }
         public SymbolInformation CurrentModule { get; set; }
         public SymbolInformation CurrentClass { get; set; }
 
@@ -22,82 +28,90 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ModuleDefinition o)
         {
-            var symbol = new SymbolInformation()
-            {
-                Name = o.Name,
-                Type = Type.Module,
-                Position = new TokenPosition()
-                {
-                    Token = o.tok,
-                    BodyStartToken = o.BodyStartTok,
-                    BodyEndToken = o.BodyEndTok
-                }
 
-            };
-            symbol.DeclarationOrigin = symbol;
-            symbol.Usages = null;
-            SymbolTable.Add(symbol);
+            var symbol = CreateSymbol(
+                name: o.Name,
+                type: Type.Module,
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.BodyStartTok,
+                bodyEndPosAsToken: o.BodyEndTok,
 
-            ParentScope = symbol;
-            CurrentModule = symbol;
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                setAsChildInParent: false,
+                canBeUsed: false
+            );
+
+            SetScope(symbol);
+            SetModule(symbol);
 
         }
 
+
+
+
         public override void Leave(ModuleDefinition o)
         {
-            CurrentModule = null;
-            ParentScope = null;
+            SetScope(null);
+            SetModule(null);
         }
 
         public override void Visit(ClassDecl o)
         {
-            var classSymbol = new SymbolInformation()
-            {
-                Name = o.Name,
-                Position = new TokenPosition()
-                {
-                    Token = o.tok,
-                    BodyStartToken = o.BodyStartTok,
-                    BodyEndToken = o.BodyEndTok
-                },
-                Type = Type.Class
-            };
-            classSymbol.Parent = ParentScope;
-            ParentScope.Children.Add(classSymbol);
-            classSymbol.DeclarationOrigin = classSymbol;
-            ParentScope = classSymbol;
-            SymbolTable.Add(classSymbol);
+            var symbol = CreateSymbol(
+                name: o.Name,
+                type: Type.Class,
 
-            CurrentClass = classSymbol;
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.BodyStartTok,
+                bodyEndPosAsToken: o.BodyEndTok,
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                setAsChildInParent: true,
+                canBeUsed: true
+            );
+
+            SetClass(symbol);
+            SetScope(symbol);
 
             //todo evtl heir alle member kurz definieren, weil eine decl auch nach der nutzung kommen kann.
             //dafür dann unten bei field, method defintiion etc muss man das dann net mehr machen.
             //lassen wir aber erstmal. erstmal das einfache.
+
+            //vlt besser sogar: wenn decl net gefunden wird, iwie auf nen stack legen und am ende nochmal kucken oder so. ka.
         }
 
         public override void Leave(ClassDecl o)
         {
-            ParentScope = ParentScope.Parent;
-            CurrentClass = CurrentClass.Parent;
+            JumpUpInScope();
+            SetClass(null);
         }
 
         public override void Visit(Field o)
         {
-            var fieldSymbol = new SymbolInformation()
-            {
-                Name = o.Name,
-                Type = Type.Field,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.tok,
-                    BodyStartToken = o.BodyStartTok,
-                    BodyEndToken = o.BodyEndTok
-                }
-            };
-            fieldSymbol.DeclarationOrigin = fieldSymbol;   //für membersymbol fehlt: children, usages
-            ParentScope.Children.Add(fieldSymbol);
-            SymbolTable.Add(fieldSymbol);
+            var symbol = CreateSymbol(
+                name: o.Name,
+                type: Type.Field,
+
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.BodyStartTok,
+                bodyEndPosAsToken: o.BodyEndTok,
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: false,
+                setAsChildInParent: true,
+                canBeUsed: true
+            );
         }
 
         public override void Leave(Field o)
@@ -106,80 +120,82 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Method o)
         {
-            var methodSymbol = new SymbolInformation()
-            {
-                Name = o.Name,
-                Type = Type.Field,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.tok,
-                    BodyStartToken = o.BodyStartTok,
-                    BodyEndToken = o.BodyEndTok
-                }
-            };
+            var symbol = CreateSymbol(
+                name: o.Name,
+                type: Type.Method,
 
-            methodSymbol.DeclarationOrigin = methodSymbol;   //für membersymbol fehlt: children, usages
-            ParentScope.Children.Add(methodSymbol);
-            SymbolTable.Add(methodSymbol);
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.BodyStartTok,
+                bodyEndPosAsToken: o.BodyEndTok,
 
-            ParentScope = methodSymbol;
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                setAsChildInParent: true,
+                canBeUsed: true
+            );
+
+            SetScope(symbol);
         }
 
         public override void Leave(Method o)
         {
-            ParentScope = ParentScope.Parent;
+            JumpUpInScope();
         }
 
+
         /// <summary>
-        /// Nonglobal Variables are Method Parameters. Base Class is Formal.
+        /// Nonglobal Variables are Method Parameters (in and out parameters).
+        /// We treat them as variable definitions.
+        /// Additional Info: Base Class of NonglobalVariable is Formal.
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
-            var symbol = new SymbolInformation()
-            {
-                Name = o.Name,
-                Type = Type.Variable,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.Tok,
-                    BodyStartToken = o.Tok,
-                    BodyEndToken = o.Tok
-                }
-            };
-            symbol.Children = null;
-            symbol.DeclarationOrigin = symbol;
-            symbol.Parent = ParentScope;
-            ParentScope.Children.Add(symbol);
-            SymbolTable.Add(symbol);
+            var symbol = CreateSymbol(
+                    name: o.Name,
+                    type: Type.Variable,
+
+                    positionAsToken: o.tok,
+                    bodyStartPosAsToken: null,
+                    bodyEndPosAsToken: null,
+
+                    isDeclaration: true,
+                    declarationSymbol: null,
+                    addUsageAtDeclaration: false,
+
+                    canHaveChildren: false,
+                    setAsChildInParent: true,
+                    canBeUsed: true
+                    );
         }
 
-        public override void Leave(NonglobalVariable o)   
-          //todo evtl outs noch kcuken
+        public override void Leave(NonglobalVariable o)
         { 
         }
 
         //local variable are just locally defined vars: var bla:=2
         public override void Visit(LocalVariable o)
         {
-            var symbol = new SymbolInformation()
-            {
-                Name = o.Name, //höätte auch son unique name und so.
-                Type = Type.Variable,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.Tok,
-                    BodyStartToken = o.Tok,
-                    BodyEndToken = o.Tok
-                }
-            };
-            symbol.Children = null;
-            symbol.DeclarationOrigin = symbol;
-            symbol.Parent = ParentScope;
-            ParentScope.Children.Add(symbol);
-            SymbolTable.Add(symbol);
+            var symbol = CreateSymbol(
+                name: o.Name,
+                type: Type.Variable,
+
+                positionAsToken: o.Tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: false,
+                setAsChildInParent: true,
+                canBeUsed: true
+            );
+
         }
 
         public override void Leave(LocalVariable o) {
@@ -196,75 +212,75 @@ namespace DafnyLanguageServer.SymbolTable
             //todo siehe oben
         }
 
+        //A Type RHS is the right hand side of omsething like var a:= new MyClass(). See also its class description.
+        //Also has some Array stuff that could be relevant for us.
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
-            if (e.Type is UserDefinedType type)   //naja was kann denn sonst noch komen???
+            if (e.Type is UserDefinedType type)   //can it be anything else?
                 t = type;
 
-            var symbol = new SymbolInformation()
-            {
-                
-                Name = t.Name, 
-                Type = Type.Class,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = t.tok,
-                    BodyStartToken = e.Tok,
-                    BodyEndToken = t.tok
-                }
-            };
-            symbol.Children = null;
-            symbol.Usages = null;
-            symbol.Parent = ParentScope;
+            var declaration = FindDeclaration(t.Name, SurroundingScope);
 
-            //ctor der basisklasse usages +1
-            //Declaration bei classdecl setzen.
-            var declaration = FindDeclaration(symbol, ParentScope);
-            declaration.Usages.Add(symbol);
+            var symbol = CreateSymbol(
+                name: t.Name,
+                type: Type.Class,
 
-            symbol.DeclarationOrigin = declaration; //müsste eig den ctor nehmen vlt aber, naja, geht auch so (und ist einfacher9.
+                positionAsToken: t.tok,
+                bodyStartPosAsToken: e.Tok,  //"new"
+                bodyEndPosAsToken: t.tok,    //ClassName
 
-            SymbolTable.Add(symbol);
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: true,
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+
+            );
         } 
+
         public override void Leave(TypeRhs e) { }
 
-        //I encountered these when a declStatemnt is used, within the declartion's update statement, the left side is then a ghost thing.
+        //A AutoGhostIndentifierExpr is when we have a VarDeclStmt: var a:= b.
+        //This VarDecl Stmt contains a Update stmt, and the left side contains ghostVars, aka the 'a'.
+        //We do nth since within the VarDeclStmt, the 'a' gets registered.
         public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar
         public override void Leave(AutoGhostIdentifierExpr e) { }
 
         public override void Visit(LiteralExpr e) { } //do nth
         public override void Leave(LiteralExpr e) { }
 
-        public override void Visit(ApplySuffix e) { } //klammern nach einem methoden-call: do nth, visitor leitet das weiter ans namesegment und co.
+        //ApllySuffixes are just brackets after a Method call.
+        //The Visitor will redirect the accept statements to the expressions lef to the (), thus we do nth.
+        public override void Visit(ApplySuffix e) { } 
         public override void Leave(ApplySuffix e) { }
 
-        //Name Segment are identifiers, also from methods vor example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
+        //Name Segment are identifiers, especially also in methods.
+        //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
-            var symbol = new SymbolInformation()
-            {
-                Name = e.Name,
-                //Type = Type.Variable,  //könnte auch methode sein, wissen wir jetzt halt net mehr, is aber eh bei definitionen wichitger schätz ich ma. erstma steriehcen.
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = e.tok,
-                    BodyStartToken = e.tok,
-                    BodyEndToken = e.tok
-                }
-            };
-            symbol.Children = null;
-            var declaration = FindDeclaration(symbol, ParentScope);
-            declaration.Usages.Add(symbol);
+            var declaration = FindDeclaration(e.Name, SurroundingScope);
+            
+            var symbol = CreateSymbol(
+                name: e.Name,
+                type: null,
 
-            symbol.DeclarationOrigin = declaration;
-            symbol.Usages = null;
-            symbol.Children = null;
-            symbol.Parent = ParentScope;
+                positionAsToken: e.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
 
-            SymbolTable.Add(symbol);
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: true,
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+
+            );
+
         }
 
         public override void Leave(NameSegment e)
@@ -273,32 +289,27 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ExprDotName e)
         {
-            
-            var symbol = new SymbolInformation()
-            {
-                Name = e.SuffixName,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = e.tok, //nimmt den ganze, net nur den suffix.
-                    BodyStartToken = e.tok,
-                    BodyEndToken = e.tok
-                }
-            };
-            symbol.Children = null;
-            symbol.Usages = null;
-            symbol.Parent = ParentScope;
-
-            
             string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, ParentScope);  //klappt ads?? dann wär ich ja ein kleines genius der progrmamierkunst.
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope); //robuster für später: wenn man FindClass macht wo man nur explizit nach klassen sucht.. falls ne var gleich der variable oder so.
+            var declaration = FindDeclaration(e.SuffixName, definingClass);
 
-            var declaration = FindDeclaration(symbol, definingClass);
-            declaration.Usages.Add(symbol);
+            var symbol = CreateSymbol(
+                name: e.SuffixName,
+                type: null,
 
-            symbol.DeclarationOrigin = declaration;
+                positionAsToken: e.tok, //nimmt den ganze, net nur den suffix.
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
 
-            SymbolTable.Add(symbol);
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: true,
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+
+            );
         }
 
         public override void Leave(ExprDotName e)
@@ -310,31 +321,27 @@ namespace DafnyLanguageServer.SymbolTable
             //we could also just do nothing, then you couldn't click on "this." for goto def or so.
             //maybe even better cause many this names may cause trouble or such, i don't know.
 
-            var symbol = new SymbolInformation()
-            {
-                Name = "this",
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = e.tok, //nimmt den ganze, net nur den suffix.
-                    BodyStartToken = e.tok,
-                    BodyEndToken = e.tok
-                }
-            };
-            symbol.Children = null;
-            symbol.Usages = null;
-            symbol.Parent = ParentScope;
-
-            
             string definingClassName = e.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, ParentScope);  //klappt ads?? dann wär ich ja ein kleines genius der progrmamierkunst. (es klappt)
-
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope);  //hier auch vlt besser "FindClass"
             var declaration = definingClass;
-            //declaration.Usages.Add(symbol);  //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
 
-            symbol.DeclarationOrigin = declaration;
+            var symbol = CreateSymbol(
+                name: "this",
+                type: Type.Class,
 
-            SymbolTable.Add(symbol);
+                positionAsToken: e.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
+
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: false,    //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+
+            );
         }
 
         public override void Leave(ThisExpr e)
@@ -343,34 +350,27 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
-            //if we already know the symbol by a vardeclstatemnt, skip it.
-            foreach (var symbol in SymbolTable)
-            {
-                if (symbol.Line == o.tok.line && symbol.Col == o.tok.col)
-                {
-                    return;
-                }
-            }
 
-            //todo zu grobgranular
-            var expressionSymbol = new SymbolInformation()
-            {
-                Name = o.tok.val,
-                Type = Type.Variable,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.tok,
-                    BodyStartToken = o.tok,
-                    BodyEndToken = o.tok
-                }
-            };
-            expressionSymbol.Children = null; // cant have children
+            var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
-            var declaration = FindDeclaration(expressionSymbol, ParentScope);
-            expressionSymbol.DeclarationOrigin = declaration;
-            declaration.Usages.Add(expressionSymbol);
-            SymbolTable.Add(expressionSymbol);
+            var symbol = CreateSymbol(
+                name: o.tok.val + "** General Expression Visit Used!! **",
+                type: null,
+
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
+
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: true,
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+
+            );
+
         }
 
         public override void Leave(Expression o)
@@ -379,24 +379,25 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(AssignmentRhs o)
         {
-            var symbol = new SymbolInformation()
-            {
-                Name = o.Tok.val,
-                Type = Type.Variable,
-                Parent = ParentScope,
-                Position = new TokenPosition()
-                {
-                    Token = o.Tok,
-                    BodyStartToken = o.Tok,
-                    BodyEndToken = o.Tok
-                }
-            };
-            symbol.Children = null; // cant have children
+            var declaration = FindDeclaration(o.Tok.val, SurroundingScope);
 
-            var declaration = FindDeclaration(symbol, ParentScope);
-            symbol.DeclarationOrigin = declaration;
-            declaration.Usages.Add(symbol);
-            SymbolTable.Add(symbol);
+            var symbol = CreateSymbol(
+                name: o.Tok.val,
+                type: Type.Variable,
+
+                positionAsToken: o.Tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
+
+                isDeclaration: false,
+                declarationSymbol: declaration,
+                addUsageAtDeclaration: true,
+
+                canHaveChildren: false,
+                setAsChildInParent: false,
+                canBeUsed: false
+            );
+
         }
 
 
@@ -405,23 +406,20 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-        //todo hat da beim constructor das eine nicht gefuinden. das ctorarg glaubs. [glaub das ist wegen Left hand side vergessen]
-
         private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
         {
             foreach (SymbolInformation s in scope.Children)
             {
                 if (s.Name == target && s.IsDeclaration) return s;
             }
-            //if symbol not found in current scope, search scope
+
+            //if symbol not found in current scope, search parent scope
             if (scope.Parent != null)
             {
                 return FindDeclaration(target, scope.Parent);
             }
             else
             {
-                //fujnzt noch nicht, z.b. bei methjodenargumenten.
-
                 //damit es nicht immer crashed erstmal soft-mässiges handling here:
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
                 return new SymbolInformation()
@@ -434,6 +432,128 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return FindDeclaration(target.Name, scope);
         }
+
+        private SymbolInformation CreateSymbol(
+            string name,
+            Type? type,
+
+            IToken positionAsToken,
+            IToken bodyStartPosAsToken,
+            IToken bodyEndPosAsToken,
+
+            bool isDeclaration,
+            SymbolInformation declarationSymbol,
+            bool addUsageAtDeclaration,
+
+            bool canHaveChildren,
+            bool setAsChildInParent,
+
+            bool canBeUsed,
+
+            bool addToSymbolTable = true
+            )
+        {
+            SymbolInformation result = new SymbolInformation();
+            result.Name = name;
+
+            //Type
+            if (type != null)
+            {
+                result.Type = (Type) type;
+            }
+            else if (declarationSymbol != null)
+            {
+                result.Type = declarationSymbol.Type;
+            } else
+            {
+                result.Type = Type.Undefined;
+            }
+
+            //Position
+            result.Position = new TokenPosition()
+            {
+                Token = positionAsToken,
+                BodyStartToken = bodyStartPosAsToken ?? positionAsToken,
+                BodyEndToken = bodyEndPosAsToken ?? positionAsToken
+            };
+
+            //Decl und Usages
+            if (canBeUsed)
+            {
+                result.Usages = new List<SymbolInformation>();
+            }
+
+
+
+
+            PerformArgChecks(isDeclaration, declarationSymbol, addUsageAtDeclaration);
+
+
+            if (isDeclaration)
+            {
+                result.DeclarationOrigin = result;
+            }
+            else
+            {
+                result.DeclarationOrigin = declarationSymbol;
+            }
+
+            if (addUsageAtDeclaration) //todo entspricht eig !isDecl, oder?
+            {
+                declarationSymbol.Usages.Add(result);
+            }
+
+            //Parent and Children
+            if (result.Type != Type.Module)
+            {
+                result.Parent = SurroundingScope;
+            }
+
+            if (canHaveChildren) //todo verienfachbar? hmm, glaubs doch rechts peizfisch (field net, method ja, blockstmt ja, localvar ne)
+            {
+                result.Children = new List<SymbolInformation>();
+            }
+
+            if (setAsChildInParent) //todo entspricht das isDeclaration?
+            {
+                SurroundingScope.Children.Add(result);
+            }
+
+            if (addToSymbolTable)
+            {
+                Add(result);
+            }
+
+            return result;
+        }
+
+        private static void PerformArgChecks(bool isDeclaration, SymbolInformation declarationSymbol,
+            bool addUsageAtDeclaration)
+        {
+            if (!isDeclaration && declarationSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(declarationSymbol),
+                    "when symbol is not a declaration, its declarationOrigin must be given");
+            }
+
+            if (isDeclaration && addUsageAtDeclaration)
+            {
+                throw new ArgumentException("when symbol is a declaration, it cannot be a usage of itself.");
+            }
+
+            if (addUsageAtDeclaration && declarationSymbol == null)
+            {
+                throw new ArgumentException("cannot add usage at unknown symbol");
+
+            }
+        }
+
+
+        private void Add(SymbolInformation symbol) => SymbolTable.Add(symbol);
+        private void SetScope(SymbolInformation symbol) => SurroundingScope = symbol;
+        private void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+        private void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
+        private void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
 
 
     }
