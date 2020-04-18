@@ -42,7 +42,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
 
@@ -71,7 +70,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
 
@@ -106,7 +104,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: false,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
         }
@@ -130,7 +127,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
             SetScope(symbol);
@@ -167,7 +163,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public override void Leave(NonglobalVariable o)
-        { 
+        {
         }
 
         //local variable are just locally defined vars: var bla:=2
@@ -186,7 +182,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: false,
-                setAsChildInParent: true,
                 canBeUsed: true
             );
 
@@ -199,11 +194,37 @@ namespace DafnyLanguageServer.SymbolTable
         {
             //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket #103
             //..> BlockStmt als eigenes special-symbol handhaben, welches dann parent sein kann.
+            //manual creation to bypass creation logic
+            //it is just here to mark the scope.
+            //blockstmt is neither a declaration, nor does it have a declaring symbol,
+            //and it shall not be a child of the parent symbol.
+            //It's ghosty.
+
+            var symbol = new SymbolInformation()
+            {
+                Name = "ghost-block-scope",
+                Type = Type.BlockStmt,
+                Parent = SurroundingScope,
+
+                DeclarationOrigin = null,
+                Usages = null,
+
+                Children = new List<SymbolInformation>(),
+
+                Position = new TokenPosition()
+                {
+                    Token = o.Tok,
+                    BodyStartToken = o.Tok,
+                    BodyEndToken = o.EndTok
+                },
+            };
+
+            SetScope(symbol);
         }
 
         public override void Leave(BlockStmt o)
         {
-            //todo siehe oben
+            JumpUpInScope();
         }
 
         //A Type RHS is the right hand side of omsething like var a:= new MyClass(). See also its class description.
@@ -229,10 +250,9 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
-        } 
+        }
 
         public override void Leave(TypeRhs e) { }
 
@@ -247,7 +267,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         //ApllySuffixes are just brackets after a Method call.
         //The Visitor will redirect the accept statements to the expressions lef to the (), thus we do nth.
-        public override void Visit(ApplySuffix e) { } 
+        public override void Visit(ApplySuffix e) { }
         public override void Leave(ApplySuffix e) { }
 
         //Name Segment are identifiers, especially also in methods.
@@ -255,7 +275,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(NameSegment e)
         {
             var declaration = FindDeclaration(e.Name, SurroundingScope);
-            
+
             var symbol = CreateSymbol(
                 name: e.Name,
                 type: null,
@@ -269,7 +289,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
         }
@@ -281,7 +300,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ExprDotName e)
         {
             string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope); //robuster für später: wenn man FindClass macht wo man nur explizit nach klassen sucht.. falls ne var gleich der variable oder so.
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
             var declaration = FindDeclaration(e.SuffixName, definingClass);
 
             var symbol = CreateSymbol(
@@ -297,7 +316,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
         }
@@ -312,7 +330,7 @@ namespace DafnyLanguageServer.SymbolTable
             //maybe even better cause many this names may cause trouble or such, i don't know.
 
             string definingClassName = e.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope);  //hier auch vlt besser "FindClass"
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
             var declaration = definingClass;
 
             var symbol = CreateSymbol(
@@ -328,7 +346,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,    //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
 
             );
@@ -356,7 +373,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
 
@@ -383,7 +399,6 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: true,
 
                 canHaveChildren: false,
-                setAsChildInParent: false,
                 canBeUsed: false
             );
 
@@ -395,15 +410,31 @@ namespace DafnyLanguageServer.SymbolTable
 
         private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
         {
-            foreach (SymbolInformation s in scope.Children)
+            var matches = scope.Children.Where(s =>
+                s.Name == target &&
+                s.IsDeclaration &&
+                (type == null || s.Type == type))
+                .ToList();
+
+            if (matches.Count() == 1)
             {
-                if (s.Name == target && s.IsDeclaration) return s;
+                return matches.Single();
+            }
+
+            if (matches.Count() > 1)
+            {
+                //simplified for now:
+                //throw new InvalidOperationException("multiple candidates for symbol declaration");
+                return new SymbolInformation()
+                {
+                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*"
+                };
             }
 
             //if symbol not found in current scope, search parent scope
             if (scope.Parent != null)
             {
-                return FindDeclaration(target, scope.Parent);
+                return FindDeclaration(target, scope.Parent, type);
             }
             else
             {
@@ -422,7 +453,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        ///  This is a Factory Method. Default values are set. 
+        ///  This is a Factory Method. Default values are set.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
@@ -448,7 +479,6 @@ namespace DafnyLanguageServer.SymbolTable
             bool isDeclaration = true,
             SymbolInformation declarationSymbol = null,
             bool addUsageAtDeclaration = false,
-
             bool canHaveChildren = true,
             bool setAsChildInParent = true,
             bool canBeUsed = true,
@@ -457,8 +487,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             SymbolInformation result = new SymbolInformation();
             result.Name = name;
+            result.Parent = SurroundingScope; //is null for modules
 
-            //Type
             if (type != null)
             {
                 result.Type = (Type) type;
@@ -471,7 +501,6 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Type = Type.Undefined;
             }
 
-            //Position
             result.Position = new TokenPosition()
             {
                 Token = positionAsToken,
@@ -479,7 +508,6 @@ namespace DafnyLanguageServer.SymbolTable
                 BodyEndToken = bodyEndPosAsToken ?? positionAsToken
             };
 
-            //Decl und Usages
             if (canBeUsed)
             {
                 result.Usages = new List<SymbolInformation>();
@@ -493,18 +521,12 @@ namespace DafnyLanguageServer.SymbolTable
                 declarationSymbol.Usages.Add(result);
             }
 
-            //Parent and Children
-            if (result.Type != Type.Module)
-            {
-                result.Parent = SurroundingScope;
-            }
-
-            if (canHaveChildren) //todo verienfachbar? hmm, glaubs doch rechts peizfisch (field net, method ja, blockstmt ja, localvar ne)
+            if (canHaveChildren)
             {
                 result.Children = new List<SymbolInformation>();
             }
 
-            if (setAsChildInParent) //todo entspricht das isDeclaration?
+            if (isDeclaration && type != Type.Module) //all decls, except for top level modules, are a child
             {
                 SurroundingScope.Children.Add(result);
             }
