@@ -8,18 +8,22 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    public class SymbolTableGenerator
+    /// <summary>
+    /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work. 
+    /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
+    /// </summary>
+    public class SymbolTableManager
     {
         private Microsoft.Dafny.Program _dafnyProgram;
         public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();
 
-        public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)
+        public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
             this._dafnyProgram = dafnyProgram;
-            GenerateTable();
+            GenerateSymbolTable();
         }
 
-        public void GenerateTable()
+        private void GenerateSymbolTable()
         {
             foreach (var module in _dafnyProgram.Modules())
             {
@@ -28,18 +32,17 @@ namespace DafnyLanguageServer.SymbolTable
 
                 SymbolTables.Add(module.Name, visitor.SymbolTable);
 
-                string debugMe = CreateReadOut(visitor.SymbolTable);
+                string debugMe = CreateDebugReadOut(visitor.SymbolTable);
             }
         }
 
-        private static string CreateReadOut(List<SymbolInformation> visitorSymbolTable)
+        private static string CreateDebugReadOut(List<SymbolInformation> visitorSymbolTable)
         {
             StringBuilder b = new StringBuilder();
             foreach (var symbol in visitorSymbolTable)
             {
                 b.AppendLine(symbol.ToString());
             }
-
             return b.ToString();
         }
     }

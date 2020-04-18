@@ -10,6 +10,8 @@ namespace DafnyLanguageServer.FileManager
     /// <summary>
     /// This <c>FileSymboltableProcessor</c> provides all symbols that were found in a (valid) Dafny file.
     /// This newOldSymbol list can be used for features like <c>AutoCompletion</c>.
+    ///
+    /// Gets replaced... 2do
     /// </summary>
     public class FileSymboltableProcessor
     {
