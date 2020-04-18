@@ -197,13 +197,37 @@ namespace DafnyLanguageServer.SymbolTable
 
     public override void Visit(BlockStmt o)
         {
-            //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket 46548
-            //..> BlockStmt als eigenes special-symbol handhaben, welches dann parent sein kann.
+            //manual creation to bypass creation logic
+            //it is just here to mark the scope.
+            //blockstmt is neither a declaration, nor does it have a declaring symbol,
+            //and it shall not be a child of the parent symbol.
+            //It's ghosty.
+
+            var symbol = new SymbolInformation()
+            {
+                Name = "ghost-block-scope",
+                Type = Type.BlockStmt,
+                Parent = SurroundingScope,
+
+                DeclarationOrigin = null,
+                Usages = null,
+
+                Children = new List<SymbolInformation>(),
+
+                Position = new TokenPosition()
+                {
+                    Token = o.Tok,
+                    BodyStartToken = o.Tok,
+                    BodyEndToken = o.EndTok
+                },
+            };
+
+            SetScope(symbol);
         }
 
         public override void Leave(BlockStmt o)
         {
-            //todo siehe oben
+            JumpUpInScope();
         }
 
         //A Type RHS is the right hand side of omsething like var a:= new MyClass(). See also its class description.

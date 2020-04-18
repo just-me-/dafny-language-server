@@ -7203,10 +7203,12 @@ namespace Microsoft.Dafny {
       Contract.Requires(s != null);
       Body.Add(s);
     }
-    public override void Accept(Visitor v) {
+    public override void Accept(Visitor v) { 
+        v.Visit(this);
       foreach (Statement stmt in this.Body) {
         stmt.Accept(v);
       }
+      v.Leave(this);
     }
   }
 
