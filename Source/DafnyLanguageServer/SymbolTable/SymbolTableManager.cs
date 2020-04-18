@@ -45,5 +45,34 @@ namespace DafnyLanguageServer.SymbolTable
             }
             return b.ToString();
         }
+
+        // EntryPoint... not by name:string, right? 
+        public SymbolInformation GetSymbolByPosition()
+        {
+            // for each... kann eig nicht mehrere geben aber evt fehler bei classes und co.
+            // daher array zum start / v1
+            // if symbol is in range
+            return null; 
+        }
+
+        // Wenn man ein Symbol liefert "parent" erhalten für AutoCompletion 2do #97
+        // Autocompletion "ohne pre-symbol"
+        public SymbolInformation GetScopeSymbolForSymbol(SymbolInformation symbol)
+        {
+            return null; 
+            // Mby rm duplicates and constructor 
+        }
+
+        // Go2Definition 
+        public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
+        {
+            return symbol.Parent;
+        }
+
+        // CodeLens
+        public List<SymbolInformation> GetUsagesOfSymbol(SymbolInformation symbol)
+        {
+            return null; 
+        }
     }
 }

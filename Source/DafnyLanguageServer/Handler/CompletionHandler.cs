@@ -45,6 +45,7 @@ namespace DafnyLanguageServer.Handler
                 return (symbols is null) ?
                     new CompletionList() :
                     ConvertListToCompletionresponse(symbols.GetList(parentClass), request);
+                // neu via position statt via schlüsselwort? 
             });
         }
 

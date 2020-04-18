@@ -38,7 +38,7 @@ namespace DafnyLanguageServer.Handler
                     _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
                     (int)request.Position.Line,
                     (int)request.Position.Character
-                );
+                ); // ned mehr das word rausholen sondern position data mitgeben. 
                 // todo not optimized yet - ticket #40
                 foreach (var symbol in symbols.GetFullList())
                 {

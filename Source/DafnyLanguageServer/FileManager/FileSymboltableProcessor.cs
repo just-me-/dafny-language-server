@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.FileManager
     public class FileSymboltableProcessor
     {
         private readonly List<DafnyServer.OldSymbolTable.OldSymbolInformation> _symbolTable;
-        public bool HasEntries => (_symbolTable.Count > 0);
+        public bool HasEntries => (_symbolTable.Count > 0); //del
 
         public FileSymboltableProcessor(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbolTable)
         {
@@ -48,6 +48,8 @@ namespace DafnyLanguageServer.FileManager
             return _symbolTable.FirstOrDefault(x => (x.Name == name));
         }
 
+
+        // is this needed in new symbol table? 
         private Range SymbolInformationToRange(DafnyServer.OldSymbolTable.OldSymbolInformation newOldSymbol)
         {
             Range range = null;
@@ -60,6 +62,7 @@ namespace DafnyLanguageServer.FileManager
             return range;
         }
 
+        // isParent wäre das glaubs neu... 
         private bool SymbolIsInRangeOf(DafnyServer.OldSymbolTable.OldSymbolInformation child, DafnyServer.OldSymbolTable.OldSymbolInformation parent)
         {
             Range childRange = SymbolInformationToRange(child);
@@ -67,6 +70,7 @@ namespace DafnyLanguageServer.FileManager
             return  FileHelper.ChildIsContainedByParent(childRange, parentRange);
         }
 
+        // einstieg über string können wir glaubs neu umgehen 
         public string GetParentForWord(string word)
         {
             return word is null ? null : _symbolTable.FirstOrDefault(x => x.Name == word)?.ParentClass;
