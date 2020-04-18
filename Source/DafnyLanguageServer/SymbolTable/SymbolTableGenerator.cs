@@ -10,20 +10,20 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public class SymbolTableGenerator
     {
-        private Microsoft.Dafny.Program dafnyProgram;
+        private Microsoft.Dafny.Program _dafnyProgram;
         public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();
 
         public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)
         {
-            this.dafnyProgram = dafnyProgram;
+            this._dafnyProgram = dafnyProgram;
             GenerateTable();
         }
 
         public void GenerateTable()
         {
-            foreach (var module in dafnyProgram.Modules())
+            foreach (var module in _dafnyProgram.Modules())
             {
-                var visitor = new VisitorThatGeneratesSymbolTable();
+                var visitor = new SymbolTableVisitor();
                 module.Accept(visitor);
 
                 SymbolTables.Add(module.Name, visitor.SymbolTable);

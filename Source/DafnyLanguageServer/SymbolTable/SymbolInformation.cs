@@ -11,7 +11,6 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolInformation
     {
         public TokenPosition Position { get; set; }
-
         public int? Line => Position?.Token.line;
         public int? Col => Position?.Token.col;
         public string Name { get; set; }

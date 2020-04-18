@@ -76,8 +76,5 @@ namespace DafnyLanguageServer.FileManager
 
             return new CounterExampleResults();
         }
-        
-
-
     }
 }

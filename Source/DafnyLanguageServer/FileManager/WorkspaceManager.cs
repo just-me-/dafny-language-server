@@ -27,7 +27,7 @@ namespace DafnyLanguageServer.FileManager
                 var temp = new SymbolTableGenerator(fileRepository.Result.DafnyProgram);
                 var symboltables = temp.SymbolTables; //das ändert sich noch, is ja pro klasse eine table im moment.
                 //würde hie rdann aber so schreiben filerepo.symboltable = TableGenerator.GetTable oder sowas.
-
+                // ==> pro Klasse... "pro file" kann man aber nicht sagen. Ein File kann ein Array von Klassen haben. Wenns pro "Modul/Package" ist ists Mapping via Workspace, nicht? 
             }
 
             return fileRepository;

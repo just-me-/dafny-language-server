@@ -17,7 +17,6 @@ namespace DafnyLanguageServer.Services
     /// </summary>
     public class CompilationService
     {
-
         private string[] CompilationArgs { get; }
 
         private string DfyFile { get; }
@@ -130,7 +129,5 @@ namespace DafnyLanguageServer.Services
                 }
             });
         }
-
     }
-
 }

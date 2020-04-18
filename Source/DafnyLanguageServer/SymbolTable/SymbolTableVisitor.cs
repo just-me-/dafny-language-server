@@ -13,14 +13,16 @@ using Visitor = Microsoft.Dafny.Visitor;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    public class VisitorThatGeneratesSymbolTable : Visitor
+    /// <summary>
+    /// This Visitor is used to generate the Symbol Table for Dafny code.
+    /// It is an extension of the Microsoft Dafny Visitor Class.
+    /// </summary>
+    public class SymbolTableVisitor : Visitor
     {
         public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
         public SymbolInformation SurroundingScope { get; set; }
         public SymbolInformation CurrentModule { get; set; }
         public SymbolInformation CurrentClass { get; set; }
-
-
 
         public override void Visit(IAstElement o) { }
 
@@ -28,7 +30,6 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ModuleDefinition o)
         {
-
             var symbol = CreateSymbol(
                 name: o.Name,
                 type: Type.Module,
@@ -47,11 +48,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             SetScope(symbol);
             SetModule(symbol);
-
         }
-
-
-
 
         public override void Leave(ModuleDefinition o)
         {
@@ -81,7 +78,7 @@ namespace DafnyLanguageServer.SymbolTable
             SetClass(symbol);
             SetScope(symbol);
 
-            //todo evtl heir alle member kurz definieren, weil eine decl auch nach der nutzung kommen kann.
+            //todo evtl hier alle member kurz definieren, weil eine decl auch nach der nutzung kommen kann.   #121
             //dafür dann unten bei field, method defintiion etc muss man das dann net mehr machen.
             //lassen wir aber erstmal. erstmal das einfache.
 
@@ -128,7 +125,6 @@ namespace DafnyLanguageServer.SymbolTable
                 bodyStartPosAsToken: o.BodyStartTok,
                 bodyEndPosAsToken: o.BodyEndTok,
 
-
                 isDeclaration: true,
                 declarationSymbol: null,
                 addUsageAtDeclaration: false,
@@ -137,7 +133,6 @@ namespace DafnyLanguageServer.SymbolTable
                 setAsChildInParent: true,
                 canBeUsed: true
             );
-
             SetScope(symbol);
         }
 
@@ -145,7 +140,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             JumpUpInScope();
         }
-
 
         /// <summary>
         /// Nonglobal Variables are Method Parameters (in and out parameters).
@@ -155,21 +149,21 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(NonglobalVariable o)
         {
             var symbol = CreateSymbol(
-                    name: o.Name,
-                    type: Type.Variable,
+                name: o.Name,
+                type: Type.Variable,
 
-                    positionAsToken: o.tok,
-                    bodyStartPosAsToken: null,
-                    bodyEndPosAsToken: null,
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
 
-                    isDeclaration: true,
-                    declarationSymbol: null,
-                    addUsageAtDeclaration: false,
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
 
-                    canHaveChildren: false,
-                    setAsChildInParent: true,
-                    canBeUsed: true
-                    );
+                canHaveChildren: false,
+                setAsChildInParent: true,
+                canBeUsed: true
+                );
         }
 
         public override void Leave(NonglobalVariable o)
@@ -203,7 +197,7 @@ namespace DafnyLanguageServer.SymbolTable
 
     public override void Visit(BlockStmt o)
         {
-            //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket 46548
+            //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket #103
             //..> BlockStmt als eigenes special-symbol handhaben, welches dann parent sein kann.
         }
 
@@ -237,7 +231,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 setAsChildInParent: false,
                 canBeUsed: false
-
             );
         } 
 
@@ -278,9 +271,7 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 setAsChildInParent: false,
                 canBeUsed: false
-
             );
-
         }
 
         public override void Leave(NameSegment e)
@@ -308,7 +299,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 setAsChildInParent: false,
                 canBeUsed: false
-
             );
         }
 
@@ -368,7 +358,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 setAsChildInParent: false,
                 canBeUsed: false
-
             );
 
         }
@@ -400,11 +389,9 @@ namespace DafnyLanguageServer.SymbolTable
 
         }
 
-
         public override void Leave(AssignmentRhs o)
         {
         }
-
 
         private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
         {
@@ -428,6 +415,7 @@ namespace DafnyLanguageServer.SymbolTable
                 };
             }
         }
+
         private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
         {
             return FindDeclaration(target.Name, scope);
@@ -447,9 +435,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             bool canHaveChildren,
             bool setAsChildInParent,
-
             bool canBeUsed,
-
             bool addToSymbolTable = true
             )
         {
@@ -483,21 +469,9 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Usages = new List<SymbolInformation>();
             }
 
-
-
-
             PerformArgChecks(isDeclaration, declarationSymbol, addUsageAtDeclaration);
 
-
-            if (isDeclaration)
-            {
-                result.DeclarationOrigin = result;
-            }
-            else
-            {
-                result.DeclarationOrigin = declarationSymbol;
-            }
-
+            result.DeclarationOrigin = isDeclaration ? result: declarationSymbol;
             if (addUsageAtDeclaration) //todo entspricht eig !isDecl, oder?
             {
                 declarationSymbol.Usages.Add(result);
@@ -533,28 +507,25 @@ namespace DafnyLanguageServer.SymbolTable
             if (!isDeclaration && declarationSymbol == null)
             {
                 throw new ArgumentNullException(nameof(declarationSymbol),
-                    "when symbol is not a declaration, its declarationOrigin must be given");
+                    "When symbol is not a declaration, its declarationOrigin must be given.");
             }
 
             if (isDeclaration && addUsageAtDeclaration)
             {
-                throw new ArgumentException("when symbol is a declaration, it cannot be a usage of itself.");
+                throw new ArgumentException("When symbol is a declaration, it cannot be a usage of itself.");
             }
 
             if (addUsageAtDeclaration && declarationSymbol == null)
             {
-                throw new ArgumentException("cannot add usage at unknown symbol");
+                throw new ArgumentException("Can not add usage at unknown symbol.");
 
             }
         }
-
 
         private void Add(SymbolInformation symbol) => SymbolTable.Add(symbol);
         private void SetScope(SymbolInformation symbol) => SurroundingScope = symbol;
         private void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
         private void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
         private void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
-
-
     }
 }
