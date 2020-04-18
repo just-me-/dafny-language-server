@@ -282,7 +282,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ExprDotName e)
         {
             string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope); //robuster für später: wenn man FindClass macht wo man nur explizit nach klassen sucht.. falls ne var gleich der variable oder so.
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
             var declaration = FindDeclaration(e.SuffixName, definingClass);
 
             var symbol = CreateSymbol(
@@ -313,7 +313,7 @@ namespace DafnyLanguageServer.SymbolTable
             //maybe even better cause many this names may cause trouble or such, i don't know.
 
             string definingClassName = e.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope);  //hier auch vlt besser "FindClass"
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
             var declaration = definingClass;
 
             var symbol = CreateSymbol(
@@ -394,17 +394,33 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-        private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
+        private SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null)
         {
-            foreach (SymbolInformation s in scope.Children)
+            var matches = scope.Children.Where(s =>
+                s.Name == target &&
+                s.IsDeclaration &&
+                (type == null || s.Type == type))
+                .ToList();
+
+            if (matches.Count() == 1)
             {
-                if (s.Name == target && s.IsDeclaration) return s;
+                return matches.Single();
+            }
+
+            if (matches.Count() > 1)
+            {
+                //simplified for now:
+                //throw new InvalidOperationException("multiple candidates for symbol declaration");
+                return new SymbolInformation()
+                {
+                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*"
+                };
             }
 
             //if symbol not found in current scope, search parent scope
             if (scope.Parent != null)
             {
-                return FindDeclaration(target, scope.Parent);
+                return FindDeclaration(target, scope.Parent, type);
             }
             else
             {
@@ -416,10 +432,7 @@ namespace DafnyLanguageServer.SymbolTable
                 };
             }
         }
-        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
-        {
-            return FindDeclaration(target.Name, scope);
-        }
+
 
         private SymbolInformation CreateSymbol(
             string name,
