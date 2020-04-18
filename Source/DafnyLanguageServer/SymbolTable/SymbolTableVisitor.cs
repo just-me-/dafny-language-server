@@ -184,7 +184,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: true
             );
-
         }
 
         public override void Leave(LocalVariable o) {
@@ -375,7 +374,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-
         }
 
         public override void Leave(Expression o)
@@ -401,14 +399,13 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-
         }
 
         public override void Leave(AssignmentRhs o)
         {
         }
 
-        private SymbolInformation FindDeclaration(string target, SymbolInformation scope)
+        private SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null)
         {
             var matches = scope.Children.Where(s =>
                 s.Name == target &&
