@@ -421,6 +421,22 @@ namespace DafnyLanguageServer.SymbolTable
             return FindDeclaration(target.Name, scope);
         }
 
+        /// <summary>
+        ///  This is a Factory Method. Default values are set. 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="positionAsToken"></param>
+        /// <param name="bodyStartPosAsToken"></param>
+        /// <param name="bodyEndPosAsToken"></param>
+        /// <param name="isDeclaration">Default: true</param>
+        /// <param name="declarationSymbol">Default: null</param>
+        /// <param name="addUsageAtDeclaration">Default: false</param>
+        /// <param name="canHaveChildren">Default: true</param>
+        /// <param name="setAsChildInParent">Default: true</param>
+        /// <param name="canBeUsed">Default: true</param>
+        /// <param name="addToSymbolTable">Default: true</param>
+        /// <returns>Returns a SymbolInformation about the specific token.</returns>
         private SymbolInformation CreateSymbol(
             string name,
             Type? type,
@@ -429,13 +445,13 @@ namespace DafnyLanguageServer.SymbolTable
             IToken bodyStartPosAsToken,
             IToken bodyEndPosAsToken,
 
-            bool isDeclaration,
-            SymbolInformation declarationSymbol,
-            bool addUsageAtDeclaration,
+            bool isDeclaration = true,
+            SymbolInformation declarationSymbol = null,
+            bool addUsageAtDeclaration = false,
 
-            bool canHaveChildren,
-            bool setAsChildInParent,
-            bool canBeUsed,
+            bool canHaveChildren = true,
+            bool setAsChildInParent = true,
+            bool canBeUsed = true,
             bool addToSymbolTable = true
             )
         {
