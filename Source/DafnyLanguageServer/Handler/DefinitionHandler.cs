@@ -73,7 +73,7 @@ namespace DafnyLanguageServer.Handler
                 // new
                 var manager = _workspaceManager.SymbolTableManager;
                 var selectedSymbol =
-                    manager.GetSymbolByPosition((int) request.Position.Line+1, (int) request.Position.Character);
+                    manager.GetSymbolByPosition((int) request.Position.Line+1, (int) request.Position.Character+1);
                 var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
 
 

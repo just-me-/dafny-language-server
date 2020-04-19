@@ -63,10 +63,11 @@ namespace DafnyLanguageServer.SymbolTable
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
         {
-            return ( symbol.LineStart <= line  
-                     && symbol.LineEnd >= line 
-                     && symbol.ColumnStart <= character 
-                     && symbol.ColumnEnd >= character
+            return (symbol.LineStart == line && symbol.ColumnStart == character) ||
+                    ( symbol.LineStart <= line  
+                         && symbol.LineEnd >= line 
+                         && symbol.ColumnStart <= character 
+                         && symbol.ColumnEnd >= character
                      );
         }
 
@@ -81,7 +82,7 @@ namespace DafnyLanguageServer.SymbolTable
         // Go2Definition 
         public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
         {
-            return symbol.Parent;
+            return symbol.DeclarationOrigin;
         }
 
         // CodeLens
