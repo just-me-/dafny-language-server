@@ -37,41 +37,31 @@ namespace DafnyLanguageServer.Handler
             return await Task.Run(() =>
             {
                 List<CodeLens> items = new List<CodeLens>();
-
-                if (_workspaceManager != null && _workspaceManager.SymbolTableManager != null &&
-                    _workspaceManager.SymbolTableManager.SymbolTables != null)
+                foreach (var modul in _workspaceManager?.SymbolTableManager?.SymbolTables)
                 {
-
-                    foreach (var modul in _workspaceManager.SymbolTableManager.SymbolTables)
+                    foreach (var symbolInformation in modul.Value)
                     {
-                        foreach (var symbolInformation in modul.Value)
+                        if ((symbolInformation.Type == SymbolTable.Type.Class ||
+                             symbolInformation.Type == SymbolTable.Type.Function ||
+                             symbolInformation.Type == SymbolTable.Type.Method) &&
+                            // no constructors and make sure no out-of-range root _defaults
+                            symbolInformation.Name != "_ctor" &&
+                            symbolInformation?.LineStart != null && symbolInformation.LineStart > 0)
                         {
-                            if ((symbolInformation.Type == SymbolTable.Type.Class ||
-                                 symbolInformation.Type == SymbolTable.Type.Function ||
-                                 symbolInformation.Type == SymbolTable.Type.Method) &&
-                                // no constructors and make sure no out-of-range root _defaults
-                                symbolInformation.Name != "_ctor" &&
-                                symbolInformation?.LineStart != null && symbolInformation.LineStart > 0)
+                            Position position = new Position((long) symbolInformation.LineStart - 1, 0);
+                            Range range = new Range {Start = position, End = position};
+                            Command command = new Command
                             {
-                                Position position = new Position((long) symbolInformation.LineStart - 1, 0);
-                                Range range = new Range {Start = position, End = position};
-                                Command command = new Command
-                                {
-                                    Title = ((symbolInformation.Usages?.Count)+0) + " reference(s) to " +
-                                            symbolInformation.Name,
-                                    Name = "dafny.showReferences"
-                                };
-                                items.Add(new CodeLens
-                                    {Data = request.TextDocument.Uri, Range = range, Command = command});
-                            }
+                                Title = (symbolInformation.Usages?.Count) + " reference(s) to " +
+                                        symbolInformation.Name,
+                                Name = "dafny.showReferences"
+                            };
+                            items.Add(new CodeLens
+                                {Data = request.TextDocument.Uri, Range = range, Command = command});
                         }
                     }
-                    return new CodeLensContainer(items);
                 }
-                else
-                {
-                    return new CodeLensContainer();
-                }
+                return new CodeLensContainer(items);
             });
         }
     }
