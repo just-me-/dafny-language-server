@@ -33,6 +33,9 @@ namespace DafnyLanguageServer.Handler
             return await Task.Run(() =>
             {
                 List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
+
+                // old 
+                /*
                 var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                 var word = FileHelper.GetFollowingWord(
                     _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
@@ -66,6 +69,21 @@ namespace DafnyLanguageServer.Handler
                         break;
                     }
                 }
+                */
+                // new
+                var manager = _workspaceManager.SymbolTableManager;
+                var selectedSymbol =
+                    manager.GetSymbolByPosition((int) request.Position.Line+1, (int) request.Position.Character);
+                var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
+
+
+                var positionOffset = 0; 
+                Position position = new Position((long)originSymbol.LineStart - 1, (long)originSymbol.ColumnStart + positionOffset);
+                Range range = new Range { Start = position, End = position };
+                var location = new Location { Uri = request.TextDocument.Uri, Range = range };
+
+                links.Add(new LocationOrLocationLink(location));
+
                 return new LocationOrLocationLinks(links);
             });
         }

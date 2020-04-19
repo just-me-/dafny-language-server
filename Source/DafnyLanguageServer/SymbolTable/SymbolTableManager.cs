@@ -47,12 +47,27 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         // EntryPoint... not by name:string, right? 
-        public SymbolInformation GetSymbolByPosition()
+        public SymbolInformation GetSymbolByPosition(int line, int character)
         {
-            // for each... kann eig nicht mehrere geben aber evt fehler bei classes und co.
-            // daher array zum start / v1
-            // if symbol is in range
-            return null; 
+            var tmpDebugList = new List<SymbolInformation>();
+            foreach (var modul in SymbolTables)
+            {
+                foreach (var symbolInformation in modul.Value)
+                {
+                    if(PositionIsInSymbolsRange(line, character, symbolInformation))
+                        tmpDebugList.Add(symbolInformation);
+                }
+            }
+            return tmpDebugList[0]; 
+        }
+
+        private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
+        {
+            return ( symbol.LineStart <= line  
+                     && symbol.LineEnd >= line 
+                     && symbol.ColumnStart <= character 
+                     && symbol.ColumnEnd >= character
+                     );
         }
 
         // Wenn man ein Symbol liefert "parent" erhalten für AutoCompletion 2do #97
