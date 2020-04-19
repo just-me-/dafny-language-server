@@ -63,6 +63,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
         {
+            // this is not realy smart (first expr for "get it work") 
             return (symbol.LineStart == line && symbol.ColumnStart == character) ||
                     ( symbol.LineStart <= line  
                          && symbol.LineEnd >= line 

@@ -33,57 +33,24 @@ namespace DafnyLanguageServer.Handler
             return await Task.Run(() =>
             {
                 List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-
-                // old 
-                /*
-                var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
-                var word = FileHelper.GetFollowingWord(
-                    _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
-                    (int)request.Position.Line,
-                    (int)request.Position.Character
-                ); // ned mehr das word rausholen sondern position data mitgeben. 
-                // todo not optimized yet - ticket #40
-                foreach (var symbol in symbols.GetFullList())
-                {
-                    if (word == symbol.Name)
-                    {
-                        long column = (long) symbol.Column;
-                        var positionOffset = 0; 
-                        switch (symbol.SymbolType.ToString())
-                        {
-                            case "Class":
-                                positionOffset = -1;
-                                break;
-                            case "Method":
-                                positionOffset = -1;
-                                break; 
-                            case "Definition":
-                                positionOffset = 1;
-                                break; 
-                        }
-                        Position position = new Position((long)symbol.Line - 1, column + positionOffset);
-                        Range range = new Range { Start = position, End = position };
-                        var location = new Location { Uri = request.TextDocument.Uri, Range = range };
-
-                        links.Add(new LocationOrLocationLink(location));
-                        break;
-                    }
-                }
-                */
-                // new
+                
                 var manager = _workspaceManager.SymbolTableManager;
                 var selectedSymbol =
                     manager.GetSymbolByPosition((int) request.Position.Line+1, (int) request.Position.Character+1);
                 var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
 
-
-                var positionOffset = 0; 
+                var positionOffset = 0;
+                switch (originSymbol.Type.ToString())
+                {
+                    case "Variable":
+                        positionOffset = -1;
+                        break;
+                }
                 Position position = new Position((long)originSymbol.LineStart - 1, (long)originSymbol.ColumnStart + positionOffset);
                 Range range = new Range { Start = position, End = position };
                 var location = new Location { Uri = request.TextDocument.Uri, Range = range };
 
                 links.Add(new LocationOrLocationLink(location));
-
                 return new LocationOrLocationLinks(links);
             });
         }
