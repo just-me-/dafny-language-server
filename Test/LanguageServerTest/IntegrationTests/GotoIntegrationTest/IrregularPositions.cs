@@ -43,9 +43,8 @@ namespace GotoIntegrationTest
         public void NegativeSpot()
         {
             string file = Files.gt_goto;
-            var ex = Assert.Throws<AggregateException>(() => SetGoToDefinitionWithoutZeroIndexing(file, -5, -5));
-            var innerEx = ex.InnerExceptions.FirstOrDefault();
-            Assert.IsInstanceOf(typeof(LspInvalidParametersException), innerEx);
+            SetGoToDefinitionWithoutZeroIndexing(file, -5, -5);
+            Assert.IsEmpty(goneTo);
         }
 
     }
