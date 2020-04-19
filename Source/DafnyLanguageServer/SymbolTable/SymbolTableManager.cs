@@ -58,7 +58,7 @@ namespace DafnyLanguageServer.SymbolTable
                         tmpDebugList.Add(symbolInformation);
                 }
             }
-            return tmpDebugList[0]; 
+            return tmpDebugList.Count>0 ? tmpDebugList[0] : null; 
         }
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)

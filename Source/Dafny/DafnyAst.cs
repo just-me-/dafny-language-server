@@ -6746,8 +6746,7 @@ namespace Microsoft.Dafny {
         localVar.Accept(v);
       }
 
-      this.Update.Accept(v);
-
+      this.Update?.Accept(v);
     }
 
     public override IEnumerable<Statement> SubStatements {
