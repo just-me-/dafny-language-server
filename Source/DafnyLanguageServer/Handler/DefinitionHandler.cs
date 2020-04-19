@@ -40,7 +40,7 @@ namespace DafnyLanguageServer.Handler
                 var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
 
                 var positionOffset = 0;
-                switch (originSymbol.Type.ToString())
+                switch (originSymbol.Type.ToString()) // 2do use enums... 
                 {
                     case "Variable":
                         positionOffset = -1;

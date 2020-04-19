@@ -83,7 +83,8 @@ namespace DafnyLanguageServer.SymbolTable
         // Go2Definition 
         public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
         {
-            return symbol.DeclarationOrigin;
+            // return itself it it is already a declaration 
+            return symbol.IsDeclaration ? symbol : symbol.DeclarationOrigin;
         }
 
         // CodeLens

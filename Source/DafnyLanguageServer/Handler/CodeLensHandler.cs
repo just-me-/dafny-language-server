@@ -3,10 +3,12 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyServer;
+using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -36,48 +38,40 @@ namespace DafnyLanguageServer.Handler
             {
                 List<CodeLens> items = new List<CodeLens>();
 
-                var fileSymboltable = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
-                if (fileSymboltable is null)
+                if (_workspaceManager != null && _workspaceManager.SymbolTableManager != null &&
+                    _workspaceManager.SymbolTableManager.SymbolTables != null)
+                {
+
+                    foreach (var modul in _workspaceManager.SymbolTableManager.SymbolTables)
+                    {
+                        foreach (var symbolInformation in modul.Value)
+                        {
+                            if ((symbolInformation.Type == SymbolTable.Type.Class ||
+                                 symbolInformation.Type == SymbolTable.Type.Function ||
+                                 symbolInformation.Type == SymbolTable.Type.Method) &&
+                                // no constructors and make sure no out-of-range root _defaults
+                                symbolInformation.Name != "_ctor" &&
+                                symbolInformation?.LineStart != null && symbolInformation.LineStart > 0)
+                            {
+                                Position position = new Position((long) symbolInformation.LineStart - 1, 0);
+                                Range range = new Range {Start = position, End = position};
+                                Command command = new Command
+                                {
+                                    Title = ((symbolInformation.Usages?.Count)+0) + " reference(s) to " +
+                                            symbolInformation.Name,
+                                    Name = "dafny.showReferences"
+                                };
+                                items.Add(new CodeLens
+                                    {Data = request.TextDocument.Uri, Range = range, Command = command});
+                            }
+                        }
+                    }
+                    return new CodeLensContainer(items);
+                }
+                else
                 {
                     return new CodeLensContainer();
                 }
-                foreach (var symbol in fileSymboltable.GetFullList())
-                {
-                    if (symbol.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Class ||
-                        symbol.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Function ||
-                        symbol.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Method)
-                    {
-                        var symbolReferencecounter = symbol.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Class ? 1 : 0;
-                        foreach (var fileBuffers in _workspaceManager.GetAllFiles().Values)
-                        {
-                            foreach (var filesSymboltable in fileBuffers.SymboleProcessor().GetFullList())
-                            {
-                                if (symbol.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Class)
-                                {
-                                    // not working well yet - ticket #40
-                                    if (filesSymboltable.ParentClass == symbol.Name
-                                        && filesSymboltable.SymbolType == DafnyServer.OldSymbolTable.OldSymbolInformation.Type.Definition
-                                        && filesSymboltable.Module is null)
-                                        symbolReferencecounter++;
-                                }
-                                else
-                                {
-                                    if (filesSymboltable.Name == symbol.Name)
-                                        symbolReferencecounter++;
-                                }
-                            }
-                        }
-                        Position position = new Position((long)symbol.Line - 1, 0);
-                        Range range = new Range { Start = position, End = position };
-                        Command command = new Command
-                        {
-                            Title = (symbolReferencecounter - 1) + " reference(s) to " + symbol.Name,
-                            Name = "dafny.showReferences"
-                        };
-                        items.Add(new CodeLens { Data = request.TextDocument.Uri, Range = range, Command = command });
-                    }
-                }
-                return new CodeLensContainer(items);
             });
         }
     }
