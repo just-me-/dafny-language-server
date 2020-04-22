@@ -47,7 +47,7 @@ namespace DafnyLanguageServer.Handler
                             positionOffset = -1;
                             break;
                     }
-                    Position position = new Position((long)originSymbol.LineStart - 1, (long)originSymbol.ColumnStart + positionOffset);
+                    Position position = new Position((long)originSymbol.Line - 1, (long)originSymbol.ColumnStart + positionOffset);
                     Range range = new Range { Start = position, End = position };
                     var location = new Location { Uri = request.TextDocument.Uri, Range = range };
 

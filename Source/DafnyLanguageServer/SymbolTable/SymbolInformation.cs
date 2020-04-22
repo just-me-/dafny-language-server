@@ -8,13 +8,19 @@ using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
+    /// <summary>
+    /// The actual "string" name for a Symbol is the base <c>SymbolInformation</c>.
+    /// Eg in <c>function myMethod {...}</c> the Symbol (and its position data) is myMethod.
+    /// To get the position of { use BodyStartToken and for } use BodyEndToken. Those positions are only available for
+    /// types like methods, functions, class, ... not for fields or variables. Just like you would expect.
+    /// There are default Tokens set though. (?) todo #102
+    /// </summary>
     public class SymbolInformation
     {
         public TokenPosition Position { get; set; }
-        public int? LineStart => Position?.BodyStartToken.line;
-        public int? LineEnd => Position?.BodyEndToken.line;
+        public int? Line => Position?.BodyStartToken.line;
         public int? ColumnStart => Position?.BodyStartToken.col;
-        public int? ColumnEnd => Position?.BodyEndToken.col;
+        public int? ColumnEnd => ColumnStart + Name.Length; 
         public string Name { get; set; }
         public Type Type { get; set; }
         public SymbolInformation Parent { get; set; }
@@ -25,7 +31,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override string ToString()
         {
-            return $"[L{LineStart}:C{ColumnStart}] \"{Name}\" | P : [L{Parent?.LineStart}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.LineStart + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
+            return $"[L{Line}:C{ColumnStart}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
         }
     }
 

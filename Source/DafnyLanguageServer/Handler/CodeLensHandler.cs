@@ -46,9 +46,9 @@ namespace DafnyLanguageServer.Handler
                              symbolInformation.Type == SymbolTable.Type.Method) &&
                             // no constructors and make sure no out-of-range root _defaults
                             symbolInformation.Name != "_ctor" &&
-                            symbolInformation?.LineStart != null && symbolInformation.LineStart > 0)
+                            symbolInformation?.Line != null && symbolInformation.Line > 0)
                         {
-                            Position position = new Position((long) symbolInformation.LineStart - 1, 0);
+                            Position position = new Position((long) symbolInformation.Line - 1, 0);
                             Range range = new Range {Start = position, End = position};
                             Command command = new Command
                             {

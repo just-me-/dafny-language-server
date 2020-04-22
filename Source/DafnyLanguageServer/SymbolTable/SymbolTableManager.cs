@@ -65,13 +65,10 @@ namespace DafnyLanguageServer.SymbolTable
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
         {
-            // this is not realy smart (first expr for "get it work") 
-            return (symbol.LineStart == line && symbol.ColumnStart == character) ||
-                    ( symbol.LineStart <= line  
-                         && symbol.LineEnd >= line 
-                         && symbol.ColumnStart <= character 
-                         && symbol.ColumnEnd >= character
-                     );
+            return (symbol.Line <= line 
+                    && symbol.Line >= line 
+                    && symbol.ColumnStart <= character 
+                    && symbol.ColumnEnd >= character);
         }
 
         // Wenn man ein Symbol liefert "parent" erhalten für AutoCompletion 2do #97
