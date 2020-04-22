@@ -82,15 +82,9 @@ namespace DafnyLanguageServer.FileManager
 
         public CompilerResults Compile(string[] requestCompilationArguments)
         {
-            try
-            {
 
-                return new CompilationService(this, requestCompilationArguments).Compile();
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("Error while executing compilation. " + e.Message);
-            }
+            return new CompilationService(this, requestCompilationArguments).Compile();
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -29,8 +30,7 @@ namespace DafnyLanguageServer.HandlerServices
         public void SendDiagnostics(FileRepository fileRepository)
         {
             _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
-            try
-            {
+
                 var rawDiagnosticElements = fileRepository.Result.DiagnosticElements;
                 var diagnostics = CreateLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
                 PublishDiagnosticsParams p = new PublishDiagnosticsParams
@@ -40,11 +40,8 @@ namespace DafnyLanguageServer.HandlerServices
                 };
                 _router.Document.PublishDiagnostics(p);
                 _msgSenderService.SendCountedErrors(diagnostics.Count);
-            }
-            catch (Exception e)
-            {
-                _msgSenderService.SendError("Error while Verifying." + e.Message);
-            }
+            
+
         }
 
         public Collection<Diagnostic> CreateLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)

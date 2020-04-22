@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
+using DafnyLanguageServer.ProgramServices;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -56,10 +57,21 @@ namespace DafnyLanguageServer.Handler
         {
             //todo ticket 154 - paar sinnvolle logs machen.
             //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
-            _log.LogError("Hallo???");
+            try
+            {
+                _log.LogInformation("Updating File " + uri);
+                FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
+                _log.LogInformation("Calculating Diagnostics");
+                new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+                _log.LogInformation("Update Request successfully handled.");
 
-            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
-            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Document Update: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling Document Update: " + e.Message);
+
+            }
         }
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)

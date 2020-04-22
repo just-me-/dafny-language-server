@@ -1,4 +1,5 @@
-﻿using DafnyLanguageServer.FileManager;
+﻿using System;
+using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
+using DafnyLanguageServer.ProgramServices;
 using DafnyServer;
 using Microsoft.Extensions.Logging;
 
@@ -39,53 +41,70 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
-            {
-                List<CodeLens> items = new List<CodeLens>();
+            _log.LogInformation("Handling Code Lens");
 
-                var fileSymboltable = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
-                if (fileSymboltable is null)
+            try
+            {
+                return await Task.Run(() =>
                 {
-                    return new CodeLensContainer();
-                }
-                foreach (var symbol in fileSymboltable.GetFullList())
-                {
-                    if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ||
-                        symbol.SymbolType == SymbolTable.SymbolInformation.Type.Function ||
-                        symbol.SymbolType == SymbolTable.SymbolInformation.Type.Method)
+                    List<CodeLens> items = new List<CodeLens>();
+
+                    var fileSymboltable = _workspaceManager.GetFileRepository(request.TextDocument.Uri)
+                        .SymboleProcessor();
+                    if (fileSymboltable is null)
                     {
-                        var symbolReferencecounter = symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ? 1 : 0;
-                        foreach (var fileBuffers in _workspaceManager.GetAllFiles().Values)
+                        return new CodeLensContainer();
+                    }
+
+                    foreach (var symbol in fileSymboltable.GetFullList())
+                    {
+                        if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ||
+                            symbol.SymbolType == SymbolTable.SymbolInformation.Type.Function ||
+                            symbol.SymbolType == SymbolTable.SymbolInformation.Type.Method)
                         {
-                            foreach (var filesSymboltable in fileBuffers.SymboleProcessor().GetFullList())
+                            var symbolReferencecounter =
+                                symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class ? 1 : 0;
+                            foreach (var fileBuffers in _workspaceManager.GetAllFiles().Values)
                             {
-                                if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class)
+                                foreach (var filesSymboltable in fileBuffers.SymboleProcessor().GetFullList())
                                 {
-                                    // not working well yet - ticket #40
-                                    if (filesSymboltable.ParentClass == symbol.Name
-                                        && filesSymboltable.SymbolType == SymbolTable.SymbolInformation.Type.Definition
-                                        && filesSymboltable.Module is null)
-                                        symbolReferencecounter++;
-                                }
-                                else
-                                {
-                                    if (filesSymboltable.Name == symbol.Name)
-                                        symbolReferencecounter++;
+                                    if (symbol.SymbolType == SymbolTable.SymbolInformation.Type.Class)
+                                    {
+                                        // not working well yet - ticket #40
+                                        if (filesSymboltable.ParentClass == symbol.Name
+                                            && filesSymboltable.SymbolType ==
+                                            SymbolTable.SymbolInformation.Type.Definition
+                                            && filesSymboltable.Module is null)
+                                            symbolReferencecounter++;
+                                    }
+                                    else
+                                    {
+                                        if (filesSymboltable.Name == symbol.Name)
+                                            symbolReferencecounter++;
+                                    }
                                 }
                             }
+
+                            Position position = new Position((long) symbol.Line - 1, 0);
+                            Range range = new Range {Start = position, End = position};
+                            Command command = new Command
+                            {
+                                Title = (symbolReferencecounter - 1) + " reference(s) to " + symbol.Name,
+                                Name = "dafny.showReferences"
+                            };
+                            items.Add(new CodeLens {Data = request.TextDocument.Uri, Range = range, Command = command});
                         }
-                        Position position = new Position((long)symbol.Line - 1, 0);
-                        Range range = new Range { Start = position, End = position };
-                        Command command = new Command
-                        {
-                            Title = (symbolReferencecounter - 1) + " reference(s) to " + symbol.Name,
-                            Name = "dafny.showReferences"
-                        };
-                        items.Add(new CodeLens { Data = request.TextDocument.Uri, Range = range, Command = command });
                     }
-                }
-                return new CodeLensContainer(items);
-            });
+
+                    return new CodeLensContainer(items);
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling CodeLens: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling CodeLens: " + e.Message);
+                return null;
+            }
         }
     }
 }

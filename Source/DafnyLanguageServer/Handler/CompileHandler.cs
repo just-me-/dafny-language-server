@@ -1,4 +1,5 @@
-﻿using OmniSharp.Extensions.JsonRpc;
+﻿using System;
+using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
@@ -44,8 +45,19 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
         {
-            FileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
-            return await Task.Run(() => f.Compile(request.CompilationArguments), cancellationToken);
+            _log.LogInformation("Handling Compilation...");
+
+            try
+            {
+                FileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
+                return await Task.Run(() => f.Compile(request.CompilationArguments), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling compilation: " + e.Message);
+
+                return null;
+            }
         }
     }
 }

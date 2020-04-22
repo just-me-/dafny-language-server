@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.ProgramServices;
 using DafnyServer;
 using Microsoft.Extensions.Logging;
 
@@ -40,20 +41,33 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
+            _log.LogInformation("Completions...");
+
+            try
             {
-                var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
-                var word = FileHelper.GetCurrentWord(
-                    _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
-                    (int)request.Position.Line,
-                    (int)request.Position.Character
-                );
-                var parentClass = symbols.GetParentForWord(word);
-                
-                return (symbols is null) ?
-                    new CompletionList() :
-                    ConvertListToCompletionresponse(symbols.GetList(parentClass), request);
-            });
+                return await Task.Run(() =>
+                {
+
+                    var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
+                    var word = FileHelper.GetCurrentWord(
+                        _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
+                        (int) request.Position.Line,
+                        (int) request.Position.Character
+                    );
+                    var parentClass = symbols.GetParentForWord(word);
+
+                    return (symbols is null)
+                        ? new CompletionList()
+                        : ConvertListToCompletionresponse(symbols.GetList(parentClass), request);
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Completions: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message);
+
+                return null;
+            }
         }
 
         public CompletionList ConvertListToCompletionresponse(List<SymbolTable.SymbolInformation> symbols, CompletionParams request)

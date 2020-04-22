@@ -1,4 +1,5 @@
-﻿using DafnyLanguageServer.FileManager;
+﻿using System;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
@@ -51,8 +52,19 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
-            var file = _workspaceManager.GetFileRepository(request.DafnyFile);
-            return await Task.Run(() => file.CounterExample());
+            _log.LogInformation("Handling Counter Example");
+
+            try
+            {
+                var file = _workspaceManager.GetFileRepository(request.DafnyFile);
+                return await Task.Run(() => file.CounterExample());
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Counter Example: " + e.Message);
+
+                return null;
+            }
         }
 
     }

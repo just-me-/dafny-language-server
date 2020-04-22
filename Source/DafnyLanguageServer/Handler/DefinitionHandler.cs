@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -6,6 +7,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.ProgramServices;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -38,44 +40,58 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
-            {
-                List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-                var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
-                var word = FileHelper.GetFollowingWord(
-                    _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
-                    (int)request.Position.Line,
-                    (int)request.Position.Character
-                );
-                // todo not optimized yet - ticket #40
-                foreach (var symbol in symbols.GetFullList())
-                {
-                    if (word == symbol.Name)
-                    {
-                        long column = (long) symbol.Column;
-                        var positionOffset = 0; 
-                        switch (symbol.SymbolType.ToString())
-                        {
-                            case "Class":
-                                positionOffset = -1;
-                                break;
-                            case "Method":
-                                positionOffset = -1;
-                                break; 
-                            case "Definition":
-                                positionOffset = 1;
-                                break; 
-                        }
-                        Position position = new Position((long)symbol.Line - 1, column + positionOffset);
-                        Range range = new Range { Start = position, End = position };
-                        var location = new Location { Uri = request.TextDocument.Uri, Range = range };
+            _log.LogInformation("Handling Goto Definition...");
 
-                        links.Add(new LocationOrLocationLink(location));
-                        break;
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
+                    var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
+                    var word = FileHelper.GetFollowingWord(
+                        _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
+                        (int) request.Position.Line,
+                        (int) request.Position.Character
+                    );
+                    // todo not optimized yet - ticket #40
+                    foreach (var symbol in symbols.GetFullList())
+                    {
+                        if (word == symbol.Name)
+                        {
+                            long column = (long) symbol.Column;
+                            var positionOffset = 0;
+                            switch (symbol.SymbolType.ToString())
+                            {
+                                case "Class":
+                                    positionOffset = -1;
+                                    break;
+                                case "Method":
+                                    positionOffset = -1;
+                                    break;
+                                case "Definition":
+                                    positionOffset = 1;
+                                    break;
+                            }
+
+                            Position position = new Position((long) symbol.Line - 1, column + positionOffset);
+                            Range range = new Range {Start = position, End = position};
+                            var location = new Location {Uri = request.TextDocument.Uri, Range = range};
+
+                            links.Add(new LocationOrLocationLink(location));
+                            break;
+                        }
                     }
-                }
-                return new LocationOrLocationLinks(links);
-            });
+
+                    return new LocationOrLocationLinks(links);
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Definition: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling Definition: " + e.Message);
+
+                return null;
+            }
         }
     }
 }
