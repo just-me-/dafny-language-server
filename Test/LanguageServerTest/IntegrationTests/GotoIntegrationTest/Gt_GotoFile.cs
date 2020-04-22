@@ -26,7 +26,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void MidWord()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 24);
@@ -66,7 +66,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void MidWord_ClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 24);
@@ -105,7 +105,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void MidWord_MethodInClassA()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 14);
@@ -145,7 +145,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-       // [Test]
+        //[Test]
         public void MidWord_MethodInClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 14);
@@ -185,7 +185,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void MidWord_MultiReturnMethod()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 20);
