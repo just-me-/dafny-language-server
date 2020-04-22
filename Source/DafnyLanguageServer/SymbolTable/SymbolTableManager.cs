@@ -11,6 +11,8 @@ namespace DafnyLanguageServer.SymbolTable
     /// <summary>
     /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work. 
     /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
+    /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
+    /// Mostly there is only one module - the default module for a single Dafny file. 
     /// </summary>
     public class SymbolTableManager
     {
@@ -80,11 +82,13 @@ namespace DafnyLanguageServer.SymbolTable
             // Mby rm duplicates and constructor 
         }
 
-        // Go2Definition 
+        /// <summary>
+        /// Return itself it it is already a declaration.
+        /// Used for Go2Definition. 
+        /// </summary>
         public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
         {
-            // return itself it it is already a declaration 
-            return symbol.IsDeclaration ? symbol : symbol.DeclarationOrigin;
+            return symbol.DeclarationOrigin;
         }
 
         // CodeLens
