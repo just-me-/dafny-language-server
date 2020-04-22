@@ -30,39 +30,13 @@ namespace DafnyLanguageServer
 
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
-            Console.WriteLine(config);
+            //Console.WriteLine(config);
 
-            var loggerconfig = new LoggerConfiguration();
-
-            switch (config.Loglevel)
-            {
-                case LogLevel.Trace:
-                    loggerconfig.MinimumLevel.Verbose();
-                    break;
-                case LogLevel.Debug:
-                    loggerconfig.MinimumLevel.Debug();
-                    break;
-                case LogLevel.Information:
-                    loggerconfig.MinimumLevel.Information();
-                    break;
-                case LogLevel.Warning:
-                    loggerconfig.MinimumLevel.Warning();
-                    break;
-                case LogLevel.Error:
-                default:
-                    loggerconfig.MinimumLevel.Error();
-                    break;
-                case LogLevel.Critical:
-                    loggerconfig.MinimumLevel.Fatal();
-                    break;
-
-            }
-
-            log = loggerconfig
-                .Enrich.FromLogContext()
-                .WriteTo.File(config.LogFile, fileSizeLimitBytes: 1024 * 1024)
-                .CreateLogger();
+            SetupLogger();
         }
+
+        
+
         public async Task StartServer()
         {
             log.Debug("Server Starting");
@@ -130,6 +104,39 @@ namespace DafnyLanguageServer
                 msgSender.SendWarning("Error while setting up config. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
                 log.Warning("Error while configuring log. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
             }
+        }
+
+        private void SetupLogger()
+        {
+            var loggerconfig = new LoggerConfiguration();
+
+            switch (config.Loglevel)
+            {
+                case LogLevel.Trace:
+                    loggerconfig.MinimumLevel.Verbose();
+                    break;
+                case LogLevel.Debug:
+                    loggerconfig.MinimumLevel.Debug();
+                    break;
+                case LogLevel.Information:
+                    loggerconfig.MinimumLevel.Information();
+                    break;
+                case LogLevel.Warning:
+                    loggerconfig.MinimumLevel.Warning();
+                    break;
+                case LogLevel.Error:
+                default:
+                    loggerconfig.MinimumLevel.Error();
+                    break;
+                case LogLevel.Critical:
+                    loggerconfig.MinimumLevel.Fatal();
+                    break;
+            }
+
+            log = loggerconfig
+                .Enrich.FromLogContext()
+                .WriteTo.File(config.LogFile, fileSizeLimitBytes: 1024 * 1024)
+                .CreateLogger();
         }
 
         private void ConfigureServices(IServiceCollection services)

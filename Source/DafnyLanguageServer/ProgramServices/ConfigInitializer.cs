@@ -11,7 +11,7 @@ namespace DafnyLanguageServer.ProgramServices
     /// </summary>
     public class ConfigInitializer
     {
-        private const string defaultCfgFile = "LanguageServerConfig.json";
+        private const string defaultCfgFile = "./LanguageServerConfig.json";
         private const string defaultStreamPath = "../Logs/StreamRedirection.txt";
         private const string defaultLogPath = "../Logs/Log.txt";
 
@@ -19,15 +19,21 @@ namespace DafnyLanguageServer.ProgramServices
         public LanguageServerConfig Config { get; set; } = new LanguageServerConfig();
 
 
-        private string[] LaunchArguments { get; set; }
-        private string AssemblyPath { get; set; }
-        private string PathToJSONConfigFile { get; set; }
+        private string[] LaunchArguments { get; }
+        private string AssemblyPath { get; set;  }
+        private string PathToJSONConfigFile { get; }
 
 
         //Log Levels (starting from 0)
         //Trace - Debug - Info - Warning - Error - Critical - None
 
-        public ConfigInitializer(string[] launchArguments) : this(launchArguments, defaultCfgFile) { }
+        public ConfigInitializer(string[] launchArguments)
+        {
+            LaunchArguments = launchArguments;
+            AssemblyPath = Path.GetDirectoryName(typeof(ConfigInitializer).Assembly.Location);
+            PathToJSONConfigFile = Path.Combine(AssemblyPath, defaultCfgFile);
+            SetUp();
+        }
 
         public ConfigInitializer(string[] launchArguments, string pathToJsonConfigFile)
         {
