@@ -27,7 +27,7 @@ namespace ProgramTest
         public void Defaults()
         {
             string configFile = Files.cr_default;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -45,7 +45,7 @@ namespace ProgramTest
         public void Fine()
         {
             string configFile = Files.cr_fine;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("../Binaries/b.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("../Binaries/a.txt");
@@ -64,7 +64,7 @@ namespace ProgramTest
         public void SameFiles()
         {
             string configFile = Files.cr_sameFiles;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -84,7 +84,7 @@ namespace ProgramTest
         public void MissingFields()
         {
             string configFile = Files.cr_missingFields;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -102,7 +102,7 @@ namespace ProgramTest
         public void AdditionalFields()
         {
             string configFile = Files.cr_additionalFields;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -120,7 +120,7 @@ namespace ProgramTest
         public void OtherFileExtension()
         {
             string configFile = Files.cr_otherEnding;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("StreamRedirection.log");
             string expectedStreamFile = CombineWithDefaultLogFolder("Log.log");
@@ -138,7 +138,7 @@ namespace ProgramTest
         public void NoFileExtension()
         {
             string configFile = Files.cr_noEnding;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("StreamRedirection");
             string expectedStreamFile = CombineWithDefaultLogFolder("Log");
@@ -158,7 +158,7 @@ namespace ProgramTest
         public void Backslashes()
         {
             string configFile = Files.cr_backslashes;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -177,7 +177,7 @@ namespace ProgramTest
         public void Empty()
         {
             string configFile = Files.cr_empty;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -196,7 +196,7 @@ namespace ProgramTest
         public void NoJson()
         {
             string configFile = Files.cr_nojsony;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -215,7 +215,7 @@ namespace ProgramTest
         public void ExceedingLogLevel()
         {
             string configFile = Files.cr_wrongLogLevel;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -234,7 +234,7 @@ namespace ProgramTest
         public void WrongLogLevelType()
         {
             string configFile = Files.cr_wrongLogLevelType;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -252,7 +252,7 @@ namespace ProgramTest
         public void WrongStreamPathType()
         {
             string configFile = Files.cr_wrongStreamPathType;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = CombineWithDefaultLogFolder("../Binaries/1"); //int as path will just use this as file name
@@ -271,7 +271,7 @@ namespace ProgramTest
         public void WrongLogPathType()
         {
             string configFile = Files.cr_wrongLogPathType;
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("../Binaries/2");
             string expectedStreamFile = defaultStream;
@@ -292,7 +292,7 @@ namespace ProgramTest
         public void NoCfgFile()
         {
             string configFile = CombinePath("/", "abasdfasfdsa.json");
-            var cr = new ConfigReader(new string[] { }, configFile);
+            var cr = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -317,7 +317,7 @@ namespace ProgramTest
         {
             string configFile = CombinePath("/", "abasdfasfdsa.json");
 
-            var cr = new ConfigReader(new string[] { "/log", "../Logs/a.txt", "/stream", "../Logs/b.txt", "/loglevel", "0" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/log", "../Logs/a.txt", "/stream", "../Logs/b.txt", "/loglevel", "0" }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
@@ -337,7 +337,7 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var cr = new ConfigReader(new string[] { "/log", "../Logs/a.txt", "/stream", "../Logs/b.txt", "/loglevel", "0" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/log", "../Logs/a.txt", "/stream", "../Logs/b.txt", "/loglevel", "0" }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
@@ -356,7 +356,7 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var cr = new ConfigReader(new string[] { "/abc", "abc" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/abc", "abc" }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -378,7 +378,7 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var cr = new ConfigReader(new string[] { "/log" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/log" }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -399,7 +399,7 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var cr = new ConfigReader(new string[] { "/loglevel", "Yes Please Log" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/loglevel", "Yes Please Log" }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
@@ -418,7 +418,7 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var cr = new ConfigReader(new string[] { "/loglevel", "55" }, configFile);
+            var cr = new ConfigInitializer(new string[] { "/loglevel", "55" }, configFile);
 
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;

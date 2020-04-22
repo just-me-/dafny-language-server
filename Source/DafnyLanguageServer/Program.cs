@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace DafnyLanguageServer
 {
     /// <summary>
-    /// This class provides the <c>Main</c> function.
+    /// This class provides the <C>Main</C> function.
     /// It starts the Omnisharp Language Server.
     /// </summary>
     class Program

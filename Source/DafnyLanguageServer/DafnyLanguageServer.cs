@@ -15,26 +15,26 @@ namespace DafnyLanguageServer
     /// <summary>
     /// Creates and starts the Dafny Language Server.
     /// It starts the Omnisharp Language Server and registers all handlers as well as the services.
-    /// It does also use owr <c>ConfigReader</c> to provide customized settings for the server.
+    /// It does also use owr <c>ConfigInitializer</c> to provide customized settings for the server.
     /// It also redirects the output stream. 
     /// </summary>
     class DafnyLanguageServer
     {
         private ILogger log;
-        private ConfigReader configReader;
+        private LanguageServerConfig config;
         private MessageSenderService msgSender; 
 
         public DafnyLanguageServer(string[] args)
         {
-            configReader = new ConfigReader(args);
+            config = new ConfigInitializer(args).Config;
 
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
-            //configReader.PrintState();
+            //Console.WriteLine(config);
 
             var loggerconfig = new LoggerConfiguration();
 
-            switch (configReader.Loglevel)
+            switch (config.Loglevel)
             {
                 case LogLevel.Trace:
                     loggerconfig.MinimumLevel.Verbose();
@@ -60,7 +60,7 @@ namespace DafnyLanguageServer
 
             log = loggerconfig
                 .Enrich.FromLogContext()
-                .WriteTo.File(configReader.LogFile, fileSizeLimitBytes: 1024 * 1024)
+                .WriteTo.File(config.LogFile, fileSizeLimitBytes: 1024 * 1024)
                 .CreateLogger();
         }
         public async Task StartServer()
@@ -95,7 +95,7 @@ namespace DafnyLanguageServer
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
             try
             {
-                using (StreamWriter writer = new StreamWriter(new FileStream(configReader.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
+                using (StreamWriter writer = new StreamWriter(new FileStream(config.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
                 {
                     Console.SetOut(writer);
                     await server.WaitForExit;
@@ -125,10 +125,10 @@ namespace DafnyLanguageServer
 
         private void CheckForConfigReader()
         {
-            if (configReader.Error)
+            if (config.Error)
             {
-                msgSender.SendWarning("Error while setting up config: " + configReader.ErrorMsg);
-                log.Warning("Error while configuring log. Error Message: " + configReader.ErrorMsg);
+                msgSender.SendWarning("Error while setting up config. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
+                log.Warning("Error while configuring log. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
             }
         }
 
