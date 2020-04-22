@@ -125,6 +125,12 @@ namespace DafnyLanguageServer.ProgramServices
             string key = splitted[0];
             string value = splitted[1];
 
+            if (value.Length < 1)
+            {
+                throw new ArgumentException("No Argument provided for switch '" + key);
+
+            }
+
             switch (key.ToLower())
             {
                 case "/stream":
@@ -137,7 +143,7 @@ namespace DafnyLanguageServer.ProgramServices
                     Config.Loglevel = (LogLevel)int.Parse(value);
                     break;
                 default:
-                    throw new ArgumentException("Unkown switch: '" + value + "'. Please refer to readme.md");
+                    throw new ArgumentException("Unknown switch: '" + value + "'. Please refer to readme.md");
             }
         }
 

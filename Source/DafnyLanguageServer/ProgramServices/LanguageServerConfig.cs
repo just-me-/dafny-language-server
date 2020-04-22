@@ -21,12 +21,13 @@ namespace DafnyLanguageServer.ProgramServices
 
         public override string ToString()
         {
-            string result = $"Log: {LogFile}";
-            result += $"Stream: {RedirectedStreamFile}";
-            result += $"LogLevel: {Loglevel}";
-            result += $"Error: {Error}";
-            result += $"ErrorMsg: {ErrorMsg}";
-            return result;
+            StringBuilder s = new StringBuilder();
+            s.AppendLine($"Log: {LogFile}");
+            s.AppendLine($"Stream: {RedirectedStreamFile}");
+            s.AppendLine($"LogLevel: {Loglevel}");
+            s.AppendLine($"Error: {Error}");
+            s.AppendLine($"ErrorMsg: {ErrorMsg}");
+            return s.ToString();
         }
 
 
