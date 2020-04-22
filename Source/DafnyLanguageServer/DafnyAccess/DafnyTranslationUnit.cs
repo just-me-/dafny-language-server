@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         public DafnyTranslationUnit(PhysicalFile file)
         {
-            ExecutionEngine.printer = new ConsolePrinter();
+            ExecutionEngine.printer = new LanguageServerOutputWriter("G:/Test.txt");
 
             this.file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
         }
