@@ -11,7 +11,6 @@ namespace DafnyLanguageServer
     {
         static async Task Main(string[] args)
         {
-            ExecutionEngine.printer = new ConsolePrinter();
 
             DafnyLanguageServer languageServer =  new DafnyLanguageServer(args);
             await languageServer.StartServer();
