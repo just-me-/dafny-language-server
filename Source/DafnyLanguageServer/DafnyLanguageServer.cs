@@ -30,7 +30,7 @@ namespace DafnyLanguageServer
 
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
-            //Console.WriteLine(config);
+            Console.WriteLine(config);
 
             var loggerconfig = new LoggerConfiguration();
 

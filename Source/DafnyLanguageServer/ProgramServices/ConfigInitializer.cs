@@ -143,7 +143,7 @@ namespace DafnyLanguageServer.ProgramServices
                     Config.Loglevel = (LogLevel)int.Parse(value);
                     break;
                 default:
-                    throw new ArgumentException("Unknown switch: '" + value + "'. Please refer to readme.md");
+                    throw new ArgumentException("Unknown switch: '" + key + "'. Please refer to readme.md");
             }
         }
 

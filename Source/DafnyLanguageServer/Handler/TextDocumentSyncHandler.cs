@@ -56,7 +56,7 @@ namespace DafnyLanguageServer.Handler
         {
             //todo ticket 154 - paar sinnvolle logs machen.
             //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
-            log.LogError("Hallo???");
+            _log.LogError("Hallo???");
 
             FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
             new DiagnosticsService(_router).SendDiagnostics(fileRepository);

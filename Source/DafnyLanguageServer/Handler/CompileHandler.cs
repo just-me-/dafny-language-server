@@ -36,10 +36,10 @@ namespace DafnyLanguageServer.Handler
         private readonly WorkspaceManager _workspaceManager;
         private readonly ILogger _log;
 
-        public CompileHandler(WorkspaceManager b, ILoggerFactory lg)
+        public CompileHandler(WorkspaceManager b, ILoggerFactory lf)
         {
             _workspaceManager = b;
-            _log = lg.CreateLogger("");
+            _log = lf.CreateLogger("");
         }
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)

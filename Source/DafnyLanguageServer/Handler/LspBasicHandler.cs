@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.Handler
         protected readonly DocumentSelector _documentSelector;
         protected readonly ILoggerFactory _loggingFactory;
         
-        protected readonly ILogger log;
+        protected readonly ILogger _log;
 
 
         public LspBasicHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
@@ -29,7 +29,7 @@ namespace DafnyLanguageServer.Handler
                     Pattern = "**/*.dfy"
                 });
             _loggingFactory = loggingFactory;
-            log = _loggingFactory.CreateLogger("");
+            _log = _loggingFactory?.CreateLogger("");
         }
 
         // 2do would be nice if capability could also be extracted + setter #136
