@@ -67,6 +67,7 @@ namespace DafnyLanguageServer
             CheckForConfigReader(); 
 
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
+            //code should no longer make prints but lets keep it for additional safety.
             try
             {
                 using (StreamWriter writer = new StreamWriter(new FileStream(config.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))

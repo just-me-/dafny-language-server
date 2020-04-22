@@ -18,14 +18,10 @@ namespace DafnyLanguageServer.DafnyAccess
     using System.IO;
 
  
-        public class LanguageServerOutputWriter : OutputPrinter
+        public class LanguageServerOutputWriterSink : OutputPrinter
         {
-            private string File { get; }
 
-            public LanguageServerOutputWriter(string file)
-            {
-                File = file;
-            }
+
             public void ErrorWriteLine(TextWriter tw, string s)
             {
                 tw.WriteLine(s);
@@ -39,10 +35,6 @@ namespace DafnyLanguageServer.DafnyAccess
 
             public void AdvisoryWriteLine(string format, params object[] args)
             {
-                using (StreamWriter sw = new StreamWriter(File, true))
-                {
-                    sw.WriteLine(format, args);
-                }
             }
 
             public void Inform(string s, TextWriter tw)
@@ -54,42 +46,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             public void WriteTrailer(PipelineStatistics stats)
             {
-                using (StreamWriter sw = new StreamWriter(File, true))
-                {
-                    sw.WriteLine();
-                    if (CommandLineOptions.Clo.vcVariety == CommandLineOptions.VCVariety.Doomed)
-                        sw.Write("{0} finished with {1} credible, {2} doomed{3}", new object[4]
-                        {
-                            (object) CommandLineOptions.Clo.DescriptiveToolName,
-                            (object) stats.VerifiedCount,
-                            (object) stats.ErrorCount,
-                            stats.ErrorCount == 1 ? (object) "" : (object) "s"
-                        });
-                    else if (CommandLineOptions.Clo.ShowVerifiedProcedureCount)
-                        sw.Write("{0} finished with {1} verified, {2} error{3}", new object[4]
-                        {
-                            (object) CommandLineOptions.Clo.DescriptiveToolName,
-                            (object) stats.VerifiedCount,
-                            (object) stats.ErrorCount,
-                            stats.ErrorCount == 1 ? (object) "" : (object) "s"
-                        });
-                    else
-                        sw.Write("{0} finished with {1} error{2}",
-                            (object) CommandLineOptions.Clo.DescriptiveToolName, (object) stats.ErrorCount,
-                            stats.ErrorCount == 1 ? (object) "" : (object) "s");
-                    if ((uint) stats.InconclusiveCount > 0U)
-                        sw.Write(", {0} inconclusive{1}", (object) stats.InconclusiveCount,
-                            stats.InconclusiveCount == 1 ? (object) "" : (object) "s");
-                    if ((uint) stats.TimeoutCount > 0U)
-                        sw.Write(", {0} time out{1}", (object) stats.TimeoutCount,
-                            stats.TimeoutCount == 1 ? (object) "" : (object) "s");
-                    if ((uint) stats.OutOfMemoryCount > 0U)
-                        sw.Write(", {0} out of memory", (object) stats.OutOfMemoryCount);
-                    if ((uint) stats.OutOfResourceCount > 0U)
-                        sw.Write(", {0} out of resource", (object) stats.OutOfResourceCount);
-                    sw.WriteLine();
-                    sw.Flush();
-                }
+                
             }
 
             public void WriteErrorInformation(
