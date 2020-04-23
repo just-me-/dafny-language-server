@@ -1,10 +1,12 @@
-﻿using DafnyLanguageServer.FileManager;
+﻿using System;
+using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -40,16 +42,29 @@ namespace DafnyLanguageServer.Handler
     {
 
         private readonly WorkspaceManager _workspaceManager;
+        private readonly ILogger _log;
 
-        public CounterExampleHandler(WorkspaceManager b)
+        public CounterExampleHandler(WorkspaceManager b, ILoggerFactory loggerFactory)
         {
             _workspaceManager = b;
+            _log = loggerFactory.CreateLogger("");
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
-            var file = _workspaceManager.GetFileRepository(request.DafnyFile);
-            return await Task.Run(() => file.CounterExample());
+            _log.LogInformation("Handling Counter Example");
+
+            try
+            {
+                var file = _workspaceManager.GetFileRepository(request.DafnyFile);
+                return await Task.Run(() => file.CounterExample());
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Counter Example: " + e.Message);
+
+                return null;
+            }
         }
 
     }

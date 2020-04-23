@@ -1,4 +1,5 @@
-﻿using DafnyLanguageServer.FileManager;
+﻿using System;
+using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -7,19 +8,23 @@ using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
+using DafnyLanguageServer.ProgramServices;
 using DafnyServer;
 using Microsoft.Dafny;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
     /// <summary>
     /// This class provides CodeLens information for VS Code.
-    /// This class is work in progress. The content of this huge class should be outsourced into a <c>CodeLensServiceProvider</c>. 
+    /// This class is work in progress. The content of this huge class should be outsourced into a <c>CodeLensServiceProvider</c>.
     /// </summary>
     public class CodeLensHandler : LspBasicHandler<CodeLensCapability>, ICodeLensHandler
     {
-        public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-            : base(router, workspaceManager)
+        private CodeLensCapability _capability;
+
+        public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+            : base(router, workspaceManager, loggingFactory)
         {
         }
 
@@ -34,6 +39,11 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
+<<<<<<< HEAD
+            _log.LogInformation("Handling Code Lens");
+
+            try
+            { //2do
             return await Task.Run(() =>
             {
                 List<CodeLens> items = new List<CodeLens>();
@@ -60,9 +70,16 @@ namespace DafnyLanguageServer.Handler
                                 {Data = request.TextDocument.Uri, Range = range, Command = command});
                         }
                     }
-                }
-                return new CodeLensContainer(items);
-            });
+
+                    return new CodeLensContainer(items);
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling CodeLens: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling CodeLens: " + e.Message);
+                return null;
+            }
         }
     }
 }

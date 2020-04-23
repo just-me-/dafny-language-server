@@ -182,17 +182,20 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DafnyAccess\LanguageServerOutputWriterSink.cs" />
     <Compile Include="FileManager\PhysicalFile.cs" />
     <Compile Include="FileManager\TranslationResult.cs" />
     <Compile Include="DafnyAccess\TranslationStatus.cs" />
     <Compile Include="DafnyLanguageServer.cs" />
     <Compile Include="HandlerServices\CompilationService.cs" />
+    <Compile Include="Handler\ShutdownHandler.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
-    <Compile Include="ProgramServices\ConfigReader.cs" />
+    <Compile Include="ProgramServices\ConfigInitializer.cs" />
     <Compile Include="FileManager\WorkspaceManager.cs" />
     <Compile Include="DafnyAccess\DiagnosticElement.cs" />
     <Compile Include="Handler\CodeLensHandler.cs" />
     <Compile Include="Handler\WorkspaceHandlers.cs" />
+    <Compile Include="ProgramServices\LanguageServerConfig.cs" />
     <Compile Include="ProgramServices\MessageSenderService.cs" />
     <Compile Include="Handler\CompletionHandler.cs" />
     <Compile Include="Handler\CounterExampleHandler.cs" />

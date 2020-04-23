@@ -1,4 +1,5 @@
 ﻿using DafnyLanguageServer.FileManager;
+using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
@@ -7,17 +8,20 @@ namespace DafnyLanguageServer.Handler
     /// <summary>
     /// This component provides virtual methods and general needed instance variables
     /// for Handler components that are basic LSP standard features.
-    /// For same - but small different typed - code (like capability) this class is generic. 
+    /// For same - but small different typed - code (like capability) this class is generic.
     /// </summary>
     public class LspBasicHandler<T>
     {
         protected readonly ILanguageServer _router;
         protected readonly WorkspaceManager _workspaceManager;
         protected readonly DocumentSelector _documentSelector;
+        protected readonly ILoggerFactory _loggingFactory;
+
+        protected readonly ILogger _log;
 
         protected T _capability; // needed by OmniSharp
 
-        public LspBasicHandler(ILanguageServer router, WorkspaceManager workspaceManager)
+        public LspBasicHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null))
         {
             _router = router;
             _workspaceManager = workspaceManager;
@@ -26,6 +30,8 @@ namespace DafnyLanguageServer.Handler
                 {
                     Pattern = "**/*.dfy"
                 });
+            _loggingFactory = loggingFactory;
+            _log = _loggingFactory?.CreateLogger("");
         }
 
         public void SetCapability(T capability)

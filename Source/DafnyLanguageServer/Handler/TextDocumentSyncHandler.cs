@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
+using DafnyLanguageServer.ProgramServices;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -23,8 +25,8 @@ namespace DafnyLanguageServer.Handler
     {
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
 
-        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-            : base(router, workspaceManager)
+        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+            : base(router, workspaceManager, loggingFactory)
         {
         }
 
@@ -47,8 +49,23 @@ namespace DafnyLanguageServer.Handler
         /// </summary>
         private void UpdateFileAndSendDiagnostics(Uri uri, string text)
         {
-            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
-            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+            //todo ticket 154 - paar sinnvolle logs machen.
+            //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
+            try
+            {
+                _log.LogInformation("Updating File " + uri);
+                FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
+                _log.LogInformation("Calculating Diagnostics");
+                new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+                _log.LogInformation("Update Request successfully handled.");
+
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Document Update: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling Document Update: " + e.Message);
+
+            }
         }
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)

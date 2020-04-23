@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -6,17 +7,19 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.ProgramServices;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
     /// <summary>
     /// This handler provides the <c>go to definition</c> position for symbols.
-    /// This class is work in progress. The content of this huge class should be outsourced into a <c>GoToDefinitionServiceProvider</c>. 
+    /// This class is work in progress. The content of this huge class should be outsourced into a <c>GoToDefinitionServiceProvider</c>.
     /// </summary>
     public class DefinitionHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
     {
-        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager)
-        : base(router, workspaceManager)
+        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        : base(router, workspaceManager, loggingFactory)
         {
         }
 
@@ -30,18 +33,20 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
+            _log.LogInformation("Handling Goto Definition...");
+
+            try
             {
                 List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-                
+
                 var manager = _workspaceManager.SymbolTableManager;
                 var selectedSymbol =
                     manager.GetSymbolByPosition((int) request.Position.Line+1, (int) request.Position.Character+1);
-                if(selectedSymbol != null) { 
+                if(selectedSymbol != null) {
                     var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
 
                     var positionOffset = 0;
-                    switch (originSymbol.Type.ToString()) // 2do use enums... 
+                    switch (originSymbol.Type.ToString()) // 2do use enums...
                     {
                         case "Variable":
                             positionOffset = -1;
@@ -55,6 +60,14 @@ namespace DafnyLanguageServer.Handler
                 }
                 return new LocationOrLocationLinks(links);
             });
+                // todo
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Definition: " + e.Message);
+                new MessageSenderService(_router).SendError("Internal server error handling Definition: " + e.Message);
+
+                return null;
+            }
         }
     }
 }
