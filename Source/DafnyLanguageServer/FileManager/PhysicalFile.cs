@@ -1,8 +1,10 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
+using System.Data.OleDb;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -36,5 +38,21 @@ namespace DafnyLanguageServer.FileManager
         public string FileName => Path.GetFileName(Filepath);
 
         public string Sourcecode { get; set; }
+
+        public void Apply(TextDocumentContentChangeEvent change)
+        {
+            string oldSource = Sourcecode;
+            Position startPos = change.Range.Start;
+            int startIndex = GetIndex(startPos);
+        }
+
+        private int GetIndex(Position pos)
+        {
+            int reuslt = 0;
+            long targetLine = pos.Line + 1;
+            long targetCol = pos.Character + 1;
+    
+            throw new NotImplementedException();
+        }
     }
 }

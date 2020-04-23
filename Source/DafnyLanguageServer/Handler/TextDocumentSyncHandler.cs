@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
     {
         private SynchronizationCapability _capability; //needed by omnisharp
 
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental; // Incremental is not yet supported by the buffer 
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager)
             : base(router, workspaceManager)
@@ -51,15 +51,23 @@ namespace DafnyLanguageServer.Handler
         /// <summary>
         /// Updates file and sends error to the client with the diagnostics service
         /// </summary>
+        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
+        //(könnte einfach generischem ethode machen)
         private void UpdateFileAndSendDiagnostics(Uri uri, string text)
         {
             FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
             new DiagnosticsService(_router).SendDiagnostics(fileRepository);
         }
 
+        private void UpdateFileAndSendDiagnostics(Uri uri, TextDocumentContentChangeEvent change)
+        {
+            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, change);
+            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+        }
+
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault());
             return Unit.Task;
         }
 

@@ -1,6 +1,7 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
 using System.Collections.Concurrent;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -14,10 +15,20 @@ namespace DafnyLanguageServer.FileManager
     {
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
 
+
+        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
         public FileRepository UpdateFile(Uri documentPath, string sourceCodeOfFile)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
             fileRepository.UpdateFile(sourceCodeOfFile);
+            _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
+            return fileRepository;
+        }
+
+        public FileRepository UpdateFile(Uri documentPath, TextDocumentContentChangeEvent change)
+        {
+            FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
+            fileRepository.UpdateFile(change);
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
             return fileRepository;
         }
