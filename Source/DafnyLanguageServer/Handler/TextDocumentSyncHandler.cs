@@ -19,11 +19,11 @@ namespace DafnyLanguageServer.Handler
     ///  This Handler implements OmniSharps DocumentSyncHandler.
     ///  It handles LSP-calls like when a document has been opened or an open document changes.
     ///  Whenever this is the case, the intern <c>WorkspaceManager</c> gets updated.
-    ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository. 
+    ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository.
     /// </summary>
     internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer 
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
@@ -47,6 +47,8 @@ namespace DafnyLanguageServer.Handler
         /// <summary>
         /// Updates file and sends error to the client with the diagnostics service
         /// </summary>
+        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
+        //(könnte einfach generischem ethode machen)
         private void UpdateFileAndSendDiagnostics(Uri uri, string text)
         {
             //todo ticket 154 - paar sinnvolle logs machen.
@@ -68,9 +70,15 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
+        private void UpdateFileAndSendDiagnostics(Uri uri, TextDocumentContentChangeEvent change)
+        {
+            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, change);
+            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+        }
+
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault());
             return Unit.Task;
         }
 
