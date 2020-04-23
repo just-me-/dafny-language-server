@@ -7,12 +7,15 @@ namespace DafnyLanguageServer.Handler
     /// <summary>
     /// This component provides virtual methods and general needed instance variables
     /// for Handler components that are basic LSP standard features.
+    /// For same - but small different typed - code (like capability) this class is generic. 
     /// </summary>
-    public class LspBasicHandler
+    public class LspBasicHandler<T>
     {
         protected readonly ILanguageServer _router;
         protected readonly WorkspaceManager _workspaceManager;
         protected readonly DocumentSelector _documentSelector;
+
+        protected T _capability; // needed by OmniSharp
 
         public LspBasicHandler(ILanguageServer router, WorkspaceManager workspaceManager)
         {
@@ -25,6 +28,9 @@ namespace DafnyLanguageServer.Handler
                 });
         }
 
-        // 2do would be nice if capability could also be extracted + setter #136
+        public void SetCapability(T capability)
+        {
+            _capability = capability;
+        }
     }
 }

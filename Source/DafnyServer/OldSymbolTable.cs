@@ -9,15 +9,15 @@ using Function = Microsoft.Dafny.Function;
 using Program = Microsoft.Dafny.Program;
 
 namespace DafnyServer {
-  public class SymbolTable {
+  public class OldSymbolTable {
     private readonly Program _dafnyProgram;
-    private readonly List<SymbolInformation> _information = new List<SymbolInformation>();
+    private readonly List<OldSymbolInformation> _information = new List<OldSymbolInformation>();
 
-    public SymbolTable(Program dafnyProgram) {
+    public OldSymbolTable(Program dafnyProgram) {
       _dafnyProgram = dafnyProgram;
     }
 
-    public List<SymbolInformation> CalculateSymbols() {
+    public List<OldSymbolInformation> CalculateSymbols() {
         foreach (var module in _dafnyProgram.Modules()) {
         AddMethods(module, _information);
         AddFields(module, _information);
@@ -26,19 +26,19 @@ namespace DafnyServer {
       return _information;
     }
 
-    private void AddMethods(ModuleDefinition module, List<SymbolInformation> information) {
+    private void AddMethods(ModuleDefinition module, List<OldSymbolInformation> information) {
       foreach (
           var clbl in
           ModuleDefinition.AllCallables(module.TopLevelDecls).Where(e => e != null && !(e.Tok is IncludeToken))) {
                 
         if (clbl is Predicate) {
           var predicate = clbl as Predicate;
-          var predicateSymbol = new SymbolInformation {
+          var predicateSymbol = new OldSymbolInformation {
             Module = predicate.EnclosingClass.Module.Name,
             Name = predicate.Name,
             Parent = predicate.EnclosingClass,
             ParentClass = predicate.EnclosingClass.Name,
-            SymbolType = SymbolInformation.Type.Predicate,
+            SymbolType = OldSymbolInformation.Type.Predicate,
             StartToken = predicate.tok,
             EndToken = predicate.BodyEndTok
           };
@@ -46,12 +46,12 @@ namespace DafnyServer {
 
         } else if (clbl is Function) {
           var fn = (Function)clbl;
-          var functionSymbol = new SymbolInformation {
+          var functionSymbol = new OldSymbolInformation {
             Module = fn.EnclosingClass.Module.Name,
             Name = fn.Name,
             ParentClass = fn.EnclosingClass.Name,
             Parent = fn.EnclosingClass,
-            SymbolType = SymbolInformation.Type.Function,
+            SymbolType = OldSymbolInformation.Type.Function,
             StartToken = fn.tok,
             EndColumn = fn.BodyEndTok.col,
             EndLine = fn.BodyEndTok.line,
@@ -65,12 +65,12 @@ namespace DafnyServer {
             information.AddRange(ResolveCallStatements(m.Body.Body));
             information.AddRange(ResolveLocalDefinitions(m.Body.Body, m));
           }
-          var methodSymbol = new SymbolInformation {
+          var methodSymbol = new OldSymbolInformation {
             Module = m.EnclosingClass.Module.Name,
             Name = m.Name,
             ParentClass = m.EnclosingClass.Name,
             Parent = m.EnclosingClass,
-            SymbolType = SymbolInformation.Type.Method,
+            SymbolType = OldSymbolInformation.Type.Method,
             StartToken = m.tok,
             Ensures = ParseContracts(m.Ens),
             Requires = ParseContracts(m.Req),
@@ -87,16 +87,16 @@ namespace DafnyServer {
       }
     }
 
-    private void AddFields(ModuleDefinition module, List<SymbolInformation> information) {
+    private void AddFields(ModuleDefinition module, List<OldSymbolInformation> information) {
       foreach (
           var fs in ModuleDefinition.AllFields(module.TopLevelDecls).Where(e => e != null && !(e.tok is IncludeToken))) {
 
-        var fieldSymbol = new SymbolInformation {
+        var fieldSymbol = new OldSymbolInformation {
           Module = fs.EnclosingClass.Module.Name,
           Name = fs.Name,
           Parent = fs.EnclosingClass,
           ParentClass = fs.EnclosingClass.Name,
-          SymbolType = SymbolInformation.Type.Field,
+          SymbolType = OldSymbolInformation.Type.Field,
           StartToken = fs.tok,
           References = FindFieldReferencesInternal(fs.Name, fs.EnclosingClass.Name, fs.EnclosingClass.Module.Name)
         };
@@ -109,13 +109,13 @@ namespace DafnyServer {
       }
     }
 
-    private static void AddClasses(ModuleDefinition module, List<SymbolInformation> information) {
+    private static void AddClasses(ModuleDefinition module, List<OldSymbolInformation> information) {
       foreach (var cs in ModuleDefinition.AllClasses(module.TopLevelDecls).Where(cl => !(cl.tok is IncludeToken))) {
         if (cs.Module != null && cs.tok != null) {
-          var classSymbol = new SymbolInformation {
+          var classSymbol = new OldSymbolInformation {
             Module = cs.Module.Name,
             Name = cs.Name,
-            SymbolType = SymbolInformation.Type.Class,
+            SymbolType = OldSymbolInformation.Type.Class,
             StartToken = cs.tok,
             EndToken = cs.BodyEndTok
           };
@@ -132,8 +132,8 @@ namespace DafnyServer {
       return requires;
     }
 
-    private static IEnumerable<SymbolInformation> ResolveLocalDefinitions(IEnumerable<Statement> statements, Method method) {
-      var information = new List<SymbolInformation>();
+    private static IEnumerable<OldSymbolInformation> ResolveLocalDefinitions(IEnumerable<Statement> statements, Method method) {
+      var information = new List<OldSymbolInformation>();
 
       foreach (var statement in statements) {
         if (statement is VarDeclStmt) {
@@ -152,12 +152,12 @@ namespace DafnyServer {
               var userType = type as UserDefinedType;
               foreach (var declarationLocal in declarations.Locals) {
                 var name = declarationLocal.Name;
-                information.Add(new SymbolInformation {
+                information.Add(new OldSymbolInformation {
                   Name = name,
                   ParentClass = userType.ResolvedClass.CompileName,
                   Parent = userType.ResolvedClass,
                   Module = userType.ResolvedClass.Module.CompileName,
-                  SymbolType = SymbolInformation.Type.Definition,
+                  SymbolType = OldSymbolInformation.Type.Definition,
                   StartToken = method.BodyStartTok,
                   EndToken = method.BodyEndTok
                 });
@@ -171,10 +171,10 @@ namespace DafnyServer {
           foreach (var expression in lefts) {
             if (expression is AutoGhostIdentifierExpr) {
               var autoGhost = expression as AutoGhostIdentifierExpr;
-              information.Add(new SymbolInformation {
+              information.Add(new OldSymbolInformation {
                 Name = autoGhost.Name,
                 ParentClass = autoGhost.Resolved.Type.ToString(),
-                SymbolType = SymbolInformation.Type.Definition,
+                SymbolType = OldSymbolInformation.Type.Definition,
                 StartToken = updateStatement.Tok,
                 EndToken = updateStatement.EndTok
               });
@@ -188,8 +188,8 @@ namespace DafnyServer {
       return information;
     }
 
-    private static IEnumerable<SymbolInformation> ResolveCallStatements(IEnumerable<Statement> statements) {
-      var information = new List<SymbolInformation>();
+    private static IEnumerable<OldSymbolInformation> ResolveCallStatements(IEnumerable<Statement> statements) {
+      var information = new List<OldSymbolInformation>();
 
       foreach (var statement in statements) {
         if (statement is CallStmt) {
@@ -205,7 +205,7 @@ namespace DafnyServer {
       return information;
     }
 
-    private static void ParseCallStatement(Statement statement, List<SymbolInformation> information) {
+    private static void ParseCallStatement(Statement statement, List<OldSymbolInformation> information) {
       var callStmt = (CallStmt)statement;
       {
         if (!(callStmt.Receiver.Type is UserDefinedType)) return;
@@ -213,19 +213,19 @@ namespace DafnyServer {
         var receiver = callStmt.Receiver as NameSegment;
         var userType = (UserDefinedType)callStmt.Receiver.Type;
         var reveiverName = receiver == null ? "" : receiver.Name;
-        information.Add(new SymbolInformation {
+        information.Add(new OldSymbolInformation {
           Name = callStmt.Method.CompileName,
           ParentClass = userType.ResolvedClass.CompileName,
           Parent = userType.ResolvedClass,
           Module = userType.ResolvedClass.Module.CompileName,
           Call = reveiverName + "." + callStmt.MethodSelect.Member,
-          SymbolType = SymbolInformation.Type.Call,
+          SymbolType = OldSymbolInformation.Type.Call,
           StartToken = callStmt.MethodSelect.tok
         });
       }
     }
 
-    private static void ParseUpdateStatement(Statement statement, List<SymbolInformation> information) {
+    private static void ParseUpdateStatement(Statement statement, List<OldSymbolInformation> information) {
       var updateStmt = (UpdateStmt)statement;
       var leftSide = updateStmt.Lhss;
       var rightSide = updateStmt.Rhss;
@@ -238,13 +238,13 @@ namespace DafnyServer {
         var segment = exprDotName.Lhs as NameSegment;
         var type = (UserDefinedType)exprDotName.Lhs.Type;
         var designator = segment == null ? "" : segment.Name;
-        information.Add(new SymbolInformation {
+        information.Add(new OldSymbolInformation {
           Name = exprDotName.SuffixName,
           ParentClass = type.ResolvedClass.CompileName,
           Parent = type.ResolvedClass,
           Module = type.ResolvedClass.Module.CompileName,
           Call = designator + "." + exprDotName.SuffixName,
-          SymbolType = SymbolInformation.Type.Call,
+          SymbolType = OldSymbolInformation.Type.Call,
           StartToken = exprDotName.tok
         });
       }
@@ -372,7 +372,7 @@ namespace DafnyServer {
 
     [Serializable]
     [DataContract]
-    public class SymbolInformation {
+    public class OldSymbolInformation {
       [DataMember(Name = "Module")]
       public string Module { get; set; }
       [DataMember(Name = "Parent")]
@@ -438,7 +438,7 @@ namespace DafnyServer {
         Predicate
       }
 
-      public SymbolInformation() {
+      public OldSymbolInformation() {
         References = new List<ReferenceInformation>();
       }
     }

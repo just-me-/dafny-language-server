@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DafnyLanguageServer.DafnyAccess.CounterExampleProvider" Collapsed="true">
+    <Position X="17" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAgAAAAACIAEIgAAAAAhgIgAAgAAAAAgAQAA=</HashCode>
+      <FileName>DafnyAccess\CounterExampleProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.DafnyAccess.DafnyTranslationUnit" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARgAAAABAKAAUIAAAAAAAAAAACAAAAADAAEAAAAAgA=</HashCode>
+      <FileName>DafnyAccess\DafnyTranslationUnit.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.DafnyAccess.DiagnosticError" Collapsed="true">
+    <Position X="13.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAACAAAAAAIBAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAccess\DiagnosticError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.DafnyAccess.ConverterExtensions" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>DafnyAccess\DiagnosticError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.DafnyAccess.ServerUtils" Collapsed="true">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>DafnyAccess\Utilities.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.DafnyLanguageServer" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAgACAACAAABAQAAAAAAAAACAAgAAA=</HashCode>
+      <FileName>DafnyLanguageServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Program" Collapsed="true">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.ConfigReader" Collapsed="true">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAgAIAAQACAQwAAAAAAAAAQAACAAAAAwAkCAEAAAAA=</HashCode>
+      <FileName>Services\ConfigReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.MessageSenderService" Collapsed="true">
+    <Position X="17" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAEIAAACBAAAAABAAAAAAAAAAAAAAFAAA=</HashCode>
+      <FileName>Services\MessageSenderService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.FileHelper" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACgAAEAgAAAEAAAAAAAgAACAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>FileManager\FileHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.FileRepository" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABABAAAAAAAAAAAAAAAQAQAAIAAAAgAAAAAAAQAAAA=</HashCode>
+      <FileName>FileManager\FileRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.FileSymboltableProcessor" Collapsed="true">
+    <Position X="13.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAICAAAACAAAAACAAAAAAQQAQABAAAAAAAAAAI=</HashCode>
+      <FileName>FileManager\FileSymboltableProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.PhysicalFile" Collapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAAAA=</HashCode>
+      <FileName>FileManager\PhysicalFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.TranslationResult" Collapsed="true">
+    <Position X="10" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQQAABAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileManager\TranslationResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.FileManager.WorkspaceManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABBAAAAIAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>FileManager\WorkspaceManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CodeLensHandler" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQKAAAAAAAAA=</HashCode>
+      <FileName>Handler\CodeLensHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CompilerParams" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCAAAAA=</HashCode>
+      <FileName>Handler\CompileHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CompilerResults" Collapsed="true">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Handler\CompileHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CompileHandler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CompileHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CompletionHandler" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQKAAAAAAAIA=</HashCode>
+      <FileName>Handler\CompletionHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CounterExampleParams" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CounterExampleHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CounterExample" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAQAAAABAAA=</HashCode>
+      <FileName>Handler\CounterExampleHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CounterExampleResults" Collapsed="true">
+    <Position X="18.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CounterExampleHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.CounterExampleHandler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CounterExampleHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.DefinitionHandler" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQKAAAAAAAAA=</HashCode>
+      <FileName>Handler\DefinitionHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.LspBasicHandler" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAgAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\LspBasicHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.TextDocumentSyncHandler" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAACAAAAABAAAAAAAAAAAAAAAAAAAIAQKgBAAAAAAA=</HashCode>
+      <FileName>Handler\TextDocumentSyncHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAQKAAAAAAAAA=</HashCode>
+      <FileName>Handler\WorkspaceHandlers.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.DidChangeWatchedFilesRegistrationOptions" Collapsed="true">
+    <Position X="18.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\WorkspaceHandlers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Handler.FileSystemWatcher" Collapsed="true">
+    <Position X="15.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\WorkspaceHandlers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Services.CompilationService" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Services\CompilationService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.Services.DiagnosticsService" Collapsed="true">
+    <Position X="15.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAgBAAAAAAYAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\DiagnosticsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.AcceptExtensions" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SymbolTable\AcceptExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.MetaDafnySymboltableBaem" Collapsed="true">
+    <Position X="18.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQABAAAAQAgAAAAACAAAAEAACAAAAAAACAQMA=</HashCode>
+      <FileName>SymbolTable\MetaDafnySymboltableBaem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.NewSymbolInformation" Collapsed="true">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAEQAQFAAEAAAAAAQAAGAABAAA=</HashCode>
+      <FileName>SymbolTable\NewSymbolInformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.TokenPosition" Collapsed="true">
+    <Position X="18.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAgABAAA=</HashCode>
+      <FileName>SymbolTable\NewSymbolInformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.SymbolTableGenerator" Collapsed="true">
+    <Position X="17" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SymbolTable\SymbolTableGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.SymbolTableGeneratorVisitor" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAACAAgEAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>SymbolTable\SymbolTableGeneratorVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DafnyLanguageServer.SymbolTable.Visitor" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SymbolTable\Visitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DafnyLanguageServer.DafnyAccess.IDafnyTranslationUnit" Collapsed="true">
+    <Position X="13.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DafnyAccess\IDafnyTranslationUnit.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DafnyLanguageServer.FileManager.IWorkspaceManager" Collapsed="true">
+    <Position X="15.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAIAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileManager\IWorkspaceManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DafnyLanguageServer.Handler.ICompile" Collapsed="true">
+    <Position X="10" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CompileHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DafnyLanguageServer.Handler.ICounterExample" Collapsed="true">
+    <Position X="11.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handler\CounterExampleHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="DafnyLanguageServer.DafnyAccess.TranslationStatus" Collapsed="true">
+    <Position X="10" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAgAAAgAAAAAAAAAAAEAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>DafnyAccess\TranslationStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DafnyLanguageServer.SymbolTable.Type" Collapsed="true">
+    <Position X="11.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAEAACAAAAAIgAAIAAAAAAAAAAAQAAAAAgAA=</HashCode>
+      <FileName>SymbolTable\NewSymbolInformation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

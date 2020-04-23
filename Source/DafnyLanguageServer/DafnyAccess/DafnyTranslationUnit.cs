@@ -21,21 +21,21 @@ namespace DafnyLanguageServer.DafnyAccess
         public DafnyTranslationUnit(PhysicalFile file, string[] args)
         {
             if (file == null) 
-                throw new ArgumentNullException("file must be set");
+                throw new ArgumentNullException("_file must be set");
 
-            this.file = file;
-            this.args = args;
+            this._file = file;
+            this._args = args;
         }
 
         // Keep track of the process state  todo #148
-        private TranslationStatus status = TranslationStatus.Virgin;
+        private TranslationStatus _status = TranslationStatus.Virgin;
+        private bool _dirtyInstance = false; // only use once! 
 
-        private readonly PhysicalFile file;
-        private readonly string[] args;
-        private bool dirtyInstance = false; // only use once! 
+        private Microsoft.Dafny.Program _dafnyProgram;
+        private IEnumerable<Tuple<string, Bpl.Program>> _boogiePrograms;
 
-        private Microsoft.Dafny.Program dafnyProgram; // behalten 
-        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;  // behalten 
+        private readonly PhysicalFile _file;
+        private readonly string[] _args;
 
         #region ErrorReporting
         private ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
@@ -62,56 +62,55 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private void checkInstance()
         {
-            if (dirtyInstance)
+            if (_dirtyInstance)
             {
                 throw new Exception("You can this instance only use once!");
             }
-            dirtyInstance = true;
+            _dirtyInstance = true;
         }
 
         /// <summary>
-        ///  Calls Pars, Resolve, Translate and Boogie.
+        /// Calls Pars, Resolve, Translate and Boogie.
         /// Makes sure, that it gets only called once per class instance. 
         /// </summary>
-        /// <returns></returns>
         public TranslationResult Verify()
         {
             checkInstance();
 
-            // Apply args for counter example 
-            var listArgs = args.ToList();
+            // Apply _args for counter example 
+            var listArgs = _args.ToList();
             listArgs.Add("/mv:" + CounterExampleProvider.ModelBvd);
             ServerUtils.ApplyArgs(listArgs.ToArray(), reporter);
 
             if (Parse() && Resolve() && Translate() && Boogie())
-                status = TranslationStatus.Boogied;
+                _status = TranslationStatus.Boogied;
 
             CollectErrorsFromReporter();
 
             var result = new TranslationResult
             {
                 Errors = Errors,
-                BoogiePrograms = boogiePrograms,
-                DafnyProgram = dafnyProgram,
+                BoogiePrograms = _boogiePrograms,
+                DafnyProgram = _dafnyProgram,
                 // Keep track of the process state todo #148
-                TranslationStatus = status
+                TranslationStatus = _status
             };
             return result;
         }
 
         /// <summary>
-        /// Calls Dafny parser.
+        /// Calls Dafny parser
         /// </summary>
         private bool Parse()
         {
             ModuleDecl module = new LiteralModuleDecl(new Microsoft.Dafny.DefaultModuleDecl(), null);
             BuiltIns builtIns = new BuiltIns();
-            var success = (Microsoft.Dafny.Parser.Parse(file.Sourcecode, file.Filepath, file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
+            var success = (Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
                            Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(reporter)) == null);
             if (success)
             {
-                dafnyProgram = new Microsoft.Dafny.Program(file.Filepath, module, builtIns, reporter);
-                status = TranslationStatus.Parsed;
+                _dafnyProgram = new Microsoft.Dafny.Program(_file.Filepath, module, builtIns, reporter);
+                _status = TranslationStatus.Parsed;
             }
             return success;
         }
@@ -121,11 +120,11 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Resolve()
         {
-            var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
-            resolver.ResolveProgram(dafnyProgram);
+            var resolver = new Microsoft.Dafny.Resolver(_dafnyProgram);
+            resolver.ResolveProgram(_dafnyProgram);
 
             bool success = (reporter.Count(ErrorLevel.Error) == 0); 
-            if (success) status = TranslationStatus.Resolved;
+            if (success) _status = TranslationStatus.Resolved;
             return success;
         }
 
@@ -134,9 +133,9 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Translate()
         {
-            boogiePrograms = Translator.Translate(dafnyProgram, reporter,
-                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = file.Filepath });
-            status = TranslationStatus.Translated;
+            _boogiePrograms = Translator.Translate(_dafnyProgram, reporter,
+                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = _file.Filepath });
+            _status = TranslationStatus.Translated;
             return true;
         }
 
@@ -144,10 +143,9 @@ namespace DafnyLanguageServer.DafnyAccess
         /// In case there are multiple Boogie programs,
         /// verify them all. 
         /// </summary>
-        /// <returns></returns>
         private bool Boogie()
         {
-            foreach (var boogieProgram in boogiePrograms)
+            foreach (var boogieProgram in _boogiePrograms)
             {
                 if (!BoogieOnce(boogieProgram.Item1, boogieProgram.Item2))
                 {
@@ -163,7 +161,6 @@ namespace DafnyLanguageServer.DafnyAccess
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
             CounterExampleProvider.RemoveExistingFileModel();
-
             if (boogieProgram.Resolve() == 0 && boogieProgram.Typecheck() == 0)
             {
                 ExecutionEngine.EliminateDeadVariables(boogieProgram);

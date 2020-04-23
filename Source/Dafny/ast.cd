@@ -52,6 +52,13 @@
   </Class>
   <Class Name="Microsoft.Dafny.Type" Collapsed="true">
     <Position X="25" Y="10.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Microsoft.Dafny.Type.NumericPersuation" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DafnyAst.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>KgRISGAoj4BISNwu0RHgCSuJgYQQAXFQaAIgKipIAuA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
@@ -78,7 +85,7 @@
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.NonProxyType" Collapsed="true">
+  <Class Name="Microsoft.Dafny.NonProxyType">
     <Position X="25" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -793,21 +800,21 @@
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.ExprRhs" Collapsed="true">
+  <Class Name="Microsoft.Dafny.ExprRhs">
     <Position X="3" Y="13.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAACAAAAAAAAACAAQAAAAAAA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.TypeRhs" Collapsed="true">
+  <Class Name="Microsoft.Dafny.TypeRhs">
     <Position X="5.25" Y="13.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAEAAQAAAAAAAAIAAAAAAADAAAAAEAAIIQAQIAAAAAA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.HavocRhs" Collapsed="true">
+  <Class Name="Microsoft.Dafny.HavocRhs">
     <Position X="0.75" Y="13.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -828,29 +835,36 @@
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.ConcreteUpdateStatement" Collapsed="true">
+  <Class Name="Microsoft.Dafny.ConcreteUpdateStatement">
     <Position X="21" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.AssignSuchThatStmt" Collapsed="true">
-    <Position X="18.75" Y="9.25" Width="1.5" />
+  <Class Name="Microsoft.Dafny.AssignSuchThatStmt">
+    <Position X="18" Y="8.75" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Microsoft.Dafny.AssignSuchThatStmt.WiggleWaggleBound" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DafnyAst.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAgCAAEAAAAAACAAAAAAAAgA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.UpdateStmt" Collapsed="true">
-    <Position X="21" Y="9.25" Width="1.5" />
+  <Class Name="Microsoft.Dafny.UpdateStmt">
+    <Position X="20.75" Y="10.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAACAAAAAAAAAAAAAAAACBAAAAAAAQAAAAQAAAAAAA=</HashCode>
       <FileName>DafnyAst.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Microsoft.Dafny.AssignOrReturnStmt" Collapsed="true">
-    <Position X="23.25" Y="9.25" Width="1.5" />
+  <Class Name="Microsoft.Dafny.AssignOrReturnStmt">
+    <Position X="23.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAAAAAAAAABAAAAAAAQAAAAQAQAAAAA=</HashCode>
       <FileName>DafnyAst.cs</FileName>

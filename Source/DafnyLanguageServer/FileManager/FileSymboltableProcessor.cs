@@ -9,29 +9,31 @@ namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This <c>FileSymboltableProcessor</c> provides all symbols that were found in a (valid) Dafny file.
-    /// This symbol list can be used for features like <c>AutoCompletion</c>.
+    /// This newOldSymbol list can be used for features like <c>AutoCompletion</c>.
+    ///
+    /// Gets replaced... 2do
     /// </summary>
     public class FileSymboltableProcessor
     {
-        private readonly List<SymbolTable.SymbolInformation> _symbolTable;
-        public bool HasEntries => (_symbolTable.Count > 0);
+        private readonly List<DafnyServer.OldSymbolTable.OldSymbolInformation> _symbolTable;
+        public bool HasEntries => (_symbolTable.Count > 0); //del
 
-        public FileSymboltableProcessor(List<SymbolTable.SymbolInformation> symbolTable)
+        public FileSymboltableProcessor(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbolTable)
         {
             _symbolTable = symbolTable;
         }
 
-        public List<SymbolTable.SymbolInformation> GetFullList()
+        public List<DafnyServer.OldSymbolTable.OldSymbolInformation> GetFullList()
         {
             return RemoveConstructorSymbols(_symbolTable);
         }
 
-        public List<SymbolTable.SymbolInformation> GetList()
+        public List<DafnyServer.OldSymbolTable.OldSymbolInformation> GetList()
         {
             return RemoveDuplicates(_symbolTable);
         }
 
-        public List<SymbolTable.SymbolInformation> GetList(string identifier)
+        public List<DafnyServer.OldSymbolTable.OldSymbolInformation> GetList(string identifier)
         {
             if (identifier is null)
             {
@@ -41,41 +43,45 @@ namespace DafnyLanguageServer.FileManager
             return RemoveDuplicates(_symbolTable.Where(x => (x.ParentClass == identifier && SymbolIsInRangeOf(x, parentSymbol))).ToList());
         }
 
-        private SymbolTable.SymbolInformation GetSymbolByName(string name)
+        private DafnyServer.OldSymbolTable.OldSymbolInformation GetSymbolByName(string name)
         {
             return _symbolTable.FirstOrDefault(x => (x.Name == name));
         }
 
-        private Range SymbolInformationToRange(SymbolTable.SymbolInformation symbol)
+
+        // is this needed in new symbol table? 
+        private Range SymbolInformationToRange(DafnyServer.OldSymbolTable.OldSymbolInformation newOldSymbol)
         {
             Range range = null;
-            if (symbol.Line != null && symbol.EndLine != null && symbol.Position != null && symbol.EndPosition != null)
+            if (newOldSymbol.Line != null && newOldSymbol.EndLine != null && newOldSymbol.Position != null && newOldSymbol.EndPosition != null)
             {
                 range = FileHelper.CreateRange(
-                    (long) symbol.Line, (long) symbol.EndLine,
-                    (long) symbol.Position, (long) symbol.EndPosition);
+                    (long) newOldSymbol.Line, (long) newOldSymbol.EndLine,
+                    (long) newOldSymbol.Position, (long) newOldSymbol.EndPosition);
             }
             return range;
         }
 
-        private bool SymbolIsInRangeOf(SymbolTable.SymbolInformation child, SymbolTable.SymbolInformation parent)
+        // isParent wäre das glaubs neu... 
+        private bool SymbolIsInRangeOf(DafnyServer.OldSymbolTable.OldSymbolInformation child, DafnyServer.OldSymbolTable.OldSymbolInformation parent)
         {
             Range childRange = SymbolInformationToRange(child);
             Range parentRange = SymbolInformationToRange(parent);
             return  FileHelper.ChildIsContainedByParent(childRange, parentRange);
         }
 
+        // einstieg über string können wir glaubs neu umgehen 
         public string GetParentForWord(string word)
         {
             return word is null ? null : _symbolTable.FirstOrDefault(x => x.Name == word)?.ParentClass;
         }
 
-        private List<SymbolTable.SymbolInformation> RemoveDuplicates(List<SymbolTable.SymbolInformation> list)
+        private List<DafnyServer.OldSymbolTable.OldSymbolInformation> RemoveDuplicates(List<DafnyServer.OldSymbolTable.OldSymbolInformation> list)
         {
             return RemoveConstructorSymbols(list).GroupBy(x => x.Name).Select(x => x.First()).ToList();
         }
 
-        private List<SymbolTable.SymbolInformation> RemoveConstructorSymbols(List<SymbolTable.SymbolInformation> list)
+        private List<DafnyServer.OldSymbolTable.OldSymbolInformation> RemoveConstructorSymbols(List<DafnyServer.OldSymbolTable.OldSymbolInformation> list)
         {
             var ignoredSymbols = new[] { "_ctor", "_default" };
             list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
