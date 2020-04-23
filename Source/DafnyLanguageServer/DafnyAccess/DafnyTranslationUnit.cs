@@ -22,7 +22,7 @@ namespace DafnyLanguageServer.DafnyAccess
         public DafnyTranslationUnit(PhysicalFile file)
         {
             ExecutionEngine.printer = new LanguageServerOutputWriterSink();
-            this.file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
+            this._file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
         }
 
         private TranslationStatus _status = TranslationStatus.Virgin;
@@ -95,7 +95,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             if (succeeded && !hasErrors)
             {
-                status = TranslationStatus.Verified;
+                _status = TranslationStatus.Verified;
             }
             var result = new TranslationResult
             {
@@ -197,7 +197,7 @@ namespace DafnyLanguageServer.DafnyAccess
                 {
                     case PipelineOutcome.Done:
                     case PipelineOutcome.VerificationCompleted:
-                        status = TranslationStatus.Boogied;
+                        _status = TranslationStatus.Boogied;
                         return true;
                 }
             }

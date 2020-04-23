@@ -21,8 +21,6 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CodeLensHandler : LspBasicHandler<CodeLensCapability>, ICodeLensHandler
     {
-        private CodeLensCapability _capability;
-
         public CodeLensHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
@@ -39,41 +37,42 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
-<<<<<<< HEAD
+
             _log.LogInformation("Handling Code Lens");
 
             try
-            { //2do
-            return await Task.Run(() =>
             {
-                List<CodeLens> items = new List<CodeLens>();
-                foreach (var modul in _workspaceManager?.SymbolTableManager?.SymbolTables)
+                return await Task.Run(() =>
                 {
-                    foreach (var symbolInformation in modul.Value)
+                    List<CodeLens> items = new List<CodeLens>();
+                    foreach (var modul in _workspaceManager?.SymbolTableManager?.SymbolTables)
                     {
-                        if ((symbolInformation.Type == SymbolTable.Type.Class ||
-                             symbolInformation.Type == SymbolTable.Type.Function ||
-                             symbolInformation.Type == SymbolTable.Type.Method) &&
-                            // no constructors and make sure no out-of-range root _defaults
-                            symbolInformation.Name != "_ctor" &&
-                            symbolInformation?.Line != null && symbolInformation.Line > 0)
+                        foreach (var symbolInformation in modul.Value)
                         {
-                            Position position = new Position((long) symbolInformation.Line - 1, 0);
-                            Range range = new Range {Start = position, End = position};
-                            Command command = new Command
+                            if ((symbolInformation.Type == SymbolTable.Type.Class ||
+                                 symbolInformation.Type == SymbolTable.Type.Function ||
+                                 symbolInformation.Type == SymbolTable.Type.Method) &&
+                                // no constructors and make sure no out-of-range root _defaults
+                                symbolInformation.Name != "_ctor" &&
+                                symbolInformation?.Line != null && symbolInformation.Line > 0)
                             {
-                                Title = (symbolInformation.Usages?.Count) + " reference(s) to " +
-                                        symbolInformation.Name,
-                                Name = "dafny.showReferences"
-                            };
-                            items.Add(new CodeLens
-                                {Data = request.TextDocument.Uri, Range = range, Command = command});
+                                Position position = new Position((long) symbolInformation.Line - 1, 0);
+                                Range range = new Range {Start = position, End = position};
+                                Command command = new Command
+                                {
+                                    Title = (symbolInformation.Usages?.Count) + " reference(s) to " +
+                                            symbolInformation.Name,
+                                    Name = "dafny.showReferences"
+                                };
+                                items.Add(new CodeLens
+                                    {Data = request.TextDocument.Uri, Range = range, Command = command});
+                            }
                         }
                     }
-
                     return new CodeLensContainer(items);
                 });
             }
+
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling CodeLens: " + e.Message);

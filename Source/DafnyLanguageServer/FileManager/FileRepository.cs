@@ -4,8 +4,10 @@ using DafnyServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
+using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
 using Type = Microsoft.Dafny.Type;
@@ -44,17 +46,17 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
-        private List<SymbolTable.SymbolInformation> Symboltable()
+        private List<DafnyServer.OldSymbolTable.OldSymbolInformation> Symboltable()
         {
             if (Result.TranslationStatus >= TranslationStatus.Resolved && Result.DafnyProgram != null) //todo
             {
                 Type.ResetScopes();
-                var symbolTable = new SymbolTable(Result.DafnyProgram);
+                var symbolTable = new DafnyServer.OldSymbolTable(Result.DafnyProgram);
                 return symbolTable.CalculateSymbols();
             }
             else
             {
-                return new List<SymbolTable.SymbolInformation>();
+                return new List<DafnyServer.OldSymbolTable.OldSymbolInformation>();
             }
         }
 

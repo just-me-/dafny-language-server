@@ -78,7 +78,7 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault());
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
             return Unit.Task;
         }
 
