@@ -439,7 +439,9 @@ namespace DafnyLanguageServer.SymbolTable
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
                 return new SymbolInformation()
                 {
-                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*"
+                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*",
+                    Children = new List<SymbolInformation>(),
+                    Usages = new List<SymbolInformation>()
                 };
             }
         }

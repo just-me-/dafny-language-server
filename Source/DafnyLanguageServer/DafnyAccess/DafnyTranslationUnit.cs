@@ -8,6 +8,7 @@ using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.HandlerServices;
 using DafnyServer;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Bpl = Microsoft.Boogie;
 using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
 

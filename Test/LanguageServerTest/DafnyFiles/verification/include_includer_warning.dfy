@@ -5,6 +5,5 @@ module MainModule {
     method Main() {
         var bigNumber := H.addOne(2);
         assert bigNumber == 3;
-        var b:int;
     }
 }
