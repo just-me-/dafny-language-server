@@ -209,9 +209,13 @@
     <Compile Include="Handler\CompileHandler.cs" />
     <Compile Include="Handler\TextDocumentSyncHandler.cs" />
     <Compile Include="HandlerServices\DiagnosticsService.cs" />
+    <Compile Include="SymbolTable\SymbolInformation.cs" />
+    <Compile Include="SymbolTable\SymbolTableManager.cs" />
+    <Compile Include="SymbolTable\SymbolTableVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Demo.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

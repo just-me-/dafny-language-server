@@ -10,8 +10,7 @@ namespace DafnyLanguageServer.ProgramServices
     /// </summary>
     public class ConfigReader
     {
-        private const string defaultCfgFile = "LanguageServerConfig.json";
-
+        private const string _defaultCfgFile = "LanguageServerConfig.json";
         private string[] LaunchArguments { get; set; }
         private string AssemblyPath { get; set; }
         private string ConfigFile { get; set; }
@@ -23,14 +22,14 @@ namespace DafnyLanguageServer.ProgramServices
         public bool Error { get; private set; } = false;
         public string ErrorMsg { get; private set; } = "";
 
-        //Log Levels (starting from 0)
-        //Trace - Debug - Info - Warning - Error - Critical - None
+        // Log Levels (starting from 0)
+        // Trace - Debug - Info - Warning - Error - Critical - None
 
         public ConfigReader(string[] launchArguments)
         {
             LaunchArguments = launchArguments;
             AssemblyPath = Path.GetDirectoryName(typeof(ConfigReader).Assembly.Location);
-            ConfigFile = Path.Combine(AssemblyPath, defaultCfgFile);
+            ConfigFile = Path.Combine(AssemblyPath, _defaultCfgFile);
             SetProperties();
         }
 
@@ -49,7 +48,6 @@ namespace DafnyLanguageServer.ProgramServices
             ReadArgs();
             Validate();
             ImprovePathLayout();
-
         }
 
         private void SetDefaults()
@@ -93,7 +91,6 @@ namespace DafnyLanguageServer.ProgramServices
                 {
                     Loglevel = (LogLevel) (int) cfgLevel;
                 }
-
             }
             catch (NullReferenceException)
             {

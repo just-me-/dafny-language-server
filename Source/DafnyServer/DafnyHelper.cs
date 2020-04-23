@@ -100,7 +100,7 @@ namespace Microsoft.Dafny {
     public void Symbols() {
       ServerUtils.ApplyArgs(args, reporter);
       if (Parse() && Resolve()) {
-        var symbolTable = new SymbolTable(dafnyProgram);
+        var symbolTable = new OldSymbolTable(dafnyProgram);
         var symbols = symbolTable.CalculateSymbols();
         Console.WriteLine("SYMBOLS_START " + ConvertToJson(symbols) + " SYMBOLS_END");
       } else {

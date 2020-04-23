@@ -14,7 +14,7 @@ namespace DafnyLanguageServer.FileManager
     /// <summary>
     /// This class represents a buffered version of a Dafny file.
     /// Attributes like Uri, Dafny source code and not buffered informations are stored in the <c>PhysicalFile</c>.
-    /// 
+    ///
     /// A <c>FileRepository</c> has also its own <c>DafnyTranslationUnit</c> to verify this Dafny file and provide related information.
     /// </summary>
     public class FileRepository
@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.FileManager
 
         private void GenerateTranslationResult()
         {
-            if(PhysicalFile != null) { 
+            if(PhysicalFile != null) {
                 DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
                 Result = translationUnit.Verify();
             }
@@ -61,7 +61,7 @@ namespace DafnyLanguageServer.FileManager
             {
                 throw new FileNotFoundException("CounterExample requires a valid filename. Invalid Path: " + PhysicalFile.Filepath);
             }
-            
+
             try
             {
                 if (Result.TranslationStatus >= TranslationStatus.Translated)
@@ -79,12 +79,10 @@ namespace DafnyLanguageServer.FileManager
             return new CounterExampleResults();
         }
 
-
         public CompilerResults Compile(string[] requestCompilationArguments)
         {
             try
             {
-
                 return new CompilationService(this, requestCompilationArguments).Compile();
             }
             catch (Exception e)

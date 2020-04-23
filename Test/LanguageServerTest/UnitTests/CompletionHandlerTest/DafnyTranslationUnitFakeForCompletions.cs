@@ -15,14 +15,14 @@ namespace CompletionHandlerTest
             return null;
         }
 
-        public List<SymbolTable.SymbolInformation> Symbols()
+        public List<OldSymbolTable.OldSymbolInformation> Symbols()
         {
-            List<SymbolTable.SymbolInformation> symbols = new List<SymbolTable.SymbolInformation>();
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "myFunction", Position = 0 });
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "myOtherFunction", Position = 1 });
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "duplicatedEntry", Position = 0 });
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "duplicatedEntry", Position = 0 });
-            symbols.Add(new SymbolTable.SymbolInformation
+            List<OldSymbolTable.OldSymbolInformation> symbols = new List<OldSymbolTable.OldSymbolInformation>();
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "myFunction", Position = 0 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "myOtherFunction", Position = 1 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "duplicatedEntry", Position = 0 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "duplicatedEntry", Position = 0 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation
             {
                 Name = "ClassA",
                 Line = 5,
@@ -30,7 +30,7 @@ namespace CompletionHandlerTest
                 Position = 0,
                 EndPosition = 5
             });
-            symbols.Add(new SymbolTable.SymbolInformation
+            symbols.Add(new OldSymbolTable.OldSymbolInformation
             {
                 Name = "aFunctionInClassA",
                 ParentClass = "ClassA",
@@ -39,7 +39,7 @@ namespace CompletionHandlerTest
                 Position = 1,
                 EndPosition = 10
             });
-            symbols.Add(new SymbolTable.SymbolInformation
+            symbols.Add(new OldSymbolTable.OldSymbolInformation
             {
                 Name = "aFunctionNotInClassA",
                 ParentClass = "ClassA",
@@ -48,8 +48,8 @@ namespace CompletionHandlerTest
                 Position = 3,
                 EndPosition = 4
             });
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "_ctor", Position = 0 });
-            symbols.Add(new SymbolTable.SymbolInformation { Name = "_default", Position = 0 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "_ctor", Position = 0 });
+            symbols.Add(new OldSymbolTable.OldSymbolInformation { Name = "_default", Position = 0 });
             return symbols;
         }
 

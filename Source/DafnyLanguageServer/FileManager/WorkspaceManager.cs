@@ -1,6 +1,8 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using DafnyLanguageServer.SymbolTable;
 
 namespace DafnyLanguageServer.FileManager
 {
@@ -13,12 +15,23 @@ namespace DafnyLanguageServer.FileManager
     public class WorkspaceManager : IWorkspaceManager
     {
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
+        public SymbolTableManager SymbolTableManager { get; set; }
 
         public FileRepository UpdateFile(Uri documentPath, string sourceCodeOfFile)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
             fileRepository.UpdateFile(sourceCodeOfFile);
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
+            
+            //Generate new fancy Symbol Table for Testing:
+            if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
+            {
+                SymbolTableManager = new SymbolTableManager(fileRepository.Result.DafnyProgram);
+                //das ändert sich noch, is ja pro klasse eine table im moment.
+                //würde hie rdann aber so schreiben filerepo.symboltable = TableGenerator.GetTable oder sowas.
+                // ==> pro Klasse... "pro file" kann man aber nicht sagen. Ein File kann ein Array von Klassen haben. Wenns pro "Modul/Package" ist ists Mapping via Workspace, nicht? 
+            }
+
             return fileRepository;
         }
 

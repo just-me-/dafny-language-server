@@ -24,11 +24,11 @@ namespace DafnyLanguageServer.DafnyAccess
             this.file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
         }
 
-        private TranslationStatus status = TranslationStatus.Virgin;
-        private bool dirtyInstance = false; // can only verify once per dafnyProgram
-        private readonly PhysicalFile file;
-        private Microsoft.Dafny.Program dafnyProgram;
-        private IEnumerable<Tuple<string, Bpl.Program>> boogiePrograms;
+        private TranslationStatus _status = TranslationStatus.Virgin;
+        private bool _dirtyInstance = false; // can only verify once per dafnyProgram
+        private readonly PhysicalFile _file;
+        private Microsoft.Dafny.Program _dafnyProgram;
+        private IEnumerable<Tuple<string, Bpl.Program>> _boogiePrograms;
 
         #region ErrorReporting
         private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
@@ -64,21 +64,25 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private void CheckInstance()
         {
-            if (dirtyInstance)
+            if (_dirtyInstance)
             {
                 throw new Exception("You can this instance only use once!");
             }
-            dirtyInstance = true;
+            _dirtyInstance = true;
         }
 
         /// <summary>
+
         ///  This method verifies Dafny Code. First, it checks if this instance is fresh.
         /// Next, it sets up default options with the tweak to generate the model file, which is needed for counter examples.
         /// then, it tries to parse, resolve, translate and boogie the code, aborting whenever it fails.
         /// Then, errors are collected and provided in the Property "Error".
         /// The results are compilats are then returned in the Wrapper Class "TranslationResult".
+
+        /// Calls Pars, Resolve, Translate and Boogie.
+        /// Makes sure, that it gets only called once per class instance.
+
         /// </summary>
-        /// <returns></returns>
         public TranslationResult Verify()
         {
             CheckInstance();
@@ -95,9 +99,10 @@ namespace DafnyLanguageServer.DafnyAccess
             var result = new TranslationResult
             {
                 DiagnosticElements = DiagnosticElements,
-                BoogiePrograms = boogiePrograms,
-                DafnyProgram = dafnyProgram,
-                TranslationStatus = status
+                BoogiePrograms = _boogiePrograms,
+                DafnyProgram = _dafnyProgram,
+                TranslationStatus = _status
+
             };
             return result;
         }
@@ -117,12 +122,12 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             ModuleDecl module = new LiteralModuleDecl(new Microsoft.Dafny.DefaultModuleDecl(), null);
             BuiltIns builtIns = new BuiltIns();
-            var success = (Microsoft.Dafny.Parser.Parse(file.Sourcecode, file.Filepath, file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
+            var success = (Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
                            Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(reporter)) == null);
             if (success)
             {
-                dafnyProgram = new Microsoft.Dafny.Program(file.Filepath, module, builtIns, reporter);
-                status = TranslationStatus.Parsed;
+                _dafnyProgram = new Microsoft.Dafny.Program(_file.Filepath, module, builtIns, reporter);
+                _status = TranslationStatus.Parsed;
             }
             return success;
         }
@@ -132,16 +137,15 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Resolve()
         {
-            var resolver = new Microsoft.Dafny.Resolver(dafnyProgram);
-            resolver.ResolveProgram(dafnyProgram);
+            var resolver = new Microsoft.Dafny.Resolver(_dafnyProgram);
+            resolver.ResolveProgram(_dafnyProgram);
 
             bool success = (reporter.Count(ErrorLevel.Error) == 0);
             if (success)
             {
-                status = TranslationStatus.Resolved;
+                _status = TranslationStatus.Resolved;
             }
-        
-        return success;
+            return success;
         }
 
         /// <summary>
@@ -149,19 +153,18 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Translate()
         {
-            boogiePrograms = Translator.Translate(dafnyProgram, reporter,
-                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = file.Filepath });
-            status = TranslationStatus.Translated;
+            _boogiePrograms = Translator.Translate(_dafnyProgram, reporter,
+                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = _file.Filepath });
+            _status = TranslationStatus.Translated;
             return true;
         }
 
         /// <summary>
         /// Just calls BoogieOnce for each of the Boogie Programs.
         /// </summary>
-        /// <returns></returns>
         private bool Boogie()
         {
-            foreach (var boogieProgram in boogiePrograms)
+            foreach (var boogieProgram in _boogiePrograms)
             {
                 if (!BoogieOnce(boogieProgram.Item1, boogieProgram.Item2))
                 {

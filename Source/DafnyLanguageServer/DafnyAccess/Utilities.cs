@@ -4,15 +4,12 @@ using System;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-
-
     /// <summary>
     /// This class is used to apply arguments to the Dafny Engine.
-    /// Is Copy Pasted from DafnyServer.Utilities because they are not public.
+    /// Is copy-pasted from DafnyServer.Utilities because they are not public.
     /// </summary>
     class ServerUtils
     {
-
         internal static void ApplyArgs(string[] args, ErrorReporter reporter)
         {
             Microsoft.Dafny.DafnyOptions.Install(new Microsoft.Dafny.DafnyOptions(reporter));
