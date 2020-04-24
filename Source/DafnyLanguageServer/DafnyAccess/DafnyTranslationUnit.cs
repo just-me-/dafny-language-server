@@ -15,15 +15,18 @@ using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampl
 namespace DafnyLanguageServer.DafnyAccess
 {
     /// <summary>
-    /// This is the translation unit for Dafny files. It calls parse, resolve, translate and Boogie's verification.
-    /// The results are provided within the Property "DiagnosticElements"
+    /// This is the translation unit for Dafny files. The constructor accepts a Physical File.
+    /// The class can then verify this file using the method "Verify()".
+    /// It will parse, resolve, translate and verify the source code and return all information gathered in the form of TranslationResults.
+    /// TranslationResults include the compilats 'dafnyProgram' and 'boogiePrograms', the success state of the verification, and also
+    /// any errors that occured during the process.
     /// </summary>
     public class DafnyTranslationUnit : IDafnyTranslationUnit
     {
         public DafnyTranslationUnit(PhysicalFile file)
         {
             ExecutionEngine.printer = new LanguageServerOutputWriterSink();
-            this._file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null.");
+            _file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null.");
         }
 
         private TranslationStatus _status = TranslationStatus.Virgin;
@@ -35,55 +38,68 @@ namespace DafnyLanguageServer.DafnyAccess
         #region ErrorReporting
         private readonly ErrorReporter _reporter = new Microsoft.Dafny.ConsoleErrorReporter();
         private bool _hasErrors;
-        public List<DiagnosticElement> DiagnosticElements { get; } = new List<DiagnosticElement>();
+        private readonly List<DiagnosticElement> _diagnosticElements = new List<DiagnosticElement>();
 
-
+        /// <summary>
+        /// This method is passed to Boogie's Logical Correctness Verifier as a delegate.
+        /// It converts errors, that Boogie reports to our unified "DiagnosticElement" Format
+        /// and adds them to the DiagnosticElement Container.
+        /// </summary>
+        /// <param name="e">ErrorInformation from Boogie</param>
         private void AddBoogieErrorToList(ErrorInformation e)
         {
-            DiagnosticElements.Add(e.ConvertToErrorInformation());
+            _diagnosticElements.Add(e.ConvertToErrorInformation());
             _hasErrors = true;
         }
 
+        /// <summary>
+        /// This method iterates over the ErrorReporter "_reporter" of this class.
+        /// This reporter is used by Dafny only (not Boogie) and any errors occuring during verification
+        /// are collected within this reporter.
+        /// This method is called after verification to add any errors and messages inside the reporter
+        /// to the DiagnosticElement Collection of this class.
+        /// Dafny-Errors (Type ErrorMessage) will also be converted to the unified DiagnosticElement Type
+        /// during this process.
+        /// </summary>
         private void CollectDiagnosticsFromReporter()
         {
             foreach (ErrorMessage e in _reporter.AllMessages[ErrorLevel.Error])
             {
-                DiagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
+                _diagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
                 _hasErrors = true;
             }
 
             foreach (ErrorMessage w in _reporter.AllMessages[ErrorLevel.Warning])
             {
-                DiagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
+                _diagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
             }
 
             foreach (ErrorMessage i in _reporter.AllMessages[ErrorLevel.Info])
             {
-                DiagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
+                _diagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
             }
         }
         #endregion
 
+        /// <summary>
+        /// Ensures that this instance will only get used once.
+        /// This is necessary since pre-existing 'dafnyPrograms' cannot be recompiled.
+        /// </summary>
         private void CheckInstance()
         {
             if (_dirtyInstance)
             {
-                throw new Exception("You can this instance only use once!");
+                throw new Exception("You can use this instance only once!");
             }
             _dirtyInstance = true;
         }
 
         /// <summary>
-
-        ///  This method verifies Dafny Code. First, it checks if this instance is fresh.
+        /// This method verifies Dafny Code. First, it checks if this instance is fresh.
         /// Next, it sets up default options with the tweak to generate the model file, which is needed for counter examples.
-        /// then, it tries to parse, resolve, translate and boogie the code, aborting whenever it fails.
-        /// Then, errors are collected and provided in the Property "Error".
-        /// The results are compilats are then returned in the Wrapper Class "TranslationResult".
-
-        /// Calls Pars, Resolve, Translate and Boogie.
-        /// Makes sure, that it gets only called once per class instance.
-
+        /// Then, it tries to parse, resolve, translate and boogie the code, aborting whenever it fails.
+        /// Then, errors are collected and provided in the Property "DiagnosticElements".
+        /// The results and compilats are then returned in the Wrapper Class "TranslationResult".
         /// </summary>
         public TranslationResult Verify()
         {
@@ -98,17 +114,19 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 _status = TranslationStatus.Verified;
             }
-            var result = new TranslationResult
+            return new TranslationResult
             {
-                DiagnosticElements = DiagnosticElements,
+                DiagnosticElements = _diagnosticElements,
                 BoogiePrograms = _boogiePrograms,
                 DafnyProgram = _dafnyProgram,
                 TranslationStatus = _status
 
             };
-            return result;
         }
 
+        /// <summary>
+        /// Sets Up Default Dafny Options except for the ModelViewFile Option, which is custom.
+        /// </summary>
         private void SetUpDafnyOptions()
         {
             DafnyOptions.Install(new DafnyOptions(_reporter));
@@ -118,7 +136,8 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        /// Calls Dafny parser. Will find Lexer DiagnosticElements.
+        /// Invokes Dafny parser on the physical file provided to this instance.
+        /// This will find lexer errors.
         /// </summary>
         private bool Parse()
         {
@@ -135,7 +154,8 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        ///  Calls Dany resolver. Will find semantic errors.
+        /// Invokes Dany resolver.
+        /// This will find semantic errors.
         /// </summary>
         private bool Resolve()
         {
@@ -151,7 +171,7 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        ///  Translates Dafny programs into Boogie programs
+        /// This method translates a Dafny program into Boogie programs.
         /// </summary>
         private bool Translate()
         {
@@ -162,7 +182,7 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        /// Just calls BoogieOnce for each of the Boogie Programs.
+        /// Iterates over all Boogie programs and calls BoogieOnce for each of them.
         /// </summary>
         private bool Boogie()
         {
@@ -177,7 +197,8 @@ namespace DafnyLanguageServer.DafnyAccess
         }
 
         /// <summary>
-        /// Prove correctness with Boogie for a single Boogie program. Finds logical errors.
+        /// Prove correctness with Boogie for a single Boogie program.
+        /// This will report logical (asserts, ensures, decreases, ...) errors.
         /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
