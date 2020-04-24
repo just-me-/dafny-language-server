@@ -228,6 +228,5 @@ namespace ContentManagerTests
             Assert.Throws<ArgumentException>(() => PhysicalFile.GetLineLength(s, l));
         }
     }
-
     
 }

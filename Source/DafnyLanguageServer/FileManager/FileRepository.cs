@@ -1,13 +1,9 @@
 ﻿using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Handler;
-using DafnyServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
-using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
 using Type = Microsoft.Dafny.Type;
