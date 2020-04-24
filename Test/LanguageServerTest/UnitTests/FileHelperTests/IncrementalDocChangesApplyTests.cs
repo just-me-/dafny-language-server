@@ -88,7 +88,7 @@ namespace ContentManagerTest
         {
             Position p = new Position(15, 24);
             var r = f.GetIndex(p);
-            Assert.AreEqual(268, r);
+            Assert.AreEqual(241, r);
         }
 
         [Test]
@@ -114,31 +114,7 @@ namespace ContentManagerTest
 
         private PhysicalFile f;
 
-        private const string cleanSource = @"
-
-class MyClass {
-
-
-    var field: int; 
-	
-	
-    method  addOne(i: int) returns (r:int) {
-       r := i + 1;
-       return r; 
-    }
-    method aMethod() modifies this { 
-        var aLocalVar := 2;
-        field := aLocalVar;  
-        aLocalVar := addOne(field);
-    }
-
-
-
-    constructor () { }
-
-}
-
-";
+        private const string cleanSource = "\r\n\r\nclass MyClass {\r\n\r\n\r\n var field: int; \r\n\t\r\n\t\r\n method  addOne(i: int) returns(r:int) {\r\n r := i + 1;\r\n       return r; \r\n    }\r\n method aMethod() modifies this { \r\n var aLocalVar := 2;\r\n field := aLocalVar;  \r\n aLocalVar := addOne(field);\r\n    }\r\n\r\n\r\n\r\n constructor() { }\r\n\r\n}\r\n\r\n";
 
         [SetUp]
         public void InitializeFile()
@@ -242,7 +218,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Insert(259, "a"), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Insert(229, "a"), f.Sourcecode);
         }
 
         [Test]
@@ -260,7 +236,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Insert(259, "abc"), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Insert(229, "abc"), f.Sourcecode);
         }
 
 
@@ -280,7 +256,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(259, 1), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(229, 1), f.Sourcecode);
         }
 
         [Test]
@@ -298,7 +274,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(258, 1), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(228, 1), f.Sourcecode);
         }
 
 
@@ -317,7 +293,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(259, 5), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(229, 5), f.Sourcecode);
         }
 
 
@@ -336,7 +312,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(244, 35), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(214, 35), f.Sourcecode);
         }
 
         [Test]
@@ -354,7 +330,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(242, 37), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(214, 37), f.Sourcecode);
         }
 
         [Test]
@@ -384,14 +360,14 @@ class MyClass {
                 Text = "baba",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 8},
-                    End = new Position {Line = 15, Character = 35}
+                    Start = new Position {Line = 15, Character = 1},
+                    End = new Position {Line = 15, Character = 30}
                 },
-                RangeLength = 27
+                RangeLength = 29
             };
             f.Apply(change);
 
-            Assert.AreEqual(cleanSource.Remove(252, 27).Insert(252, "baba"), f.Sourcecode);
+            Assert.AreEqual(cleanSource.Remove(215, 29).Insert(215, "baba"), f.Sourcecode);
         }
 
 
@@ -404,10 +380,7 @@ class MyClass {
 
         private PhysicalFile f;
 
-        private const string cleanSource = @"class A {
-    var a:int;
-    constructor(){}
-}";
+        private const string cleanSource = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}";
 
         [SetUp]
         public void InitializeFile()
@@ -434,10 +407,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    contructor(){}
-}";
+            string expected = "class A {\r\n    var a:int;\r\n    contructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -458,10 +428,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    consructor(){}
-}";
+            string expected = "class A {\r\n    var a:int;\r\n    consructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -482,10 +449,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    consatructor(){}
-}";
+            string expected = "class A {\r\n    var a:int;\r\n    consatructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -506,10 +470,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    consabctructor(){}
-}";
+            string expected = "class A {\r\n    var a:int;\r\n    consabctructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -531,10 +492,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var b:string;
-    constructor(){}
-}";
+            string expected = "class A {\r\n    var b:string;\r\n    constructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
             
@@ -597,11 +555,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    constructor(){}
-}
-";
+            string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}\r\n";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -622,10 +576,7 @@ class MyClass {
             };
             f.Apply(change);
 
-            string expected = @"class A {
-    var a:int;
-    constructor(){}
-}//bla";
+            string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}//bla";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
