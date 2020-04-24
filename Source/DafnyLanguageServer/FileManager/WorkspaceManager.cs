@@ -20,10 +20,24 @@ namespace DafnyLanguageServer.FileManager
 
 
         //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
-        public FileRepository UpdateFile(Uri documentPath, string sourceCodeOfFile)
+        public FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFileOrChangeEvent)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
-            fileRepository.UpdateFile(sourceCodeOfFile);
+
+            if (typeof(T) == typeof(string)) {
+                var text = sourceCodeOfFileOrChangeEvent as string;
+                fileRepository.UpdateFile(text);
+            }
+            else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>))
+            {
+                var changes = sourceCodeOfFileOrChangeEvent as Container<TextDocumentContentChangeEvent>;
+                fileRepository.UpdateFile(changes);
+            }
+            else
+            {
+                throw new TypeAccessException("Expected string or TextDocumentChangeEvent-Container at text-document-change event request");
+            }
+
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
 
             //Generate new fancy Symbol Table for Testing:
@@ -38,13 +52,6 @@ namespace DafnyLanguageServer.FileManager
             return fileRepository;
         }
 
-        public FileRepository UpdateFile(Uri documentPath, TextDocumentContentChangeEvent change)
-        {
-            FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
-            fileRepository.UpdateFile(change);
-            _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
-            return fileRepository;
-        }
 
         private FileRepository GetOrCreateFileRepositoryInWorkspace(Uri documentPath)
         {

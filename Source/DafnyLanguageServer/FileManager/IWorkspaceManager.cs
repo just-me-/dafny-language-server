@@ -8,7 +8,7 @@ namespace DafnyLanguageServer.FileManager
     /// </summary>
     public interface IWorkspaceManager
     {
-        FileRepository UpdateFile(Uri documentPath, string sourceCodeOfFile);
+        FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFile);
         FileRepository GetFileRepository(Uri documentPath);
         FileRepository GetFileRepository(string documentPath);
         ConcurrentDictionary<Uri, FileRepository> GetAllFiles();

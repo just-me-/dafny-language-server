@@ -38,21 +38,46 @@ namespace DafnyLanguageServer.FileManager
         public string FileName => Path.GetFileName(Filepath);
 
         public string Sourcecode { get; set; }
-
+        
         public void Apply(TextDocumentContentChangeEvent change)
         {
-            string oldSource = Sourcecode;
             Position startPos = change.Range.Start;
             int startIndex = GetIndex(startPos);
+            string newSourceCut = Sourcecode.Remove(startIndex, change.RangeLength);
+            string newSource = newSourceCut.Insert(startIndex, change.Text);
+            Sourcecode = newSource;
         }
 
-        private int GetIndex(Position pos)
+        public int GetIndex(Position pos)
         {
-            int reuslt = 0;
-            long targetLine = pos.Line + 1;
-            long targetCol = pos.Character + 1;
-    
-            throw new NotImplementedException();
+            int result = 0;
+
+            //using 1-based indexes, thus +1 everywhere and starting from 1.
+            int targetLine = (int)pos.Line + 1;
+            int targetCol = (int)pos.Character + 1;
+            int currentLine = 1;
+            int currentCol = 1;
+
+            while (!ReachedTargetPosition(currentLine, targetLine, currentCol, targetCol))
+            {
+                if (Sourcecode[result] == '\n')
+                {
+                    currentLine++;
+                    currentCol = 1;
+                }
+                else
+                {
+                    currentCol++;
+                }
+                result++;
+            }
+
+            return result;
+        }
+
+        private static bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
+        {
+            return (currentLine == targetLine && currentCol == targetCol);
         }
     }
 }
