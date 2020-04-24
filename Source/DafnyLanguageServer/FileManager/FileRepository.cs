@@ -25,16 +25,19 @@ namespace DafnyLanguageServer.FileManager
         public PhysicalFile PhysicalFile { get; set; }
         public TranslationResult Result { get; set; }
 
-        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
         public void UpdateFile(string sourceCodeOfFile)
         {
             PhysicalFile.Sourcecode = sourceCodeOfFile;
             GenerateTranslationResult();
         }
 
-        public void UpdateFile(TextDocumentContentChangeEvent change)
+        public void UpdateFile(Container<TextDocumentContentChangeEvent> changes)
         {
-            PhysicalFile.Apply(change);
+            foreach (var change in changes)
+            {
+                PhysicalFile.Apply(change);
+            }
+
             GenerateTranslationResult();
         }
 

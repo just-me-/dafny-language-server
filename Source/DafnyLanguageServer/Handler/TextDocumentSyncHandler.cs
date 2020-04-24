@@ -7,6 +7,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 using System;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.HandlerServices;
@@ -23,7 +24,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full; // Incremental is not yet supported by the buffer
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
@@ -47,16 +48,14 @@ namespace DafnyLanguageServer.Handler
         /// <summary>
         /// Updates file and sends error to the client with the diagnostics service
         /// </summary>
-        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
-        //(könnte einfach generischem ethode machen)
-        private void UpdateFileAndSendDiagnostics(Uri uri, string text)
+        private void UpdateFileAndSendDiagnostics<T>(Uri uri, T textOrChangeEvent)
         {
             //todo ticket 154 - paar sinnvolle logs machen.
             //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
             try
             {
                 _log.LogInformation("Updating File " + uri);
-                FileRepository fileRepository = _workspaceManager.UpdateFile(uri, text);
+                FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
                 _log.LogInformation("Calculating Diagnostics");
                 new DiagnosticsService(_router).SendDiagnostics(fileRepository);
                 _log.LogInformation("Update Request successfully handled.");
@@ -70,15 +69,15 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        private void UpdateFileAndSendDiagnostics(Uri uri, TextDocumentContentChangeEvent change)
-        {
-            FileRepository fileRepository = _workspaceManager.UpdateFile(uri, change);
-            new DiagnosticsService(_router).SendDiagnostics(fileRepository);
-        }
-
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
+            if (Change == TextDocumentSyncKind.Full)
+            {
+                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
+            } else if (Change == TextDocumentSyncKind.Incremental)
+            {
+                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges);
+            }
             return Unit.Task;
         }
 
