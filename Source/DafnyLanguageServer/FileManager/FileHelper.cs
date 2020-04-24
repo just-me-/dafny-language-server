@@ -54,29 +54,6 @@ namespace DafnyLanguageServer.FileManager
             );
         }
 
-        public static string EscapeFilePath(string path)
-        {
-            string escapeCharacter = "\"";
-
-            if (path.StartsWith(escapeCharacter) && path.EndsWith(escapeCharacter))
-            {
-                path = path.Substring(1, path.Length - 2);
-            }
-
-            if (path.Contains(escapeCharacter))
-            {
-                throw new NotSupportedException("Filename with Quote is not supported.");
-            }
-
-            if (path.Contains(" "))
-            {
-                return escapeCharacter + path + escapeCharacter;
-            }
-            else
-            {
-                return path;
-            }
-        }
 
         public static Position CreatePosition(long line, long chr)
         {
