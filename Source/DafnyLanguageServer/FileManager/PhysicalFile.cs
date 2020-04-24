@@ -74,12 +74,12 @@ namespace DafnyLanguageServer.FileManager
 
         private static bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
         {
-            return (currentLine == targetLine && currentCol == targetCol);
+            return currentLine == targetLine && currentCol == targetCol;
         }
 
-        public static int GetLineLength(string source, int line)
+        public int GetLengthOfLine(int line)
         {
-            string[] lines = Regex.Split(source, "\r\n|\r|\n");
+            string[] lines = Regex.Split(Sourcecode, "\r\n|\r|\n");
             if (line < 0)
             {
                 throw new ArgumentException("Line-Index must not be negative");

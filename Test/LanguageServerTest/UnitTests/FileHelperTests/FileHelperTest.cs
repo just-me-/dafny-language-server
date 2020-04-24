@@ -186,15 +186,19 @@ namespace ContentManagerTests
         }
     }
 
-    internal class LineLengthTests
+    public class PhysicalFileTest
     {
         [Test]
         public void SimpleTest1()
         {
-            const string s = "a\nabc\na";
             const int l = 1;
 
-            int result = PhysicalFile.GetLineLength(s, l);
+            var f = new PhysicalFile()
+            {
+                Sourcecode = "a\nabc\na"
+            };
+
+            int result = f.GetLengthOfLine(l);
 
             Assert.AreEqual(3, result);
         }
@@ -202,10 +206,14 @@ namespace ContentManagerTests
         [Test]
         public void SimpleTest2()
         {
-            const string s = "a\nabc\na";
             const int l = 0;
 
-            int result = PhysicalFile.GetLineLength(s, l);
+            var f = new PhysicalFile()
+            {
+                Sourcecode = "a\nabc\na"
+            };
+
+            int result = f.GetLengthOfLine(l);
 
             Assert.AreEqual(1, result);
         }
@@ -213,19 +221,27 @@ namespace ContentManagerTests
         [Test]
         public void LineTooLarge()
         {
-            const string s = "a\nabc\na";
             const int l = 3;
 
-            Assert.Throws<ArgumentException>(() => PhysicalFile.GetLineLength(s, l));
+            var f = new PhysicalFile()
+            {
+                Sourcecode = "a\nabc\na"
+            };
+
+            Assert.Throws<ArgumentException>(() => f.GetLengthOfLine(l));
         }
 
         [Test]
         public void LineNegativeThrows()
         {
-            const string s = "a\nabc\na";
             const int l = -1;
 
-            Assert.Throws<ArgumentException>(() => PhysicalFile.GetLineLength(s, l));
+            var f = new PhysicalFile()
+            {
+                Sourcecode = "a\nabc\na"
+            };
+
+            Assert.Throws<ArgumentException>(() => f.GetLengthOfLine(l));
         }
     }
     

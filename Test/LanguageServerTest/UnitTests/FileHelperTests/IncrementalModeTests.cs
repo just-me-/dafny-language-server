@@ -20,7 +20,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void pos_0_0()
+        public void Pos_0_0()
         {
             Position p = new Position(0, 0);
             var r = f.GetIndex(p);
@@ -28,7 +28,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void pos_2_0()
+        public void Pos_2_0()
         {
             Position p = new Position(2, 0);
             var r = f.GetIndex(p);
@@ -36,7 +36,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void pos_2_1()
+        public void Pos_2_1()
         {
             Position p = new Position(2, 1);
             var r = f.GetIndex(p);
@@ -44,7 +44,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void pos_2_2()
+        public void Pos_2_2()
         {
             Position p = new Position(2, 2);
             var r = f.GetIndex(p);
@@ -92,7 +92,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Illegal_col_out_of_bounds()
+        public void ColumnOutOfBounds()
         {
             Position p = new Position(1, 100);
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
@@ -100,7 +100,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Illegal_line_out_of_bounds()
+        public void LineOutOfBounds()
         {
             Position p = new Position(100, 0);
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
@@ -168,7 +168,7 @@ namespace ContentManagerTest
 
         //INSSERT
         [Test]
-        public void Insert_one_char_at_0_0()
+        public void InsertOneCharAt_0_0()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -186,7 +186,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Insert_one_char_at_1_0()
+        public void InsertOneCharAt_1_0()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -204,7 +204,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Insert_one_char_at_15_15()
+        public void InsertOneCharAt_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -222,7 +222,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Insert_text_at_15_15()
+        public void InsertTextAt_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -242,7 +242,7 @@ namespace ContentManagerTest
 
         //DELETE
         [Test]
-        public void PressingDEL_at_15_15()
+        public void PressingDELETEat_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -260,7 +260,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void PressingRETURN_at_15_15()
+        public void PressingRETURNat_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -279,7 +279,7 @@ namespace ContentManagerTest
 
 
         [Test]
-        public void Removing_Range_at_15_15()
+        public void RemovingRangeAt_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -298,7 +298,7 @@ namespace ContentManagerTest
 
 
         [Test]
-        public void Removing_Line_15_But_Keep_Line_Alive()
+        public void RemovingLine_15_WithoutNewLine()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -316,7 +316,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Removing_Line_15()
+        public void RemovingLine_15_IncludingNewLine()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -334,7 +334,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Removing_Line_1()
+        public void RemovingLine_1()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -353,7 +353,7 @@ namespace ContentManagerTest
 
         //CopyPaste
         [Test]
-        public void Replace_Line_15()
+        public void ReplaceLine_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -374,8 +374,8 @@ namespace ContentManagerTest
 
     }
 
-    //these are the meaningful tests
-    public class ApplyChanges_RequestExplicitlyMeasuredByDebugging_ExpectationExplicitlyTypedOut
+
+    public class RequestExplicitlyMeasuredByDebugging_ExpectationExplicitlyTypedOut
     {
 
         private PhysicalFile f;
@@ -393,7 +393,7 @@ namespace ContentManagerTest
 
 
         [Test]
-        public void Hit_Return_2_8()
+        public void HitReturn_2_8()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -407,14 +407,14 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    contructor(){}\r\n}";
+            const string expected = "class A {\r\n    var a:int;\r\n    contructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
         }
 
         [Test]
-        public void Hit_Del_2_8()
+        public void HitDel_2_8()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -428,14 +428,14 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    consructor(){}\r\n}";
+            const string expected = "class A {\r\n    var a:int;\r\n    consructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
         }
 
         [Test]
-        public void Type_at_2_8()
+        public void TypeAt_2_8()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -449,14 +449,14 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    consatructor(){}\r\n}";
+            const string expected = "class A {\r\n    var a:int;\r\n    consatructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
         }
 
         [Test]
-        public void Insert_at_2_8()
+        public void InsertAt_2_8()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -470,7 +470,7 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    consabctructor(){}\r\n}";
+            const string expected = "class A {\r\n    var a:int;\r\n    consabctructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -492,7 +492,7 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var b:string;\r\n    constructor(){}\r\n}";
+            const string expected = "class A {\r\n    var b:string;\r\n    constructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
             
@@ -513,7 +513,7 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = @"//nix";
+            const string expected = @"//nix";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
@@ -534,14 +534,14 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = @"";
+            const string expected = @"";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
         }
 
         [Test]
-        public void Append_NL()
+        public void AppendNL()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -555,14 +555,14 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}\r\n";
+            const string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}\r\n";
 
             Assert.AreEqual(expected, f.Sourcecode);
 
         }
 
         [Test]
-        public void Append_Text()
+        public void AppendText()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -576,7 +576,7 @@ namespace ContentManagerTest
             };
             f.Apply(change);
 
-            string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}//bla";
+            const string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}//bla";
 
             Assert.AreEqual(expected, f.Sourcecode);
 

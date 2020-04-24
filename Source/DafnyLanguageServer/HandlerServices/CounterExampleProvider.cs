@@ -35,20 +35,16 @@ namespace DafnyLanguageServer.HandlerServices
     public class CounterExampleProvider
     {
         public string ModelBvd { get; }
-        private string Source { get; }
+        private PhysicalFile PhysicalFile { get; }
 
-        public CounterExampleProvider(PhysicalFile file) : this(file.Sourcecode,
-            CounterExampleDefaultModelFile.FilePath)
+
+        public CounterExampleProvider(PhysicalFile file) : this(file, CounterExampleDefaultModelFile.FilePath)
         {
         }
 
-        public CounterExampleProvider(string source) : this(source, CounterExampleDefaultModelFile.FilePath)
+        public CounterExampleProvider(PhysicalFile file, string pathToModelBvd)
         {
-        }
-
-        public CounterExampleProvider(string source, string pathToModelBvd)
-        {
-            Source = source;
+            PhysicalFile = file;
             ModelBvd = pathToModelBvd;
         }
 
@@ -59,7 +55,7 @@ namespace DafnyLanguageServer.HandlerServices
                 return new CounterExampleResults();
             }
             List<ILanguageSpecificModel> specificModels = new ModelReader(ModelBvd).ReadModelFile();
-            return new CounterExampleExtractor(Source, specificModels).ExtractCounterExamples();
+            return new CounterExampleExtractor(PhysicalFile, specificModels).ExtractCounterExamples();
         }
 
         private class ModelReader
@@ -102,11 +98,11 @@ namespace DafnyLanguageServer.HandlerServices
 
         private class CounterExampleExtractor
         {
-            private string Source { get; }
+            private PhysicalFile PhysicalFile { get; }
             private List<ILanguageSpecificModel> SpecificModels { get; }
-            public CounterExampleExtractor(string source, List<ILanguageSpecificModel> specificModels)
+            public CounterExampleExtractor(PhysicalFile file, List<ILanguageSpecificModel> specificModels)
             {
-                Source = source;
+                PhysicalFile = file;
                 SpecificModels = specificModels;
             }
 
@@ -177,7 +173,7 @@ namespace DafnyLanguageServer.HandlerServices
                     var lineStr = m.Groups[1].ToString();
                     int line = Int32.Parse(lineStr);
                     ce.Line = line;
-                    ce.Col = PhysicalFile.GetLineLength(Source, line);
+                    ce.Col = PhysicalFile.GetLengthOfLine(line);
                 }
                 else
                 {
