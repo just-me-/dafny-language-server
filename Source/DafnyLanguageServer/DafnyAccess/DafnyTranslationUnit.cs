@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.DafnyAccess
         public DafnyTranslationUnit(PhysicalFile file)
         {
             ExecutionEngine.printer = new LanguageServerOutputWriterSink();
-            this._file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: File must be non-null.");
+            this._file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null.");
         }
 
         private TranslationStatus _status = TranslationStatus.Virgin;
@@ -33,31 +33,31 @@ namespace DafnyLanguageServer.DafnyAccess
         private IEnumerable<Tuple<string, Bpl.Program>> _boogiePrograms;
 
         #region ErrorReporting
-        private readonly ErrorReporter reporter = new Microsoft.Dafny.ConsoleErrorReporter();
-        private bool hasErrors;
+        private readonly ErrorReporter _reporter = new Microsoft.Dafny.ConsoleErrorReporter();
+        private bool _hasErrors;
         public List<DiagnosticElement> DiagnosticElements { get; } = new List<DiagnosticElement>();
 
 
         private void AddBoogieErrorToList(ErrorInformation e)
         {
             DiagnosticElements.Add(e.ConvertToErrorInformation());
-            hasErrors = true;
+            _hasErrors = true;
         }
 
         private void CollectDiagnosticsFromReporter()
         {
-            foreach (ErrorMessage e in reporter.AllMessages[ErrorLevel.Error])
+            foreach (ErrorMessage e in _reporter.AllMessages[ErrorLevel.Error])
             {
                 DiagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
-                hasErrors = true;
+                _hasErrors = true;
             }
 
-            foreach (ErrorMessage w in reporter.AllMessages[ErrorLevel.Warning])
+            foreach (ErrorMessage w in _reporter.AllMessages[ErrorLevel.Warning])
             {
                 DiagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
             }
 
-            foreach (ErrorMessage i in reporter.AllMessages[ErrorLevel.Info])
+            foreach (ErrorMessage i in _reporter.AllMessages[ErrorLevel.Info])
             {
                 DiagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
             }
@@ -94,7 +94,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
             CollectDiagnosticsFromReporter();
 
-            if (succeeded && !hasErrors)
+            if (succeeded && !_hasErrors)
             {
                 _status = TranslationStatus.Verified;
             }
@@ -111,7 +111,7 @@ namespace DafnyLanguageServer.DafnyAccess
 
         private void SetUpDafnyOptions()
         {
-            DafnyOptions.Install(new DafnyOptions(reporter));
+            DafnyOptions.Install(new DafnyOptions(_reporter));
             DafnyOptions.Clo.ApplyDefaultOptions();
             DafnyOptions.O.ModelViewFile = CounterExampleDefaultModelFile.FilePath;
 
@@ -124,11 +124,11 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             ModuleDecl module = new LiteralModuleDecl(new Microsoft.Dafny.DefaultModuleDecl(), null);
             BuiltIns builtIns = new BuiltIns();
-            var success = (Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(reporter)) == 0 &&
-                           Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(reporter)) == null);
+            var success = (Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(_reporter)) == 0 &&
+                           Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(_reporter)) == null);
             if (success)
             {
-                _dafnyProgram = new Microsoft.Dafny.Program(_file.Filepath, module, builtIns, reporter);
+                _dafnyProgram = new Microsoft.Dafny.Program(_file.Filepath, module, builtIns, _reporter);
                 _status = TranslationStatus.Parsed;
             }
             return success;
@@ -142,7 +142,7 @@ namespace DafnyLanguageServer.DafnyAccess
             var resolver = new Microsoft.Dafny.Resolver(_dafnyProgram);
             resolver.ResolveProgram(_dafnyProgram);
 
-            bool success = (reporter.Count(ErrorLevel.Error) == 0);
+            bool success = (_reporter.Count(ErrorLevel.Error) == 0);
             if (success)
             {
                 _status = TranslationStatus.Resolved;
@@ -155,7 +155,7 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Translate()
         {
-            _boogiePrograms = Translator.Translate(_dafnyProgram, reporter,
+            _boogiePrograms = Translator.Translate(_dafnyProgram, _reporter,
                 new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = _file.Filepath });
             _status = TranslationStatus.Translated;
             return true;
