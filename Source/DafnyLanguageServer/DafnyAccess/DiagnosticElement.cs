@@ -9,9 +9,8 @@ using Microsoft.Dafny;
 namespace DafnyLanguageServer.DafnyAccess
 {
     /// <summary>
-    /// This class represents DiagnosticElements.
-    /// Dafny, as well as Boogi DiagnosticElements can be converted into DiagnosticErrors.
-    /// These can be used to create Diagnostics.
+    /// This class represents DiagnosticElements, such as an Error or a Warning.
+    /// Since Dafny and Boogie have different types of Errors, and since they are sometimes not accessible, error informations are unified by this class.
     /// </summary>
     public class DiagnosticElement
     {
@@ -36,8 +35,10 @@ namespace DafnyLanguageServer.DafnyAccess
 
     public static class ConverterExtensions
     {
-        //Converting Dafny DiagnosticElements. These can be info, warning and error.
-        //If Error, the extra Info "Syntax Error" is added, to separate them from logical errors.
+        ///<summary>
+        ///Converts Dafny Errors into DiagnosticElements. These can be of type info, warning and error.
+        ///If error, the extra text "Syntax Error" is added, to separate them from logical errors.
+        /// </summary>  
         public static DiagnosticElement ConvertToErrorInformation(this ErrorMessage eMsg, ErrorLevel severity)
         {
             if (severity == ErrorLevel.Error)
@@ -48,17 +49,26 @@ namespace DafnyLanguageServer.DafnyAccess
 
         }
 
-        //Converting Boogie DiagnosticElements. These are also of Severity Error.
+        /// <summary>
+        ///Converts Boogie Errors into DiagnosticElements. These can only be of type error.
+        ///The extra text "Logical Error" is added, to separate them from syntax errors.
+        /// </summary>  
         public static DiagnosticElement ConvertToErrorInformation(this ErrorInformation eInfo)
         {
             if (eInfo is null) return null;
             return new DiagnosticElement(eInfo.Tok, "Logical Error: " + eInfo.Msg, ErrorLevel.Error)
             {
-           
                 Aux = eInfo.Aux
             };
         }
 
+        /// <summary>
+        /// Generic method that converts a list of errors into a list of DiagnosticElements using a converter.
+        /// </summary>
+        /// <typeparam name="T">Origin Type, either Dafny or Boogie Error [ErrorInformation or ErrorMessage]</typeparam>
+        /// <param name="source">List of errors of Type T</param>
+        /// <param name="converter">A converter, converting an Error from T to DiagnosticElement</param>
+        /// <returns>Converted List</returns>
         public static List<DiagnosticElement> ToDiagnosticErrorList<T>(this IEnumerable<T> source, Func<T, DiagnosticElement> converter)
         {
             return source?.Select(converter).ToList();

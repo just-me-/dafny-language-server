@@ -19,7 +19,13 @@ namespace DafnyLanguageServer.FileManager
         public SymbolTableManager SymbolTableManager { get; set; }
 
 
-        //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
+        /// <summary>
+        /// Requests the fileRepository to apply updates and store it in the buffer.
+        /// </summary>
+        /// <typeparam name="T">string or Container with TextDocumentContentChangeEvent</typeparam>
+        /// <param name="documentPath">URI to the document</param>
+        /// <param name="sourceCodeOfFileOrChangeEvents">Update Information, either just the new complete sourcecode or TextDocumentChangeEvent-Container</param>
+        /// <returns></returns>
         public FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFileOrChangeEvents)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
@@ -41,18 +47,20 @@ namespace DafnyLanguageServer.FileManager
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
 
             //Generate new fancy Symbol Table for Testing:
+            //kommt dann glaub eher in das filerepo rein
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
                 SymbolTableManager = new SymbolTableManager(fileRepository.Result.DafnyProgram);
-                //das ändert sich noch, is ja pro klasse eine table im moment.
-                //würde hie rdann aber so schreiben filerepo.symboltable = TableGenerator.GetTable oder sowas.
-                // ==> pro Klasse... "pro file" kann man aber nicht sagen. Ein File kann ein Array von Klassen haben. Wenns pro "Modul/Package" ist ists Mapping via Workspace, nicht?
             }
 
             return fileRepository;
         }
 
-
+        /// <summary>
+        /// Retreives a fileRepository from the buffer. If it doesn't exist, it will be created.
+        /// </summary>
+        /// <param name="documentPath">URI to the file.</param>
+        /// <returns>FileRepository</returns>
         private FileRepository GetOrCreateFileRepositoryInWorkspace(Uri documentPath)
         {
             return _files.TryGetValue(documentPath, out var bufferedFile)

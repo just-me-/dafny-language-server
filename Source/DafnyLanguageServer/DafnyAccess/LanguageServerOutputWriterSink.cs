@@ -8,17 +8,13 @@ using Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
-    // Decompiled with JetBrains decompiler
-    // Type: Microsoft.Boogie.ConsolePrinter
-    // Assembly: BoogieExecutionEngine, Version=2.4.1.10503, Culture=neutral, PublicKeyToken=736440c9b414ea16
-    // MVID: ACE21C81-810D-4A55-A367-D03CF4F40F3F
-    // Assembly location: G:\Dokumente\VisualStudio\BA\boogie\Binaries\BoogieExecutionEngine.dll
-
-    using System;
-    using System.IO;
-
- 
-        public class LanguageServerOutputWriterSink : OutputPrinter
+    /// <summary>
+    /// OutputPrinter that does nothing aside the default functionality.
+    /// Boogie requires an output printer to be set.
+    /// Instead of using Dafny's Console Printer, which messes with the console,
+    /// this sink is used within the Language Server.
+    /// </summary>
+    public class LanguageServerOutputWriterSink : OutputPrinter
         {
 
 

@@ -7,7 +7,7 @@ namespace DafnyLanguageServer.FileManager
 {
     /// <summary>
     /// This class represents a physical Dafny file. The content of this file is not buffered.
-    /// It is de current representation of the file in the users workspace in VSCode.
+    /// It is the current representation of the file in the users workspace in VSCode.
     /// Gets updated whenever a change event over LSP is triggered.
     /// Only contains basic attributes like source code and name. 
     /// </summary>
@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.FileManager
             //we need to correct this here.
             get
             {
-                var windowsCorrectionPattern = @"/\w:[/\\].*";  //finds /C:/blabla  and /C:\blabla
+                var windowsCorrectionPattern = @"/\w:[/\\].*";  //finds /C:/xyz  and /C:\xyz
                 var match = Regex.Match(_filepath, windowsCorrectionPattern);
                 if (match.Success)
                 {
@@ -35,7 +35,11 @@ namespace DafnyLanguageServer.FileManager
         public string FileName => Path.GetFileName(Filepath);
 
         public string Sourcecode { get; set; }
-        
+
+        /// <summary>
+        /// Applies TextDocumentChanges to this instance's source code.
+        /// </summary>
+        /// <param name="change">The TextDocumentContentChangeEvent provided by the LSP</param>
         public void Apply(TextDocumentContentChangeEvent change)
         {
             Position startPos = change.Range.Start;
@@ -45,6 +49,11 @@ namespace DafnyLanguageServer.FileManager
             Sourcecode = newSource;
         }
 
+        /// <summary>
+        /// Gets the index of a certain position (position includes line + character).
+        /// </summary>
+        /// <param name="pos">The position you want the index for.</param>
+        /// <returns>The index. It can be used for common string methods like replace(index) or insert(index).</returns>
         public int GetIndex(Position pos)
         {
             int result = 0;
@@ -77,6 +86,11 @@ namespace DafnyLanguageServer.FileManager
             return currentLine == targetLine && currentCol == targetCol;
         }
 
+        /// <summary>
+        /// Returns the length of a line.
+        /// </summary>
+        /// <param name="line">The line you want the length for.</param>
+        /// <returns>Length of the line.</returns>
         public int GetLengthOfLine(int line)
         {
             string[] lines = Regex.Split(Sourcecode, "\r\n|\r|\n");
