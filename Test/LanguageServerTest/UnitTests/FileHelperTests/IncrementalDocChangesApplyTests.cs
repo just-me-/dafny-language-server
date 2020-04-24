@@ -15,31 +15,7 @@ namespace ContentManagerTest
         {
             f = new PhysicalFile()
             {
-                Sourcecode = @"
-
-class MyClass {
-
-
-    var field: int; 
-	
-	
-    method  addOne(i: int) returns (r:int) {
-       r := i + 1;
-       return r; 
-    }
-    method aMethod() modifies this { 
-        var aLocalVar := 2;
-        field := aLocalVar;  
-        aLocalVar := addOne(field);
-    }
-
-
-
-    constructor () { }
-
-}
-
-"
+                Sourcecode = "\r\n\r\nclass MyClass {\r\n\r\n\r\n    var field: int; \r\n\t\r\n\t\r\n method  addOne(i: int) returns(r: int) {\r\n r := i + 1;\r\n       return r; \r\n    }\r\n method aMethod() modifies this { \r\n var aLocalVar:= 2;\r\n field := aLocalVar;  \r\n aLocalVar := addOne(field);\r\n    }\r\n\r\n\r\n\r\n constructor() { }\r\n\r\n}\r\n\r\n"
             };
         }
 
