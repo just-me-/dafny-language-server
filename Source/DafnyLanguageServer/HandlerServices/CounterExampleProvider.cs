@@ -177,7 +177,7 @@ namespace DafnyLanguageServer.HandlerServices
                     var lineStr = m.Groups[1].ToString();
                     int line = Int32.Parse(lineStr);
                     ce.Line = line;
-                    ce.Col = FileHelper.GetLineLength(Source, line);
+                    ce.Col = PhysicalFile.GetLineLength(Source, line);
                 }
                 else
                 {

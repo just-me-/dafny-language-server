@@ -65,7 +65,7 @@ namespace DafnyLanguageServer.HandlerServices
         {
             int line = e.Tok.line - 1;
             int col = e.Tok.col - 1;
-            int length = FileHelper.GetLineLength(file.Sourcecode, line) - col;
+            int length = PhysicalFile.GetLineLength(file.Sourcecode, line) - col;
 
             if (e.Msg.EndsWith("."))
             {
@@ -123,7 +123,7 @@ namespace DafnyLanguageServer.HandlerServices
                 string auxmessage = aux.Msg;
                 int auxline = aux.Tok.line - 1;
                 int auxcol = aux.Tok.col - 1;
-                int auxlength = FileHelper.GetLineLength(file.Sourcecode, auxline) - auxcol;
+                int auxlength = PhysicalFile.GetLineLength(file.Sourcecode, auxline) - auxcol;
                 Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
 
                 string src = file.FileName;

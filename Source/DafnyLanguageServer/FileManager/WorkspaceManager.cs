@@ -20,17 +20,17 @@ namespace DafnyLanguageServer.FileManager
 
 
         //todo wegen incremental mode neu changevevent statt nur text - duplicate noch wegkriegen.
-        public FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFileOrChangeEvent)
+        public FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFileOrChangeEvents)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
             if (typeof(T) == typeof(string)) {
-                var text = sourceCodeOfFileOrChangeEvent as string;
+                var text = sourceCodeOfFileOrChangeEvents as string;
                 fileRepository.UpdateFile(text);
             }
             else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>))
             {
-                var changes = sourceCodeOfFileOrChangeEvent as Container<TextDocumentContentChangeEvent>;
+                var changes = sourceCodeOfFileOrChangeEvents as Container<TextDocumentContentChangeEvent>;
                 fileRepository.UpdateFile(changes);
             }
             else

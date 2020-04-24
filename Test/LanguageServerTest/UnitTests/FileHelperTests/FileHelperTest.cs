@@ -194,7 +194,7 @@ namespace ContentManagerTests
             const string s = "a\nabc\na";
             const int l = 1;
 
-            int result = FileHelper.GetLineLength(s, l);
+            int result = PhysicalFile.GetLineLength(s, l);
 
             Assert.AreEqual(3, result);
         }
@@ -205,7 +205,7 @@ namespace ContentManagerTests
             const string s = "a\nabc\na";
             const int l = 0;
 
-            int result = FileHelper.GetLineLength(s, l);
+            int result = PhysicalFile.GetLineLength(s, l);
 
             Assert.AreEqual(1, result);
         }
@@ -216,7 +216,7 @@ namespace ContentManagerTests
             const string s = "a\nabc\na";
             const int l = 3;
 
-            Assert.Throws<ArgumentException>(() => FileHelper.GetLineLength(s, l));
+            Assert.Throws<ArgumentException>(() => PhysicalFile.GetLineLength(s, l));
         }
 
         [Test]
@@ -225,7 +225,7 @@ namespace ContentManagerTests
             const string s = "a\nabc\na";
             const int l = -1;
 
-            Assert.Throws<ArgumentException>(() => FileHelper.GetLineLength(s, l));
+            Assert.Throws<ArgumentException>(() => PhysicalFile.GetLineLength(s, l));
         }
     }
 

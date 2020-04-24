@@ -50,8 +50,6 @@ namespace DafnyLanguageServer.Handler
         /// </summary>
         private void UpdateFileAndSendDiagnostics<T>(Uri uri, T textOrChangeEvent)
         {
-            //todo ticket 154 - paar sinnvolle logs machen.
-            //zB unten immer nur exceptions schmeissen, und hier dann abfangen beim handler und dann loggen und msgSender nutzen.
             try
             {
                 _log.LogInformation("Updating File " + uri);
@@ -73,8 +71,9 @@ namespace DafnyLanguageServer.Handler
         {
             if (Change == TextDocumentSyncKind.Full)
             {
-                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.FirstOrDefault()?.Text);
-            } else if (Change == TextDocumentSyncKind.Incremental)
+                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.LastOrDefault()?.Text);
+            }
+            else if (Change == TextDocumentSyncKind.Incremental)
             {
                 UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges);
             }

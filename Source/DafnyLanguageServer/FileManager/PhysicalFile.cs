@@ -79,5 +79,19 @@ namespace DafnyLanguageServer.FileManager
         {
             return (currentLine == targetLine && currentCol == targetCol);
         }
+
+        public static int GetLineLength(string source, int line)
+        {
+            string[] lines = Regex.Split(source, "\r\n|\r|\n");
+            if (line < 0)
+            {
+                throw new ArgumentException("Line-Index must not be negative");
+            }
+            if (line >= lines.Length)
+            {
+                throw new ArgumentException($"There are not enough lines ({line}) in the given source!");
+            }
+            return lines[line].Length;
+        }
     }
 }
