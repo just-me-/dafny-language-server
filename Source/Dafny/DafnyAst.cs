@@ -7284,11 +7284,11 @@ namespace Microsoft.Dafny {
         {
                 stmt.Accept(v);
         }
+        v.Leave(this);
         if (this.Els != null)
         {
             this.Els.Accept(v);
         }
-        v.Leave(this);
     }
   }
 

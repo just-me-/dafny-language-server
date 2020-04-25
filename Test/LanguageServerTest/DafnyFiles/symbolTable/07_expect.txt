@@ -1,13 +1,21 @@
 [L0:C0] "_module" | P : [L] | D : self | C : 1 | U : 
-[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
-[L1:C8] "IAmTestNo7" | P : [L0]_default | D : self | C : 2 | U : 0
-[L2:C8] "a" | P : [L1]IAmTestNo7 | D : self | C :  | U : 1
-[L3:C8] "b" | P : [L1]IAmTestNo7 | D : self | C :  | U : 5
-[L6:C18] "a" | P : [L6]if-stmt-ghost | D : [L2]a | C :  | U : 
-[L6:C23] "b" | P : [L6]if-stmt-ghost | D : [L3]b | C :  | U : 
-[L7:C11] "a" | P : [L6]if-stmt-ghost | D : self | C :  | U : 1
-[L9:C13] "a" | P : [L8]if-stmt-ghost | D : [L7]a | C :  | U : 
-[L11:C13] "b" | P : [L10]block-stmt-ghost | D : [L3]b | C :  | U : 
-[L15:C12] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
-[L18:C6] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
-[L18:C11] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 2 | U : 0
+[L1:C8] "IAmTestNo7" | P : [L0]_default | D : self | C : 2 | U : 1
+[L30:C8] "Main" | P : [L0]_default | D : self | C : 0 | U : 0
+[L2:C8] "a" | P : [L1]IAmTestNo7 | D : self | C :  | U : 4
+[L3:C8] "b" | P : [L1]IAmTestNo7 | D : self | C :  | U : 4
+[L7:C10] "a" | P : [L6]if-stmt-ghost | D : [L2]a | C :  | U : 
+[L8:C10] "a" | P : [L6]if-stmt-ghost | D : self | C :  | U : 1
+[L9:C10] "a" | P : [L6]if-stmt-ghost | D : [L8]a | C :  | U : 
+[L10:C25] "a" | P : [L10]if-stmt-ghost | D : [L2]a | C :  | U : 
+[L10:C30] "b" | P : [L10]if-stmt-ghost | D : [L3]b | C :  | U : 
+[L11:C13] "a" | P : [L10]if-stmt-ghost | D : [L2]a | C :  | U : 
+[L12:C11] "a" | P : [L10]if-stmt-ghost | D : self | C :  | U : 1
+[L13:C10] "a" | P : [L10]if-stmt-ghost | D : [L12]a | C :  | U : 
+[L15:C13] "a" | P : [L14]block-stmt-ghost | D : [L2]a | C :  | U : 
+[L16:C11] "a" | P : [L14]block-stmt-ghost | D : self | C :  | U : 1
+[L17:C10] "a" | P : [L14]block-stmt-ghost | D : [L16]a | C :  | U : 
+[L21:C12] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L24:C6] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L24:C11] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L31:C1] "IAmTestNo7" | P : [L30]Main | D : [L1]IAmTestNo7 | C :  | U : 

@@ -3,12 +3,18 @@ method IAmTestNo7() {
    var b: nat := 2;
 
    //if
-   if (!true || (a && b==2) ) {
-      var a := 12;
-   } else if (false) {
+   if (false) {
+	  print a;
+     var a := 99;
+	  print a;
+   } else if (!true || (a && b==2)) {
       print a;
+      var a := 99;
+	  print a;
    } else {
-      print b;
+      print a;
+      var a := 99;
+	  print a;
    }
 
    //while
@@ -19,4 +25,8 @@ method IAmTestNo7() {
    }
 
 
+}
+
+method Main() {
+IAmTestNo7();
 }
