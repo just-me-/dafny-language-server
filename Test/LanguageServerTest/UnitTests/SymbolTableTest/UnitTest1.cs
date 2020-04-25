@@ -61,8 +61,7 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-        //todo work in progress
-        //[Test]
+        [Test]
         public void Test5_useSymbolsFromGlobalScope()
         {
             var fa = Files.st_05;
