@@ -49,7 +49,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-        protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null)
+        protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null, bool goRecursive = true)
         {
             var matches = scope.Children.Where(s =>
                 s.Name == target &&
@@ -72,16 +72,17 @@ namespace DafnyLanguageServer.SymbolTable
                 };
             }
 
-            //if symbol not found in current scope, search parent scope
-            if (scope.Parent != null)
+            //if symbol not found in current scope, search parent scope, except if we are searching default scope.
+            if (scope.Parent != null && goRecursive)
             {
                 return FindDeclaration(target, scope.Parent, type);
             }
 
-            //if symbol cannot be found, it yet may be in global scope
+            //if symbol was not found and there are no more parents, it yet may be in global scope
+            //this makes stack overlfows -> default class -> default module -> default class -> default module etc, so we got this boolean "goRecursive" to avoid that.
             if (scope != GlobalScope)
             {
-                return FindDeclaration(target, GlobalScope); //may revisit (visit... get it...) this when we acgtually work with module includes.
+                return FindDeclaration(target, GlobalScope, type, false); //may revisit (visit... get it...) this when we acgtually work with module includes. anyway a bit weirdo.
             }
             else
             {

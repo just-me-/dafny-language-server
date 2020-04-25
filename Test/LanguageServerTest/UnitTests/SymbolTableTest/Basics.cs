@@ -88,6 +88,32 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
+
+        [Test]
+        public void Test7_IfWhile()
+        {
+            var fa = Files.st_07;
+            var fe = Files.st_07e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
+
+        [Test]
+        public void Test8_NegationTernary()
+        {
+            var fa = Files.st_08;
+            var fe = Files.st_08e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
         private List<string> GetSymbolsAsList(string f)
         {
             var physFile = new PhysicalFile
