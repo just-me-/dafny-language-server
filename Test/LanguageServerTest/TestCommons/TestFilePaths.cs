@@ -2,7 +2,7 @@
 
 namespace TestCommons
 {
-    
+
     public static class Paths
     {
         //Folders
@@ -120,7 +120,21 @@ namespace TestCommons
         public static readonly string vc_warning = CreateTestfilePath("verification/include_includer_warning.dfy");
 
 
-        
+        //SymbolTAble
+        public static readonly string st_01 = CreateTestfilePath("symbolTable/01_basic.dfy");
+        public static readonly string st_02 = CreateTestfilePath("symbolTable/02_classAccessors.dfy");
+        public static readonly string st_03 = CreateTestfilePath("symbolTable/03_blockscope.dfy");
+        public static readonly string st_04 = CreateTestfilePath("symbolTable/04_declarationAfterUsage.dfy");
+        public static readonly string st_05 = CreateTestfilePath("symbolTable/05_globalScope.dfy");
+
+        public static readonly string st_01e = CreateTestfilePath("symbolTable/01_expect.txt");
+        public static readonly string st_02e = CreateTestfilePath("symbolTable/02_expect.txt");
+        public static readonly string st_03e = CreateTestfilePath("symbolTable/03_expect.txt");
+        public static readonly string st_04e = CreateTestfilePath("symbolTable/04_expect.txt");
+        public static readonly string st_05e = CreateTestfilePath("symbolTable/05_expect.txt");
+
+
+
 
         private static string CreateTestfilePath(string s)
         {

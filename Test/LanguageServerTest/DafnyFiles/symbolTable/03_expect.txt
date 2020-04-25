@@ -1,0 +1,22 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 2 | U : 
+[L1:C7] "MyClass" | P : [L0]_module | D : self | C : 3 | U : 0
+[L2:C9] "field" | P : [L1]MyClass | D : self | C :  | U : 6
+[L3:C5] "_ctor" | P : [L1]MyClass | D : self | C : 0 | U : 0
+[L4:C12] "aMethod" | P : [L1]MyClass | D : self | C : 1 | U : 0
+[L5:C9] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
+[L6:C15] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
+[L8:C13] "field" | P : [L4]aMethod | D : self | C :  | U : 3
+[L9:C15] "field" | P : [L4]aMethod | D : [L8]field | C :  | U : 
+[L10:C15] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 
+[L10:C20] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
+[L13:C19] "field" | P : [L12]ghost-block-scope | D : [L8]field | C :  | U : 
+[L14:C19] "this" | P : [L12]ghost-block-scope | D : [L1]MyClass | C :  | U : 
+[L14:C24] "field" | P : [L12]ghost-block-scope | D : [L2]field | C :  | U : 
+[L16:C17] "field" | P : [L12]ghost-block-scope | D : self | C :  | U : 1
+[L17:C19] "field" | P : [L12]ghost-block-scope | D : [L16]field | C :  | U : 
+[L18:C19] "this" | P : [L12]ghost-block-scope | D : [L1]MyClass | C :  | U : 
+[L18:C24] "field" | P : [L12]ghost-block-scope | D : [L2]field | C :  | U : 
+[L21:C15] "field" | P : [L4]aMethod | D : [L8]field | C :  | U : 
+[L22:C15] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 
+[L22:C20] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 0 | U : 0

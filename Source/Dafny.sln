@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgramTest", "..\Test\Lang
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CounterExampleProviderUnitTest", "..\Test\LanguageServerTest\UnitTests\CounterExampleProviderUnitTest\CounterExampleProviderUnitTest.csproj", "{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SymbolTableTest", "..\Test\LanguageServerTest\UnitTests\SymbolTableTest\SymbolTableTest.csproj", "{270DD504-F805-4AC7-988E-6323CF561320}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Checked|.NET = Checked|.NET
@@ -604,6 +606,38 @@ Global
 		{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}.Release|x86.ActiveCfg = Release|Any CPU
 		{F58A1C1C-09FC-4C17-A6B1-5A8E85118361}.Release|x86.Build.0 = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|.NET.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|.NET.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|Any CPU.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|Any CPU.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|Mixed Platforms.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|x86.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Checked|x86.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|.NET.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Debug|x86.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|.NET.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|.NET.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|Any CPU.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|Any CPU.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|Mixed Platforms.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|x86.ActiveCfg = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.QED|x86.Build.0 = Debug|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|.NET.ActiveCfg = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|.NET.Build.0 = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|x86.ActiveCfg = Release|Any CPU
+		{270DD504-F805-4AC7-988E-6323CF561320}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -625,6 +659,7 @@ Global
 		{24B16896-0ED4-415F-BA15-259D948916F3} = {9BAFF655-78FA-4E7A-A670-DD81F4AEF1DD}
 		{112E7353-C042-459C-9437-FC8C856F3E5C} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 		{F58A1C1C-09FC-4C17-A6B1-5A8E85118361} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
+		{270DD504-F805-4AC7-988E-6323CF561320} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99B9F147-1557-41C6-883E-E773DA068F27}

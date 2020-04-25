@@ -1,0 +1,18 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 2 | U : 
+[L1:C7] "MyClass" | P : [L0]_module | D : self | C : 4 | U : 0
+[L3:C9] "field" | P : [L1]MyClass | D : self | C :  | U : 2
+[L5:C13] "addOne" | P : [L1]MyClass | D : self | C : 2 | U : 1
+[L5:C20] "i" | P : [L5]addOne | D : self | C :  | U : 1
+[L5:C37] "r" | P : [L5]addOne | D : self | C :  | U : 2
+[L6:C8] "r" | P : [L5]addOne | D : [L5]r | C :  | U : 
+[L6:C13] "i" | P : [L5]addOne | D : [L5]i | C :  | U : 
+[L7:C15] "r" | P : [L5]addOne | D : [L5]r | C :  | U : 
+[L10:C12] "aMethod" | P : [L1]MyClass | D : self | C : 1 | U : 0
+[L11:C13] "aLocalVar" | P : [L10]aMethod | D : self | C :  | U : 2
+[L12:C9] "field" | P : [L10]aMethod | D : [L3]field | C :  | U : 
+[L12:C18] "aLocalVar" | P : [L10]aMethod | D : [L11]aLocalVar | C :  | U : 
+[L13:C9] "aLocalVar" | P : [L10]aMethod | D : [L11]aLocalVar | C :  | U : 
+[L13:C22] "addOne" | P : [L10]aMethod | D : [L5]addOne | C :  | U : 
+[L13:C29] "field" | P : [L10]aMethod | D : [L3]field | C :  | U : 
+[L16:C5] "_ctor" | P : [L1]MyClass | D : self | C : 0 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 0 | U : 0

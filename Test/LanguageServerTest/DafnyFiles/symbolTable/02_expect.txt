@@ -1,0 +1,35 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 3 | U : 
+[L6:C7] "MyClass" | P : [L0]_module | D : self | C : 3 | U : 1
+[L8:C9] "field" | P : [L6]MyClass | D : self | C :  | U : 0
+[L10:C13] "addOne" | P : [L6]MyClass | D : self | C : 2 | U : 1
+[L10:C20] "i" | P : [L10]addOne | D : self | C :  | U : 1
+[L10:C37] "r" | P : [L10]addOne | D : self | C :  | U : 1
+[L11:C8] "r" | P : [L10]addOne | D : [L10]r | C :  | U : 
+[L11:C13] "i" | P : [L10]addOne | D : [L10]i | C :  | U : 
+[L13:C5] "_ctor" | P : [L6]MyClass | D : self | C : 0 | U : 0
+[L19:C7] "OtherClass" | P : [L0]_module | D : self | C : 4 | U : 0
+[L21:C9] "field" | P : [L19]OtherClass | D : self | C :  | U : 3
+[L23:C5] "_ctor" | P : [L19]OtherClass | D : self | C : 0 | U : 0
+[L25:C13] "addOne" | P : [L19]OtherClass | D : self | C : 2 | U : 2
+[L25:C20] "i" | P : [L25]addOne | D : self | C :  | U : 1
+[L25:C37] "r" | P : [L25]addOne | D : self | C :  | U : 1
+[L26:C8] "r" | P : [L25]addOne | D : [L25]r | C :  | U : 
+[L26:C13] "i" | P : [L25]addOne | D : [L25]i | C :  | U : 
+[L29:C12] "hotStuff" | P : [L19]OtherClass | D : self | C : 1 | U : 0
+[L30:C13] "mc" | P : [L29]hotStuff | D : self | C :  | U : 1
+[L30:C23] "MyClass" | P : [L29]hotStuff | D : [L6]MyClass | C :  | U : 
+[L31:C9] "field" | P : [L29]hotStuff | D : [L21]field | C :  | U : 
+[L31:C18] "mc" | P : [L29]hotStuff | D : [L30]mc | C :  | U : 
+[L31:C21] "addOne" | P : [L29]hotStuff | D : [L10]addOne | C :  | U : 
+[L32:C9] "field" | P : [L29]hotStuff | D : [L21]field | C :  | U : 
+[L32:C18] "this" | P : [L29]hotStuff | D : [L19]OtherClass | C :  | U : 
+[L32:C23] "addOne" | P : [L29]hotStuff | D : [L25]addOne | C :  | U : 
+[L33:C9] "field" | P : [L29]hotStuff | D : [L21]field | C :  | U : 
+[L33:C18] "addOne" | P : [L29]hotStuff | D : [L25]addOne | C :  | U : 
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L1:C9] "addOne" | P : [L0]_default | D : self | C : 3 | U : 0
+[L1:C16] "i" | P : [L1]addOne | D : self | C :  | U : 1
+[L1:C33] "r" | P : [L1]addOne | D : self | C :  | U : 1
+[L2:C9] "field" | P : [L1]addOne | D : self | C :  | U : 0
+[L3:C5] "r" | P : [L1]addOne | D : [L1]r | C :  | U : 
+[L3:C10] "i" | P : [L1]addOne | D : [L1]i | C :  | U : 

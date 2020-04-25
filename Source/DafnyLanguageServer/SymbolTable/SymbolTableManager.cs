@@ -16,12 +16,12 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableManager
     {
-        private Microsoft.Dafny.Program _dafnyProgram;
+        private readonly Microsoft.Dafny.Program _dafnyProgram;
         public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
-            this._dafnyProgram = dafnyProgram;
+            _dafnyProgram = dafnyProgram;
             GenerateSymbolTable();
         }
 
@@ -34,18 +34,27 @@ namespace DafnyLanguageServer.SymbolTable
 
                 SymbolTables.Add(module.Name, visitor.SymbolTable);
 
-                string debugMe = CreateDebugReadOut(visitor.SymbolTable);
+                string debugMe = CreateDebugReadOut();
             }
         }
 
-        private static string CreateDebugReadOut(List<SymbolInformation> visitorSymbolTable)
+        public string CreateDebugReadOut()
         {
             StringBuilder b = new StringBuilder();
-            foreach (var symbol in visitorSymbolTable)
+            foreach (var kvp in SymbolTables)
             {
-                b.AppendLine(symbol.ToString());
+                b.AppendLine("Module: " + kvp.Key);
+                foreach (var symbol in kvp.Value)
+                {
+                    b.AppendLine(symbol.ToString());
+                }
             }
             return b.ToString();
+        }
+
+        public List<string> GetEntriesAsStringList()
+        {
+            return (from kvp in SymbolTables from symbol in kvp.Value select symbol.ToString()).ToList();
         }
 
         // EntryPoint... not by name:string, right? 
