@@ -10,7 +10,7 @@ using Files = TestCommons.Paths;
 
 namespace SymbolTableTest
 {
-    public class Tests
+    public class Basics
     {
 
         [Test]
@@ -73,6 +73,9 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
+
+        //Note on test:
+        //assert, ensures, requires not yet supported, excluded from expecatation temporarily //todo ticket für symboltable weiss nummer grad nich.
         [Test]
         public void Test6_ClassesMethodsMultiReturns_VariousBasicCodeFeatures()
         {
