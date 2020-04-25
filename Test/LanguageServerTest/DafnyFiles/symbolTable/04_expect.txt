@@ -1,0 +1,15 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 3 | U : 
+[L1:C7] "A" | P : [L0]_module | D : self | C : 3 | U : 0
+[L2:C5] "_ctor" | P : [L1]A | D : self | C : 0 | U : 0
+[L3:C12] "a" | P : [L1]A | D : self | C : 1 | U : 0
+[L11:C9] "myB" | P : [L1]A | D : self | C :  | U : 2
+[L14:C7] "B" | P : [L0]_module | D : self | C : 2 | U : 1
+[L15:C5] "_ctor" | P : [L14]B | D : self | C : 0 | U : 0
+[L16:C12] "b" | P : [L14]B | D : self | C : 0 | U : 1
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 0 | U : 0
+[L6:C9] "myB" | P : [L3]a | D : [L11]myB | C :  | U : 
+[L6:C20] "B" | P : [L3]a | D : [L14]B | C :  | U : 
+[L7:C9] "myB" | P : [L3]a | D : [L11]myB | C :  | U : 
+[L7:C13] "b" | P : [L3]a | D : [L16]b | C :  | U : 
+[L8:C13] "myB" | P : [L3]a | D : self | C :  | U : 1
+[L9:C9] "myB" | P : [L3]a | D : [L8]myB | C :  | U : 

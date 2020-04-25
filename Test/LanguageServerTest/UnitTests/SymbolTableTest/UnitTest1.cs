@@ -49,8 +49,7 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-        //todo work in progress
-        //[Test]
+        [Test]
         public void Test4_useSymbolsbeforeDeclaration()
         {
             var fa = Files.st_04;
