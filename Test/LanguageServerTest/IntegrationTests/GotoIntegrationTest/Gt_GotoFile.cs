@@ -13,7 +13,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class ClassA : GoToBase
     {
-        public ClassA() : base(9, 15, Files.gt_goto)
+        public ClassA() : base(9, 7, Files.gt_goto)
         {
         }
 
@@ -53,7 +53,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class ClassB : GoToBase
     {
-        public ClassB() : base(14, 15, Files.gt_goto)
+        public ClassB() : base(14, 7, Files.gt_goto)
         {
         }
 
@@ -92,7 +92,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class MethodInClassA : GoToBase
     {
-        public MethodInClassA() : base(11, 23, Files.gt_goto)
+        public MethodInClassA() : base(11, 11, Files.gt_goto)
         {
         }
 
@@ -172,7 +172,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class MultiReturnMethod : GoToBase
     {
-        public MultiReturnMethod() : base(4, 2, Files.gt_goto)
+        public MultiReturnMethod() : base(1, 8, Files.gt_goto)
         {
         }
 

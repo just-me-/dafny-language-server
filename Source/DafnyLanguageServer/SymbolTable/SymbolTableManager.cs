@@ -58,7 +58,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         // EntryPoint... not by name:string, right? 
-        public SymbolInformation GetSymbolByPosition(int line, int character)
+        public SymbolInformation GetSymbolByPosition(long line, long character)
         {
             var tmpDebugList = new List<SymbolInformation>();
             foreach (var modul in SymbolTables)
@@ -72,7 +72,7 @@ namespace DafnyLanguageServer.SymbolTable
             return tmpDebugList.Count>0 ? tmpDebugList[0] : null; 
         }
 
-        private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
+        private bool PositionIsInSymbolsRange(long line, long character, SymbolInformation symbol)
         {
             return (symbol.Line <= line 
                     && symbol.Line >= line 
