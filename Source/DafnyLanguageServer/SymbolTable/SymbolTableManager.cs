@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolTableManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
-        public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();
+        public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();  //still nicht sicher ob das sinnvoll ist.... eig könnt man auch alles in eine einzige tabelle aggregieren mit allen modulen (?)
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -29,10 +29,16 @@ namespace DafnyLanguageServer.SymbolTable
         {
             foreach (var module in _dafnyProgram.Modules())
             {
-                var visitor = new SymbolTableVisitor();
-                module.Accept(visitor);
+                var declarationVisitor = new LanguageServerDeclarationVisitor();
+                module.Accept(declarationVisitor);
+                var declarationTable = declarationVisitor.SymbolTable;
 
-                SymbolTables.Add(module.Name, visitor.SymbolTable);
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations();
+                deepVisitor.SymbolTable = declarationTable;
+
+                module.Accept(deepVisitor);
+
+                SymbolTables.Add(module.Name, deepVisitor.SymbolTable);  
 
                 string debugMe = CreateDebugReadOut();
             }
@@ -58,7 +64,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         // EntryPoint... not by name:string, right? 
-        public SymbolInformation GetSymbolByPosition(long line, long character)
+        public SymbolInformation GetSymbolByPosition(int line, int character)
         {
             var tmpDebugList = new List<SymbolInformation>();
             foreach (var modul in SymbolTables)
@@ -72,7 +78,7 @@ namespace DafnyLanguageServer.SymbolTable
             return tmpDebugList.Count>0 ? tmpDebugList[0] : null; 
         }
 
-        private bool PositionIsInSymbolsRange(long line, long character, SymbolInformation symbol)
+        private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
         {
             return (symbol.Line <= line 
                     && symbol.Line >= line 

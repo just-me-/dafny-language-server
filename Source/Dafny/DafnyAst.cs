@@ -5793,23 +5793,26 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v)
     {
       v.Visit(this);
-      foreach (Formal arg in this.Ins) //das sind die argumente
-      {
-        arg.Accept(v);
-      }
+          if (v.GoesDeep)
+          {
 
-      foreach (Formal outParam in this.Outs)  //das sind die out values, also so method x() returns (ICHBINSOEINER: int, ICHAUCH: string) {...} //können wir auch als definitionen hernehmen.
-      {
-          outParam.Accept(v);
-      }
+          
+              foreach (Formal arg in this.Ins) //das sind die argumente
+              {
+                arg.Accept(v);
+              }
 
-      //todo hier müssten auch out variablen sein, ma kucken noch späte.r
+              foreach (Formal outParam in this.Outs)  //das sind die out values, also so method x() returns (ICHBINSOEINER: int, ICHAUCH: string) {...} //können wir auch als definitionen hernehmen.
+              {
+                  outParam.Accept(v);
+              }
 
-      foreach (var stmt in this.Body.Body)
-      {
-          stmt.Accept(v);
-      }
-
+              foreach (var stmt in this.Body.Body)
+              {
+                  stmt.Accept(v);
+              }
+          }
+          
       v.Leave(this);
     }
 
@@ -11573,7 +11576,7 @@ namespace Microsoft.Dafny {
 
   public abstract class Visitor
   {
-
+    public bool GoesDeep { get; set; } = true;
     public abstract void Visit(IAstElement o);
     public abstract void Leave(IAstElement o);
 

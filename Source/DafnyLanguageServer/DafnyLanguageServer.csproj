@@ -214,7 +214,9 @@
     <Compile Include="HandlerServices\DiagnosticsService.cs" />
     <Compile Include="SymbolTable\SymbolInformation.cs" />
     <Compile Include="SymbolTable\SymbolTableManager.cs" />
-    <Compile Include="SymbolTable\SymbolTableVisitor.cs" />
+    <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
+    <Compile Include="SymbolTable\LanguageServerDeclarationVisitor.cs" />
+    <Compile Include="SymbolTable\LanguageServerDeepVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

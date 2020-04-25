@@ -17,37 +17,26 @@ namespace DafnyLanguageServer.SymbolTable
     /// This Visitor is used to generate the Symbol Table for Dafny code.
     /// It is an extension of the Microsoft Dafny Visitor Class.
     /// </summary>
-    public class SymbolTableVisitor : Visitor
+    public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-        public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
-        public SymbolInformation SurroundingScope { get; set; }
-        public SymbolInformation CurrentModule { get; set; }
-        public SymbolInformation CurrentClass { get; set; }
 
-        public override void Visit(IAstElement o) { }
-
-        public override void Leave(IAstElement o) { }
 
         public override void Visit(ModuleDefinition o)
         {
-            var symbol = CreateSymbol(
-                name: o.Name,
-                type: Type.Module,
-                positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
+            //jsut set scope and stuff, but don't create new symbol.
+            //symbol shouild be the first symbol in table.
 
-                isDeclaration: true,
-                declarationSymbol: null,
-                addUsageAtDeclaration: false,
-
-                canHaveChildren: true,
-                canBeUsed: false
-            );
-
-            SetScope(symbol);
-            SetModule(symbol);
+            var preDeclaredSymbol = SymbolTable.First();
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||
+                !preDeclaredSymbol.IsDeclaration)
+            {
+                throw new InvalidOperationException("frist symbol in table is not module.");
+            }
+            SetScope(preDeclaredSymbol);
+            SetModule(preDeclaredSymbol);
         }
+
+        #region navigate-through-declarations
 
         public override void Leave(ModuleDefinition o)
         {
@@ -57,30 +46,10 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ClassDecl o)
         {
-            var symbol = CreateSymbol(
-                name: o.Name,
-                type: Type.Class,
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Type.Class);
 
-                positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
-
-                isDeclaration: true,
-                declarationSymbol: null,
-                addUsageAtDeclaration: false,
-
-                canHaveChildren: true,
-                canBeUsed: true
-            );
-
-            SetClass(symbol);
-            SetScope(symbol);
-
-            //todo evtl hier alle member kurz definieren, weil eine decl auch nach der nutzung kommen kann.   #121
-            //dafür dann unten bei field, method defintiion etc muss man das dann net mehr machen.
-            //lassen wir aber erstmal. erstmal das einfache.
-
-            //vlt besser sogar: wenn decl net gefunden wird, iwie auf nen stack legen und am ende nochmal kucken oder so. ka.
+            SetScope(preDeclaredSymbol);
+            SetClass(preDeclaredSymbol);
         }
 
         public override void Leave(ClassDecl o)
@@ -91,21 +60,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Field o)
         {
-            var symbol = CreateSymbol(
-                name: o.Name,
-                type: Type.Field,
-
-                positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
-
-                isDeclaration: true,
-                declarationSymbol: null,
-                addUsageAtDeclaration: false,
-
-                canHaveChildren: false,
-                canBeUsed: true
-            );
+            //do nothing, no need to set scope or such for fields
         }
 
         public override void Leave(Field o)
@@ -114,28 +69,22 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Method o)
         {
-            var symbol = CreateSymbol(
-                name: o.Name,
-                type: Type.Method,
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Type.Method);
 
-                positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
+            SetScope(preDeclaredSymbol);
 
-                isDeclaration: true,
-                declarationSymbol: null,
-                addUsageAtDeclaration: false,
-
-                canHaveChildren: true,
-                canBeUsed: true
-            );
-            SetScope(symbol);
         }
 
         public override void Leave(Method o)
         {
             JumpUpInScope();
         }
+
+
+#endregion
+
+        ///////"new" stuff from here on the other visitor didnt do from here on.
+
 
         /// <summary>
         /// Nonglobal Variables are Method Parameters (in and out parameters).
