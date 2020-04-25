@@ -47,7 +47,9 @@ namespace DafnyLanguageServer.Handler
 
                     if (selectedSymbol == null)
                     {
-                        throw new ArgumentNullException($"Could not find symbol at position {line}:{col}");
+                        _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}");
+
+                        return new LocationOrLocationLinks(links);
                     }
 
                     var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
