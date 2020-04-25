@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
@@ -92,6 +92,7 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
         {
+            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.Text); //flush all text on save
             return Unit.Task;
         }
 

@@ -127,6 +127,8 @@ namespace TestCommons
         public static readonly string st_04 = CreateTestfilePath("symbolTable/04_declarationAfterUsage.dfy");
         public static readonly string st_05 = CreateTestfilePath("symbolTable/05_globalScope.dfy");
         public static readonly string st_06 = CreateTestfilePath("symbolTable/06_GoTo.dfy");
+        public static readonly string st_07 = CreateTestfilePath("symbolTable/07_if_while.dfy");
+        public static readonly string st_08 = CreateTestfilePath("symbolTable/08_unary_ternary.dfy");
 
         public static readonly string st_01e = CreateTestfilePath("symbolTable/01_expect.txt");
         public static readonly string st_02e = CreateTestfilePath("symbolTable/02_expect.txt");
@@ -134,6 +136,8 @@ namespace TestCommons
         public static readonly string st_04e = CreateTestfilePath("symbolTable/04_expect.txt");
         public static readonly string st_05e = CreateTestfilePath("symbolTable/05_expect.txt");
         public static readonly string st_06e = CreateTestfilePath("symbolTable/06_expect.txt");
+        public static readonly string st_07e = CreateTestfilePath("symbolTable/07_expect.txt");
+        public static readonly string st_08e = CreateTestfilePath("symbolTable/08_expect.txt");
 
 
 
