@@ -1,13 +1,15 @@
 [L0:C0] "_module" | P : [L] | D : self | C : 1 | U : 
 [L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
 [L1:C9] "foo" | P : [L0]_default | D : self | C : 1 | U : 0
-[L1:C24] "b" | P : [L1]foo | D : self | C :  | U : 9
+[L1:C24] "b" | P : [L1]foo | D : self | C :  | U : 11
 [L2:C4] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
 [L5:C4] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
 [L5:C10] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
 [L8:C4] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
-[L8:C9] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L8:C12] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L8:C22] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L8:C29] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
 [L11:C4] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
-[L11:C12] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
-[L11:C22] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
-[L11:C29] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L11:C9] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L14:C4] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
+[L14:C9] "b" | P : [L1]foo | D : [L1]b | C :  | U : 
