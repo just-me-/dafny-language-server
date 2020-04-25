@@ -296,6 +296,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
+
         public override void Visit(Expression o)
         {
 

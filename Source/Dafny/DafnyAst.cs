@@ -7274,6 +7274,16 @@ namespace Microsoft.Dafny {
         }
       }
     }
+
+    public override void Accept(Visitor v)
+    {
+        this.Guard.Accept(v);
+        this.Thn.Accept(v);
+        if (this.Els != null)
+        {
+            this.Els.Accept(v);
+        }
+    }
   }
 
   public class GuardedAlternative
@@ -7431,6 +7441,12 @@ namespace Microsoft.Dafny {
         }
       }
     }
+
+    public override void Accept(Visitor v)
+        {
+            this.Guard.Accept(v);
+            this.Body.Accept(v);
+        }
   }
 
   /// <summary>
@@ -7483,6 +7499,18 @@ namespace Microsoft.Dafny {
           yield return alt.Guard;
         }
       }
+    }
+
+    public override void Accept(Visitor v)
+    {
+        foreach (var a in this.Alternatives)
+        {
+                a.Guard.Accept(v);
+                foreach (var stmt in a.Body)
+                {
+                    stmt.Accept(v);
+                }
+        }
     }
   }
 
@@ -9575,6 +9603,12 @@ namespace Microsoft.Dafny {
       Contract.Requires(tok != null);
       Contract.Requires(e != null);
       this.Op = op;
+
+
+    }
+    public override void Accept(Visitor v)
+    {
+            this.E.Accept(v);
     }
   }
 
@@ -10720,6 +10754,13 @@ namespace Microsoft.Dafny {
         yield return Els;
       }
     }
+
+    public override void Accept(Visitor v)
+    {
+            this.Test.Accept(v);
+            this.Thn.Accept(v);
+            this.Els.Accept(v);
+    }
   }
 
   public class MatchExpr : Expression {  // a MatchExpr is an "extended expression" and is only allowed in certain places
@@ -11081,6 +11122,11 @@ namespace Microsoft.Dafny {
       : base(tok) {
       E = e;
     }
+    
+    public override void Accept(Visitor v)
+    {
+        this.E.Accept(v);
+    }
   }
 
   public class TypeExpr : ParensExpression
@@ -11186,6 +11232,11 @@ namespace Microsoft.Dafny {
           }
         }
       }
+    }
+
+    public override void Accept(Visitor v)
+    {
+        this.E.Accept(v);
     }
   }
 
@@ -11582,7 +11633,9 @@ namespace Microsoft.Dafny {
     public abstract void Visit(IAstElement o);
     public abstract void Leave(IAstElement o);
 
-    public abstract void Visit(ClassDecl o);
+
+        #region classes-and-their-members
+        public abstract void Visit(ClassDecl o);
     public abstract void Leave(ClassDecl o);
 
     public abstract void Visit(Field o);
@@ -11591,22 +11644,35 @@ namespace Microsoft.Dafny {
     public abstract void Visit(Method o);
     public abstract void Leave(Method o);
 
-    public abstract void Visit(NonglobalVariable o);
+        #endregion
+
+        #region locals-formals
+
+        public abstract void Visit(NonglobalVariable o);
     public abstract void Leave(NonglobalVariable o);
 
     public abstract void Visit(LocalVariable o);                                   //do not auto format this code!!!
     public abstract void Leave(LocalVariable o);
+        #endregion
 
-    public abstract void Visit(BlockStmt o);
-    public abstract void Leave(BlockStmt o);
+
 
         #region rhs
         public abstract void Visit(AssignmentRhs o);
-    public abstract void Leave(AssignmentRhs o);
+        public abstract void Leave(AssignmentRhs o);
 
-    public abstract void Visit(TypeRhs e);
-    public abstract void Leave(TypeRhs e);
+        public abstract void Visit(TypeRhs e);
+        public abstract void Leave(TypeRhs e);
         #endregion
+
+
+        #region statements
+
+        public abstract void Visit(BlockStmt o);
+        public abstract void Leave(BlockStmt o);
+
+        #endregion
+
 
 
 
@@ -11632,6 +11698,8 @@ namespace Microsoft.Dafny {
         public abstract void Leave(ExprDotName e);
         public abstract void Visit(ThisExpr e);
         public abstract void Leave(ThisExpr e);
+
+
         //more todo
 
         #endregion
