@@ -1,0 +1,42 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 3 | U : 
+[L9:C7] "ClassA" | P : [L0]_module | D : self | C : 2 | U : 1
+[L10:C4] "_ctor" | P : [L9]ClassA | D : self | C : 0 | U : 0
+[L11:C11] "myMethod" | P : [L9]ClassA | D : self | C : 0 | U : 1
+[L14:C7] "ClassB" | P : [L0]_module | D : self | C : 2 | U : 1
+[L15:C4] "_ctor" | P : [L14]ClassB | D : self | C : 0 | U : 0
+[L16:C11] "myMethod" | P : [L14]ClassB | D : self | C : 0 | U : 1
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 2 | U : 0
+[L1:C8] "MultipleReturns" | P : [L0]_default | D : self | C : 4 | U : 1
+[L19:C8] "Main" | P : [L0]_default | D : self | C : 9 | U : 0
+[L1:C24] "inp1" | P : [L1]MultipleReturns | D : self | C :  | U : 2
+[L1:C35] "inp2" | P : [L1]MultipleReturns | D : self | C :  | U : 2
+[L1:C55] "more" | P : [L1]MultipleReturns | D : self | C :  | U : 1
+[L1:C66] "less" | P : [L1]MultipleReturns | D : self | C :  | U : 1
+[L5:C4] "more" | P : [L1]MultipleReturns | D : [L1]more | C :  | U : 
+[L5:C12] "inp1" | P : [L1]MultipleReturns | D : [L1]inp1 | C :  | U : 
+[L5:C19] "inp2" | P : [L1]MultipleReturns | D : [L1]inp2 | C :  | U : 
+[L6:C4] "less" | P : [L1]MultipleReturns | D : [L1]less | C :  | U : 
+[L6:C12] "inp1" | P : [L1]MultipleReturns | D : [L1]inp1 | C :  | U : 
+[L6:C19] "inp2" | P : [L1]MultipleReturns | D : [L1]inp2 | C :  | U : 
+[L20:C8] "myNumber" | P : [L19]Main | D : self | C :  | U : 0
+[L21:C8] "classA" | P : [L19]Main | D : self | C :  | U : 1
+[L21:C22] "ClassA" | P : [L19]Main | D : [L9]ClassA | C :  | U : 
+[L22:C4] "classA" | P : [L19]Main | D : [L21]classA | C :  | U : 
+[L22:C11] "myMethod" | P : [L19]Main | D : [L11]myMethod | C :  | U : 
+[L23:C8] "classB" | P : [L19]Main | D : self | C :  | U : 1
+[L23:C22] "ClassB" | P : [L19]Main | D : [L14]ClassB | C :  | U : 
+[L24:C4] "classB" | P : [L19]Main | D : [L23]classB | C :  | U : 
+[L24:C11] "myMethod" | P : [L19]Main | D : [L16]myMethod | C :  | U : 
+[L26:C8] "more" | P : [L19]Main | D : self | C :  | U : 2
+[L27:C8] "less" | P : [L19]Main | D : self | C :  | U : 2
+[L28:C4] "more" | P : [L19]Main | D : [L26]more | C :  | U : 
+[L28:C10] "less" | P : [L19]Main | D : [L27]less | C :  | U : 
+[L28:C18] "MultipleReturns" | P : [L19]Main | D : [L1]MultipleReturns | C :  | U : 
+[L29:C8] "some" | P : [L19]Main | D : self | C :  | U : 0
+[L29:C16] "more" | P : [L19]Main | D : [L26]more | C :  | U : 
+[L29:C23] "less" | P : [L19]Main | D : [L27]less | C :  | U : 
+[L31:C8] "a" | P : [L19]Main | D : self | C :  | U : 1
+[L32:C8] "b" | P : [L19]Main | D : self | C :  | U : 1
+[L33:C8] "sum" | P : [L19]Main | D : self | C :  | U : 0
+[L33:C15] "a" | P : [L19]Main | D : [L31]a | C :  | U : 
+[L33:C19] "b" | P : [L19]Main | D : [L32]b | C :  | U : 

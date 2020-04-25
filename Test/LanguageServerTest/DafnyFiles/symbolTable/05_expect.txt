@@ -5,4 +5,4 @@
 [L1:C8] "foo" | P : [L0]_default | D : self | C : 0 | U : 1
 [L11:C8] "foo_after" | P : [L0]_default | D : self | C : 0 | U : 1
 [L6:C9] "foo" | P : [L5]a | D : [L1]foo | C :  | U : 
-[L7:C9] "foo_after" | P : [L5]a | D : [L11]foo_after | C :  | U :
+[L7:C9] "foo_after" | P : [L5]a | D : [L11]foo_after | C :  | U : 
