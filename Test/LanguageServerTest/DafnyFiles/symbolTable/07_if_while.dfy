@@ -1,6 +1,3 @@
-//this file crashes the language server... why??
-//iwo stack overflow - evtl visitor loop bei den statments unten - ma schauen.
-
 method IAmTestNo7() {
    var a: bool := true;
    var b: nat := 2;

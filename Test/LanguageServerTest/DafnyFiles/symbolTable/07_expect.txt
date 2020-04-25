@@ -1,13 +1,13 @@
 [L0:C0] "_module" | P : [L] | D : self | C : 1 | U : 
 [L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
-[L4:C8] "IAmTestNo7" | P : [L0]_default | D : self | C : 2 | U : 0
-[L5:C8] "a" | P : [L4]IAmTestNo7 | D : self | C :  | U : 1
-[L6:C8] "b" | P : [L4]IAmTestNo7 | D : self | C :  | U : 5
-[L9:C18] "a" | P : [L9]if-stmt-ghost | D : [L5]a | C :  | U : 
-[L9:C23] "b" | P : [L9]if-stmt-ghost | D : [L6]b | C :  | U : 
-[L10:C11] "a" | P : [L9]if-stmt-ghost | D : self | C :  | U : 1
-[L12:C13] "a" | P : [L11]if-stmt-ghost | D : [L10]a | C :  | U : 
-[L14:C13] "b" | P : [L13]block-stmt-ghost | D : [L6]b | C :  | U : 
-[L18:C12] "b" | P : [L18]while-stmt-ghost | D : [L6]b | C :  | U : 
-[L21:C6] "b" | P : [L18]while-stmt-ghost | D : [L6]b | C :  | U : 
-[L21:C11] "b" | P : [L18]while-stmt-ghost | D : [L6]b | C :  | U : 
+[L1:C8] "IAmTestNo7" | P : [L0]_default | D : self | C : 2 | U : 0
+[L2:C8] "a" | P : [L1]IAmTestNo7 | D : self | C :  | U : 1
+[L3:C8] "b" | P : [L1]IAmTestNo7 | D : self | C :  | U : 5
+[L6:C18] "a" | P : [L6]if-stmt-ghost | D : [L2]a | C :  | U : 
+[L6:C23] "b" | P : [L6]if-stmt-ghost | D : [L3]b | C :  | U : 
+[L7:C11] "a" | P : [L6]if-stmt-ghost | D : self | C :  | U : 1
+[L9:C13] "a" | P : [L8]if-stmt-ghost | D : [L7]a | C :  | U : 
+[L11:C13] "b" | P : [L10]block-stmt-ghost | D : [L3]b | C :  | U : 
+[L15:C12] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L18:C6] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
+[L18:C11] "b" | P : [L15]while-stmt-ghost | D : [L3]b | C :  | U : 
