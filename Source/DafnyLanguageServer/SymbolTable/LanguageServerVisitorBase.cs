@@ -106,6 +106,9 @@ namespace DafnyLanguageServer.SymbolTable
             return FindDeclaration(target.Name, scope);
         }
 
+
+
+
         /// <summary>
         ///  This is a Factory Method. Default values are set.
         /// </summary>
@@ -127,8 +130,8 @@ namespace DafnyLanguageServer.SymbolTable
             Type? type,
 
             IToken positionAsToken,
-            IToken bodyStartPosAsToken,
-            IToken bodyEndPosAsToken,
+            IToken bodyStartPosAsToken = null,
+            IToken bodyEndPosAsToken = null,
 
             bool isDeclaration = true,
             SymbolInformation declarationSymbol = null,
@@ -168,10 +171,19 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Usages = new List<SymbolInformation>();
             }
 
-            PerformArgChecks(isDeclaration, declarationSymbol, addUsageAtDeclaration);
+            if (isDeclaration)
+            {
+                result.DeclarationOrigin = result;
+            } else if (declarationSymbol != null)
+            {
+                result.DeclarationOrigin = declarationSymbol;
+            }
+            else
+            {
+                //null? self?
+            }
 
-            result.DeclarationOrigin = isDeclaration ? result : declarationSymbol;
-            if (addUsageAtDeclaration) //todo entspricht eig !isDecl, oder?
+            if (addUsageAtDeclaration)
             {
                 declarationSymbol.Usages.Add(result);
             }
@@ -181,7 +193,7 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Children = new List<SymbolInformation>();
             }
 
-            if (isDeclaration && type != Type.Module) //all decls, except for top level modules, are a child
+            if (isDeclaration && SurroundingScope != null) //add child unless we are on toplevel scope.
             {
                 SurroundingScope.Children.Add(result);
             }

@@ -140,30 +140,86 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
     public override void Visit(BlockStmt o)
-        {
-            var symbol = new SymbolInformation()
-            {
-                Name = "ghost-block-scope",
-                Type = Type.BlockStmt,
-                Parent = SurroundingScope,
+    {
+        var name = "block-stmt-ghost";
 
-                DeclarationOrigin = null,
-                Usages = null,
+        var symbol = CreateSymbol(
+            name: name,
+            type: Type.BlockScope,
 
-                Children = new List<SymbolInformation>(),
+            positionAsToken: o.Tok,
+            bodyStartPosAsToken: o.Tok,
+            bodyEndPosAsToken: o.EndTok,
 
-                Position = new TokenPosition()
-                {
-                    Token = o.Tok,
-                    BodyStartToken = o.Tok,
-                    BodyEndToken = o.EndTok
-                },
-            };
+            isDeclaration: false,
+            declarationSymbol: null,
+            addUsageAtDeclaration: false,
+
+            canHaveChildren: true,
+            canBeUsed: false,
+            addToSymbolTable: false
+        );
 
             SetScope(symbol);
         }
 
         public override void Leave(BlockStmt o)
+        {
+            JumpUpInScope();
+        }
+
+        public override void Visit(WhileStmt o)
+        {
+            var name = "while-stmt-ghost";
+
+            var symbol = CreateSymbol(
+                name: name,
+                type: Type.BlockScope,
+
+                positionAsToken: o.Tok,
+                bodyStartPosAsToken: o.Tok,
+                bodyEndPosAsToken: o.EndTok,
+
+                isDeclaration: false,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                canBeUsed: false,
+                addToSymbolTable: false
+            );
+            SetScope(symbol);
+        }
+
+        public override void Leave(WhileStmt e)
+        {
+            JumpUpInScope();
+        }
+
+        public override void Visit(IfStmt o)
+        {
+            var name = "if-stmt-ghost";
+
+            var symbol = CreateSymbol(
+                name: name,
+                type: Type.BlockScope,
+
+                positionAsToken: o.Tok,
+                bodyStartPosAsToken: o.Tok,
+                bodyEndPosAsToken: o.EndTok,
+
+                isDeclaration: false,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                canBeUsed: false,
+                addToSymbolTable: false
+            );
+            SetScope(symbol);
+        }
+
+        public override void Leave(IfStmt e)
         {
             JumpUpInScope();
         }

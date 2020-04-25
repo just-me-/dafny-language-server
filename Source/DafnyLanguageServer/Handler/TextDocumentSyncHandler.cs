@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Full;
+        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
 
         public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)

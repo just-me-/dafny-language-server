@@ -48,7 +48,7 @@ namespace DafnyLanguageServer.SymbolTable
         Definition,
         Predicate,
         Undefined,
-        BlockStmt
+        BlockScope
     }
 
     public class TokenPosition

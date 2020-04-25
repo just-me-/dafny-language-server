@@ -7275,14 +7275,20 @@ namespace Microsoft.Dafny {
       }
     }
 
+    //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
     public override void Accept(Visitor v)
     {
+        v.Visit(this);
         this.Guard.Accept(v);
-        this.Thn.Accept(v);
+        foreach (var stmt in this.Thn.Body)
+        {
+                stmt.Accept(v);
+        }
         if (this.Els != null)
         {
             this.Els.Accept(v);
         }
+        v.Leave(this);
     }
   }
 
@@ -7442,10 +7448,17 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
+    //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
+
+        public override void Accept(Visitor v)
         {
+            v.Visit(this);
             this.Guard.Accept(v);
-            this.Body.Accept(v);
+            foreach (var stmt in this.Body.Body)
+            {
+                stmt.Accept(v);
+            }
+            v.Leave(this);
         }
   }
 
@@ -11670,6 +11683,10 @@ namespace Microsoft.Dafny {
 
         public abstract void Visit(BlockStmt o);
         public abstract void Leave(BlockStmt o);
+        public abstract void Visit(WhileStmt s);
+        public abstract void Leave(WhileStmt e);
+        public abstract void Visit(IfStmt e);
+        public abstract void Leave(IfStmt e);
 
         #endregion
 
@@ -11698,6 +11715,10 @@ namespace Microsoft.Dafny {
         public abstract void Leave(ExprDotName e);
         public abstract void Visit(ThisExpr e);
         public abstract void Leave(ThisExpr e);
+
+
+
+
 
 
         //more todo

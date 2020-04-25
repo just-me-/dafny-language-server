@@ -54,11 +54,11 @@ namespace DafnyLanguageServer
                     // Handler group 
                     .WithHandler<TextDocumentSyncHandler>()
                     .WithHandler<DidChangeWatchedFilesHandler>()
-                    //.WithHandler<CompletionHandler>()
+                    .WithHandler<CompletionHandler>()
                     .WithHandler<CompileHandler>()
                     .WithHandler<CounterExampleHandler>()
-                    //.WithHandler<CodeLensHandler>()
-                    //.WithHandler<DefinitionHandler>()
+                    .WithHandler<CodeLensHandler>()
+                    .WithHandler<DefinitionHandler>()
                     .WithHandler<ShutdownHandler>()
             );
 

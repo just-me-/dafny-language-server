@@ -186,6 +186,26 @@ namespace DafnyLanguageServer.SymbolTable
             throw new NotImplementedException("This visitor must only visit declarations");
         }
 
+        public override void Visit(WhileStmt s)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Leave(WhileStmt e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Visit(IfStmt e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Leave(IfStmt e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
         public override void Visit(AssignmentRhs o)
         {
             throw new NotImplementedException("This visitor must only visit declarations");
