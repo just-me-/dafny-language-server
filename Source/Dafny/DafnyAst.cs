@@ -11576,6 +11576,8 @@ namespace Microsoft.Dafny {
 
   public abstract class Visitor
   {
+    public const string DEFAULT_CLASS_NAME = "_default";
+    public const string DEFAULT_MODULE_NAME = "_module";
     public bool GoesDeep { get; set; } = true;
     public abstract void Visit(IAstElement o);
     public abstract void Leave(IAstElement o);

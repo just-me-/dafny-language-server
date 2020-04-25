@@ -25,6 +25,29 @@ namespace DafnyLanguageServer.SymbolTable
         public SymbolInformation CurrentClass { get; set; }
 
 
+        private SymbolInformation _globalScope;
+
+        public SymbolInformation GlobalScope
+        {
+            get
+            {
+                if (_globalScope != null)
+                {
+                    return _globalScope;
+                }
+
+                foreach (var symbol in SymbolTable)
+                {
+                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Type == Type.Class)
+                    {
+                        _globalScope = symbol;
+                        return symbol;
+                    }
+                }
+                throw new InvalidOperationException("Global Class Scope was not registered.");
+            }
+        }
+
 
         protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null)
         {
@@ -54,16 +77,26 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 return FindDeclaration(target, scope.Parent, type);
             }
+
+            //if symbol cannot be found, it yet may be in global scope
+            if (scope != GlobalScope)
+            {
+                return FindDeclaration(target, GlobalScope); //may revisit (visit... get it...) this when we acgtually work with module includes.
+            }
             else
             {
+                //This case is then Method Failure.
+
+
                 //damit es nicht immer crashed erstmal soft-mässiges handling here:
-                //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
                 return new SymbolInformation()
                 {
                     Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*",
                     Children = new List<SymbolInformation>(),
                     Usages = new List<SymbolInformation>()
                 };
+                //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
+
             }
         }
 

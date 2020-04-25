@@ -26,8 +26,8 @@ namespace DafnyLanguageServer.SymbolTable
             //jsut set scope and stuff, but don't create new symbol.
             //symbol shouild be the first symbol in table.
 
-            var preDeclaredSymbol = SymbolTable.First();
-            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||
+            var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||      
                 !preDeclaredSymbol.IsDeclaration)
             {
                 throw new InvalidOperationException("frist symbol in table is not module.");
@@ -50,6 +50,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             SetScope(preDeclaredSymbol);
             SetClass(preDeclaredSymbol);
+
         }
 
         public override void Leave(ClassDecl o)
@@ -140,14 +141,6 @@ namespace DafnyLanguageServer.SymbolTable
 
     public override void Visit(BlockStmt o)
         {
-            //todo: hier noch vermerken dass neuer scope irgendwie... für zukunftsmarcel und zukunftstom ticket #103
-            //..> BlockStmt als eigenes special-symbol handhaben, welches dann parent sein kann.
-            //manual creation to bypass creation logic
-            //it is just here to mark the scope.
-            //blockstmt is neither a declaration, nor does it have a declaring symbol,
-            //and it shall not be a child of the parent symbol.
-            //It's ghosty.
-
             var symbol = new SymbolInformation()
             {
                 Name = "ghost-block-scope",
@@ -353,165 +346,5 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(AssignmentRhs o)
         {
         }
-
-        private SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null)
-        {
-            var matches = scope.Children.Where(s =>
-                s.Name == target &&
-                s.IsDeclaration &&
-                (type == null || s.Type == type))
-                .ToList();
-
-            if (matches.Count() == 1)
-            {
-                return matches.Single();
-            }
-
-            if (matches.Count() > 1)
-            {
-                //simplified for now:
-                //throw new InvalidOperationException("multiple candidates for symbol declaration");
-                return new SymbolInformation()
-                {
-                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*"
-                };
-            }
-
-            //if symbol not found in current scope, search parent scope
-            if (scope.Parent != null)
-            {
-                return FindDeclaration(target, scope.Parent, type);
-            }
-            else
-            {
-                //damit es nicht immer crashed erstmal soft-mässiges handling here:
-                //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-                return new SymbolInformation()
-                {
-                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*",
-                    Children = new List<SymbolInformation>(),
-                    Usages = new List<SymbolInformation>()
-                };
-            }
-        }
-
-        private SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
-        {
-            return FindDeclaration(target.Name, scope);
-        }
-
-        /// <summary>
-        ///  This is a Factory Method. Default values are set.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="positionAsToken"></param>
-        /// <param name="bodyStartPosAsToken"></param>
-        /// <param name="bodyEndPosAsToken"></param>
-        /// <param name="isDeclaration">Default: true</param>
-        /// <param name="declarationSymbol">Default: null</param>
-        /// <param name="addUsageAtDeclaration">Default: false</param>
-        /// <param name="canHaveChildren">Default: true</param>
-        /// <param name="setAsChildInParent">Default: true</param>
-        /// <param name="canBeUsed">Default: true</param>
-        /// <param name="addToSymbolTable">Default: true</param>
-        /// <returns>Returns a SymbolInformation about the specific token.</returns>
-        private SymbolInformation CreateSymbol(
-            string name,
-            Type? type,
-
-            IToken positionAsToken,
-            IToken bodyStartPosAsToken,
-            IToken bodyEndPosAsToken,
-
-            bool isDeclaration = true,
-            SymbolInformation declarationSymbol = null,
-            bool addUsageAtDeclaration = false,
-            bool canHaveChildren = true,
-            bool setAsChildInParent = true,
-            bool canBeUsed = true,
-            bool addToSymbolTable = true
-            )
-        {
-            SymbolInformation result = new SymbolInformation();
-            result.Name = name;
-            result.Parent = SurroundingScope; //is null for modules
-
-            if (type != null)
-            {
-                result.Type = (Type) type;
-            }
-            else if (declarationSymbol != null)
-            {
-                result.Type = declarationSymbol.Type;
-            } else
-            {
-                result.Type = Type.Undefined;
-            }
-
-            result.Position = new TokenPosition()
-            {
-                Token = positionAsToken,
-                BodyStartToken = bodyStartPosAsToken ?? positionAsToken,
-                BodyEndToken = bodyEndPosAsToken ?? positionAsToken
-            };
-
-            if (canBeUsed)
-            {
-                result.Usages = new List<SymbolInformation>();
-            }
-
-            PerformArgChecks(isDeclaration, declarationSymbol, addUsageAtDeclaration);
-
-            result.DeclarationOrigin = isDeclaration ? result: declarationSymbol;
-            if (addUsageAtDeclaration) //todo entspricht eig !isDecl, oder?
-            {
-                declarationSymbol.Usages.Add(result);
-            }
-
-            if (canHaveChildren)
-            {
-                result.Children = new List<SymbolInformation>();
-            }
-
-            if (isDeclaration && type != Type.Module) //all decls, except for top level modules, are a child
-            {
-                SurroundingScope.Children.Add(result);
-            }
-
-            if (addToSymbolTable)
-            {
-                Add(result);
-            }
-
-            return result;
-        }
-
-        private static void PerformArgChecks(bool isDeclaration, SymbolInformation declarationSymbol,
-            bool addUsageAtDeclaration)
-        {
-            if (!isDeclaration && declarationSymbol == null)
-            {
-                throw new ArgumentNullException(nameof(declarationSymbol),
-                    "When symbol is not a declaration, its declarationOrigin must be given.");
-            }
-
-            if (isDeclaration && addUsageAtDeclaration)
-            {
-                throw new ArgumentException("When symbol is a declaration, it cannot be a usage of itself.");
-            }
-
-            if (addUsageAtDeclaration && declarationSymbol == null)
-            {
-                throw new ArgumentException("Can not add usage at unknown symbol.");
-
-            }
-        }
-
-        private void Add(SymbolInformation symbol) => SymbolTable.Add(symbol);
-        private void SetScope(SymbolInformation symbol) => SurroundingScope = symbol;
-        private void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
-        private void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
-        private void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
     }
 }

@@ -44,30 +44,7 @@ namespace DafnyLanguageServer.SymbolTable
             SetModule(symbol);
         }
 
-        public override void Visit(ExprDotName e)
-        {
-            throw new NotImplementedException("This visitor must only visit declarations");
-        }
-
-        public override void Leave(ExprDotName e)
-        {
-            throw new NotImplementedException("This visitor must only visit declarations");
-        }
-
-        public override void Visit(ThisExpr e)
-        {
-            throw new NotImplementedException("This visitor must only visit declarations");
-        }
-
-        public override void Leave(ThisExpr e)
-        {
-            throw new NotImplementedException("This visitor must only visit declarations");
-        }
-
-        public override void Leave(NameSegment e)
-        {
-            throw new NotImplementedException("This visitor must only visit declarations");
-        }
+       
 
         public override void Leave(ModuleDefinition o)
         {
@@ -97,6 +74,7 @@ namespace DafnyLanguageServer.SymbolTable
             SetScope(symbol);
 
         }
+
 
         public override void Leave(ClassDecl o)
         {
@@ -144,12 +122,38 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: true
             );
-            SetScope(symbol);
+            SetScope(symbol); //technically not necessary since we dont go deeper.
         }
 
         public override void Leave(Method o)
         {
             JumpUpInScope();
+        }
+
+
+        public override void Visit(ExprDotName e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Leave(ExprDotName e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Visit(ThisExpr e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Leave(ThisExpr e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
+        }
+
+        public override void Leave(NameSegment e)
+        {
+            throw new NotImplementedException("This visitor must only visit declarations");
         }
 
         public override void Visit(NonglobalVariable o)
