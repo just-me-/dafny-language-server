@@ -17,10 +17,11 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolInformation
     {
-        public TokenPosition Position { get; set; }
-        public int? Line => Position?.BodyStartToken.line;
-        public int? ColumnStart => Position?.BodyStartToken.col;
-        public int? ColumnEnd => ColumnStart + Name.Length; 
+        public TokenPosition Position { get; set; } //todo we only need main token probably.
+        public int? Line => Position?.Token.line;
+        public int? Column => ColumnStart;
+        public int? ColumnStart => Position?.Token.col;
+        public int? ColumnEnd => ColumnStart + Name.Length;
         public string Name { get; set; }
         public Type Type { get; set; }
         public SymbolInformation Parent { get; set; }
@@ -31,7 +32,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override string ToString()
         {
-            return $"[L{Line}:C{ColumnStart}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
+            return $"[L{Line}:C{Column}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
         }
     }
 
