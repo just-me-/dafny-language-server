@@ -28,7 +28,7 @@ namespace DafnyLanguageServer.Handler
             _documentSelector = new DocumentSelector(
                 new DocumentFilter()
                 {
-                    Pattern = "**/*.dfy"
+                    Pattern = "**/*.dfy" // todo lang file #102
                 });
             _loggingFactory = loggingFactory;
             _log = _loggingFactory?.CreateLogger("");

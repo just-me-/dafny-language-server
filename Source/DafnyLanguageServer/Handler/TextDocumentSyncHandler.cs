@@ -51,18 +51,17 @@ namespace DafnyLanguageServer.Handler
         {
             try
             {
-                _log.LogInformation("Updating File " + uri);
+                _log.LogInformation("Updating File " + uri); // todo lang file #102
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
-                _log.LogInformation("Calculating Diagnostics");
+                _log.LogInformation("Calculating Diagnostics"); // todo lang file #102
                 new DiagnosticsService(_router).SendDiagnostics(fileRepository);
-                _log.LogInformation("Update Request successfully handled.");
+                _log.LogInformation("Update Request successfully handled."); // todo lang file #102
 
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Document Update: " + e.Message);
-                new MessageSenderService(_router).SendError("Internal server error handling Document Update: " + e.Message);
-
+                _log.LogError("Internal server error handling Document Update: " + e.Message); // todo lang file #102
+                new MessageSenderService(_router).SendError("Internal server error handling Document Update: " + e.Message); // todo lang file #102
             }
         }
 

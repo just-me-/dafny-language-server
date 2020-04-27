@@ -11,11 +11,10 @@ using Microsoft.Boogie.ModelViewer.Dafny;
 
 namespace DafnyLanguageServer.HandlerServices
 {
-
     public static class CounterExampleDefaultModelFile
     {
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleDefaultModelFile).Assembly.Location);
-        public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd"));
+        public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd")); // todo lang file #102 btw konfigurierbar 
 
         public static void ClearDefaultModelFile()
         {
@@ -36,7 +35,6 @@ namespace DafnyLanguageServer.HandlerServices
     {
         public string ModelBvd { get; }
         private PhysicalFile PhysicalFile { get; }
-
 
         public CounterExampleProvider(PhysicalFile file) : this(file, CounterExampleDefaultModelFile.FilePath)
         {
@@ -130,13 +128,13 @@ namespace DafnyLanguageServer.HandlerServices
                     {
                         continue;
                     }
-                    if (state.Name.Contains(":initial state"))
+                    if (state.Name.Contains(":initial state")) // todo lang file #102
                     {
                         return state;
                     }
                 }
 
-                throw new InvalidOperationException("specific Model does not contain a :initial state");
+                throw new InvalidOperationException("Specific model does not contain a :initial state"); // todo lang file #102
             }
 
             private CounterExample ExtractCounterExampleFromState(StateNode state)
@@ -201,10 +199,4 @@ namespace DafnyLanguageServer.HandlerServices
             private static bool IsReference(string s) => s.StartsWith("T@U!val!");
         }
     }
-
-
-
-    
-
-
 }

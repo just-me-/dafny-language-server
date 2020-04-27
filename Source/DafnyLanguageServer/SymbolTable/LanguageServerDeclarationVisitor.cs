@@ -14,7 +14,8 @@ using Visitor = Microsoft.Dafny.Visitor;
 namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
-    /// This Visitor creates a symbol table visiting only declarations
+    /// This Visitor creates a symbol table visiting only declarations.
+    /// This includes methods, fields classes and modules. 
     /// </summary>
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {
@@ -39,12 +40,9 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: false
             );
-
             SetScope(symbol);
             SetModule(symbol);
         }
-
-       
 
         public override void Leave(ModuleDefinition o)
         {
@@ -72,9 +70,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             SetClass(symbol);
             SetScope(symbol);
-
         }
-
 
         public override void Leave(ClassDecl o)
         {
@@ -130,10 +126,9 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-
-        public override void Visit(ExprDotName e)
+        public override void Visit(ExprDotName e) 
         {
-            throw new NotImplementedException("This visitor must only visit declarations");
+            throw new NotImplementedException("This visitor must only visit declarations"); // todo lang file #102
         }
 
         public override void Leave(ExprDotName e)

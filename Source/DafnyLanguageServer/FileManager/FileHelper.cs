@@ -59,7 +59,7 @@ namespace DafnyLanguageServer.FileManager
         {
             if (line < 0 || chr < 0)
             {
-                throw new ArgumentException("Negative position values are not supported");
+                throw new ArgumentException("Negative position values are not supported"); // todo lang file #102
             }
 
             return new Position

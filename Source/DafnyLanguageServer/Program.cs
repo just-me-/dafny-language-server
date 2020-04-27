@@ -11,7 +11,6 @@ namespace DafnyLanguageServer
     {
         static async Task Main(string[] args)
         {
-
             DafnyLanguageServer languageServer =  new DafnyLanguageServer(args);
             await languageServer.StartServer();
         }

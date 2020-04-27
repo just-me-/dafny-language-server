@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.HandlerServices
     /// </summary>
     public class CompilationService
     {
-        public const string failurePrefix = "Compilation failed: ";
+        public const string failurePrefix = "Compilation failed: "; // todo lang file #102
         private string[] CompilationArgs { get; }
 
         private FileRepository FileRepo { get; }
@@ -39,7 +39,6 @@ namespace DafnyLanguageServer.HandlerServices
 
         public CompilerResults Compile()
         {
-
             var exitval = DafnyDriver.ProcessCommandLineArguments(CompilationArgs, out var dafnyFiles, out var otherFiles);
 
             if (!PerformPreliminaryChecks(exitval, out var errorneousCompileResults))
@@ -86,7 +85,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (System.IO.Path.GetExtension(Path) != ".dfy")
             {
                 {
-                    compilerResults = CreateErrorneousResults("Can only compile .dfy files");
+                    compilerResults = CreateErrorneousResults("Can only compile .dfy files"); // todo lang file #102
                     return false;
                 }
             }
@@ -94,7 +93,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (!File.Exists(FileRepo.PhysicalFile.Filepath))
             {
                 {
-                    compilerResults = CreateErrorneousResults("Could not locate file: " + Path);
+                    compilerResults = CreateErrorneousResults("Could not locate file: " + Path); // todo lang file #102
                     return false;
                 }
             }
@@ -115,7 +114,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (!DafnyOptions.O.Compile)
             {
                 {
-                    compilerResults = CreateErrorneousResults("Compile CLO is explicitly set to 0.");
+                    compilerResults = CreateErrorneousResults("Compile CLO is explicitly set to 0."); // todo lang file #102
                     return false;
                 }
             }
@@ -123,7 +122,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (exitval == DafnyDriver.ExitValue.PREPROCESSING_ERROR)
             {
                 {
-                    compilerResults = CreateErrorneousResults($"Error while preprocessing your custom command line arguments.");
+                    compilerResults = CreateErrorneousResults($"Error while preprocessing your custom command line arguments."); // todo lang file #102
                     return false;
                 }
             }
@@ -141,9 +140,6 @@ namespace DafnyLanguageServer.HandlerServices
                 Executable = false
             };
         }
-
-
-
     }
 
 }

@@ -95,7 +95,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Return itself it it is already a declaration.
+        /// Return itself if it is already a declaration.
         /// Used for Go2Definition. 
         /// </summary>
         public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)

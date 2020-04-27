@@ -24,7 +24,6 @@ namespace DafnyLanguageServer.SymbolTable
         public SymbolInformation CurrentModule { get; set; }
         public SymbolInformation CurrentClass { get; set; }
 
-
         private SymbolInformation _globalScope;
 
         public SymbolInformation GlobalScope
@@ -41,13 +40,12 @@ namespace DafnyLanguageServer.SymbolTable
                     if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Type == Type.Class)
                     {
                         _globalScope = symbol;
-                        return symbol;
+                        return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
                     }
                 }
-                throw new InvalidOperationException("Global Class Scope was not registered.");
+                throw new InvalidOperationException("Global Class Scope was not registered."); // todo lang file #102
             }
         }
-
 
         protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null, bool goRecursive = true)
         {
@@ -68,7 +66,7 @@ namespace DafnyLanguageServer.SymbolTable
                 //throw new InvalidOperationException("multiple candidates for symbol declaration");
                 return new SymbolInformation()
                 {
-                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*"
+                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*" // todo lang file #102
                 };
             }
 
@@ -88,16 +86,14 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 //This case is then Method Failure.
 
-
                 //damit es nicht immer crashed erstmal soft-mässiges handling here:
                 return new SymbolInformation()
                 {
-                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*",
+                    Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
                     Children = new List<SymbolInformation>(),
                     Usages = new List<SymbolInformation>()
                 };
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-
             }
         }
 
@@ -105,9 +101,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return FindDeclaration(target.Name, scope);
         }
-
-
-
 
         /// <summary>
         ///  This is a Factory Method. Default values are set.
@@ -212,17 +205,17 @@ namespace DafnyLanguageServer.SymbolTable
             if (!isDeclaration && declarationSymbol == null)
             {
                 throw new ArgumentNullException(nameof(declarationSymbol),
-                    "When symbol is not a declaration, its declarationOrigin must be given.");
+                    "When symbol is not a declaration, its declarationOrigin must be given."); // todo lang file #102
             }
 
             if (isDeclaration && addUsageAtDeclaration)
             {
-                throw new ArgumentException("When symbol is a declaration, it cannot be a usage of itself.");
+                throw new ArgumentException("When symbol is a declaration, it cannot be a usage of itself."); // todo lang file #102
             }
 
             if (addUsageAtDeclaration && declarationSymbol == null)
             {
-                throw new ArgumentException("Can not add usage at unknown symbol.");
+                throw new ArgumentException("Can not add usage at unknown symbol."); // todo lang file #102
 
             }
         }
@@ -233,10 +226,8 @@ namespace DafnyLanguageServer.SymbolTable
         protected void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
         protected void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
 
-
         public override void Visit(IAstElement o) { }
 
         public override void Leave(IAstElement o) { }
-
     }
 }

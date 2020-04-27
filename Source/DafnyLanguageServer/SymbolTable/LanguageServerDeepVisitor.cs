@@ -19,18 +19,15 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-
-
         public override void Visit(ModuleDefinition o)
         {
-            //jsut set scope and stuff, but don't create new symbol.
-            //symbol shouild be the first symbol in table.
-
+            // Set scope but do not create new symbol.
+            // Symbol should be the first symbol in table.
             var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||      
                 !preDeclaredSymbol.IsDeclaration)
             {
-                throw new InvalidOperationException("frist symbol in table is not module.");
+                throw new InvalidOperationException("First symbol in table is not module."); // todo lang file #102
             }
             SetScope(preDeclaredSymbol);
             SetModule(preDeclaredSymbol);
@@ -88,9 +85,9 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         /// <summary>
-        /// Nonglobal Variables are Method Parameters (in and out parameters).
+        /// Non global variables are method parameters (in and out parameters).
         /// We treat them as variable definitions.
-        /// Additional Info: Base Class of NonglobalVariable is Formal.
+        /// Additional Info: Base Class of non global variable is formal.
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
@@ -139,27 +136,25 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(LocalVariable o) {
         }
 
-    public override void Visit(BlockStmt o)
-    {
-        var name = "block-stmt-ghost";
+        public override void Visit(BlockStmt o)
+        {
+            var name = "block-stmt-ghost";
+            var symbol = CreateSymbol(   // todo "createSymbol als unter factory? eig immer die selben parameter #103
+                name: name,
+                type: Type.BlockScope,
 
-        var symbol = CreateSymbol(
-            name: name,
-            type: Type.BlockScope,
+                positionAsToken: o.Tok,
+                bodyStartPosAsToken: o.Tok,
+                bodyEndPosAsToken: o.EndTok,
 
-            positionAsToken: o.Tok,
-            bodyStartPosAsToken: o.Tok,
-            bodyEndPosAsToken: o.EndTok,
+                isDeclaration: false,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
 
-            isDeclaration: false,
-            declarationSymbol: null,
-            addUsageAtDeclaration: false,
-
-            canHaveChildren: true,
-            canBeUsed: false,
-            addToSymbolTable: false
-        );
-
+                canHaveChildren: true,
+                canBeUsed: false,
+                addToSymbolTable: false
+            );
             SetScope(symbol);
         }
 
@@ -171,7 +166,6 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(WhileStmt o)
         {
             var name = "while-stmt-ghost";
-
             var symbol = CreateSymbol(
                 name: name,
                 type: Type.BlockScope,
@@ -224,8 +218,10 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        //A Type RHS is the right hand side of omsething like var a:= new MyClass(). See also its class description.
-        //Also has some Array stuff that could be relevant for us.
+        /// <summary>
+        /// A <c>TypeRhs</c> is the right hand side of something like var a:= new MyClass(). See also its class description.
+        /// Also has some Array stuff that could be relevant for us.
+        /// </summary>
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
@@ -256,7 +252,7 @@ namespace DafnyLanguageServer.SymbolTable
         //A AutoGhostIndentifierExpr is when we have a VarDeclStmt: var a:= b.
         //This VarDecl Stmt contains a Update stmt, and the left side contains ghostVars, aka the 'a'.
         //We do nth since within the VarDeclStmt, the 'a' gets registered.
-        public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar
+        public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar //todo nth? statt // /// verwenden fèr code doku #104
         public override void Leave(AutoGhostIdentifierExpr e) { }
 
         public override void Visit(LiteralExpr e) { } //do nth
@@ -344,7 +340,6 @@ namespace DafnyLanguageServer.SymbolTable
 
                 canHaveChildren: false,
                 canBeUsed: false
-
             );
         }
 
@@ -352,10 +347,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-
         public override void Visit(Expression o)
         {
-
             var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
             var symbol = CreateSymbol(

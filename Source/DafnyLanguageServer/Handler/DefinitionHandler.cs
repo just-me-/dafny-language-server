@@ -33,7 +33,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Goto Definition...");
+            _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
 
             try
             {
@@ -47,7 +47,7 @@ namespace DafnyLanguageServer.Handler
 
                     if (selectedSymbol == null)
                     {
-                        _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}");
+                        _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
 
                         return new LocationOrLocationLinks(links);
                     }
@@ -66,10 +66,10 @@ namespace DafnyLanguageServer.Handler
 
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Definition: " + e.Message);
-                new MessageSenderService(_router).SendError("Internal server error handling Definition: " + e.Message);
+                _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
+                new MessageSenderService(_router).SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
 
-                return null;
+                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
     }

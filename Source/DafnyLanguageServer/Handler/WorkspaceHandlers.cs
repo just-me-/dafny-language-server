@@ -29,7 +29,8 @@ namespace DafnyLanguageServer.Handler
                 Watchers = new FileSystemWatcher[]
                 {
                         new FileSystemWatcher{
-                            GlobPattern = "**/*.dfy",
+
+                            GlobPattern = "**/*.dfy",  // todo lang file #102
                             Kind = 7
                         }
                 },

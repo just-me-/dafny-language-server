@@ -40,8 +40,6 @@ namespace DafnyLanguageServer.HandlerServices
                 };
                 _router.Document.PublishDiagnostics(p);
                 _msgSenderService.SendCountedErrors(diagnostics.Count);
-            
-
         }
 
         public Collection<Diagnostic> CreateLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)
@@ -73,7 +71,7 @@ namespace DafnyLanguageServer.HandlerServices
             }
 
             string msg;
-            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null)
+            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null) // todo lang file #102
             {
                 msg = e.Msg;
             }
@@ -116,7 +114,7 @@ namespace DafnyLanguageServer.HandlerServices
             List<Diagnostic> relatedInformations = new List<Diagnostic>();
             foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
             {
-                if (aux.Category == "Execution trace")
+                if (aux.Category == "Execution trace") // todo lang file #102
                 {
                     continue;
                 }

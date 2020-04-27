@@ -18,7 +18,6 @@ namespace DafnyLanguageServer.FileManager
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
         public SymbolTableManager SymbolTableManager { get; set; }
 
-
         /// <summary>
         /// Requests the fileRepository to apply updates and store it in the buffer.
         /// </summary>
@@ -41,7 +40,7 @@ namespace DafnyLanguageServer.FileManager
             }
             else
             {
-                throw new TypeAccessException("Expected string or TextDocumentChangeEvent-Container at text-document-change event request");
+                throw new TypeAccessException("Expected string or TextDocumentChangeEvent-Container at text-document-change event request"); // todo lang file #102
             }
 
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);

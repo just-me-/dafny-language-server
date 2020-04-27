@@ -38,7 +38,7 @@ namespace DafnyLanguageServer.Handler
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
 
-            _log.LogInformation("Handling Code Lens");
+            _log.LogInformation("Handling Code Lens"); // todo lang file #102
 
             try
             {
@@ -60,7 +60,7 @@ namespace DafnyLanguageServer.Handler
                                 Range range = new Range {Start = position, End = position};
                                 Command command = new Command
                                 {
-                                    Title = (symbolInformation.Usages?.Count) + " reference(s) to " +
+                                    Title = (symbolInformation.Usages?.Count) + " reference(s) to " + // todo lang file #102
                                             symbolInformation.Name,
                                     Name = "dafny.showReferences"
                                 };
@@ -75,9 +75,9 @@ namespace DafnyLanguageServer.Handler
 
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling CodeLens: " + e.Message);
-                new MessageSenderService(_router).SendError("Internal server error handling CodeLens: " + e.Message);
-                return null;
+                _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                new MessageSenderService(_router).SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
     }

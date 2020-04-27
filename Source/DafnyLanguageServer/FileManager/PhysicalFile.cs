@@ -81,7 +81,7 @@ namespace DafnyLanguageServer.FileManager
             return result;
         }
 
-        private static bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
+        private bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
         {
             return currentLine == targetLine && currentCol == targetCol;
         }
@@ -96,11 +96,11 @@ namespace DafnyLanguageServer.FileManager
             string[] lines = Regex.Split(Sourcecode, "\r\n|\r|\n");
             if (line < 0)
             {
-                throw new ArgumentException("Line-Index must not be negative");
+                throw new ArgumentException("Line-Index must not be negative"); // todo lang file #102
             }
             if (line >= lines.Length)
             {
-                throw new ArgumentException($"There are not enough lines ({line}) in the given source!");
+                throw new ArgumentException($"There are not enough lines ({line}) in the given source!"); // todo lang file #102
             }
             return lines[line].Length;
         }

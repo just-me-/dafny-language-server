@@ -17,8 +17,6 @@ namespace DafnyLanguageServer.ProgramServices
         public string ErrorMsg => ErrorMessages.ToString();
         public StringBuilder ErrorMessages { get; } = new StringBuilder();
 
-
-
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
@@ -29,7 +27,5 @@ namespace DafnyLanguageServer.ProgramServices
             s.AppendLine($"ErrorMsg: {ErrorMsg}");
             return s.ToString();
         }
-
-
     }
 }

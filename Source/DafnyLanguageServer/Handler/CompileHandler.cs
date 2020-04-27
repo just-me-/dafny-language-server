@@ -45,7 +45,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Compilation...");
+            _log.LogInformation("Handling Compilation...");// todo lang file #102
 
             try
             {
@@ -54,9 +54,9 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling compilation: " + e.Message);
+                _log.LogError("Internal server error handling compilation: " + e.Message);// todo lang file #102
 
-                return null;
+                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
     }

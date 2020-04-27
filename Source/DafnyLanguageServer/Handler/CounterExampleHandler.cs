@@ -30,7 +30,6 @@ namespace DafnyLanguageServer.Handler
     public class CounterExampleResults
     {
         public List<CounterExample> CounterExamples { get; } = new List<CounterExample>();
-
     }
 
     [Serial, Method("counterExample")]
@@ -40,7 +39,6 @@ namespace DafnyLanguageServer.Handler
 
     public class CounterExampleHandler : ICounterExample
     {
-
         private readonly WorkspaceManager _workspaceManager;
         private readonly ILogger _log;
 
@@ -52,7 +50,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Counter Example");
+            _log.LogInformation("Handling Counter Example"); // todo lang file #102
 
             try
             {
@@ -61,9 +59,9 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Counter Example: " + e.Message);
+                _log.LogError("Internal server error handling Counter Example: " + e.Message); // todo lang file #102
 
-                return null;
+                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
 

@@ -34,13 +34,12 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions...");
+            _log.LogInformation("Completions..."); // todo lang file #102
 
             try
             {
                 return await Task.Run(() =>
                 {
-
                     var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                     var word = FileHelper.GetCurrentWord(
                         _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
@@ -56,10 +55,10 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Completions: " + e.Message);
-                new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message);
+                _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
+                new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
 
-                return null;
+                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
 
@@ -83,7 +82,7 @@ namespace DafnyLanguageServer.Handler
                     new CompletionItem
                     {
 #if DEBUG
-                        Label = $"{symbol.Name} (Type: {symbol.SymbolType}) (Parent: {symbol.ParentClass})",
+                        Label = $"{symbol.Name} (Type: {symbol.SymbolType}) (Parent: {symbol.ParentClass})", // todo lang file #102
 #else
                         Label = $"{symbol.Name}",
 #endif

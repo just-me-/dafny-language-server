@@ -59,7 +59,6 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
-
         private List<DafnyServer.OldSymbolTable.OldSymbolInformation> Symboltable()
         {
             if (Result.TranslationStatus >= TranslationStatus.Resolved && Result.DafnyProgram != null) //todo
@@ -95,7 +94,7 @@ namespace DafnyLanguageServer.FileManager
 
             catch (Exception e)
             {
-                throw new InvalidOperationException("Error while collecting models. " + e.Message);
+                throw new InvalidOperationException("Error while collecting models. " + e.Message);// todo lang file #102
 
             }
 
@@ -115,7 +114,7 @@ namespace DafnyLanguageServer.FileManager
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException("Error while executing compilation. " + e.Message);
+                throw new InvalidOperationException("Error while executing compilation. " + e.Message);// todo lang file #102
             }
         }
     }

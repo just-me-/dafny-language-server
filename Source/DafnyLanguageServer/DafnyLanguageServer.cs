@@ -27,19 +27,15 @@ namespace DafnyLanguageServer
         public DafnyLanguageServer(string[] args)
         {
             config = new ConfigInitializer(args).Config;
-
             //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
             //TOdo: Vor abgabe weg machen xD Ticket # 59
             //Console.WriteLine(config);
-
             SetupLogger();
         }
 
-        
-
         public async Task StartServer()
         {
-            log.Debug("Server Starting");
+            log.Debug("Server is starting..."); // todo lang file #102
 
             var server = await LanguageServer.From(options =>
                 options
@@ -67,7 +63,7 @@ namespace DafnyLanguageServer
             CheckForConfigReader(); 
 
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
-            //code should no longer make prints but lets keep it for additional safety.
+            // code should no longer make prints but lets keep it for additional safety.
             try
             {
                 using (StreamWriter writer = new StreamWriter(new FileStream(config.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
@@ -78,12 +74,12 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                string msg = "Could not redirect output stream. " + e.Message;
+                string msg = "Could not redirect output stream. " + e.Message; // todo lang file #102
                 msgSender.SendError(msg);
                 log.Error(msg);
             }
 
-            log.Debug("Server Closed");
+            log.Debug("Server closed."); // todo lang file #102
         }
 
         private void CreateMsgSender(ILanguageServer server)
@@ -95,12 +91,12 @@ namespace DafnyLanguageServer
         {
             var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
             msgSender.SendServerStarted(dafnyVersion);
-            log.Debug("Server Running");
+            log.Debug("Server is running."); // todo lang file #102
         }
 
         private void CheckForConfigReader()
         {
-            if (config.Error)
+            if (config.Error) // todo lang file #102
             {
                 msgSender.SendWarning("Error while setting up config. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
                 log.Warning("Error while configuring log. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
