@@ -16,7 +16,7 @@ namespace CompilationServiceTest
     public class CompilationServiceTest
     {
         private CompilerResults compilerResults;
-        private const string failurePrefix = CompilationService.failurePrefix;
+        private readonly string failurePrefix = DafnyLanguageServer.Resources.CompilationResults.compilation_failed;
 
         [SetUp]
         public void DeleteFiles()
@@ -153,7 +153,7 @@ namespace CompilationServiceTest
 
         private void RunCompilation(string filePath, string[] args = null)
         {
-            
+
             if (args == null)
             {
                 args = new string[] { };

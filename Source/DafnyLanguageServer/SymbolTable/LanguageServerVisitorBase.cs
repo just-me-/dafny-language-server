@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
                         return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
                     }
                 }
-                throw new InvalidOperationException("Global Class Scope was not registered."); // todo lang file #102
+                throw new InvalidOperationException(Resources.ExceptionMessages.global_class_not_registered);
             }
         }
 
@@ -167,7 +167,8 @@ namespace DafnyLanguageServer.SymbolTable
             if (isDeclaration)
             {
                 result.DeclarationOrigin = result;
-            } else if (declarationSymbol != null)
+            }
+            else if (declarationSymbol != null)
             {
                 result.DeclarationOrigin = declarationSymbol;
             }
@@ -205,18 +206,17 @@ namespace DafnyLanguageServer.SymbolTable
             if (!isDeclaration && declarationSymbol == null)
             {
                 throw new ArgumentNullException(nameof(declarationSymbol),
-                    "When symbol is not a declaration, its declarationOrigin must be given."); // todo lang file #102
+                    Resources.ExceptionMessages.missing_delcaration_origin);
             }
 
             if (isDeclaration && addUsageAtDeclaration)
             {
-                throw new ArgumentException("When symbol is a declaration, it cannot be a usage of itself."); // todo lang file #102
+                throw new ArgumentException(Resources.ExceptionMessages.cannot_use_itself);
             }
 
             if (addUsageAtDeclaration && declarationSymbol == null)
             {
-                throw new ArgumentException("Can not add usage at unknown symbol."); // todo lang file #102
-
+                throw new ArgumentException(Resources.ExceptionMessages.cannot_use_unknown_symbol);
             }
         }
 

@@ -16,7 +16,6 @@ namespace DafnyLanguageServer.Handler
         protected readonly WorkspaceManager _workspaceManager;
         protected readonly DocumentSelector _documentSelector;
         protected readonly ILoggerFactory _loggingFactory;
-
         protected readonly ILogger _log;
 
         protected T _capability; // needed by OmniSharp
@@ -28,7 +27,7 @@ namespace DafnyLanguageServer.Handler
             _documentSelector = new DocumentSelector(
                 new DocumentFilter()
                 {
-                    Pattern = "**/*.dfy" // todo lang file #102
+                    Pattern = Resources.ConfigurationStrings.file_watch_pattern
                 });
             _loggingFactory = loggingFactory;
             _log = _loggingFactory?.CreateLogger("");

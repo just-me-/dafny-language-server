@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.Handler
                 {
                         new FileSystemWatcher{
 
-                            GlobPattern = "**/*.dfy",  // todo lang file #102
+                            GlobPattern = Resources.ConfigurationStrings.file_watch_pattern,
                             Kind = 7
                         }
                 },

@@ -21,7 +21,6 @@ namespace DafnyLanguageServer.HandlerServices
     /// </summary>
     public class CompilationService
     {
-        public const string failurePrefix = "Compilation failed: "; // todo lang file #102
         private string[] CompilationArgs { get; }
 
         private FileRepository FileRepo { get; }
@@ -82,10 +81,10 @@ namespace DafnyLanguageServer.HandlerServices
 
         private bool PerformPreliminaryChecks(DafnyDriver.ExitValue exitval, out CompilerResults compilerResults)
         {
-            if (System.IO.Path.GetExtension(Path) != ".dfy")
+            if (System.IO.Path.GetExtension(Path) != Resources.CompilationResults.file_ending)
             {
                 {
-                    compilerResults = CreateErrorneousResults("Can only compile .dfy files"); // todo lang file #102
+                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.only_dfy);
                     return false;
                 }
             }
@@ -93,7 +92,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (!File.Exists(FileRepo.PhysicalFile.Filepath))
             {
                 {
-                    compilerResults = CreateErrorneousResults("Could not locate file: " + Path); // todo lang file #102
+                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.could_not_locate_file + " " + Path);
                     return false;
                 }
             }
@@ -114,7 +113,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (!DafnyOptions.O.Compile)
             {
                 {
-                    compilerResults = CreateErrorneousResults("Compile CLO is explicitly set to 0."); // todo lang file #102
+                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.compile_CLO_is_zero);
                     return false;
                 }
             }
@@ -122,7 +121,7 @@ namespace DafnyLanguageServer.HandlerServices
             if (exitval == DafnyDriver.ExitValue.PREPROCESSING_ERROR)
             {
                 {
-                    compilerResults = CreateErrorneousResults($"Error while preprocessing your custom command line arguments."); // todo lang file #102
+                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.not_supported_custom_args);
                     return false;
                 }
             }
@@ -136,7 +135,7 @@ namespace DafnyLanguageServer.HandlerServices
             return new CompilerResults
             {
                 Error = true,
-                Message = failurePrefix + msg,
+                Message = $"{Resources.CompilationResults.compilation_failed} {msg}",
                 Executable = false
             };
         }

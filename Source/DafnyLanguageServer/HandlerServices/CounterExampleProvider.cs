@@ -14,7 +14,7 @@ namespace DafnyLanguageServer.HandlerServices
     public static class CounterExampleDefaultModelFile
     {
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleDefaultModelFile).Assembly.Location);
-        public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, "../model.bvd")); // todo lang file #102 btw konfigurierbar 
+        public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, Resources.ConfigurationStrings.model_path));
 
         public static void ClearDefaultModelFile()
         {

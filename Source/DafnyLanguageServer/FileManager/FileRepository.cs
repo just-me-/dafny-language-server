@@ -53,7 +53,8 @@ namespace DafnyLanguageServer.FileManager
         /// </summary>
         private void GenerateTranslationResult()
         {
-            if (PhysicalFile != null) {
+            if (PhysicalFile != null)
+            {
                 DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
                 Result = translationUnit.Verify();
             }
@@ -94,7 +95,7 @@ namespace DafnyLanguageServer.FileManager
 
             catch (Exception e)
             {
-                throw new InvalidOperationException("Error while collecting models. " + e.Message);// todo lang file #102
+                throw new InvalidOperationException(Resources.ExceptionMessages.could_not_collect_models + " " + e.Message);
 
             }
 
@@ -114,7 +115,7 @@ namespace DafnyLanguageServer.FileManager
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException("Error while executing compilation. " + e.Message);// todo lang file #102
+                throw new InvalidOperationException(Resources.ExceptionMessages.could_not_execute_compilation + " " + e.Message);
             }
         }
     }

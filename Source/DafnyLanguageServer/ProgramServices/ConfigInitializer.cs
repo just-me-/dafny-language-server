@@ -18,7 +18,7 @@ namespace DafnyLanguageServer.ProgramServices
         public LanguageServerConfig Config { get; set; } = new LanguageServerConfig();
 
         private string[] LaunchArguments { get; }
-        private string AssemblyPath { get; set;  }
+        private string AssemblyPath { get; set; }
         private string PathToJSONConfigFile { get; }
 
         //Log Levels (starting from 0)
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.ProgramServices
             Config.RedirectedStreamFile = Path.Combine(AssemblyPath, defaultStreamPath);
             Config.LogFile = Path.Combine(AssemblyPath, defaultLogPath);
             Config.Loglevel = LogLevel.Error;
-        } 
+        }
 
         private void ReadJSONConfig()
         {
@@ -62,7 +62,7 @@ namespace DafnyLanguageServer.ProgramServices
             {
                 if (!File.Exists(PathToJSONConfigFile))
                 {
-                    throw new FileNotFoundException("Config file not found at: " + PathToJSONConfigFile); // todo lang file #102
+                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + PathToJSONConfigFile); // todo lang file #102
                 }
 
                 JObject cfg = JObject.Parse(File.ReadAllText(PathToJSONConfigFile));
@@ -73,29 +73,28 @@ namespace DafnyLanguageServer.ProgramServices
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
                 {
-                    throw new ArgumentException("StreamRedirection and Log must not be the same files"); // todo lang file #102
+                    throw new ArgumentException(Resources.ExceptionMessages.stream_and_log_are_same);
                 }
 
                 if (cfgLog != null)
                 {
-                    Config.LogFile = Path.Combine(AssemblyPath, (string) cfgLog);
+                    Config.LogFile = Path.Combine(AssemblyPath, (string)cfgLog);
                 }
 
                 if (cfgStream != null)
                 {
-                    Config.RedirectedStreamFile = Path.Combine(AssemblyPath, (string) cfgStream);
+                    Config.RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfgStream);
                 }
 
                 if (cfgLevel != null)
                 {
-                    Config.Loglevel = (LogLevel) (int) cfgLevel;
+                    Config.Loglevel = (LogLevel)(int)cfgLevel;
                 }
 
             }
             catch (NullReferenceException)
             {
-                AddError("Error while parsing json config"); // todo lang file #102
-                AddError("Error while parsing json config"); // todo lang file #102
+                AddError(Resources.ExceptionMessages.config_could_not_be_parsed);
             }
             catch (Exception e)
             {
@@ -112,14 +111,14 @@ namespace DafnyLanguageServer.ProgramServices
                     string[] splitted = arg.Split(':');
                     if (splitted.Length != 2)
                     {
-                        throw new ArgumentException("Error parsing launch arguments. Please refer to the readme.md"); // todo lang file #102
+                        throw new ArgumentException(Resources.ExceptionMessages.not_supported_launch_args);
                     }
                     HandleArgumentPair(splitted);
                 }
             }
             catch (Exception e)
             {
-               AddExceptionToError(e);
+                AddExceptionToError(e);
             }
         }
 

@@ -35,8 +35,7 @@ namespace DafnyLanguageServer
 
         public async Task StartServer()
         {
-            log.Debug("Server is starting..."); // todo lang file #102
-            log.Debug("Server is starting..." + Resources.ExceptionMessages.test); // todo lang file #102
+            log.Debug(Resources.LoggingMessages.server_starting);
 
             var server = await LanguageServer.From(options =>
                 options
@@ -75,12 +74,12 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                string msg = "Could not redirect output stream. " + e.Message; // todo lang file #102
+                string msg = Resources.LoggingMessages.could_not_redirect_outputstream + " " + e.Message;
                 msgSender.SendError(msg);
                 log.Error(msg);
             }
 
-            log.Debug("Server closed."); // todo lang file #102
+            log.Debug(Resources.LoggingMessages.server_closed);
         }
 
         private void CreateMsgSender(ILanguageServer server)
@@ -92,15 +91,16 @@ namespace DafnyLanguageServer
         {
             var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
             msgSender.SendServerStarted(dafnyVersion);
-            log.Debug("Server is running."); // todo lang file #102
+            log.Debug(Resources.LoggingMessages.server_running);
         }
 
         private void CheckForConfigReader()
         {
-            if (config.Error) // todo lang file #102
+            if (config.Error)
             {
-                msgSender.SendWarning("Error while setting up config. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
-                log.Warning("Error while configuring log. Some Defaults may be in use. Error Message: " + config.ErrorMsg);
+                var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {config.ErrorMsg}";
+                msgSender.SendWarning(msg);
+                log.Warning(msg);
             }
         }
 

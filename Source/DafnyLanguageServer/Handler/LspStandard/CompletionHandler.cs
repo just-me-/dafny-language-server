@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions..." + Resources.ExceptionMessages.test); // todo lang file #102 
+            _log.LogInformation("Completions..." + Resources.ExceptionMessages.negative_position); // todo lang file #102 
 
             try
             {

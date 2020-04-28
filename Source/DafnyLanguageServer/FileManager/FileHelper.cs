@@ -40,7 +40,7 @@ namespace DafnyLanguageServer.FileManager
             return (
                 (childRange != null && parentRange != null)
                 && (
-                    (childRange.Start.Line >= parentRange.Start.Line 
+                    (childRange.Start.Line >= parentRange.Start.Line
                      && childRange.End.Line <= parentRange.End.Line
                      && parentRange.Start.Line != parentRange.End.Line)
                     ||
@@ -59,7 +59,7 @@ namespace DafnyLanguageServer.FileManager
         {
             if (line < 0 || chr < 0)
             {
-                throw new ArgumentException("Negative position values are not supported"); // todo lang file #102
+                throw new ArgumentException(Resources.ExceptionMessages.negative_position);
             }
 
             return new Position

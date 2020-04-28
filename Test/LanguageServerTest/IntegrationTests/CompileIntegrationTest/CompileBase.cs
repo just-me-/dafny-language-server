@@ -16,7 +16,7 @@ namespace CompileIntegrationTest
 
         protected CompilerResults compilerResults;
         protected const string compileKeyword = "compile";
-        protected const string failPrefix = CompilationService.failurePrefix;
+        protected readonly string failPrefix = DafnyLanguageServer.Resources.CompilationResults.compilation_failed;
 
         public CompileBase() : base("Compile")
         {
@@ -35,7 +35,7 @@ namespace CompileIntegrationTest
             {
                 args = new string[] { };
             }
-            
+
             CompilerParams compilerParams = new CompilerParams
             {
                 FileToCompile = testfile,

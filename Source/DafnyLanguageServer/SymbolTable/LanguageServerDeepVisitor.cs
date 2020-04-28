@@ -24,10 +24,10 @@ namespace DafnyLanguageServer.SymbolTable
             // Set scope but do not create new symbol.
             // Symbol should be the first symbol in table.
             var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
-            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||      
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||
                 !preDeclaredSymbol.IsDeclaration)
             {
-                throw new InvalidOperationException("First symbol in table is not module."); // todo lang file #102
+                throw new InvalidOperationException(Resources.ExceptionMessages.first_symbol_not_module);
             }
             SetScope(preDeclaredSymbol);
             SetModule(preDeclaredSymbol);
@@ -79,7 +79,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-#endregion
+        #endregion
 
         ///////"new" stuff from here on the other visitor didnt do from here on.
 
@@ -133,7 +133,8 @@ namespace DafnyLanguageServer.SymbolTable
             );
         }
 
-        public override void Leave(LocalVariable o) {
+        public override void Leave(LocalVariable o)
+        {
         }
 
         public override void Visit(BlockStmt o)

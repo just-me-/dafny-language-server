@@ -61,11 +61,146 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Ahmumumu ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die When symbol is a declaration, it cannot be a usage of itself. ähnelt.
         /// </summary>
-        internal static string test {
+        internal static string cannot_use_itself {
             get {
-                return ResourceManager.GetString("test", resourceCulture);
+                return ResourceManager.GetString("cannot_use_itself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Can not add usage at unknown symbol. ähnelt.
+        /// </summary>
+        internal static string cannot_use_unknown_symbol {
+            get {
+                return ResourceManager.GetString("cannot_use_unknown_symbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error while parsing json config. ähnelt.
+        /// </summary>
+        internal static string config_could_not_be_parsed {
+            get {
+                return ResourceManager.GetString("config_could_not_be_parsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Config file not found at: ähnelt.
+        /// </summary>
+        internal static string config_file_not_found {
+            get {
+                return ResourceManager.GetString("config_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error while collectiong (counter example) models. ähnelt.
+        /// </summary>
+        internal static string could_not_collect_models {
+            get {
+                return ResourceManager.GetString("could_not_collect_models", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error while executing compilation. ähnelt.
+        /// </summary>
+        internal static string could_not_execute_compilation {
+            get {
+                return ResourceManager.GetString("could_not_execute_compilation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die First symbol in table is not module. ähnelt.
+        /// </summary>
+        internal static string first_symbol_not_module {
+            get {
+                return ResourceManager.GetString("first_symbol_not_module", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Global Class Scope was not registered. ähnelt.
+        /// </summary>
+        internal static string global_class_not_registered {
+            get {
+                return ResourceManager.GetString("global_class_not_registered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die When symbol is not a declaration, its declarationOrigin must be given. ähnelt.
+        /// </summary>
+        internal static string missing_delcaration_origin {
+            get {
+                return ResourceManager.GetString("missing_delcaration_origin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Line index must not be negative. ähnelt.
+        /// </summary>
+        internal static string negativ_line {
+            get {
+                return ResourceManager.GetString("negativ_line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Negative position values are not supported. ähnelt.
+        /// </summary>
+        internal static string negative_position {
+            get {
+                return ResourceManager.GetString("negative_position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die There are not enough lines in the given source. ähnelt.
+        /// </summary>
+        internal static string not_enough_lines {
+            get {
+                return ResourceManager.GetString("not_enough_lines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error parsing launch arguments. Please refer to the readme.md ähnelt.
+        /// </summary>
+        internal static string not_supported_launch_args {
+            get {
+                return ResourceManager.GetString("not_supported_launch_args", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die StreamRedirection and Log must not be the same files. ähnelt.
+        /// </summary>
+        internal static string stream_and_log_are_same {
+            get {
+                return ResourceManager.GetString("stream_and_log_are_same", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Expected string or TextDocumentChangeEvent-Container at text-document-change event request. ähnelt.
+        /// </summary>
+        internal static string unexpected_file_type {
+            get {
+                return ResourceManager.GetString("unexpected_file_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die This visitor must only visit declarations. ähnelt.
+        /// </summary>
+        internal static string visit_only_declarations {
+            get {
+                return ResourceManager.GetString("visit_only_declarations", resourceCulture);
             }
         }
     }

@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.FileManager
             }
             else
             {
-                throw new TypeAccessException("Expected string or TextDocumentChangeEvent-Container at text-document-change event request"); // todo lang file #102
+                throw new TypeAccessException(Resources.ExceptionMessages.unexpected_file_type);
             }
 
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);

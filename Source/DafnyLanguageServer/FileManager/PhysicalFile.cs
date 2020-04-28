@@ -96,11 +96,11 @@ namespace DafnyLanguageServer.FileManager
             string[] lines = Regex.Split(Sourcecode, "\r\n|\r|\n");
             if (line < 0)
             {
-                throw new ArgumentException("Line-Index must not be negative"); // todo lang file #102
+                throw new ArgumentException(Resources.ExceptionMessages.negativ_line);
             }
             if (line >= lines.Length)
             {
-                throw new ArgumentException($"There are not enough lines ({line}) in the given source!"); // todo lang file #102
+                throw new ArgumentException($"{Resources.ExceptionMessages.not_enough_lines} ({line})");
             }
             return lines[line].Length;
         }
