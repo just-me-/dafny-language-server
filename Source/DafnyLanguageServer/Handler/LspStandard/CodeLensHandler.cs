@@ -49,15 +49,15 @@ namespace DafnyLanguageServer.Handler
                     {
                         foreach (var symbolInformation in modul.Value)
                         {
-                            if ((symbolInformation.Type == SymbolTable.Type.Class ||
+                            if ((symbolInformation.Type == SymbolTable.Type.Class || //todo ... not perfeect at all 
                                  symbolInformation.Type == SymbolTable.Type.Function ||
                                  symbolInformation.Type == SymbolTable.Type.Method) &&
                                 // no constructors and make sure no out-of-range root _defaults
                                 symbolInformation.Name != "_ctor" &&
                                 symbolInformation?.Line != null && symbolInformation.Line > 0)
                             {
-                                Position position = new Position((long) symbolInformation.Line - 1, 0);
-                                Range range = new Range {Start = position, End = position};
+                                Position position = new Position((long)symbolInformation.Line - 1, 0);
+                                Range range = new Range { Start = position, End = position };
                                 Command command = new Command
                                 {
                                     Title = (symbolInformation.Usages?.Count) + " reference(s) to " + // todo lang file #102
@@ -65,7 +65,7 @@ namespace DafnyLanguageServer.Handler
                                     Name = "dafny.showReferences"
                                 };
                                 items.Add(new CodeLens
-                                    {Data = request.TextDocument.Uri, Range = range, Command = command});
+                                { Data = request.TextDocument.Uri, Range = range, Command = command });
                             }
                         }
                     }

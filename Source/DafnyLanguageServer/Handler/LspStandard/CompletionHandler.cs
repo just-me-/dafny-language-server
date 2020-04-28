@@ -4,6 +4,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.ProgramServices;
@@ -18,6 +19,13 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
+        private enum CompletionType
+        {
+            afterDot,
+            afterNew,
+            allInScope
+        }
+
         public CompletionHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
@@ -40,6 +48,7 @@ namespace DafnyLanguageServer.Handler
             {
                 return await Task.Run(() =>
                 {
+                    /* old 
                     var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                     var word = FileHelper.GetCurrentWord(
                         _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
@@ -51,6 +60,57 @@ namespace DafnyLanguageServer.Handler
                     return (symbols is null)
                         ? new CompletionList()
                         : ConvertListToCompletionresponse(symbols.GetList(parentClass), request);
+                        */
+
+                    var line = (int)request.Position.Line + 1;
+                    var col = (int)request.Position.Character + 1;
+
+                    var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
+                    var desire = GetSupposedDesire(col, codeLine);
+
+                    var manager = _workspaceManager.SymbolTableManager;
+
+                    var complitionItems = new List<CompletionItem>();
+                    switch (desire)
+                    {
+                        case CompletionType.afterDot:
+                            var selectedSymbol = manager.GetSymbolByPosition(line, col - 2);
+                            foreach (var suggestionElement in selectedSymbol.DeclarationOrigin.DeclarationOrigin.Parent.Children)
+                            {
+                                // for class this should be methods, mby vars
+                                // for modules this should be classs... todo test 
+
+                                //this is a huge hack Oo 
+                                // hug problem; symbol table is not updating while typing invalid code.... dm'
+                                // weiteres problem; declaration origin ist "sich slbst", man kommt nicht an die klasse ran. Type ist variable. Iwie noch einen instance type in den visitor einbauen... 
+                                AddCompletionItem(complitionItems, suggestionElement);
+                            }
+                            break;
+                        case CompletionType.afterNew:
+                            break;
+                        case CompletionType.allInScope:
+                            break;
+                    }
+
+                    return complitionItems;
+
+                    //var selectedSymbol = manager.GetSymbolByPosition(line, col);
+                    /* if (selectedSymbol is null)
+                     {
+                         return new CompletionList();
+                     }*/
+
+                    // über den manager iwie drüber itrieren.... stichwort yeald reeturn 
+
+                    // createCompletionEntry... add 
+
+                    // if forher ".", dann symbol pos -2
+                    // verfeinerungen... vorher ein "new"? 
+                    // else "alle im aktuellen scope". "get closest position by position"
+                    // neeeee... get "whre i am in scope of..." 
+
+                    // von deer position zurück loopen.."geetmeaningofcompltion.. punkt?"
+
                 });
             }
             catch (Exception e)
@@ -62,7 +122,40 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        public CompletionList ConvertListToCompletionresponse(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbols, CompletionParams request)
+        private void AddCompletionItem(List<CompletionItem> items, SymbolTable.SymbolInformation symbol)
+        {
+            CompletionItemKind kind = Enum.TryParse(symbol.Type.ToString(), true, out kind)
+                ? kind
+                : CompletionItemKind.Reference;
+
+            // is this range rly neeeded? 
+            ///Range range = FileHelper.CreateRange(request.Position.Line, request.Position.Character, symbol.Name.Length);
+            TextEdit textEdit = new TextEdit
+            {
+                NewText = symbol.Name,
+                //Range = range
+            };
+
+            items.Add(
+                new CompletionItem
+                {
+#if DEBUG
+                    Label = $"{symbol.Name} (Type: {symbol.Type}) (Parent: {symbol.Parent.Name})", // todo lang file #102
+#else
+                        Label = $"{symbol.Name}",
+#endif
+                    Kind = kind,
+                    TextEdit = textEdit
+                });
+        }
+
+        private CompletionType GetSupposedDesire(int colPos, string line)
+        {
+            // zurückloopen 
+            return CompletionType.afterDot;
+        }
+
+        private CompletionList ConvertListToCompletionresponse(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbols, CompletionParams request)
         {
             var complitionItems = new List<CompletionItem>();
             foreach (var symbol in symbols)
