@@ -48,7 +48,6 @@ namespace DafnyLanguageServer.FileManager
             return _symbolTable.FirstOrDefault(x => (x.Name == name));
         }
 
-
         // is this needed in new symbol table? 
         private Range SymbolInformationToRange(DafnyServer.OldSymbolTable.OldSymbolInformation newOldSymbol)
         {

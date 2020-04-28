@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions..."); // todo lang file #102
+            _log.LogInformation("Completions..." + Resources.ExceptionMessages.test); // todo lang file #102 
 
             try
             {
@@ -43,8 +43,8 @@ namespace DafnyLanguageServer.Handler
                     var symbols = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymboleProcessor();
                     var word = FileHelper.GetCurrentWord(
                         _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.Sourcecode,
-                        (int) request.Position.Line,
-                        (int) request.Position.Character
+                        (int)request.Position.Line,
+                        (int)request.Position.Character
                     );
                     var parentClass = symbols.GetParentForWord(word);
 

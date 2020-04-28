@@ -22,7 +22,7 @@ namespace DafnyLanguageServer
     {
         private ILogger log;
         private LanguageServerConfig config;
-        private MessageSenderService msgSender; 
+        private MessageSenderService msgSender;
 
         public DafnyLanguageServer(string[] args)
         {
@@ -36,6 +36,7 @@ namespace DafnyLanguageServer
         public async Task StartServer()
         {
             log.Debug("Server is starting..."); // todo lang file #102
+            log.Debug("Server is starting..." + Resources.ExceptionMessages.test); // todo lang file #102
 
             var server = await LanguageServer.From(options =>
                 options
@@ -58,9 +59,9 @@ namespace DafnyLanguageServer
                     .WithHandler<ShutdownHandler>()
             );
 
-            CreateMsgSender(server); 
+            CreateMsgSender(server);
             SendServerStartedInformation();
-            CheckForConfigReader(); 
+            CheckForConfigReader();
 
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
             // code should no longer make prints but lets keep it for additional safety.

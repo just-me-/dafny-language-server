@@ -188,30 +188,35 @@
     <Compile Include="DafnyAccess\TranslationStatus.cs" />
     <Compile Include="DafnyLanguageServer.cs" />
     <Compile Include="HandlerServices\CompilationService.cs" />
-    <Compile Include="Handler\ShutdownHandler.cs" />
+    <Compile Include="Handler\LspStandard\ShutdownHandler.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
     <Compile Include="ProgramServices\ConfigInitializer.cs" />
     <Compile Include="FileManager\WorkspaceManager.cs" />
     <Compile Include="DafnyAccess\DiagnosticElement.cs" />
-    <Compile Include="Handler\CodeLensHandler.cs" />
-    <Compile Include="Handler\WorkspaceHandlers.cs" />
+    <Compile Include="Handler\LspStandard\CodeLensHandler.cs" />
+    <Compile Include="Handler\LspStandard\WorkspaceHandlers.cs" />
     <Compile Include="ProgramServices\LanguageServerConfig.cs" />
     <Compile Include="ProgramServices\MessageSenderService.cs" />
-    <Compile Include="Handler\CompletionHandler.cs" />
-    <Compile Include="Handler\CounterExampleHandler.cs" />
+    <Compile Include="Handler\LspStandard\CompletionHandler.cs" />
+    <Compile Include="Handler\LspExtension\CounterExampleHandler.cs" />
     <Compile Include="HandlerServices\CounterExampleProvider.cs" />
     <Compile Include="DafnyAccess\DafnyTranslationUnit.cs" />
     <Compile Include="DafnyAccess\IDafnyTranslationUnit.cs" />
     <Compile Include="FileManager\FileRepository.cs" />
-    <Compile Include="Handler\DefinitionHandler.cs" />
+    <Compile Include="Handler\LspStandard\DefinitionHandler.cs" />
     <Compile Include="FileManager\FileHelper.cs" />
     <Compile Include="FileManager\FileSymboltableProcessor.cs" />
     <Compile Include="FileManager\IWorkspaceManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Handler\CompileHandler.cs" />
-    <Compile Include="Handler\TextDocumentSyncHandler.cs" />
+    <Compile Include="Handler\LspExtension\CompileHandler.cs" />
+    <Compile Include="Handler\LspStandard\TextDocumentSyncHandler.cs" />
     <Compile Include="HandlerServices\DiagnosticsService.cs" />
+    <Compile Include="Resources\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="SymbolTable\SymbolInformation.cs" />
     <Compile Include="SymbolTable\SymbolTableManager.cs" />
     <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
@@ -238,5 +243,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

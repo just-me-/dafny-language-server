@@ -29,7 +29,8 @@ namespace DafnyLanguageServer.FileManager
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
-            if (typeof(T) == typeof(string)) {
+            if (typeof(T) == typeof(string))
+            {
                 var text = sourceCodeOfFileOrChangeEvents as string;
                 fileRepository.UpdateFile(text);
             }
