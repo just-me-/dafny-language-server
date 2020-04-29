@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Serilog.Sinks.File;
+using Function = Microsoft.Dafny.Function;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Visitor = Microsoft.Dafny.Visitor;
@@ -74,6 +75,18 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public override void Leave(Method o)
+        {
+            JumpUpInScope();
+        }
+
+        public override void Visit(Function o)
+        {
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
+
+            SetScope(preDeclaredSymbol); //technically not necessary since we dont go deeper.
+        }
+
+        public override void Leave(Function o)
         {
             JumpUpInScope();
         }
