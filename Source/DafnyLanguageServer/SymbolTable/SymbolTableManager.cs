@@ -38,7 +38,7 @@ namespace DafnyLanguageServer.SymbolTable
 
                 module.Accept(deepVisitor);
 
-                SymbolTables.Add(module.Name, deepVisitor.SymbolTable);  
+                SymbolTables.Add(module.Name, deepVisitor.SymbolTable);
 
                 string debugMe = CreateDebugReadOut();
             }
@@ -71,18 +71,26 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 foreach (var symbolInformation in modul.Value)
                 {
-                    if(PositionIsInSymbolsRange(line, character, symbolInformation))
+                    if (PositionIsInSymbolsRange(line, character, symbolInformation))
                         tmpDebugList.Add(symbolInformation);
                 }
             }
-            return tmpDebugList.Count>0 ? tmpDebugList[0] : null; 
+            return tmpDebugList.Count > 0 ? tmpDebugList[0] : null;
+        }
+
+        public SymbolInformation GetClassSymbolByPath(string classPath)
+        {
+            // todo better do a split? is there rly every time "just one module and one class"? #212
+            var originModule = classPath.Substring(0, classPath.IndexOf('.'));
+            var originClass = classPath.Substring(classPath.IndexOf('.'), classPath.Length);
+            return SymbolTables[originModule]?.Find(symbol => symbol.Name == originClass && symbol.IsDeclaration);
         }
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
         {
-            return (symbol.Line <= line 
-                    && symbol.Line >= line 
-                    && symbol.ColumnStart <= character 
+            return (symbol.Line <= line
+                    && symbol.Line >= line
+                    && symbol.ColumnStart <= character
                     && symbol.ColumnEnd >= character);
         }
 
@@ -90,7 +98,7 @@ namespace DafnyLanguageServer.SymbolTable
         // Autocompletion "ohne pre-symbol"
         public SymbolInformation GetScopeSymbolForSymbol(SymbolInformation symbol)
         {
-            return null; 
+            return null;
             // Mby rm duplicates and constructor 
         }
 
@@ -106,7 +114,7 @@ namespace DafnyLanguageServer.SymbolTable
         // CodeLens
         public List<SymbolInformation> GetUsagesOfSymbol(SymbolInformation symbol)
         {
-            return null; 
+            return null;
         }
     }
 }
