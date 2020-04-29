@@ -74,6 +74,10 @@ namespace DafnyLanguageServer.Handler
                     var manager = _workspaceManager.SymbolTableManager;
                     var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
                     var complitionItems = new List<CompletionItem>();
+
+
+                    var test = manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol);
+
                     switch (desire)
                     {
                         case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 
@@ -108,11 +112,7 @@ namespace DafnyLanguageServer.Handler
                             }
                             break;
                     }
-
                     return complitionItems;
-
-
-
                 });
             }
             catch (Exception e)

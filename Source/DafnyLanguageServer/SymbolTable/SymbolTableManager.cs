@@ -165,6 +165,8 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
+            // erst durch alle childs
+            // dann durch den parent. 
             return null;
         }
 
@@ -174,9 +176,41 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
         {
+            List<SymbolInformation> list = new List<SymbolInformation>();
+            list.AddRange(GetAllChilds(symbol, null));
+
+            var parent = symbol.Parent;
+            while (parent != null)
+            {
+                list.AddRange(GetAllChilds(parent, symbol));
+                parent = parent.Parent;
+            }
+
             // erst durch alle childs.. und childs von childs... 
             // und alle parents dann... uund bei denen auch wieder tief runter etc. 
-            return null;
+
+            // ---- njääääh? die sind ja eig alle "nicht bekannt"... an der aktuellen "position" 
+
+            return list;
+        }
+
+        private List<SymbolInformation> GetAllChilds(SymbolInformation symbol, SymbolInformation excludeSymbol)
+        {
+            List<SymbolInformation> list = new List<SymbolInformation>();
+            foreach (var childSymbol in symbol.Children)
+            {
+                if (childSymbol.IsDeclaration
+                    && (excludeSymbol == null || excludeSymbol.Name != childSymbol.Name)
+                    && childSymbol.Name != "_ctor"
+                    && childSymbol.Name != "_default")// effizienter machbar? 
+                {
+                    list.Add(childSymbol);
+                }
+                // njäääh - childs von childs sind ja eigentlich unbekannt
+                // an der aktuellen position 
+                // list.AddRange(GetAllChilds(childSymbol, excludeSymbol));
+            }
+            return list;
         }
 
         /// <summary>
