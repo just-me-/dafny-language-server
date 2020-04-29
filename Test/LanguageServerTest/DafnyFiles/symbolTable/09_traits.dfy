@@ -30,8 +30,14 @@ class Sub extends Base1, Base2 {
     }
 }
 
-
-method globalMethod() {
+class Sub2 extends Base2 {
+    method foo() {
+        baseVar2 := 7;  
+        baseMethod2();
+    }
+}
+ 
+method globalMethod() { 
     var baseVar1 := 4;
     var baseVar2 := 4;
     var subVar := 6;

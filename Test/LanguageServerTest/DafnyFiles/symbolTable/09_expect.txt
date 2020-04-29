@@ -1,0 +1,31 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 3 | U : 
+[L17:C7] "Sub" | P : [L0]_module | D : self | C : 6 | U : 0
+[L18:C9] "subVar" | P : [L17]Sub | D : self | C :  | U : 1
+[L19:C12] "subMethod" | P : [L17]Sub | D : self | C : 0 | U : 0
+[L2:C9] "baseVar1" | P : [L17]Sub | D : self | C :  | U : 2
+[L3:C12] "baseMethod1" | P : [L17]Sub | D : self | C : 0 | U : 2
+[L10:C9] "baseVar2" | P : [L17]Sub | D : self | C :  | U : 2
+[L11:C12] "baseMethod2" | P : [L17]Sub | D : self | C : 0 | U : 2
+[L33:C7] "Sub2" | P : [L0]_module | D : self | C : 3 | U : 0
+[L34:C12] "foo" | P : [L33]Sub2 | D : self | C : 0 | U : 0
+[L10:C9] "baseVar2" | P : [L33]Sub2 | D : self | C :  | U : 2
+[L11:C12] "baseMethod2" | P : [L33]Sub2 | D : self | C : 0 | U : 1
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L40:C8] "globalMethod" | P : [L0]_default | D : self | C : 3 | U : 0
+[L21:C9] "baseVar1" | P : [L19]subMethod | D : [L2]baseVar1 | C :  | U : 
+[L22:C9] "baseVar2" | P : [L19]subMethod | D : [L10]baseVar2 | C :  | U : 
+[L23:C9] "subVar" | P : [L19]subMethod | D : [L18]subVar | C :  | U : 
+[L25:C9] "baseMethod1" | P : [L19]subMethod | D : [L3]baseMethod1 | C :  | U : 
+[L26:C9] "this" | P : [L19]subMethod | D : [L17]Sub | C :  | U : 
+[L26:C14] "baseMethod1" | P : [L19]subMethod | D : [L3]baseMethod1 | C :  | U : 
+[L28:C9] "baseMethod2" | P : [L19]subMethod | D : [L11]baseMethod2 | C :  | U : 
+[L29:C9] "this" | P : [L19]subMethod | D : [L17]Sub | C :  | U : 
+[L29:C14] "baseMethod2" | P : [L19]subMethod | D : [L11]baseMethod2 | C :  | U : 
+[L5:C9] "baseVar1" | P : [L3]baseMethod1 | D : [L2]baseVar1 | C :  | U : 
+[L13:C9] "baseVar2" | P : [L11]baseMethod2 | D : [L10]baseVar2 | C :  | U : 
+[L35:C9] "baseVar2" | P : [L34]foo | D : [L10]baseVar2 | C :  | U : 
+[L36:C9] "baseMethod2" | P : [L34]foo | D : [L11]baseMethod2 | C :  | U : 
+[L13:C9] "baseVar2" | P : [L11]baseMethod2 | D : [L10]baseVar2 | C :  | U : 
+[L41:C9] "baseVar1" | P : [L40]globalMethod | D : self | C :  | U : 0
+[L42:C9] "baseVar2" | P : [L40]globalMethod | D : self | C :  | U : 0
+[L43:C9] "subVar" | P : [L40]globalMethod | D : self | C :  | U : 0 
