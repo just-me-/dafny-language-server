@@ -11034,7 +11034,7 @@ namespace Microsoft.Dafny {
   }
 
 
-  public class MaybeFreeExpression {
+  public class MaybeFreeExpression : IAstElement {
     public readonly Expression E;
     public readonly bool IsFree;
     public readonly AssertLabel/*?*/ Label;
@@ -11091,10 +11091,14 @@ namespace Microsoft.Dafny {
       IToken closeBrace = new Token(tok.line, tok.col + 7 + s.Length + 1); // where 7 = length(":error ")
       this.Attributes = new UserSuppliedAttributes(tok, openBrace, closeBrace, args, this.Attributes);
     }
+
+    public void Accept(Visitor v) { 
+      this.E.Accept(v);
+    }
   }
 
 
-  public class FrameExpression {
+  public class FrameExpression : IAstElement {
     public readonly IToken tok;
     public readonly Expression E;  // may be a WildcardExpr
     [ContractInvariantMethod]
@@ -11117,6 +11121,10 @@ namespace Microsoft.Dafny {
       this.tok = tok;
       E = e;
       FieldName = fieldName;
+    }
+    public void Accept(Visitor v)
+    {
+        this.E.Accept(v);
     }
   }
 
