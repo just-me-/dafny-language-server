@@ -12,7 +12,7 @@ namespace CompileIntegrationTest
         public void Java()
         {
             RunCompilation(Files.cp_otherlang_java);
-            VerifyResults(true, false, failPrefix + "Can only compile .dfy files");
+            VerifyResults(true, false, failPrefix + "Can only compile .dfy files.");
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace CompileIntegrationTest
         public void Py()
         {
             RunCompilation(Files.cp_otherlang_py);
-            VerifyResults(true, false, failPrefix + "Can only compile .dfy files");
+            VerifyResults(true, false, failPrefix + "Can only compile .dfy files.");
         }
 
         [Test]

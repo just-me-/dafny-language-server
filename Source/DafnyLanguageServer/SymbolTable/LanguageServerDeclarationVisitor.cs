@@ -9,6 +9,7 @@ using Microsoft.Dafny;
 using Serilog.Sinks.File;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
+using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
 namespace DafnyLanguageServer.SymbolTable
@@ -28,7 +29,9 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Module,
+                kind: Kind.Module,
+                type: null,
+
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.BodyStartTok,
                 bodyEndPosAsToken: o.BodyEndTok,
@@ -54,7 +57,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Class,
+                kind: Kind.Class,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.BodyStartTok,
@@ -82,7 +85,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Field,
+                kind: Kind.Field,
+                type: o.Type,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.BodyStartTok,
@@ -105,7 +109,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Method,
+                kind: Kind.Method,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.BodyStartTok,
