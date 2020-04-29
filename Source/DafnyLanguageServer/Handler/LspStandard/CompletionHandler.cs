@@ -4,11 +4,13 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.SymbolTable;
 using DafnyServer;
 using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
@@ -74,10 +76,6 @@ namespace DafnyLanguageServer.Handler
                     var manager = _workspaceManager.SymbolTableManager;
                     var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
                     var complitionItems = new List<CompletionItem>();
-
-
-                    var test = manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol);
-
                     switch (desire)
                     {
                         case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 
@@ -86,6 +84,7 @@ namespace DafnyLanguageServer.Handler
                             // object.variable gibts auch... not supported yet 
 
                             var selectedSymbol = manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
+                            // if selectedSymbol is null... error iwas... not found mässig... todo
                             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
                             foreach (var suggestionElement in classSymbol.Children)
                             {
@@ -101,8 +100,10 @@ namespace DafnyLanguageServer.Handler
                         case CompletionType.afterNew:
                             foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol))
                             {
-                                // strip all "non class declarations" 
-                                AddCompletionItem(complitionItems, suggestionElement);
+                                if (suggestionElement.Kind == Kind.Class)
+                                {
+                                    AddCompletionItem(complitionItems, suggestionElement);
+                                }
                             }
                             break;
                         case CompletionType.allInScope:
@@ -153,16 +154,49 @@ namespace DafnyLanguageServer.Handler
 
         private CompletionType GetSupposedDesire(int colPos, string line, out string symbolName)
         {
-            // return parameter und dann gleich das "symbol" auslesen falls es ein "." ist? wär gail 
-            symbolName = "teest";
+            var characters = line.ToCharArray();
+            int position = colPos - 2;
+            if (position > characters.Length)
+            {
+                throw new ArgumentException("Länge von col ist grösser statt länge array"); // todo translation 
+            }
 
-            // zurückloopen 
+            if (characters[position] == '.')
+            {
+                position--;
+                var symbolString = "";
+                while (position >= 0)
+                {
+                    if (char.IsLetter(characters[position])
+                        || char.IsNumber(characters[position])
+                        || characters[position] == '_'
+                        || characters[position] == '-'
+                    ) // hmm ned mit regex weil chars... testen ob das a-zA-Z0-9-_ gleichwertig ist... 
+                    {
+                        symbolString += characters[position];
+                        position--;
+                    }
+                    else // das else iwie streichen mit != 
+                    {
+                        break;
+                    }
+                }
+                char[] symbolCharArray = symbolString.ToCharArray();
+                Array.Reverse(symbolCharArray);
+                symbolName = new string(symbolCharArray);
+                return CompletionType.afterDot;
+            }
+            symbolName = "";
 
-            // if forher ".", dann symbol pos -2
-            // verfeinerungen... vorher ein "new"? 
-            // von deer position zurück loopen.."geetmeaningofcompltion.. punkt?"
+            if (characters[position] == ' '
+                && characters[position - 3] == 'n'
+                && characters[position - 2] == 'e'
+                && characters[position - 1] == 'w')
+            {
+                return CompletionType.afterNew;
+            }
 
-            return CompletionType.afterDot;
+            return CompletionType.allInScope;
         }
 
         private CompletionList ConvertListToCompletionresponse(List<DafnyServer.OldSymbolTable.OldSymbolInformation> symbols, CompletionParams request)

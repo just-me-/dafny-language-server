@@ -165,8 +165,38 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
-            // erst durch alle childs
-            // dann durch den parent. 
+            var matchingSymbol = GetSpecificChild(entryPoint, symbolName);
+            if (matchingSymbol != null)
+            {
+                return matchingSymbol;
+            }
+
+            var parent = entryPoint.Parent;
+            while (parent != null)
+            {
+                matchingSymbol = GetSpecificChild(parent, symbolName);
+                if (matchingSymbol != null)
+                {
+                    return matchingSymbol;
+                }
+                parent = parent.Parent;
+            }
+            return null;
+        }
+
+        private SymbolInformation GetSpecificChild(SymbolInformation symbol, string symbolName)
+        {
+            if (symbol == null || symbol.Children == null)
+            {
+                return null;
+            }
+            foreach (var childSymbol in symbol.Children)
+            {
+                if (childSymbol.IsDeclaration && childSymbol.Name == symbolName)
+                {
+                    return childSymbol;
+                }
+            }
             return null;
         }
 
@@ -196,6 +226,10 @@ namespace DafnyLanguageServer.SymbolTable
 
         private List<SymbolInformation> GetAllChilds(SymbolInformation symbol, SymbolInformation excludeSymbol)
         {
+            if (symbol == null || symbol.Children == null)
+            {
+                return null;
+            }
             List<SymbolInformation> list = new List<SymbolInformation>();
             foreach (var childSymbol in symbol.Children)
             {
