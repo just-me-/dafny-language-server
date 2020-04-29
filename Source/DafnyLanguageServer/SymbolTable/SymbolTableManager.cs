@@ -81,9 +81,12 @@ namespace DafnyLanguageServer.SymbolTable
         public SymbolInformation GetClassSymbolByPath(string classPath)
         {
             // todo better do a split? is there rly every time "just one module and one class"? #212
-            var originModule = classPath.Substring(0, classPath.IndexOf('.'));
-            var originClass = classPath.Substring(classPath.IndexOf('.'), classPath.Length);
-            return SymbolTables[originModule]?.Find(symbol => symbol.Name == originClass && symbol.IsDeclaration);
+            string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
+            if (originPath.Length != 2)
+            {
+                throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
+            }
+            return SymbolTables[originPath[0]]?.Find(symbol => symbol.Name == originPath[1] && symbol.IsDeclaration);
         }
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
