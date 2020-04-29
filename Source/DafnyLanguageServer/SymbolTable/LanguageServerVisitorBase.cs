@@ -9,6 +9,7 @@ using Microsoft.Dafny;
 using Serilog.Sinks.File;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
+using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
 namespace DafnyLanguageServer.SymbolTable
@@ -37,7 +38,7 @@ namespace DafnyLanguageServer.SymbolTable
 
                 foreach (var symbol in SymbolTable)
                 {
-                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Type == Type.Class)
+                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Kind == Kind.Class)
                     {
                         _globalScope = symbol;
                         return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
@@ -47,12 +48,12 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Type? type = null, bool goRecursive = true)
+        protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Kind? type = null, bool goRecursive = true)
         {
             var matches = scope.Children.Where(s =>
                 s.Name == target &&
                 s.IsDeclaration &&
-                (type == null || s.Type == type))
+                (type == null || s.Kind == type))
                 .ToList();
 
             if (matches.Count() == 1)
@@ -106,7 +107,8 @@ namespace DafnyLanguageServer.SymbolTable
         ///  This is a Factory Method. Default values are set.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="type"></param>
+        /// <param name="kind">Variable, Method, Module, ...</param>
+        /// <param name="type">int, bool, Person, Vehicle, ...</param>
         /// <param name="positionAsToken"></param>
         /// <param name="bodyStartPosAsToken"></param>
         /// <param name="bodyEndPosAsToken"></param>
@@ -120,9 +122,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// <returns>Returns a SymbolInformation about the specific token.</returns>
         protected SymbolInformation CreateSymbol(
             string name,
-            Type? type,
-
             IToken positionAsToken,
+
+            Kind? kind = Kind.Undefined,
+            Type type = null,
+
             IToken bodyStartPosAsToken = null,
             IToken bodyEndPosAsToken = null,
 
@@ -139,9 +143,22 @@ namespace DafnyLanguageServer.SymbolTable
             result.Name = name;
             result.Parent = SurroundingScope; //is null for modules
 
+            if (kind != null)
+            {
+                result.Kind = (Kind)kind;
+            }
+            else if (declarationSymbol != null)
+            {
+                result.Kind = declarationSymbol.Kind;
+            }
+            else
+            {
+                result.Kind = Kind.Undefined;
+            }
+
             if (type != null)
             {
-                result.Type = (Type)type;
+                result.Type = type;
             }
             else if (declarationSymbol != null)
             {
@@ -149,7 +166,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                result.Type = Type.Undefined;
+                result.Type = null;
             }
 
             result.Position = new TokenPosition()

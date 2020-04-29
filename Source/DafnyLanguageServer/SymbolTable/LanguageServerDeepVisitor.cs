@@ -24,7 +24,7 @@ namespace DafnyLanguageServer.SymbolTable
             // Set scope but do not create new symbol.
             // Symbol should be the first symbol in table.
             var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
-            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Type != Type.Module ||
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module ||
                 !preDeclaredSymbol.IsDeclaration)
             {
                 throw new InvalidOperationException(Resources.ExceptionMessages.first_symbol_not_module);
@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ClassDecl o)
         {
-            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Type.Class);
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Class);
 
             SetScope(preDeclaredSymbol);
             SetClass(preDeclaredSymbol);
@@ -67,7 +67,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Method o)
         {
-            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Type.Method);
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
 
             SetScope(preDeclaredSymbol);
 
@@ -93,7 +93,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Variable,
+                kind: Kind.Variable,
+                type: o.Type,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,
@@ -118,7 +119,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var symbol = CreateSymbol(
                 name: o.Name,
-                type: Type.Variable,
+                kind: Kind.Variable,
+                type: o.Type,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: null,
@@ -142,7 +144,7 @@ namespace DafnyLanguageServer.SymbolTable
             var name = "block-stmt-ghost";
             var symbol = CreateSymbol(   // todo "createSymbol als unter factory? eig immer die selben parameter #103
                 name: name,
-                type: Type.BlockScope,
+                kind: Kind.BlockScope,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: o.Tok,
@@ -169,7 +171,7 @@ namespace DafnyLanguageServer.SymbolTable
             var name = "while-stmt-ghost";
             var symbol = CreateSymbol(
                 name: name,
-                type: Type.BlockScope,
+                kind: Kind.BlockScope,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: o.Tok,
@@ -197,7 +199,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             var symbol = CreateSymbol(
                 name: name,
-                type: Type.BlockScope,
+                kind: Kind.BlockScope,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: o.Tok,
@@ -233,7 +235,8 @@ namespace DafnyLanguageServer.SymbolTable
 
             var symbol = CreateSymbol(
                 name: t.Name,
-                type: Type.Class,
+                kind: Kind.Class,
+                type: e.Type,
 
                 positionAsToken: t.tok,
                 bodyStartPosAsToken: e.Tok,  //"new"
@@ -272,7 +275,8 @@ namespace DafnyLanguageServer.SymbolTable
 
             var symbol = CreateSymbol(
                 name: e.Name,
-                type: null,
+                kind: null,
+                type: e.Type,
 
                 positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
@@ -294,12 +298,13 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ExprDotName e)
         {
             string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
             var declaration = FindDeclaration(e.SuffixName, definingClass);
 
             var symbol = CreateSymbol(
                 name: e.SuffixName,
-                type: null,
+                kind: null,
+                type: e.Type,
 
                 positionAsToken: e.tok, //nimmt den ganze, net nur den suffix.
                 bodyStartPosAsToken: null,
@@ -324,12 +329,12 @@ namespace DafnyLanguageServer.SymbolTable
             //maybe even better cause many this names may cause trouble or such, i don't know.
 
             string definingClassName = e.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Type.Class);
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
             var declaration = definingClass;
 
             var symbol = CreateSymbol(
                 name: "this",
-                type: Type.Class,
+                kind: Kind.Class,
 
                 positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
@@ -354,7 +359,8 @@ namespace DafnyLanguageServer.SymbolTable
 
             var symbol = CreateSymbol(
                 name: o.tok.val + "** General Expression Visit Used!! **",
-                type: null,
+                kind: null,
+                type: o.Type,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,
@@ -379,7 +385,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             var symbol = CreateSymbol(
                 name: o.Tok.val,
-                type: Type.Variable,
+                kind: Kind.Variable,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: null,

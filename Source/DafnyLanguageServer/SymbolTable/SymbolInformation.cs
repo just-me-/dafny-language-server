@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
+using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -23,6 +24,7 @@ namespace DafnyLanguageServer.SymbolTable
         public int? ColumnStart => Position?.Token.col;
         public int? ColumnEnd => ColumnStart + Name.Length;
         public string Name { get; set; }
+        public Kind Kind { get; set; }
         public Type Type { get; set; }
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
@@ -36,7 +38,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
     }
 
-    public enum Type
+    public enum Kind
     {
         Module,
         Class,

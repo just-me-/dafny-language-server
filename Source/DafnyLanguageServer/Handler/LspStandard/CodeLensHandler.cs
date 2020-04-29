@@ -49,9 +49,9 @@ namespace DafnyLanguageServer.Handler
                     {
                         foreach (var symbolInformation in modul.Value)
                         {
-                            if ((symbolInformation.Type == SymbolTable.Type.Class ||
-                                 symbolInformation.Type == SymbolTable.Type.Function ||
-                                 symbolInformation.Type == SymbolTable.Type.Method) &&
+                            if ((symbolInformation.Kind == SymbolTable.Kind.Class ||
+                                 symbolInformation.Kind == SymbolTable.Kind.Function ||
+                                 symbolInformation.Kind == SymbolTable.Kind.Method) &&
                                 // no constructors and make sure no out-of-range root _defaults
                                 symbolInformation.Name != "_ctor" &&
                                 symbolInformation?.Line != null && symbolInformation.Line > 0)
