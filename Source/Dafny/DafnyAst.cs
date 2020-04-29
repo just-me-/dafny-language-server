@@ -5457,9 +5457,25 @@ namespace Microsoft.Dafny {
 
     public override void Accept(Visitor v) {
       v.Visit(this);
-      if (v.GoesDeep)
-      {
-          this.Body.Accept(v);
+      if (v.GoesDeep) {
+
+        foreach (var ens in this.Ens) {
+        ens.Accept(v);
+        }
+       
+        foreach (var req in this.Req) {
+          req.Accept(v);
+        }
+       
+        foreach (var rd in this.Reads) {
+          rd.Accept(v);
+        }
+       
+        foreach (var dec in this.Decreases.Expressions) {
+          dec.Accept(v);
+        }
+        
+        this.Body.Accept(v);
       }
       v.Leave(this);
     }
@@ -5766,8 +5782,16 @@ namespace Microsoft.Dafny {
 
   public class Method : MemberDecl, TypeParameter.ParentType, IMethodCodeContext
   {
-    public override string WhatKind { get { return "method"; } }
-    public bool SignatureIsOmitted { get { return SignatureEllipsis != null; } }
+    public override string WhatKind
+    {
+        get { return "method"; }
+    }
+
+    public bool SignatureIsOmitted
+    {
+        get { return SignatureEllipsis != null; }
+    }
+
     public readonly IToken SignatureEllipsis;
     public bool MustReverify;
     public readonly List<TypeParameter> TypeArgs;
@@ -5777,9 +5801,12 @@ namespace Microsoft.Dafny {
     public readonly Specification<FrameExpression> Mod;
     public readonly List<MaybeFreeExpression> Ens;
     public readonly Specification<Expression> Decreases;
-    private BlockStmt methodBody;  // Body is readonly after construction, except for any kind of rewrite that may take place around the time of resolution (note that "methodBody" is a "DividedBlockStmt" for any "Method" that is a "Constructor")
-    public bool IsRecursive;  // filled in during resolution
-    public bool IsTailRecursive;  // filled in during resolution
+
+    private BlockStmt
+        methodBody; // Body is readonly after construction, except for any kind of rewrite that may take place around the time of resolution (note that "methodBody" is a "DividedBlockStmt" for any "Method" that is a "Constructor")
+
+    public bool IsRecursive; // filled in during resolution
+    public bool IsTailRecursive; // filled in during resolution
     public readonly ISet<IVariable> AssignedAssumptionVariables = new HashSet<IVariable>();
     public Method OverriddenMethod;
     private static BlockStmt emptyBody = new BlockStmt(Token.NoToken, Token.NoToken, new List<Statement>());
@@ -5789,12 +5816,15 @@ namespace Microsoft.Dafny {
         foreach (var e in Req) {
           yield return e.E;
         }
+
         foreach (var e in Mod.Expressions) {
           yield return e.E;
         }
+
         foreach (var e in Ens) {
           yield return e.E;
         }
+
         foreach (var e in Decreases.Expressions) {
           yield return e;
         }
@@ -5804,28 +5834,39 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v)
     {
       v.Visit(this);
-          if (v.GoesDeep)
-          {
+      if (v.GoesDeep) {
+        foreach (Formal arg in this.Ins) {
+          arg.Accept(v);
+        }
 
-          
-              foreach (Formal arg in this.Ins) //das sind die argumente
-              {
-                arg.Accept(v);
-              }
+        foreach (Formal outParam in this.Outs) {
+          outParam.Accept(v);
+        }
+        
+        foreach (var m in this.Mod.Expressions) {
+          m.Accept(v);
+        }
 
-              foreach (Formal outParam in this.Outs)  //das sind die out values, also so method x() returns (ICHBINSOEINER: int, ICHAUCH: string) {...} //können wir auch als definitionen hernehmen.
-              {
-                  outParam.Accept(v);
-              }
+        foreach (var ens in this.Ens) {
+          ens.Accept(v);
+        }
 
-              foreach (var stmt in this.Body.Body)
-              {
-                  stmt.Accept(v);
-              }
-          }
-          
-      v.Leave(this);
+        foreach (var req in this.Req) {
+          req.Accept(v);
+        }
+
+        foreach (var dec in this.Decreases.Expressions) {
+          dec.Accept(v);
+        }
+
+        foreach (var stmt in this.Body.Body) {
+          stmt.Accept(v);
+        }
+
+        v.Leave(this);
+      }
     }
+
 
     [ContractInvariantMethod]
     void ObjectInvariant() {
@@ -7461,16 +7502,20 @@ namespace Microsoft.Dafny {
 
     //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
 
-        public override void Accept(Visitor v)
-        {
-            v.Visit(this);
-            this.Guard.Accept(v);
-            foreach (var stmt in this.Body.Body)
-            {
-                stmt.Accept(v);
-            }
-            v.Leave(this);
-        }
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var d in this.Decreases.Expressions) {
+        d.Accept(v);
+      }
+      foreach (var i in this.Invariants) {
+        i.Accept(v);
+      }
+      foreach (var m in this.Mod.Expressions) {
+        m.Accept(v);
+      }
+      this.Guard.Accept(v);
+      v.Leave(this);
+    }
   }
 
   /// <summary>
