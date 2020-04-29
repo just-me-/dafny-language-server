@@ -8,7 +8,7 @@ predicate isPos(i: int) {
 
 function method isOdd(i: int) : bool {
     i%2 == 1
-} 
+}  
 
 method foo(i: int) returns (r: int)
 requires i >= 0
@@ -21,5 +21,12 @@ ensures isEven(r)
 
 class A{
     method foo()
-    modifies this {} 
+    modifies this {
+        var i:= 0;
+        while ( i < 10)
+        decreases 10-i
+        invariant i>=0 {
+            i := i+1;
+        }
+    } 
 }
