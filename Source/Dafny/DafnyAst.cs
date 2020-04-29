@@ -5455,10 +5455,13 @@ namespace Microsoft.Dafny {
       get { return containsQuantifier;  }
     }
 
-    public override void Accept(Visitor v)
-    {
-      //todo for later
-      base.Accept(v);
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      if (v.GoesDeep)
+      {
+          this.Body.Accept(v);
+      }
+      v.Leave(this);
     }
 
     public override IEnumerable<Expression> SubExpressions {
@@ -11664,6 +11667,9 @@ namespace Microsoft.Dafny {
 
     public abstract void Visit(Method o);
     public abstract void Leave(Method o);
+
+    public abstract void Visit(Function o);
+    public abstract void Leave(Function o);
 
         #endregion
 
