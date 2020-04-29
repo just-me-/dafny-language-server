@@ -78,7 +78,7 @@ namespace DafnyLanguageServer.SymbolTable
             return tmpDebugList.Count > 0 ? tmpDebugList[0] : null;
         }
 
-        public SymbolInformation GetClassSymbolByPath(string classPath)
+        private SymbolInformation GetClassSymbolByPath(string classPath)
         {
             // todo better do a split? is there rly every time "just one module and one class"? #212
             string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
@@ -86,6 +86,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
             }
+            // a hash in the hash would be more efficient... composit pattern? todo 
             return SymbolTables[originPath[0]]?.Find(symbol => symbol.Name == originPath[1] && symbol.IsDeclaration);
         }
 
@@ -97,12 +98,33 @@ namespace DafnyLanguageServer.SymbolTable
                     && symbol.ColumnEnd >= character);
         }
 
-        // Wenn man ein Symbol liefert "parent" erhalten für AutoCompletion 2do #97
-        // Autocompletion "ohne pre-symbol"
-        public SymbolInformation GetScopeSymbolForSymbol(SymbolInformation symbol)
+        /// <summary>
+        /// In case the user is typing and there can not be an entry point via a Symbol
+        /// (eg for autocompletion), the entry point has to be via the scope of the wrapping parent symbol.
+        /// Use this method to get the parent symbol as en entry point. 
+        /// </summary>
+        public SymbolInformation GetSymbolWrapperForCurrentScope(int line, int character)
         {
             return null;
             // Mby rm duplicates and constructor 
+        }
+
+        /// <summary>
+        /// Provide an entry point (symbol) and a string (name of a symbol) you are looking for.
+        /// This method returns the nearest declaration with that name that can be found. 
+        /// </summary>
+        public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// This returns all symbol declaration that are in scope for the given symbol.
+        /// This recursive and can be used for functions like auto completion. 
+        /// </summary>
+        public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
+        {
+            return null;
         }
 
         /// <summary>
@@ -112,6 +134,17 @@ namespace DafnyLanguageServer.SymbolTable
         public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
         {
             return symbol.DeclarationOrigin;
+        }
+
+        /// <summary>
+        /// For instances of classes - returns the origins "class type" as Smybol.
+        /// Eg var instance = new ClassA();
+        /// Calling this function with instance will return the symbol of ClassA (origin). 
+        /// </summary>
+        public SymbolInformation GetClassOriginFromSymbol(SymbolInformation symbol)
+        {
+            var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
+            return GetClassSymbolByPath(classPath);
         }
 
         // CodeLens

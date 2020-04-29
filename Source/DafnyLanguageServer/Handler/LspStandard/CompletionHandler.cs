@@ -76,16 +76,22 @@ namespace DafnyLanguageServer.Handler
                     switch (desire)
                     {
                         case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 
-                            var selectedSymbol = manager.GetSymbolByPosition(line, col - 2);
+                            // modul1.modul2.class ist auch möglich
+                            // und
+                            // object.variable gibts auch... not supported yet 
 
-                            var classPath = selectedSymbol.DeclarationOrigin.UserTypeDefinition.ResolvedClass.FullName;
-                            var classSymbol = manager.GetClassSymbolByPath(classPath);
+
+                            var selectedSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
+
+                            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
                             foreach (var suggestionElement in classSymbol.Children)
                             {
+                                // strip constructor 2do 
                                 AddCompletionItem(complitionItems, suggestionElement);
                             }
                             break;
                         case CompletionType.afterNew:
+
                             break;
                         case CompletionType.allInScope:
                             break;
