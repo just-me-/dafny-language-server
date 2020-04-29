@@ -3856,6 +3856,10 @@ namespace Microsoft.Dafny {
     public TraitDecl(IToken tok, string name, ModuleDefinition module,
       List<TypeParameter> typeArgs, [Captured] List<MemberDecl> members, Attributes attributes)
       : base(tok, name, module, typeArgs, members, attributes, null) { }
+
+    public override void Accept(Visitor v)
+    {
+    }
   }
 
   public class ClassDecl : TopLevelDeclWithMembers {
@@ -3877,6 +3881,10 @@ namespace Microsoft.Dafny {
       v.Visit(this);
       foreach (var member in this.Members) {
         member.Accept(v);
+      }
+      foreach (var member in this.InheritedMembers)
+      {
+          member.Accept(v);
       }
       v.Leave(this);
     }
