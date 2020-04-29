@@ -3,14 +3,14 @@ function isEven(i: int):bool {
 }
 
 predicate isPos(i: int) {
-    i>0
+    i>=0
 }
 
 function method isOdd(i: int) : bool {
     i%2 == 1
 }  
 
-method foo(i: int) returns (r: int)
+method foo(i: int) returns (r: int) 
 requires i >= 0
 requires isOdd(i) 
 ensures isEven(r) 
@@ -21,12 +21,17 @@ ensures isEven(r)
 
 class A{
     method foo()
-    modifies this {
+    modifies this { 
         var i:= 0;
+        
         while ( i < 10)
+        invariant isPos(i)
+        invariant i >= 0
         decreases 10-i
-        invariant i>=0 {
-            i := i+1;
+        {
+            i := i+1; 
         }
+
+        while (false) {} 
     } 
 }

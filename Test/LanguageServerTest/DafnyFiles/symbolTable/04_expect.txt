@@ -13,3 +13,4 @@
 [L7:C13] "b" | P : [L3]a | D : [L16]b | C :  | U : 
 [L8:C13] "myB" | P : [L3]a | D : self | C :  | U : 1
 [L9:C9] "myB" | P : [L3]a | D : [L8]myB | C :  | U : 
+[L4:C14] "this" | P : [L3]a | D : [L1]A | C :  | U : 

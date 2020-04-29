@@ -5459,6 +5459,10 @@ namespace Microsoft.Dafny {
       v.Visit(this);
       if (v.GoesDeep) {
 
+        foreach (var args in this.Formals) {
+          args.Accept(v);
+        }
+
         foreach (var ens in this.Ens) {
         ens.Accept(v);
         }
@@ -5470,11 +5474,12 @@ namespace Microsoft.Dafny {
         foreach (var rd in this.Reads) {
           rd.Accept(v);
         }
-       
-        foreach (var dec in this.Decreases.Expressions) {
+
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>())
+        {
           dec.Accept(v);
         }
-        
+
         this.Body.Accept(v);
       }
       v.Leave(this);
@@ -5834,37 +5839,44 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v)
     {
       v.Visit(this);
-      if (v.GoesDeep) {
-        foreach (Formal arg in this.Ins) {
+      if (v.GoesDeep)
+      {
+        foreach (Formal arg in this.Ins)
+        {
           arg.Accept(v);
         }
 
-        foreach (Formal outParam in this.Outs) {
+        foreach (Formal outParam in this.Outs)
+        {
           outParam.Accept(v);
         }
-        
-        foreach (var m in this.Mod.Expressions) {
+
+        foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
+        {
           m.Accept(v);
         }
 
-        foreach (var ens in this.Ens) {
+        foreach (var ens in this.Ens)
+        {
           ens.Accept(v);
         }
 
-        foreach (var req in this.Req) {
+        foreach (var req in this.Req)
+        {
           req.Accept(v);
         }
 
-        foreach (var dec in this.Decreases.Expressions) {
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>())
+        {
           dec.Accept(v);
         }
-
-        foreach (var stmt in this.Body.Body) {
+        
+        foreach (var stmt in this.Body.Body)
+        {
           stmt.Accept(v);
         }
-
-        v.Leave(this);
       }
+      v.Leave(this);
     }
 
 
@@ -7505,16 +7517,27 @@ namespace Microsoft.Dafny {
 
     public override void Accept(Visitor v) {
       v.Visit(this);
-      foreach (var d in this.Decreases.Expressions) {
+      foreach (var d in this.Decreases.Expressions)
+      {
         d.Accept(v);
       }
-      foreach (var i in this.Invariants) {
+
+      foreach (var i in this.Invariants)
+      {
         i.Accept(v);
       }
-      foreach (var m in this.Mod.Expressions) {
+
+      foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
+      {
         m.Accept(v);
       }
+
       this.Guard.Accept(v);
+
+      foreach (var stmt in this.Body.Body)
+      {
+        stmt.Accept(v);
+      }
       v.Leave(this);
     }
   }
@@ -9074,6 +9097,12 @@ namespace Microsoft.Dafny {
       Var = v;
       Type = v.Type;
     }
+
+    public override void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -9655,6 +9684,9 @@ namespace Microsoft.Dafny {
     public override IEnumerable<Expression> SubExpressions {
       get { yield return E; }
     }
+    public override void Accept(Visitor v) {
+      E.Accept(v);
+    }
   }
 
   public class UnaryOpExpr : UnaryExpr
@@ -10055,6 +10087,13 @@ namespace Microsoft.Dafny {
         yield return E1;
         yield return E2;
       }
+    }
+
+    public override void Accept(Visitor v)
+    {
+      E0.Accept(v);
+      E1.Accept(v);
+      E2.Accept(v);
     }
   }
 
@@ -11375,6 +11414,14 @@ namespace Microsoft.Dafny {
       }
       E = desugaring;
     }
+
+    public override void Accept(Visitor v)
+    {
+      foreach (var e in this.Operands)
+      {
+        e.Accept(v);
+      }
+    }
   }
 
   /// <summary>
@@ -11770,7 +11817,11 @@ namespace Microsoft.Dafny {
         public abstract void Leave(AutoGhostIdentifierExpr e);
         public abstract void Visit(LiteralExpr e);
         public abstract void Leave(LiteralExpr e);
-        public abstract void Visit(ApplySuffix e);
+
+        public abstract void Visit(IdentifierExpr e);
+        public abstract void Leave(IdentifierExpr e);
+
+      public abstract void Visit(ApplySuffix e);
         public abstract void Leave(ApplySuffix e);
         public abstract void Visit(NameSegment e);
         public abstract void Leave(NameSegment e);

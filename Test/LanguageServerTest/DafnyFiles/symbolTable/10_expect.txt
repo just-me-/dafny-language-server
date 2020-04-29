@@ -1,0 +1,33 @@
+[L0:C0] "_module" | P : [L] | D : self | C : 2 | U : 
+[L22:C7] "A" | P : [L0]_module | D : self | C : 1 | U : 0
+[L23:C12] "foo" | P : [L22]A | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 4 | U : 0
+[L1:C10] "isEven" | P : [L0]_default | D : self | C : 1 | U : 1
+[L5:C11] "isPos" | P : [L0]_default | D : self | C : 1 | U : 1
+[L9:C17] "isOdd" | P : [L0]_default | D : self | C : 1 | U : 1
+[L13:C8] "foo" | P : [L0]_default | D : self | C : 2 | U : 0
+[L24:C14] "this" | P : [L23]foo | D : [L22]A | C :  | U : 
+[L25:C13] "i" | P : [L23]foo | D : self | C :  | U : 6
+[L30:C22] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L28:C19] "isPos" | P : [L27]while-stmt-ghost | D : [L5]isPos | C :  | U : 
+[L28:C25] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L29:C19] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L27:C17] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L32:C13] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L32:C18] "i" | P : [L27]while-stmt-ghost | D : [L25]i | C :  | U : 
+[L1:C17] "i" | P : [L1]isEven | D : self | C :  | U : 1
+[L2:C5] "i" | P : [L1]isEven | D : [L1]i | C :  | U : 
+[L5:C17] "i" | P : [L5]isPos | D : self | C :  | U : 1
+[L6:C5] "i" | P : [L5]isPos | D : [L5]i | C :  | U : 
+[L9:C23] "i" | P : [L9]isOdd | D : self | C :  | U : 1
+[L10:C5] "i" | P : [L9]isOdd | D : [L9]i | C :  | U : 
+[L13:C12] "i" | P : [L13]foo | D : self | C :  | U : 3
+[L13:C29] "r" | P : [L13]foo | D : self | C :  | U : 3
+[L16:C9] "isEven" | P : [L13]foo | D : [L1]isEven | C :  | U : 
+[L16:C16] "r" | P : [L13]foo | D : [L13]r | C :  | U : 
+[L14:C10] "i" | P : [L13]foo | D : [L13]i | C :  | U : 
+[L15:C10] "isOdd" | P : [L13]foo | D : [L9]isOdd | C :  | U : 
+[L15:C16] "i" | P : [L13]foo | D : [L13]i | C :  | U : 
+[L18:C5] "r" | P : [L13]foo | D : [L13]r | C :  | U : 
+[L18:C9] "i" | P : [L13]foo | D : [L13]i | C :  | U : 
+[L19:C12] "r" | P : [L13]foo | D : [L13]r | C :  | U : 

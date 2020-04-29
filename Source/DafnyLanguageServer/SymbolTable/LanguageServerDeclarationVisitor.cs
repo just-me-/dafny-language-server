@@ -8,6 +8,7 @@ using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Serilog.Sinks.File;
 using Function = Microsoft.Dafny.Function;
+using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Type = Microsoft.Dafny.Type;
@@ -298,6 +299,16 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(NameSegment e)
         {
             throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Leave(IdentifierExpr o)
+        {
+          throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Visit(IdentifierExpr o)
+        {
+          throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
     }
 }

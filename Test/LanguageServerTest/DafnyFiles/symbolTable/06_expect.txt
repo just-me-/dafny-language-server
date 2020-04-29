@@ -8,16 +8,21 @@
 [L0:C0] "_default" | P : [L0]_module | D : self | C : 2 | U : 0
 [L1:C8] "MultipleReturns" | P : [L0]_default | D : self | C : 4 | U : 1
 [L19:C8] "Main" | P : [L0]_default | D : self | C : 9 | U : 0
-[L1:C24] "inp1" | P : [L1]MultipleReturns | D : self | C :  | U : 2
-[L1:C35] "inp2" | P : [L1]MultipleReturns | D : self | C :  | U : 2
-[L1:C55] "more" | P : [L1]MultipleReturns | D : self | C :  | U : 1
-[L1:C66] "less" | P : [L1]MultipleReturns | D : self | C :  | U : 1
+[L1:C24] "inp1" | P : [L1]MultipleReturns | D : self | C :  | U : 3
+[L1:C35] "inp2" | P : [L1]MultipleReturns | D : self | C :  | U : 3
+[L1:C55] "more" | P : [L1]MultipleReturns | D : self | C :  | U : 3
+[L1:C66] "less" | P : [L1]MultipleReturns | D : self | C :  | U : 2
+[L3:C12] "less" | P : [L1]MultipleReturns | D : [L1]less | C :  | U : 
+[L3:C19] "inp1" | P : [L1]MultipleReturns | D : [L1]inp1 | C :  | U : 
+[L3:C26] "more" | P : [L1]MultipleReturns | D : [L1]more | C :  | U : 
+[L2:C13] "inp2" | P : [L1]MultipleReturns | D : [L1]inp2 | C :  | U : 
 [L5:C4] "more" | P : [L1]MultipleReturns | D : [L1]more | C :  | U : 
 [L5:C12] "inp1" | P : [L1]MultipleReturns | D : [L1]inp1 | C :  | U : 
 [L5:C19] "inp2" | P : [L1]MultipleReturns | D : [L1]inp2 | C :  | U : 
 [L6:C4] "less" | P : [L1]MultipleReturns | D : [L1]less | C :  | U : 
 [L6:C12] "inp1" | P : [L1]MultipleReturns | D : [L1]inp1 | C :  | U : 
 [L6:C19] "inp2" | P : [L1]MultipleReturns | D : [L1]inp2 | C :  | U : 
+[L7:C11] "more" | P : [L1]MultipleReturns | D : [L1]more | C :  | U : 
 [L20:C8] "myNumber" | P : [L19]Main | D : self | C :  | U : 0
 [L21:C8] "classA" | P : [L19]Main | D : self | C :  | U : 1
 [L21:C22] "ClassA" | P : [L19]Main | D : [L9]ClassA | C :  | U : 
