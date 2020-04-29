@@ -86,6 +86,13 @@ namespace DafnyLanguageServer.FileManager
             return currentLine == targetLine && currentCol == targetCol;
         }
 
+        //todo tests and doc 
+        public string GetSourceLine(int line)
+        {
+            var codeLines = Regex.Split(this.Sourcecode, "\r\n|\r|\n");
+            return (codeLines.Length >= line) ? codeLines[line] : "";
+        }
+
         /// <summary>
         /// Returns the length of a line.
         /// </summary>
