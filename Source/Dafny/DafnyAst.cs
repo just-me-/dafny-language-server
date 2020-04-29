@@ -6331,6 +6331,10 @@ namespace Microsoft.Dafny {
         yield return Expr;
       }
     }
+
+    public override void Accept(Visitor v) {
+      Expr.Accept(v);
+    }
   }
 
   public class AssertStmt : PredicateStmt {
@@ -6516,6 +6520,11 @@ namespace Microsoft.Dafny {
         }
       }
     }
+    public override void Accept(Visitor v) {
+      foreach (AssignmentRhs rhs in this.rhss) {
+        rhs.Accept(v);
+      }
+    }
   }
 
   public class ReturnStmt : ProduceStmt
@@ -6525,14 +6534,6 @@ namespace Microsoft.Dafny {
       : base(tok, endTok, rhss) {
       Contract.Requires(tok != null);
       Contract.Requires(endTok != null);
-    }
-
-    public override void Accept(Visitor v)
-    {
-        foreach (AssignmentRhs rhs in this.rhss)
-        {
-            rhs.Accept(v);
-        }
     }
   }
 
