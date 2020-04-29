@@ -82,11 +82,16 @@ namespace DafnyLanguageServer.Handler
 
 
                             var selectedSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
-
+                            var i = 1;
                             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
                             foreach (var suggestionElement in classSymbol.Children)
                             {
                                 // strip constructor 2do 
+                                /*
+                                var ignoredSymbols = new[] { "_ctor", "_default" };
+                                list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
+                                return list;
+                                */
                                 AddCompletionItem(complitionItems, suggestionElement);
                             }
                             break;

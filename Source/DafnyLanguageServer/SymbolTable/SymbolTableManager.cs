@@ -63,7 +63,6 @@ namespace DafnyLanguageServer.SymbolTable
             return (from kvp in SymbolTables from symbol in kvp.Value select symbol.ToString()).ToList();
         }
 
-        // EntryPoint... not by name:string, right? 
         public SymbolInformation GetSymbolByPosition(int line, int character)
         {
             var tmpDebugList = new List<SymbolInformation>();
@@ -100,13 +99,64 @@ namespace DafnyLanguageServer.SymbolTable
 
         /// <summary>
         /// In case the user is typing and there can not be an entry point via a Symbol
-        /// (eg for autocompletion), the entry point has to be via the scope of the wrapping parent symbol.
+        /// (eg for auto completion), the entry point has to be via the scope of the wrapping parent symbol.
         /// Use this method to get the parent symbol as en entry point. 
         /// </summary>
         public SymbolInformation GetSymbolWrapperForCurrentScope(int line, int character)
         {
-            return null;
-            // Mby rm duplicates and constructor 
+            SymbolInformation closestWrappingSymbol = null;
+            int smallestSpanOfWrappingSymbol = -1;
+            foreach (var modul in SymbolTables)
+            {
+                foreach (var symbolInformation in modul.Value)
+                {
+                    if (SymbolWrapsPosition(line, character, symbolInformation))
+                    {
+                        var span = CalculateSpanOfSymbol(symbolInformation);
+                        if ((closestWrappingSymbol == null) // for the first round 
+                            || (span >= 0 && span <= smallestSpanOfWrappingSymbol))
+                        {
+                            smallestSpanOfWrappingSymbol = span;
+                            closestWrappingSymbol = symbolInformation;
+                        }
+                    }
+                }
+            }
+            return closestWrappingSymbol;
+        }
+
+        private bool SymbolWrapsPosition(int line, int character, SymbolInformation symbol)
+        {
+            var symbolStartLine = symbol?.Position?.BodyStartToken?.line;
+            var symbolEndLine = symbol?.Position?.BodyEndToken?.line;
+
+            var symbolStartChar = symbol?.Position?.BodyStartToken?.col;
+            var symbolEndChar = symbol?.Position?.BodyEndToken?.col;
+
+            return (symbolStartLine != null && symbolEndLine != null)
+                   &&
+                   (
+                    (symbolStartLine <= line
+                    && symbolEndLine >= line
+                    && symbolStartLine != symbolEndLine)
+                   || // if it is on one line - check position 
+                    (symbolStartLine == symbolEndLine
+                    && symbolStartLine == line
+                    && symbolStartChar <= character
+                    && symbolEndChar >= character)
+                   );
+        }
+
+        /// <summary>
+        /// returns -1 in case of an error 
+        /// </summary>
+        private int CalculateSpanOfSymbol(SymbolInformation symbol)
+        {
+            var symbolStartLine = symbol?.Position?.BodyStartToken?.line;
+            var symbolEndLine = symbol?.Position?.BodyEndToken?.line;
+            return (symbolEndLine != null && symbolStartLine != null)
+                ? ((int)symbolEndLine - (int)symbolStartLine)
+                : -1;
         }
 
         /// <summary>

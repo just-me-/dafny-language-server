@@ -35,6 +35,7 @@ namespace DafnyLanguageServer.FileManager
                 : "";
         }
 
+        // moved to smboltablemaneger ... can be deleted if autocompletion is done. move tests
         public static bool ChildIsContainedByParent(Range childRange, Range parentRange)
         {
             return (
