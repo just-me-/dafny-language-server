@@ -174,6 +174,8 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
         {
+            // erst durch alle childs.. und childs von childs... 
+            // und alle parents dann... uund bei denen auch wieder tief runter etc. 
             return null;
         }
 

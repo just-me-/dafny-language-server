@@ -68,10 +68,11 @@ namespace DafnyLanguageServer.Handler
                     var col = (int)request.Position.Character + 1;
 
                     var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                    var desire = GetSupposedDesire(col, codeLine);
+                    string extractedSymbolName;
+                    var desire = GetSupposedDesire(col, codeLine, out extractedSymbolName);
 
                     var manager = _workspaceManager.SymbolTableManager;
-
+                    var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
                     var complitionItems = new List<CompletionItem>();
                     switch (desire)
                     {
@@ -80,9 +81,7 @@ namespace DafnyLanguageServer.Handler
                             // und
                             // object.variable gibts auch... not supported yet 
 
-
-                            var selectedSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
-                            var i = 1;
+                            var selectedSymbol = manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
                             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
                             foreach (var suggestionElement in classSymbol.Children)
                             {
@@ -96,30 +95,23 @@ namespace DafnyLanguageServer.Handler
                             }
                             break;
                         case CompletionType.afterNew:
-
+                            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol))
+                            {
+                                // strip all "non class declarations" 
+                                AddCompletionItem(complitionItems, suggestionElement);
+                            }
                             break;
                         case CompletionType.allInScope:
+                            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol))
+                            {
+                                AddCompletionItem(complitionItems, suggestionElement);
+                            }
                             break;
                     }
 
                     return complitionItems;
 
-                    //var selectedSymbol = manager.GetSymbolByPosition(line, col);
-                    /* if (selectedSymbol is null)
-                     {
-                         return new CompletionList();
-                     }*/
 
-                    // über den manager iwie drüber itrieren.... stichwort yeald reeturn 
-
-                    // createCompletionEntry... add 
-
-                    // if forher ".", dann symbol pos -2
-                    // verfeinerungen... vorher ein "new"? 
-                    // else "alle im aktuellen scope". "get closest position by position"
-                    // neeeee... get "whre i am in scope of..." 
-
-                    // von deer position zurück loopen.."geetmeaningofcompltion.. punkt?"
 
                 });
             }
@@ -159,9 +151,17 @@ namespace DafnyLanguageServer.Handler
                 });
         }
 
-        private CompletionType GetSupposedDesire(int colPos, string line)
+        private CompletionType GetSupposedDesire(int colPos, string line, out string symbolName)
         {
+            // return parameter und dann gleich das "symbol" auslesen falls es ein "." ist? wär gail 
+            symbolName = "teest";
+
             // zurückloopen 
+
+            // if forher ".", dann symbol pos -2
+            // verfeinerungen... vorher ein "new"? 
+            // von deer position zurück loopen.."geetmeaningofcompltion.. punkt?"
+
             return CompletionType.afterDot;
         }
 
