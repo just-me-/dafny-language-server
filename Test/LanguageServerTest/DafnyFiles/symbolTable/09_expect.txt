@@ -28,4 +28,4 @@
 [L13:C9] "baseVar2" | P : [L11]baseMethod2 | D : [L10]baseVar2 | C :  | U : 
 [L41:C9] "baseVar1" | P : [L40]globalMethod | D : self | C :  | U : 0
 [L42:C9] "baseVar2" | P : [L40]globalMethod | D : self | C :  | U : 0
-[L43:C9] "subVar" | P : [L40]globalMethod | D : self | C :  | U : 0 
+[L43:C9] "subVar" | P : [L40]globalMethod | D : self | C :  | U : 0

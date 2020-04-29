@@ -105,7 +105,7 @@ namespace CompilationServiceTest
         public void Otherlang_Java()
         {
             RunCompilation(Files.cp_otherlang_java);
-            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files");
+            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files.");
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace CompilationServiceTest
         public void Otherlang_Py()
         {
             RunCompilation(Files.cp_otherlang_py);
-            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files");
+            VerifyResults(true, false, failurePrefix + "Can only compile .dfy files.");
         }
 
         [Test]
