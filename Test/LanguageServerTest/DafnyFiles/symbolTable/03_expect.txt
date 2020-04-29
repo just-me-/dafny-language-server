@@ -20,3 +20,4 @@
 [L21:C15] "field" | P : [L4]aMethod | D : [L8]field | C :  | U : 
 [L22:C15] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 
 [L22:C20] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
+[L4:C31] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 

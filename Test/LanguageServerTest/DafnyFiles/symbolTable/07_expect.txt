@@ -3,7 +3,7 @@
 [L1:C8] "IAmTestNo7" | P : [L0]_default | D : self | C : 2 | U : 1
 [L30:C8] "Main" | P : [L0]_default | D : self | C : 0 | U : 0
 [L2:C8] "a" | P : [L1]IAmTestNo7 | D : self | C :  | U : 4
-[L3:C8] "b" | P : [L1]IAmTestNo7 | D : self | C :  | U : 4
+[L3:C8] "b" | P : [L1]IAmTestNo7 | D : self | C :  | U : 5
 [L7:C10] "a" | P : [L6]if-stmt-ghost | D : [L2]a | C :  | U : 
 [L8:C10] "a" | P : [L6]if-stmt-ghost | D : self | C :  | U : 1
 [L9:C10] "a" | P : [L6]if-stmt-ghost | D : [L8]a | C :  | U : 
@@ -15,6 +15,7 @@
 [L15:C13] "a" | P : [L14]block-stmt-ghost | D : [L2]a | C :  | U : 
 [L16:C11] "a" | P : [L14]block-stmt-ghost | D : self | C :  | U : 1
 [L17:C10] "a" | P : [L14]block-stmt-ghost | D : [L16]a | C :  | U : 
+[L22:C17] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
 [L21:C12] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
 [L24:C6] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 
 [L24:C11] "b" | P : [L21]while-stmt-ghost | D : [L3]b | C :  | U : 

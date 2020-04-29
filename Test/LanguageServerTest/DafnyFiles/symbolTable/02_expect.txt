@@ -33,3 +33,4 @@
 [L2:C9] "field" | P : [L1]addOne | D : self | C :  | U : 0
 [L3:C5] "r" | P : [L1]addOne | D : [L1]r | C :  | U : 
 [L3:C10] "i" | P : [L1]addOne | D : [L1]i | C :  | U : 
+[L29:C32] "this" | P : [L29]hotStuff | D : [L19]OtherClass | C :  | U : 

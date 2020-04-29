@@ -5455,10 +5455,34 @@ namespace Microsoft.Dafny {
       get { return containsQuantifier;  }
     }
 
-    public override void Accept(Visitor v)
-    {
-      //todo for later
-      base.Accept(v);
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      if (v.GoesDeep) {
+
+        foreach (var args in this.Formals) {
+          args.Accept(v);
+        }
+
+        foreach (var ens in this.Ens) {
+        ens.Accept(v);
+        }
+       
+        foreach (var req in this.Req) {
+          req.Accept(v);
+        }
+       
+        foreach (var rd in this.Reads) {
+          rd.Accept(v);
+        }
+
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>())
+        {
+          dec.Accept(v);
+        }
+
+        this.Body.Accept(v);
+      }
+      v.Leave(this);
     }
 
     public override IEnumerable<Expression> SubExpressions {
@@ -5763,8 +5787,16 @@ namespace Microsoft.Dafny {
 
   public class Method : MemberDecl, TypeParameter.ParentType, IMethodCodeContext
   {
-    public override string WhatKind { get { return "method"; } }
-    public bool SignatureIsOmitted { get { return SignatureEllipsis != null; } }
+    public override string WhatKind
+    {
+        get { return "method"; }
+    }
+
+    public bool SignatureIsOmitted
+    {
+        get { return SignatureEllipsis != null; }
+    }
+
     public readonly IToken SignatureEllipsis;
     public bool MustReverify;
     public readonly List<TypeParameter> TypeArgs;
@@ -5774,9 +5806,12 @@ namespace Microsoft.Dafny {
     public readonly Specification<FrameExpression> Mod;
     public readonly List<MaybeFreeExpression> Ens;
     public readonly Specification<Expression> Decreases;
-    private BlockStmt methodBody;  // Body is readonly after construction, except for any kind of rewrite that may take place around the time of resolution (note that "methodBody" is a "DividedBlockStmt" for any "Method" that is a "Constructor")
-    public bool IsRecursive;  // filled in during resolution
-    public bool IsTailRecursive;  // filled in during resolution
+
+    private BlockStmt
+        methodBody; // Body is readonly after construction, except for any kind of rewrite that may take place around the time of resolution (note that "methodBody" is a "DividedBlockStmt" for any "Method" that is a "Constructor")
+
+    public bool IsRecursive; // filled in during resolution
+    public bool IsTailRecursive; // filled in during resolution
     public readonly ISet<IVariable> AssignedAssumptionVariables = new HashSet<IVariable>();
     public Method OverriddenMethod;
     private static BlockStmt emptyBody = new BlockStmt(Token.NoToken, Token.NoToken, new List<Statement>());
@@ -5786,12 +5821,15 @@ namespace Microsoft.Dafny {
         foreach (var e in Req) {
           yield return e.E;
         }
+
         foreach (var e in Mod.Expressions) {
           yield return e.E;
         }
+
         foreach (var e in Ens) {
           yield return e.E;
         }
+
         foreach (var e in Decreases.Expressions) {
           yield return e;
         }
@@ -5801,28 +5839,46 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v)
     {
       v.Visit(this);
-          if (v.GoesDeep)
-          {
+      if (v.GoesDeep)
+      {
+        foreach (Formal arg in this.Ins)
+        {
+          arg.Accept(v);
+        }
 
-          
-              foreach (Formal arg in this.Ins) //das sind die argumente
-              {
-                arg.Accept(v);
-              }
+        foreach (Formal outParam in this.Outs)
+        {
+          outParam.Accept(v);
+        }
 
-              foreach (Formal outParam in this.Outs)  //das sind die out values, also so method x() returns (ICHBINSOEINER: int, ICHAUCH: string) {...} //können wir auch als definitionen hernehmen.
-              {
-                  outParam.Accept(v);
-              }
+        foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
+        {
+          m.Accept(v);
+        }
 
-              foreach (var stmt in this.Body.Body)
-              {
-                  stmt.Accept(v);
-              }
-          }
-          
+        foreach (var ens in this.Ens)
+        {
+          ens.Accept(v);
+        }
+
+        foreach (var req in this.Req)
+        {
+          req.Accept(v);
+        }
+
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>())
+        {
+          dec.Accept(v);
+        }
+        
+        foreach (var stmt in this.Body.Body)
+        {
+          stmt.Accept(v);
+        }
+      }
       v.Leave(this);
     }
+
 
     [ContractInvariantMethod]
     void ObjectInvariant() {
@@ -6287,6 +6343,10 @@ namespace Microsoft.Dafny {
         yield return Expr;
       }
     }
+
+    public override void Accept(Visitor v) {
+      Expr.Accept(v);
+    }
   }
 
   public class AssertStmt : PredicateStmt {
@@ -6472,6 +6532,11 @@ namespace Microsoft.Dafny {
         }
       }
     }
+    public override void Accept(Visitor v) {
+      foreach (AssignmentRhs rhs in this.rhss) {
+        rhs.Accept(v);
+      }
+    }
   }
 
   public class ReturnStmt : ProduceStmt
@@ -6481,14 +6546,6 @@ namespace Microsoft.Dafny {
       : base(tok, endTok, rhss) {
       Contract.Requires(tok != null);
       Contract.Requires(endTok != null);
-    }
-
-    public override void Accept(Visitor v)
-    {
-        foreach (AssignmentRhs rhs in this.rhss)
-        {
-            rhs.Accept(v);
-        }
     }
   }
 
@@ -7458,16 +7515,31 @@ namespace Microsoft.Dafny {
 
     //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
 
-        public override void Accept(Visitor v)
-        {
-            v.Visit(this);
-            this.Guard.Accept(v);
-            foreach (var stmt in this.Body.Body)
-            {
-                stmt.Accept(v);
-            }
-            v.Leave(this);
-        }
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var d in this.Decreases.Expressions)
+      {
+        d.Accept(v);
+      }
+
+      foreach (var i in this.Invariants)
+      {
+        i.Accept(v);
+      }
+
+      foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
+      {
+        m.Accept(v);
+      }
+
+      this.Guard.Accept(v);
+
+      foreach (var stmt in this.Body.Body)
+      {
+        stmt.Accept(v);
+      }
+      v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -9025,6 +9097,12 @@ namespace Microsoft.Dafny {
       Var = v;
       Type = v.Type;
     }
+
+    public override void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
+    }
   }
 
   /// <summary>
@@ -9606,6 +9684,9 @@ namespace Microsoft.Dafny {
     public override IEnumerable<Expression> SubExpressions {
       get { yield return E; }
     }
+    public override void Accept(Visitor v) {
+      E.Accept(v);
+    }
   }
 
   public class UnaryOpExpr : UnaryExpr
@@ -10006,6 +10087,13 @@ namespace Microsoft.Dafny {
         yield return E1;
         yield return E2;
       }
+    }
+
+    public override void Accept(Visitor v)
+    {
+      E0.Accept(v);
+      E1.Accept(v);
+      E2.Accept(v);
     }
   }
 
@@ -11031,7 +11119,7 @@ namespace Microsoft.Dafny {
   }
 
 
-  public class MaybeFreeExpression {
+  public class MaybeFreeExpression : IAstElement {
     public readonly Expression E;
     public readonly bool IsFree;
     public readonly AssertLabel/*?*/ Label;
@@ -11088,10 +11176,14 @@ namespace Microsoft.Dafny {
       IToken closeBrace = new Token(tok.line, tok.col + 7 + s.Length + 1); // where 7 = length(":error ")
       this.Attributes = new UserSuppliedAttributes(tok, openBrace, closeBrace, args, this.Attributes);
     }
+
+    public void Accept(Visitor v) { 
+      this.E.Accept(v);
+    }
   }
 
 
-  public class FrameExpression {
+  public class FrameExpression : IAstElement {
     public readonly IToken tok;
     public readonly Expression E;  // may be a WildcardExpr
     [ContractInvariantMethod]
@@ -11114,6 +11206,10 @@ namespace Microsoft.Dafny {
       this.tok = tok;
       E = e;
       FieldName = fieldName;
+    }
+    public void Accept(Visitor v)
+    {
+        this.E.Accept(v);
     }
   }
 
@@ -11317,6 +11413,14 @@ namespace Microsoft.Dafny {
         }
       }
       E = desugaring;
+    }
+
+    public override void Accept(Visitor v)
+    {
+      foreach (var e in this.Operands)
+      {
+        e.Accept(v);
+      }
     }
   }
 
@@ -11665,6 +11769,9 @@ namespace Microsoft.Dafny {
     public abstract void Visit(Method o);
     public abstract void Leave(Method o);
 
+    public abstract void Visit(Function o);
+    public abstract void Leave(Function o);
+
         #endregion
 
         #region locals-formals
@@ -11710,7 +11817,11 @@ namespace Microsoft.Dafny {
         public abstract void Leave(AutoGhostIdentifierExpr e);
         public abstract void Visit(LiteralExpr e);
         public abstract void Leave(LiteralExpr e);
-        public abstract void Visit(ApplySuffix e);
+
+        public abstract void Visit(IdentifierExpr e);
+        public abstract void Leave(IdentifierExpr e);
+
+      public abstract void Visit(ApplySuffix e);
         public abstract void Leave(ApplySuffix e);
         public abstract void Visit(NameSegment e);
         public abstract void Leave(NameSegment e);

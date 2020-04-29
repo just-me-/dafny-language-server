@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Serilog.Sinks.File;
+using Function = Microsoft.Dafny.Function;
+using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Visitor = Microsoft.Dafny.Visitor;
@@ -74,6 +76,18 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public override void Leave(Method o)
+        {
+            JumpUpInScope();
+        }
+
+        public override void Visit(Function o)
+        {
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Function);
+
+            SetScope(preDeclaredSymbol); //technically not necessary since we dont go deeper.
+        }
+
+        public override void Leave(Function o)
         {
             JumpUpInScope();
         }
@@ -282,6 +296,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(LiteralExpr e) { } //do nth
         public override void Leave(LiteralExpr e) { }
 
+
         //ApllySuffixes are just brackets after a Method call.
         //The Visitor will redirect the accept statements to the expressions lef to the (), thus we do nth.
         public override void Visit(ApplySuffix e) { }
@@ -417,7 +432,14 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-        public override void Visit(AssignmentRhs o)
+
+    public override void Visit(IdentifierExpr e) { //this expr often occurs within "decrease" clauses, although ther is no decrease statement... so i guess we just skip it.
+    }
+
+    public override void Leave(IdentifierExpr e) {
+    }
+
+    public override void Visit(AssignmentRhs o)
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);
 
