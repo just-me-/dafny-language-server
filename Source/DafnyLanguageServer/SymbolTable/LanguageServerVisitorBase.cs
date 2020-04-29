@@ -109,6 +109,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="name"></param>
         /// <param name="kind">Variable, Method, Module, ...</param>
         /// <param name="type">int, bool, Person, Vehicle, ...</param>
+        /// <param name="typeDefinition">UserDefinedType; entry point for ResolvedClass for class instances.</param>
         /// <param name="positionAsToken"></param>
         /// <param name="bodyStartPosAsToken"></param>
         /// <param name="bodyEndPosAsToken"></param>
@@ -126,6 +127,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             Kind? kind = Kind.Undefined,
             Type type = null,
+            UserDefinedType typeDefinition = null,
 
             IToken bodyStartPosAsToken = null,
             IToken bodyEndPosAsToken = null,
@@ -166,8 +168,10 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                result.Type = null;
+                result.Type = null; // todo diese null checks sind nicht nötig wegen defaults? #120
             }
+
+            result.UserTypeDefinition = typeDefinition;
 
             result.Position = new TokenPosition()
             {

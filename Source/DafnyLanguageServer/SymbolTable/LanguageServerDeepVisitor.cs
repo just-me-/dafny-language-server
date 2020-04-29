@@ -100,7 +100,8 @@ namespace DafnyLanguageServer.SymbolTable
             var symbol = CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
-                type: userType ?? o.Type,
+                type: o.Type,
+                typeDefinition: userType,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,
@@ -132,7 +133,8 @@ namespace DafnyLanguageServer.SymbolTable
             var symbol = CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
-                type: userType ?? o.Type,
+                type: o.Type,
+                typeDefinition: userType,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: null,
@@ -254,6 +256,7 @@ namespace DafnyLanguageServer.SymbolTable
                 name: t.Name,
                 kind: Kind.Class,
                 type: e.Type,
+                typeDefinition: userType,
 
                 positionAsToken: t.tok,
                 bodyStartPosAsToken: e.Tok,  //"new"
@@ -299,6 +302,7 @@ namespace DafnyLanguageServer.SymbolTable
                 name: e.Name,
                 kind: null,
                 type: e.Type,
+                typeDefinition: userType,
 
                 positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
@@ -332,6 +336,7 @@ namespace DafnyLanguageServer.SymbolTable
                 name: e.SuffixName,
                 kind: null,
                 type: e.Type,
+                typeDefinition: userType,
 
                 positionAsToken: e.tok, //nimmt den ganze, net nur den suffix.
                 bodyStartPosAsToken: null,
@@ -393,6 +398,7 @@ namespace DafnyLanguageServer.SymbolTable
                 name: o.tok.val + "** General Expression Visit Used!! **",
                 kind: null,
                 type: o.Type,
+                typeDefinition: userType,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,

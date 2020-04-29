@@ -26,6 +26,7 @@ namespace DafnyLanguageServer.SymbolTable
         public string Name { get; set; }
         public Kind Kind { get; set; }
         public Type Type { get; set; }
+        public UserDefinedType UserTypeDefinition { get; set; }
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
         public List<SymbolInformation> Children { get; set; }
