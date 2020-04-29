@@ -91,10 +91,16 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
+            UserDefinedType userType = null;
+            if (o.Type != null && o.Type is UserDefinedType)
+            {
+                userType = o.Type as UserDefinedType;
+            }
+
             var symbol = CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
-                type: o.Type,
+                type: userType ?? o.Type,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,
@@ -117,10 +123,16 @@ namespace DafnyLanguageServer.SymbolTable
         //local variable are just locally defined vars: var bla:=2
         public override void Visit(LocalVariable o)
         {
+            UserDefinedType userType = null;
+            if (o.Type != null && o.Type is UserDefinedType)
+            {
+                userType = o.Type as UserDefinedType;
+            }
+
             var symbol = CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
-                type: o.Type,
+                type: userType ?? o.Type,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: null,
@@ -233,6 +245,11 @@ namespace DafnyLanguageServer.SymbolTable
 
             var declaration = FindDeclaration(t.Name, SurroundingScope);
 
+            UserDefinedType userType = null;
+            if (e.Type != null && e.Type is UserDefinedType)
+            {
+                userType = e.Type as UserDefinedType;
+            }
             var symbol = CreateSymbol(
                 name: t.Name,
                 kind: Kind.Class,
@@ -273,6 +290,11 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var declaration = FindDeclaration(e.Name, SurroundingScope);
 
+            UserDefinedType userType = null;
+            if (e.Type != null && e.Type is UserDefinedType)
+            {
+                userType = e.Type as UserDefinedType;
+            }
             var symbol = CreateSymbol(
                 name: e.Name,
                 kind: null,
@@ -301,6 +323,11 @@ namespace DafnyLanguageServer.SymbolTable
             var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
             var declaration = FindDeclaration(e.SuffixName, definingClass);
 
+            UserDefinedType userType = null;
+            if (e.Type != null && e.Type is UserDefinedType)
+            {
+                userType = e.Type as UserDefinedType;
+            }
             var symbol = CreateSymbol(
                 name: e.SuffixName,
                 kind: null,
@@ -357,6 +384,11 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
+            UserDefinedType userType = null;
+            if (o.Type != null && o.Type is UserDefinedType)
+            {
+                userType = o.Type as UserDefinedType;
+            }
             var symbol = CreateSymbol(
                 name: o.tok.val + "** General Expression Visit Used!! **",
                 kind: null,
