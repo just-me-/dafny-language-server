@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using DafnyLanguageServer.ProgramServices;
 using DafnyServer;
+using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -73,16 +75,13 @@ namespace DafnyLanguageServer.Handler
                     var complitionItems = new List<CompletionItem>();
                     switch (desire)
                     {
-                        case CompletionType.afterDot:
+                        case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 
                             var selectedSymbol = manager.GetSymbolByPosition(line, col - 2);
-                            foreach (var suggestionElement in selectedSymbol.DeclarationOrigin.DeclarationOrigin.Parent.Children)
-                            {
-                                // for class this should be methods, mby vars
-                                // for modules this should be classs... todo test 
 
-                                //this is a huge hack Oo 
-                                // hug problem; symbol table is not updating while typing invalid code.... dm'
-                                // weiteres problem; declaration origin ist "sich slbst", man kommt nicht an die klasse ran. Type ist variable. Iwie noch einen instance type in den visitor einbauen... 
+                            var classPath = selectedSymbol.DeclarationOrigin.UserTypeDefinition.ResolvedClass.FullName;
+                            var classSymbol = manager.GetClassSymbolByPath(classPath);
+                            foreach (var suggestionElement in classSymbol.Children)
+                            {
                                 AddCompletionItem(complitionItems, suggestionElement);
                             }
                             break;
@@ -124,7 +123,7 @@ namespace DafnyLanguageServer.Handler
 
         private void AddCompletionItem(List<CompletionItem> items, SymbolTable.SymbolInformation symbol)
         {
-            CompletionItemKind kind = Enum.TryParse(symbol.Type.ToString(), true, out kind)
+            CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
                 : CompletionItemKind.Reference;
 
@@ -140,7 +139,7 @@ namespace DafnyLanguageServer.Handler
                 new CompletionItem
                 {
 #if DEBUG
-                    Label = $"{symbol.Name} (Type: {symbol.Type}) (Parent: {symbol.Parent.Name})", // todo lang file #102
+                    Label = $"{symbol.Name} (Kind: {symbol.Kind}) (Parent: {symbol.Parent.Name})", // todo lang file #102
 #else
                         Label = $"{symbol.Name}",
 #endif
