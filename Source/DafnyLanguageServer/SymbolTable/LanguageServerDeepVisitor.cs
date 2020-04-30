@@ -339,7 +339,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ExprDotName e)
         {
             string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
+            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
             var declaration = FindDeclaration(e.SuffixName, definingClass);
 
             UserDefinedType userType = null;
@@ -402,6 +402,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
+            // todo mergen213
             var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
             UserDefinedType userType = null;
@@ -433,13 +434,15 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-    public override void Visit(IdentifierExpr e) { //this expr often occurs within "decrease" clauses, although ther is no decrease statement... so i guess we just skip it.
-    }
+        public override void Visit(IdentifierExpr e)
+        { //this expr often occurs within "decrease" clauses, although ther is no decrease statement... so i guess we just skip it.
+        }
 
-    public override void Leave(IdentifierExpr e) {
-    }
+        public override void Leave(IdentifierExpr e)
+        {
+        }
 
-    public override void Visit(AssignmentRhs o)
+        public override void Visit(AssignmentRhs o)
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);
 

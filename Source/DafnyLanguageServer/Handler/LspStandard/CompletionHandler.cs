@@ -50,6 +50,7 @@ namespace DafnyLanguageServer.Handler
 
             try
             {
+                // todo in einen service verlagern 
                 return await Task.Run(() =>
                 {
                     /* old 

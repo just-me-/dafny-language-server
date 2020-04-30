@@ -29,12 +29,12 @@ namespace DafnyLanguageServer.FileManager
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
-            if (typeof(T) == typeof(string))
+            if (typeof(T) == typeof(string)) //full
             {
                 var text = sourceCodeOfFileOrChangeEvents as string;
                 fileRepository.UpdateFile(text);
             }
-            else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>))
+            else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>)) //incremental; line(s)
             {
                 var changes = sourceCodeOfFileOrChangeEvents as Container<TextDocumentContentChangeEvent>;
                 fileRepository.UpdateFile(changes);
@@ -48,9 +48,14 @@ namespace DafnyLanguageServer.FileManager
 
             //Generate new fancy Symbol Table for Testing:
             //kommt dann glaub eher in das filerepo rein
+            // dokuuu "table ist auf workspace (vscode) basis, ned auf file basis oder so
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
                 SymbolTableManager = new SymbolTableManager(fileRepository.Result.DafnyProgram);
+                // if not null... update changes 
+                // not create all symbols every time... todo 
+                // get wrapping symbol of cursor position... update "this childs in symbols". 
+                // commpile "just this file again" 
             }
 
             return fileRepository;
