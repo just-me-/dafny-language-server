@@ -108,10 +108,18 @@ namespace DafnyLanguageServer.SymbolTable
             int smallestSpanOfWrappingSymbol = -1;
             foreach (var modul in SymbolTables)
             {
+                // next if module not wraps.... skip todo
+                /*
+                if (SymbolWrapsPosition(SymbolWrapsPosition(line, character, modul.Value.)))
+                {
+                    continue;
+                }
+                */
                 foreach (var symbolInformation in modul.Value)
                 {
                     if (SymbolWrapsPosition(line, character, symbolInformation))
                     {
+                        // span can be ignored..?
                         var span = CalculateSpanOfSymbol(symbolInformation);
                         if ((closestWrappingSymbol == null) // for the first round 
                             || (span >= 0 && span <= smallestSpanOfWrappingSymbol))
@@ -119,6 +127,7 @@ namespace DafnyLanguageServer.SymbolTable
                             smallestSpanOfWrappingSymbol = span;
                             closestWrappingSymbol = symbolInformation;
                         }
+                        //should it not go deeper / rekursion? 
                     }
                 }
             }
