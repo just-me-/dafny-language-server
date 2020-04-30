@@ -7343,17 +7343,17 @@ namespace Microsoft.Dafny {
     //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
     public override void Accept(Visitor v)
     {
-        v.Visit(this);
-        this.Guard.Accept(v);
-        foreach (var stmt in this.Thn.Body)
-        {
-                stmt.Accept(v);
-        }
-        v.Leave(this);
-        if (this.Els != null)
-        {
-            this.Els.Accept(v);
-        }
+      v.Visit(this);
+      this.Guard.Accept(v);
+      foreach (var stmt in this.Thn.Body)
+      { 
+        stmt.Accept(v);
+      }
+      v.Leave(this);
+      if (this.Els != null)
+      {
+        this.Els.Accept(v);
+      }
     }
   }
 
