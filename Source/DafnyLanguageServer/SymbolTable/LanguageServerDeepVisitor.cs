@@ -47,6 +47,35 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Class);
 
+            if (o.TraitsTyp.Any()) {
+               preDeclaredSymbol.BaseClases = new List<SymbolInformation>();
+               foreach (var baseClassType in o.TraitsTyp)
+               {
+                    var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
+                    SymbolInformation baseSymbol = FindDeclaration(baseClassIdentifier.Name, SurroundingScope);
+                    preDeclaredSymbol.BaseClases.Add(baseSymbol);
+                    //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
+                    var t = CreateSymbol(
+                      name: baseClassIdentifier.Name,
+                      positionAsToken: baseClassIdentifier.tok,
+                      bodyStartPosAsToken: baseClassIdentifier.tok,
+                      bodyEndPosAsToken: baseClassIdentifier.tok,
+                      kind: Kind.Class,
+                      type: baseClassType,
+                      typeDefinition: baseClassIdentifier,
+                      isDeclaration: false,
+                      declarationSymbol: baseSymbol,
+                      addUsageAtDeclaration: true,
+                      canHaveChildren: false,
+                      canBeUsed: false,
+                      setAsChildInParent: false
+                    );
+                    //adjust parent because the 'Mimi extends BABA' parent is rather Mimi then whtatever.
+                    t.Parent = preDeclaredSymbol;
+               }
+            }
+            
+
             SetScope(preDeclaredSymbol);
             SetClass(preDeclaredSymbol);
 
@@ -67,17 +96,28 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-        public override void Visit(Method o)
-        {
-            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
 
-            SetScope(preDeclaredSymbol);
+
+        public override void Visit(Method o) {
+          var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
+
+          SetScope(preDeclaredSymbol);
 
         }
 
-        public override void Leave(Method o)
-        {
-            JumpUpInScope();
+        public override void Leave(Method o) {
+          JumpUpInScope();
+        }
+
+        public override void Visit(Constructor o) {
+          var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Constructor);
+
+          SetScope(preDeclaredSymbol);
+
+        }
+
+        public override void Leave(Constructor o) {
+          JumpUpInScope();
         }
 
         public override void Visit(Function o)
