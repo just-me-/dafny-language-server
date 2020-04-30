@@ -83,7 +83,8 @@ namespace DafnyLanguageServer.SymbolTable
             SetClass(null);
         }
 
-        public override void Visit(Field o)
+
+    public override void Visit(Field o)
         {
             UserDefinedType userType = null;
             if (o.Type != null && o.Type is UserDefinedType)
@@ -139,7 +140,30 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        public override void Visit(Function o)
+        public override void Visit(Constructor o) {
+          var symbol = CreateSymbol(
+            name: o.Name,
+            kind: Kind.Constructor,
+
+            positionAsToken: o.tok,
+            bodyStartPosAsToken: o.BodyStartTok,
+            bodyEndPosAsToken: o.BodyEndTok,
+
+            isDeclaration: true,
+            declarationSymbol: null,
+            addUsageAtDeclaration: false,
+
+            canHaveChildren: true,
+            canBeUsed: true
+          );
+          SetScope(symbol); //technically not necessary since we dont go deeper.
+        }
+
+        public override void Leave(Constructor o) {
+          JumpUpInScope();
+        }
+
+    public override void Visit(Function o)
         {
             var symbol = CreateSymbol(
                 name: o.Name,

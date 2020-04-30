@@ -26,7 +26,18 @@ namespace DafnyLanguageServer.SymbolTable
         public string Name { get; set; }
         public Kind Kind { get; set; }
         public Type Type { get; set; }
+
         public UserDefinedType UserTypeDefinition { get; set; }
+        //ich würde hier: so machen: dann müsste man den gar nie setzen, oder das snippet auch net auslagern in ne methode.
+    /*
+     * get
+      {
+        if (Type != null && Type is UserDefinedType) {
+          _userType = Type as UserDefinedType;
+        }
+  }
+     */
+
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
         //public List<SymbolInformation> Children { get; set; } // key value hash machen 
@@ -35,6 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
         public List<SymbolInformation> Children => ChildrenHash?.Values.ToList();
 
         public List<SymbolInformation> Usages { get; set; }
+        public List<SymbolInformation> BaseClases { get; set; }
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public override string ToString()
@@ -46,16 +58,18 @@ namespace DafnyLanguageServer.SymbolTable
     public enum Kind
     {
         Module,
+
         Class,
         Method,
+        Constructor,
         Function,
         Field,
-        Variable,
-        Call,
-        Definition,
-        Predicate,
+        Variable, //besser: Local Variable?
+        Call,     //was das? wird nie bentuzt
+        Definition, //same?? hat ja "IsDeclaration"
+        Predicate,  //wtf...das eiunfach ne function mit bool return.
         Undefined,
-        BlockScope
+        BlockScope,
     }
 
     public class TokenPosition

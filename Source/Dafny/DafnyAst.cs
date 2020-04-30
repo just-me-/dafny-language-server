@@ -3859,6 +3859,12 @@ namespace Microsoft.Dafny {
 
     public override void Accept(Visitor v)
     {
+      v.Visit(this);
+      foreach (var member in this.Members)
+      {
+        member.Accept(v);
+      }
+      v.Leave(this);
     }
   }
 
@@ -3881,10 +3887,6 @@ namespace Microsoft.Dafny {
       v.Visit(this);
       foreach (var member in this.Members) {
         member.Accept(v);
-      }
-      foreach (var member in this.InheritedMembers)
-      {
-          member.Accept(v);
       }
       v.Leave(this);
     }
@@ -6084,6 +6086,12 @@ namespace Microsoft.Dafny {
       get {
         return Name != "_ctor";
       }
+    }
+
+    public override void Accept(Visitor v)
+    {
+      v.Visit(this);
+      v.Leave(this);
     }
   }
 
@@ -11759,8 +11767,8 @@ namespace Microsoft.Dafny {
     public abstract void Leave(IAstElement o);
 
 
-        #region classes-and-their-members
-        public abstract void Visit(ClassDecl o);
+    #region classes-and-their-members
+    public abstract void Visit(ClassDecl o);
     public abstract void Leave(ClassDecl o);
 
     public abstract void Visit(Field o);
@@ -11768,6 +11776,9 @@ namespace Microsoft.Dafny {
 
     public abstract void Visit(Method o);
     public abstract void Leave(Method o);
+
+    public abstract void Visit(Constructor o);
+    public abstract void Leave(Constructor o);
 
     public abstract void Visit(Function o);
     public abstract void Leave(Function o);
