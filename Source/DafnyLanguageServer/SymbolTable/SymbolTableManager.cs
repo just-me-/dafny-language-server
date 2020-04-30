@@ -172,8 +172,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// Provide an entry point (symbol) and a string (name of a symbol) you are looking for.
         /// This method returns the nearest declaration with that name that can be found. 
         /// </summary>
+        ///
+        /// "mxTest"  
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
+            // todo mergen213
             var matchingSymbol = GetSpecificChild(entryPoint, symbolName);
             if (matchingSymbol != null)
             {
@@ -190,6 +193,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 parent = parent.Parent;
             }
+            // default module hat default class als child. für global scope 
             return null;
         }
 
@@ -230,6 +234,9 @@ namespace DafnyLanguageServer.SymbolTable
 
             // ---- njääääh? die sind ja eig alle "nicht bekannt"... an der aktuellen "position" 
 
+            // default module hat default class als child. für global scope 
+            //this.SymbolTables["_modul "].["_default"] // jat immer nur ein layer. nur methoden. 
+            //==> getDefaultClass oder so als helpter
             return list;
         }
 
@@ -272,6 +279,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public SymbolInformation GetClassOriginFromSymbol(SymbolInformation symbol)
         {
+            // todo mergen213 ClassMergen 
             var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
             return GetClassSymbolByPath(classPath);
         }

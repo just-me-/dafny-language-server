@@ -51,6 +51,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Kind? type = null, bool goRecursive = true)
         {
+            // todo.. dont use where, use hash. 
             var matches = scope.Children.Where(s =>
                 s.Name == target &&
                 s.IsDeclaration &&
@@ -92,7 +93,7 @@ namespace DafnyLanguageServer.SymbolTable
                 return new SymbolInformation()
                 {
                     Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
-                    Children = new List<SymbolInformation>(),
+                    ChildrenHash = new Dictionary<string, SymbolInformation>(),
                     Usages = new List<SymbolInformation>()
                 };
                 //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
@@ -206,12 +207,12 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (canHaveChildren)
             {
-                result.Children = new List<SymbolInformation>();
+                result.ChildrenHash = new Dictionary<string, SymbolInformation>();
             }
 
             if (isDeclaration && SurroundingScope != null) //add child unless we are on toplevel scope.
             {
-                SurroundingScope.Children.Add(result);
+                SurroundingScope.ChildrenHash.Add(result.Name, result);
             }
 
             if (addToSymbolTable)
@@ -244,7 +245,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         protected void Add(SymbolInformation symbol) => SymbolTable.Add(symbol);
         protected void SetScope(SymbolInformation symbol) => SurroundingScope = symbol;
-        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
         protected void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
         protected void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
 

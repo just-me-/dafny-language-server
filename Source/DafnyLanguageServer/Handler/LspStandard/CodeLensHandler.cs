@@ -63,7 +63,16 @@ namespace DafnyLanguageServer.Handler
                                 {
                                     Title = (symbolInformation.Usages?.Count) + " reference(s) to " + // todo lang file #102
                                             symbolInformation.Name,
-                                    Name = "dafny.showReferences"
+                                    Name = "dafny.showReferences",
+
+                                    //Arguments = [filUri, rangeStaart, Locations] todo
+                                    /*
+                                     * editor.action.showReferences - Show references at a position in a file
+
+uri - The text document in which to show references
+position - The position at which to show
+locations - An array of locations.
+                                     */
                                 };
                                 items.Add(new CodeLens
                                 { Data = request.TextDocument.Uri, Range = range, Command = command });

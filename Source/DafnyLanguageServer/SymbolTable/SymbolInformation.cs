@@ -29,7 +29,11 @@ namespace DafnyLanguageServer.SymbolTable
         public UserDefinedType UserTypeDefinition { get; set; }
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
-        public List<SymbolInformation> Children { get; set; }
+        //public List<SymbolInformation> Children { get; set; } // key value hash machen 
+        // hash als adapter machen, user soll nix geändert haben 
+        public Dictionary<string, SymbolInformation> ChildrenHash { get; set; }
+        public List<SymbolInformation> Children => ChildrenHash?.Values.ToList();
+
         public List<SymbolInformation> Usages { get; set; }
         public bool IsDeclaration => DeclarationOrigin == this;
 
