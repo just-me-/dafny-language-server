@@ -179,11 +179,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         ///
         /// "mxTest"
-        // weg
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
             var navigator = new SymbolTableNavigator(SymbolTables);
-            return navigator.BottomUpFirst(entryPoint, symbolName);
+            Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Name == symbolName;
+            return navigator.BottomUpFirst(entryPoint, filter);
         }
 
         /// <summary>
@@ -193,7 +193,8 @@ namespace DafnyLanguageServer.SymbolTable
         public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
         {
             var navigator = new SymbolTableNavigator(SymbolTables);
-            return navigator.BottomUpAll(symbol);
+            Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Kind != Kind.Constructor;
+            return navigator.BottomUpAll(symbol, filter);
         }
 
         /// <summary>

@@ -47,9 +47,9 @@ namespace DafnyLanguageServer.SymbolTable
 
         }
 
-        public SymbolInformation BottomUpFirst(SymbolInformation entryPoint, string symbolName)
+        public SymbolInformation BottomUpFirst(SymbolInformation entryPoint, Predicate<SymbolInformation> filter)
         {
-            var matchingSymbol = GetMatchingChild(entryPoint, symbolName);
+            var matchingSymbol = GetMatchingChild(entryPoint, filter);
             if (matchingSymbol != null)
             {
                 return matchingSymbol;
@@ -58,7 +58,7 @@ namespace DafnyLanguageServer.SymbolTable
             var parent = entryPoint.Parent;
             while (parent != null)
             {
-                matchingSymbol = GetMatchingChild(parent, symbolName);
+                matchingSymbol = GetMatchingChild(parent, filter);
                 if (matchingSymbol != null)
                 {
                     return matchingSymbol;
@@ -69,7 +69,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             return null;
         }
-        private SymbolInformation GetMatchingChild(SymbolInformation symbol, string symbolName)
+        private SymbolInformation GetMatchingChild(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
             if (symbol == null || symbol.Children == null)
             {
@@ -77,7 +77,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             foreach (var childSymbol in symbol.Children)
             {
-                if (childSymbol.IsDeclaration && childSymbol.Name == symbolName)
+                if (filter.Invoke(childSymbol))
                 {
                     return childSymbol;
                 }
@@ -85,15 +85,15 @@ namespace DafnyLanguageServer.SymbolTable
             return null;
         }
 
-        public List<SymbolInformation> BottomUpAll(SymbolInformation symbol)
+        public List<SymbolInformation> BottomUpAll(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
             List<SymbolInformation> list = new List<SymbolInformation>();
-            list.AddRange(GetAllChildren(symbol, null));
+            list.AddRange(GetAllChildren(symbol, null, filter));
 
             var parent = symbol.Parent;
             while (parent != null)
             {
-                list.AddRange(GetAllChildren(parent, symbol));
+                list.AddRange(GetAllChildren(parent, symbol, filter));
                 parent = parent.Parent;
             }
 
@@ -102,7 +102,7 @@ namespace DafnyLanguageServer.SymbolTable
             //==> getDefaultClass oder so als helpter
             return list;
         }
-        private List<SymbolInformation> GetAllChildren(SymbolInformation symbol, SymbolInformation excludeSymbol)
+        private List<SymbolInformation> GetAllChildren(SymbolInformation symbol, SymbolInformation excludeSymbol, Predicate<SymbolInformation> filter)
         {
             if (symbol == null || symbol.Children == null)
             {
@@ -111,7 +111,7 @@ namespace DafnyLanguageServer.SymbolTable
             List<SymbolInformation> list = new List<SymbolInformation>();
             foreach (var childSymbol in symbol.Children)
             {
-                if (childSymbol.IsDeclaration && childSymbol.Kind != Kind.Constructor
+                if (filter.Invoke(childSymbol)
                     && (excludeSymbol == null || excludeSymbol.Name != childSymbol.Name))
                 {
                     list.Add(childSymbol);
