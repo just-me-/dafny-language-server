@@ -237,6 +237,7 @@
     <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
     <Compile Include="SymbolTable\LanguageServerDeclarationVisitor.cs" />
     <Compile Include="SymbolTable\LanguageServerDeepVisitor.cs" />
+    <Compile Include="SymbolTable\SymbolTableNavigator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

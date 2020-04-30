@@ -12,7 +12,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work. 
     /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
     /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
-    /// Mostly there is only one module - the default module for a single Dafny file. 
+    /// Mostly there is only one module - the default module (and class) for a single Dafny file. 
     /// </summary>
     public class SymbolTableManager
     {
@@ -63,18 +63,22 @@ namespace DafnyLanguageServer.SymbolTable
             return (from kvp in SymbolTables from symbol in kvp.Value select symbol.ToString()).ToList();
         }
 
+
+        // ab hier das meiste auslagern(?)
+
+
+        // weg 
         public SymbolInformation GetSymbolByPosition(int line, int character)
         {
-            var tmpDebugList = new List<SymbolInformation>();
             foreach (var modul in SymbolTables)
             {
                 foreach (var symbolInformation in modul.Value)
                 {
                     if (PositionIsInSymbolsRange(line, character, symbolInformation))
-                        tmpDebugList.Add(symbolInformation);
+                        return symbolInformation;
                 }
             }
-            return tmpDebugList.Count > 0 ? tmpDebugList[0] : null;
+            return null;
         }
 
         private SymbolInformation GetClassSymbolByPath(string classPath)
@@ -102,6 +106,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// (eg for auto completion), the entry point has to be via the scope of the wrapping parent symbol.
         /// Use this method to get the parent symbol as en entry point. 
         /// </summary>
+        //  weg 
         public SymbolInformation GetSymbolWrapperForCurrentScope(int line, int character)
         {
             SymbolInformation closestWrappingSymbol = null;
@@ -173,44 +178,12 @@ namespace DafnyLanguageServer.SymbolTable
         /// This method returns the nearest declaration with that name that can be found. 
         /// </summary>
         ///
-        /// "mxTest"  
+        /// "mxTest"
+        // weg
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
-            // todo mergen213
-            var matchingSymbol = GetSpecificChild(entryPoint, symbolName);
-            if (matchingSymbol != null)
-            {
-                return matchingSymbol;
-            }
-
-            var parent = entryPoint.Parent;
-            while (parent != null)
-            {
-                matchingSymbol = GetSpecificChild(parent, symbolName);
-                if (matchingSymbol != null)
-                {
-                    return matchingSymbol;
-                }
-                parent = parent.Parent;
-            }
-            // default module hat default class als child. für global scope 
-            return null;
-        }
-
-        private SymbolInformation GetSpecificChild(SymbolInformation symbol, string symbolName)
-        {
-            if (symbol == null || symbol.Children == null)
-            {
-                return null;
-            }
-            foreach (var childSymbol in symbol.Children)
-            {
-                if (childSymbol.IsDeclaration && childSymbol.Name == symbolName)
-                {
-                    return childSymbol;
-                }
-            }
-            return null;
+            var navigator = new SymbolTableNavigator(SymbolTables);
+            return navigator.BottomUpFirst(entryPoint, symbolName);
         }
 
         /// <summary>
@@ -219,48 +192,8 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
         {
-            List<SymbolInformation> list = new List<SymbolInformation>();
-            list.AddRange(GetAllChilds(symbol, null));
-
-            var parent = symbol.Parent;
-            while (parent != null)
-            {
-                list.AddRange(GetAllChilds(parent, symbol));
-                parent = parent.Parent;
-            }
-
-            // erst durch alle childs.. und childs von childs... 
-            // und alle parents dann... uund bei denen auch wieder tief runter etc. 
-
-            // ---- njääääh? die sind ja eig alle "nicht bekannt"... an der aktuellen "position" 
-
-            // default module hat default class als child. für global scope 
-            //this.SymbolTables["_modul "].["_default"] // jat immer nur ein layer. nur methoden. 
-            //==> getDefaultClass oder so als helpter
-            return list;
-        }
-
-        private List<SymbolInformation> GetAllChilds(SymbolInformation symbol, SymbolInformation excludeSymbol)
-        {
-            if (symbol == null || symbol.Children == null)
-            {
-                return null;
-            }
-            List<SymbolInformation> list = new List<SymbolInformation>();
-            foreach (var childSymbol in symbol.Children)
-            {
-                if (childSymbol.IsDeclaration
-                    && (excludeSymbol == null || excludeSymbol.Name != childSymbol.Name)
-                    && childSymbol.Name != "_ctor"
-                    && childSymbol.Name != "_default")// effizienter machbar? 
-                {
-                    list.Add(childSymbol);
-                }
-                // njäääh - childs von childs sind ja eigentlich unbekannt
-                // an der aktuellen position 
-                // list.AddRange(GetAllChilds(childSymbol, excludeSymbol));
-            }
-            return list;
+            var navigator = new SymbolTableNavigator(SymbolTables);
+            return navigator.BottomUpAll(symbol);
         }
 
         /// <summary>
