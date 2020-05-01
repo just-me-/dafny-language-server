@@ -24,19 +24,20 @@ namespace DafnyLanguageServer.SymbolTable
         public int? ColumnStart => Position?.Token.col;
         public int? ColumnEnd => ColumnStart + Name.Length;
         public string Name { get; set; }
+
         public Kind Kind { get; set; }
         public Type Type { get; set; }
 
         public UserDefinedType UserTypeDefinition { get; set; }
         //ich würde hier: so machen: dann müsste man den gar nie setzen, oder das snippet auch net auslagern in ne methode.
-    /*
-     * get
-      {
-        if (Type != null && Type is UserDefinedType) {
-          _userType = Type as UserDefinedType;
-        }
-  }
-     */
+        /*
+         * get
+          {
+            if (Type != null && Type is UserDefinedType) {
+              _userType = Type as UserDefinedType;
+            }
+      }
+         */
 
         public SymbolInformation Parent { get; set; }
         public SymbolInformation DeclarationOrigin { get; set; }
@@ -47,11 +48,48 @@ namespace DafnyLanguageServer.SymbolTable
 
         public List<SymbolInformation> Usages { get; set; }
         public List<SymbolInformation> BaseClases { get; set; }
+        public List<SymbolInformation> Descendants { get; set; }
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public override string ToString()
         {
             return $"[L{Line}:C{Column}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
+        }
+
+        public SymbolInformation this[string index]
+        {
+            get { return ChildrenHash[index]; }
+            set { ChildrenHash.Add(index, value); }
+        }
+        public bool Wraps(SymbolInformation child)
+        {
+            return child != null && this.Wraps((int)child.Line, (int)child.Column);
+        }
+
+        public bool Wraps(int line, int character)
+        {
+            var symbolStartLine = Position?.BodyStartToken?.line;
+            var symbolEndLine = Position?.BodyEndToken?.line;
+
+            var symbolStartChar = Position?.BodyStartToken?.col;
+            var symbolEndChar = Position?.BodyEndToken?.col;
+            if (symbolStartLine == line && symbolStartChar == symbolEndChar)
+            {
+                symbolEndChar = ColumnEnd;
+            }
+
+            return (symbolStartLine != null && symbolEndLine != null)
+                   &&
+                   (
+                       (symbolStartLine <= line
+                        && symbolEndLine >= line
+                        && symbolStartLine != symbolEndLine)
+                       || // if it is on one line - check position 
+                       (symbolStartLine == symbolEndLine
+                        && symbolStartLine == line
+                        && symbolStartChar <= character
+                        && symbolEndChar >= character)
+                   );
         }
     }
 

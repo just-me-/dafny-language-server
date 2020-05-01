@@ -51,93 +51,17 @@ namespace DafnyLanguageServer.SymbolTable
 
         protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Kind? type = null, bool goRecursive = true)
         {
-            // todo.. dont use where, use hash. 
-            var matches = scope.Children.Where(s =>
+            var navigator = new SymbolTableNavigator();
+            Predicate<SymbolInformation> filter = s =>
                 s.Name == target &&
                 s.IsDeclaration &&
-                (type == null || s.Kind == type))
-                .ToList();
-
-            if (matches.Count() == 1)
+                (type == null || s.Kind == type);
+            return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation()
             {
-                return matches.Single();
-            }
-
-            if (matches.Count() > 1)
-            {
-                //simplified for now:
-                //throw new InvalidOperationException("multiple candidates for symbol declaration");
-                return new SymbolInformation()
-                {
-                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*" // todo lang file #102
-                };
-            }
-
-            //***NEU*** @ Marcel
-            //*****************************************************
-
-            //if i am searching a class, and if i have base classes, i also want to look up if a symbol is defined within my base classes
-            if (scope.Kind == Kind.Class && ( scope.BaseClases?.Any() ?? false) )
-            {
-              var matchesInBase = new List<SymbolInformation>();
-              foreach (var baseScope in scope.BaseClases)
-              {
-                //ich würd jetzt noch iwie auslagern "search a single scope - ohne rekursion und irgendwas, mache aber nicht weil ja eh ändert.
-                //das search single scope könnt man auch gleich biem global scope searchen nmutzen dann bräuchte es den komsichen "goRekursiv" paramter net mehr.
-                matchesInBase.AddRange(
-                  baseScope.Children.Where(s =>
-                    s.Name == target &&
-                    s.IsDeclaration &&
-                    (type == null || s.Kind == type)).ToList()
-                );
-              }
-
-              //wieder halt prüfen: hab ichs gefunden? oder zuviele?
-                if (matchesInBase.Count() == 1) {
-                  return matchesInBase.Single();
-                }
-
-                if (matchesInBase.Count() > 1) {
-                  //simplified for now:
-                  //throw new InvalidOperationException("multiple candidates for symbol declaration");
-                  return new SymbolInformation() {
-                    Name = "*ERROR - MULTIPLE DECLARATION CANDIDATES FOUND*" // todo lang file #102
-                  };
-                }
-
-                //wenn in base klassen nicht gefunden, einfach weitermachen mit parents, global scope etc.
-            }
-
-            //btw ich kann nicht indenten weil das auf 2 weite wegen dem DafnyAst gestellt ist und die klammern bleiben auch oben und so, ich mach es nicht extra.
-
-            //*****************************************************
-            //***NEU ENDE***
-
-      //if symbol not found in current scope, search parent scope, except if we are searching default scope.
-      if (scope.Parent != null && goRecursive)
-            {
-              return FindDeclaration(target, scope.Parent, type);
-            }
-
-            //if symbol was not found and there are no more parents, it yet may be in global scope
-            //this makes stack overlfows -> default class -> default module -> default class -> default module etc, so we got this boolean "goRecursive" to avoid that.
-            if (scope != GlobalScope)
-            {
-              return FindDeclaration(target, GlobalScope, type, false); //may revisit (visit... get it...) this when we acgtually work with module includes. anyway a bit weirdo.
-            }
-            else
-            {
-              //This case is then Method Failure.
-
-              //damit es nicht immer crashed erstmal soft-mässiges handling here:
-              return new SymbolInformation()
-              {
                 Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
                 ChildrenHash = new Dictionary<string, SymbolInformation>(),
                 Usages = new List<SymbolInformation>()
-              };
-              //throw new ArgumentOutOfRangeException("Symbol Declaration not found");
-            }
+            };
         }
 
         protected SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
@@ -159,7 +83,6 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="declarationSymbol">Default: null</param>
         /// <param name="addUsageAtDeclaration">Default: false</param>
         /// <param name="canHaveChildren">Default: true</param>
-        /// <param name="setAsChildInParent">Default: true</param>
         /// <param name="canBeUsed">Default: true</param>
         /// <param name="addToSymbolTable">Default: true</param>
         /// <returns>Returns a SymbolInformation about the specific token.</returns>
@@ -178,7 +101,6 @@ namespace DafnyLanguageServer.SymbolTable
             SymbolInformation declarationSymbol = null,
             bool addUsageAtDeclaration = false,
             bool canHaveChildren = true,
-            bool setAsChildInParent = true,
             bool canBeUsed = true,
             bool addToSymbolTable = true
             )
@@ -248,11 +170,16 @@ namespace DafnyLanguageServer.SymbolTable
             if (canHaveChildren)
             {
                 result.ChildrenHash = new Dictionary<string, SymbolInformation>();
+                result.Descendants = new List<SymbolInformation>();
             }
 
             if (isDeclaration && SurroundingScope != null) //add child unless we are on toplevel scope.
             {
                 SurroundingScope.ChildrenHash.Add(result.Name, result);
+            }
+            if (SurroundingScope != null) //add child unless we are on toplevel scope.
+            {
+                SurroundingScope.Descendants.Add(result);
             }
 
             if (addToSymbolTable)

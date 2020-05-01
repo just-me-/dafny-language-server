@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie.VCExprAST;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -12,17 +14,6 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableNavigator
     {
-        public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();  //still nicht sicher ob das sinnvoll ist.... eig könnt man auch alles in eine einzige tabelle aggregieren mit allen modulen (?)
-
-        public SymbolTableNavigator(Dictionary<string, List<SymbolInformation>> SymbolTables)
-        {
-            if (SymbolTables == null)
-            {
-                throw new ArgumentException("Can not be null.. need smyboltables"); // todo ressources 
-            }
-            this.SymbolTables = SymbolTables;
-        }
-
         private void test(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
             // break expression? 
@@ -39,82 +30,146 @@ namespace DafnyLanguageServer.SymbolTable
 
         public void GetFirstMatch()
         {
+            SymbolInformation closestWrappingSymbol = null;
+
 
         }
 
-        private void TopDown()
+        public SymbolInformation TopDown(SymbolInformation rootEntry, int line, int character)
         {
+            SymbolInformation bestMatch = null;
+            foreach (var child in rootEntry.Children)
+            {
+                if (child.Wraps(line, character))
+                {
+                    bestMatch = child;
+                    if (child.Children.Any())
+                    {
+                        var match = TopDown(child, line, character);
+                        bestMatch = match ?? bestMatch;
+                    }
+                }
 
+                // sondercase für die default class imd default scope
+                // wenn bisher nix gefunden, dann ist "wraps" immer true
+                // für den default scope 
+                if (bestMatch == null && child.Name == "_default")
+                {
+                    if (child.Children.Any())
+                    {
+                        var match = TopDown(child, line, character);
+                        bestMatch = match ?? bestMatch;
+                    }
+                }
+            }
+            return bestMatch;
+        }
+
+        public SymbolInformation GetSymbolByPosition(SymbolInformation rootEntry, int line, int character)
+        {
+            var wrappingSymbol = TopDown(rootEntry, line, character);
+            foreach (var symbol in wrappingSymbol.Descendants)
+            {
+                if (symbol.Wraps(line, character))
+                {
+                    return symbol;
+                }
+            }
+            return null;
+        }
+
+        public List<SymbolInformation> TopDownAll(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        {
+            filter ??= (s => true);
+
+            var symbolList = new List<SymbolInformation>();
+            if (filter.Invoke(symbol))
+            {
+                symbolList.Add(symbol);
+            }
+
+            if (symbol?.Descendants == null)
+            {
+                return symbolList;
+            }
+
+            foreach (var child in symbol?.Descendants)
+            {
+                symbolList.AddRange(TopDownAll(child, filter));
+            }
+            return symbolList;
         }
 
         public SymbolInformation BottomUpFirst(SymbolInformation entryPoint, Predicate<SymbolInformation> filter)
         {
+            filter ??= (s => true);
+
             var matchingSymbol = GetMatchingChild(entryPoint, filter);
             if (matchingSymbol != null)
             {
                 return matchingSymbol;
             }
 
-            var parent = entryPoint.Parent;
-            while (parent != null)
+            var parent = entryPoint;
+            while (parent.Parent != null)
             {
+                parent = parent.Parent;
                 matchingSymbol = GetMatchingChild(parent, filter);
                 if (matchingSymbol != null)
                 {
                     return matchingSymbol;
                 }
-                parent = parent.Parent;
             }
-            // default module hat default class als child. für global scope 
 
-            return null;
+            return GetMatchingChild(parent["_default"], filter);
         }
         private SymbolInformation GetMatchingChild(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
-            if (symbol == null || symbol.Children == null)
+            var child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
+            if (child == null)
             {
-                return null;
-            }
-            foreach (var childSymbol in symbol.Children)
-            {
-                if (filter.Invoke(childSymbol))
+                // habe ich geerbt? 
+                if (symbol.Kind == Kind.Class && (symbol.BaseClases?.Any() ?? false))
                 {
-                    return childSymbol;
+                    foreach (var baseScope in symbol.BaseClases)
+                    {
+                        var baseclassSymbol = baseScope?.Children?.Where(filter.Invoke).FirstOrDefault();
+                        if (baseclassSymbol != null)
+                        {
+                            return baseclassSymbol;
+                        }
+                    }
                 }
             }
-            return null;
+            return child;
         }
 
         public List<SymbolInformation> BottomUpAll(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
-            List<SymbolInformation> list = new List<SymbolInformation>();
-            list.AddRange(GetAllChildren(symbol, null, filter));
+            filter ??= (s => true);
 
-            var parent = symbol.Parent;
+            List<SymbolInformation> list = new List<SymbolInformation>();
+            list.AddRange(GetAllChildren(symbol, filter));
+
+            var parent = symbol;
             while (parent != null)
             {
-                list.AddRange(GetAllChildren(parent, symbol, filter));
                 parent = parent.Parent;
+                list.AddRange(GetAllChildren(parent, filter));
             }
-
-            // default module hat default class als child. für global scope 
-            //this.SymbolTables["_modul "].["_default"] // jat immer nur ein layer. nur methoden. 
-            //==> getDefaultClass oder so als helpter
+            list.AddRange(GetAllChildren(parent, filter));
             return list;
         }
-        private List<SymbolInformation> GetAllChildren(SymbolInformation symbol, SymbolInformation excludeSymbol, Predicate<SymbolInformation> filter)
+
+        private List<SymbolInformation> GetAllChildren(SymbolInformation symbol, Predicate<SymbolInformation> filter)
         {
-            if (symbol == null || symbol.Children == null)
+            var list = symbol?.Children?.Where(filter.Invoke).ToList();
+            // habe ich geerbt? 
+            if (symbol.Kind == Kind.Class && (symbol.BaseClases?.Any() ?? false))
             {
-                return null;
-            }
-            List<SymbolInformation> list = new List<SymbolInformation>();
-            foreach (var childSymbol in symbol.Children)
-            {
-                if (filter.Invoke(childSymbol)
-                    && (excludeSymbol == null || excludeSymbol.Name != childSymbol.Name))
+                foreach (var baseScope in symbol.BaseClases)
                 {
-                    list.Add(childSymbol);
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("lolololol"));
                 }
             }
             return list;
