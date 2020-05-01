@@ -84,7 +84,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
-    public override void Visit(Field o)
+        public override void Visit(Field o)
         {
             UserDefinedType userType = null;
             if (o.Type != null && o.Type is UserDefinedType)
@@ -140,30 +140,32 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        public override void Visit(Constructor o) {
-          var symbol = CreateSymbol(
-            name: o.Name,
-            kind: Kind.Constructor,
+        public override void Visit(Constructor o)
+        {
+            var symbol = CreateSymbol(
+              name: o.Name,
+              kind: Kind.Constructor,
 
-            positionAsToken: o.tok,
-            bodyStartPosAsToken: o.BodyStartTok,
-            bodyEndPosAsToken: o.BodyEndTok,
+              positionAsToken: o.tok,
+              bodyStartPosAsToken: o.BodyStartTok,
+              bodyEndPosAsToken: o.BodyEndTok,
 
-            isDeclaration: true,
-            declarationSymbol: null,
-            addUsageAtDeclaration: false,
+              isDeclaration: true,
+              declarationSymbol: null,
+              addUsageAtDeclaration: false,
 
-            canHaveChildren: true,
-            canBeUsed: true
-          );
-          SetScope(symbol); //technically not necessary since we dont go deeper.
+              canHaveChildren: true,
+              canBeUsed: true
+            );
+            SetScope(symbol); //technically not necessary since we dont go deeper.
         }
 
-        public override void Leave(Constructor o) {
-          JumpUpInScope();
+        public override void Leave(Constructor o)
+        {
+            JumpUpInScope();
         }
 
-    public override void Visit(Function o)
+        public override void Visit(Function o)
         {
             var symbol = CreateSymbol(
                 name: o.Name,
@@ -181,7 +183,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: true,
 
-                setAsChildInParent: true,
                 addToSymbolTable: true
             );
             SetScope(symbol); //technically not necessary since we dont go deeper.
@@ -334,12 +335,12 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Leave(IdentifierExpr o)
         {
-          throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(IdentifierExpr o)
         {
-          throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
     }
 }

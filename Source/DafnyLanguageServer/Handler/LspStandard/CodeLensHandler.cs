@@ -45,9 +45,9 @@ namespace DafnyLanguageServer.Handler
                 return await Task.Run(() =>
                 {
                     List<CodeLens> items = new List<CodeLens>();
-                    foreach (var modul in _workspaceManager?.SymbolTableManager?.SymbolTables)
+                    foreach (var modul in _workspaceManager?.SymbolTableManager?.SymbolTables.Values)
                     {
-                        foreach (var symbolInformation in modul.Value)
+                        foreach (var symbolInformation in modul.Children)
                         {
 
                             if ((symbolInformation.Kind == SymbolTable.Kind.Class || //todo ... not perfeect at all 

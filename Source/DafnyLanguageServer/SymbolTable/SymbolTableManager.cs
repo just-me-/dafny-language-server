@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolTableManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
-        public Dictionary<string, List<SymbolInformation>> SymbolTables { get; set; } = new Dictionary<string, List<SymbolInformation>>();  //still nicht sicher ob das sinnvoll ist.... eig könnt man auch alles in eine einzige tabelle aggregieren mit allen modulen (?)
+        public Dictionary<string, SymbolInformation> SymbolTables { get; set; } = new Dictionary<string, SymbolInformation>();
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -38,7 +38,11 @@ namespace DafnyLanguageServer.SymbolTable
 
                 module.Accept(deepVisitor);
 
-                SymbolTables.Add(module.Name, deepVisitor.SymbolTable);
+                if (deepVisitor.SymbolTable[0].Kind != Kind.Module)
+                {
+                    throw new Exception("Mimimi komisch mimimumu");
+                }
+                SymbolTables.Add(module.Name, deepVisitor.SymbolTable[0]); // todo immer erstes modul #201
 
                 string debugMe = CreateDebugReadOut();
             }
@@ -50,7 +54,7 @@ namespace DafnyLanguageServer.SymbolTable
             foreach (var kvp in SymbolTables)
             {
                 b.AppendLine("Module: " + kvp.Key);
-                foreach (var symbol in kvp.Value)
+                foreach (var symbol in kvp.Value.Children)
                 {
                     b.AppendLine(symbol.ToString());
                 }
@@ -60,7 +64,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public List<string> GetEntriesAsStringList()
         {
-            return (from kvp in SymbolTables from symbol in kvp.Value select symbol.ToString()).ToList();
+            return (from kvp in SymbolTables from symbol in kvp.Value.Children select symbol.ToString()).ToList();
         }
 
 
@@ -70,15 +74,13 @@ namespace DafnyLanguageServer.SymbolTable
         // weg 
         public SymbolInformation GetSymbolByPosition(int line, int character)
         {
+            var navigator = new SymbolTableNavigator();
+            SymbolInformation symbol = null;
             foreach (var modul in SymbolTables)
             {
-                foreach (var symbolInformation in modul.Value)
-                {
-                    if (PositionIsInSymbolsRange(line, character, symbolInformation))
-                        return symbolInformation;
-                }
+                symbol ??= navigator.GetSymbolByPosition(modul.Value, line, character);
             }
-            return null;
+            return symbol;
         }
 
         private SymbolInformation GetClassSymbolByPath(string classPath)
@@ -89,8 +91,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
             }
-            // a hash in the hash would be more efficient... composit pattern? todo 
-            return SymbolTables[originPath[0]]?.Find(symbol => symbol.Name == originPath[1] && symbol.IsDeclaration);
+            return SymbolTables[originPath[0]][originPath[1]];
         }
 
         private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
@@ -110,67 +111,12 @@ namespace DafnyLanguageServer.SymbolTable
         public SymbolInformation GetSymbolWrapperForCurrentScope(int line, int character)
         {
             SymbolInformation closestWrappingSymbol = null;
-            int smallestSpanOfWrappingSymbol = -1;
             foreach (var modul in SymbolTables)
             {
-                // next if module not wraps.... skip todo
-                /*
-                if (SymbolWrapsPosition(SymbolWrapsPosition(line, character, modul.Value.)))
-                {
-                    continue;
-                }
-                */
-                foreach (var symbolInformation in modul.Value)
-                {
-                    if (SymbolWrapsPosition(line, character, symbolInformation))
-                    {
-                        // span can be ignored..?
-                        var span = CalculateSpanOfSymbol(symbolInformation);
-                        if ((closestWrappingSymbol == null) // for the first round 
-                            || (span >= 0 && span <= smallestSpanOfWrappingSymbol))
-                        {
-                            smallestSpanOfWrappingSymbol = span;
-                            closestWrappingSymbol = symbolInformation;
-                        }
-                        //should it not go deeper / rekursion? 
-                    }
-                }
+                var navigator = new SymbolTableNavigator();
+                closestWrappingSymbol = navigator.TopDown(modul.Value, line, character);
             }
             return closestWrappingSymbol;
-        }
-
-        private bool SymbolWrapsPosition(int line, int character, SymbolInformation symbol)
-        {
-            var symbolStartLine = symbol?.Position?.BodyStartToken?.line;
-            var symbolEndLine = symbol?.Position?.BodyEndToken?.line;
-
-            var symbolStartChar = symbol?.Position?.BodyStartToken?.col;
-            var symbolEndChar = symbol?.Position?.BodyEndToken?.col;
-
-            return (symbolStartLine != null && symbolEndLine != null)
-                   &&
-                   (
-                    (symbolStartLine <= line
-                    && symbolEndLine >= line
-                    && symbolStartLine != symbolEndLine)
-                   || // if it is on one line - check position 
-                    (symbolStartLine == symbolEndLine
-                    && symbolStartLine == line
-                    && symbolStartChar <= character
-                    && symbolEndChar >= character)
-                   );
-        }
-
-        /// <summary>
-        /// returns -1 in case of an error 
-        /// </summary>
-        private int CalculateSpanOfSymbol(SymbolInformation symbol)
-        {
-            var symbolStartLine = symbol?.Position?.BodyStartToken?.line;
-            var symbolEndLine = symbol?.Position?.BodyEndToken?.line;
-            return (symbolEndLine != null && symbolStartLine != null)
-                ? ((int)symbolEndLine - (int)symbolStartLine)
-                : -1;
         }
 
         /// <summary>
@@ -181,7 +127,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// "mxTest"
         public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
         {
-            var navigator = new SymbolTableNavigator(SymbolTables);
+            var navigator = new SymbolTableNavigator();
             Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Name == symbolName;
             return navigator.BottomUpFirst(entryPoint, filter);
         }
@@ -192,7 +138,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
         {
-            var navigator = new SymbolTableNavigator(SymbolTables);
+            var navigator = new SymbolTableNavigator();
             Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Kind != Kind.Constructor;
             return navigator.BottomUpAll(symbol, filter);
         }
