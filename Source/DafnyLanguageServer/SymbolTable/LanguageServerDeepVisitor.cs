@@ -49,12 +49,12 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (o.TraitsTyp.Any())
             {
-                preDeclaredSymbol.BaseClases = new List<SymbolInformation>();
+                preDeclaredSymbol.BaseClasses = new List<ISymbol>();
                 foreach (var baseClassType in o.TraitsTyp)
                 {
                     var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
-                    SymbolInformation baseSymbol = FindDeclaration(baseClassIdentifier.Name, SurroundingScope);
-                    preDeclaredSymbol.BaseClases.Add(baseSymbol);
+                    ISymbol baseSymbol = FindDeclaration(baseClassIdentifier.Name, SurroundingScope);
+                    preDeclaredSymbol.BaseClasses.Add(baseSymbol);
                     //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
                     var t = CreateSymbol(
                       name: baseClassIdentifier.Name,

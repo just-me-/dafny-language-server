@@ -8,7 +8,7 @@ namespace ContentManagerTests
     [Category("Unit")]
     internal class BufferManagerTests
     {
-        private WorkspaceManager b;
+        private IWorkspaceManager b;
         readonly Uri uri1 = new Uri(@"C:\file1.txt");
         readonly Uri uri2 = new Uri(@"C:\file2.txt");
         readonly Uri unregisteredUri = new Uri(@"C:\file3.txt");
@@ -40,7 +40,7 @@ namespace ContentManagerTests
         [Test]
         public void GetAllFilesEmpty()
         {
-            WorkspaceManager t = new WorkspaceManager();
+            IWorkspaceManager t = new WorkspaceManager();
             Assert.IsTrue(t.GetAllFiles().IsEmpty);
         }
 
@@ -88,26 +88,6 @@ namespace ContentManagerTests
         {
             string s = b.GetFileRepository(unregisteredUri).PhysicalFile.Sourcecode;
             Assert.AreEqual(null, s);
-        }
-
-
-        [Test]
-        public void GetSymbolTableRegular()
-        {
-            FileSymboltableProcessor s = this.b.GetFileRepository(uri1).SymboleProcessor();
-            Assert.IsTrue(s.HasEntries);
-            var a = s.GetList();
-            Assert.AreEqual("MultipleReturns", a[0].Name);
-            Assert.AreEqual("Method", a[0].SymbolType.ToString());
-        }
-
-        [Test]
-        public void GetSymbolTableEmpty()
-        {
-            FileSymboltableProcessor s2 = this.b.GetFileRepository(uri2).SymboleProcessor();
-            Assert.IsTrue(s2.HasEntries);
-            var a = s2.GetList();
-            Assert.IsEmpty(a);
         }
     }
 }

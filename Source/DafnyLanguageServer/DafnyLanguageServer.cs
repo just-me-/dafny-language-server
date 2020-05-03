@@ -48,13 +48,13 @@ namespace DafnyLanguageServer
                     // Service group 
                     .WithServices(ConfigureServices)
                     // Handler group 
-                    .WithHandler<TextDocumentSyncHandler>()
+                    .WithHandler<TextDocumentSyncTaskHandler>()
                     .WithHandler<DidChangeWatchedFilesHandler>()
-                    .WithHandler<CompletionHandler>()
+                    .WithHandler<CompletionTaskHandler>()
                     .WithHandler<CompileHandler>()
                     .WithHandler<CounterExampleHandler>()
-                    .WithHandler<CodeLensHandler>()
-                    .WithHandler<DefinitionHandler>()
+                    .WithHandler<CodeLensTaskHandler>()
+                    .WithHandler<DefinitionTaskHandler>()
                     .WithHandler<ShutdownHandler>()
             );
 

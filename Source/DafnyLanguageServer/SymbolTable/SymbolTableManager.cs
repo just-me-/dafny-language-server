@@ -14,10 +14,10 @@ namespace DafnyLanguageServer.SymbolTable
     /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
     /// Mostly there is only one module - the default module (and class) for a single Dafny file. 
     /// </summary>
-    public class SymbolTableManager
+    public class SymbolTableManager : IManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
-        public Dictionary<string, SymbolInformation> SymbolTables { get; set; } = new Dictionary<string, SymbolInformation>();
+        public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -72,10 +72,10 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         // weg 
-        public SymbolInformation GetSymbolByPosition(int line, int character)
+        public ISymbol GetSymbolByPosition(int line, int character)
         {
-            var navigator = new SymbolTableNavigator();
-            SymbolInformation symbol = null;
+            INavigator navigator = new SymbolTableNavigator();
+            ISymbol symbol = null;
             foreach (var modul in SymbolTables)
             {
                 symbol ??= navigator.GetSymbolByPosition(modul.Value, line, character);
@@ -83,7 +83,7 @@ namespace DafnyLanguageServer.SymbolTable
             return symbol;
         }
 
-        private SymbolInformation GetClassSymbolByPath(string classPath)
+        private ISymbol GetClassSymbolByPath(string classPath)
         {
             // todo better do a split? is there rly every time "just one module and one class"? #212
             string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
@@ -94,7 +94,7 @@ namespace DafnyLanguageServer.SymbolTable
             return SymbolTables[originPath[0]][originPath[1]];
         }
 
-        private bool PositionIsInSymbolsRange(int line, int character, SymbolInformation symbol)
+        private bool PositionIsInSymbolsRange(int line, int character, ISymbol symbol)
         {
             return (symbol.Line <= line
                     && symbol.Line >= line
@@ -108,12 +108,12 @@ namespace DafnyLanguageServer.SymbolTable
         /// Use this method to get the parent symbol as en entry point. 
         /// </summary>
         //  weg 
-        public SymbolInformation GetSymbolWrapperForCurrentScope(int line, int character)
+        public ISymbol GetSymbolWrapperForCurrentScope(int line, int character)
         {
-            SymbolInformation closestWrappingSymbol = null;
+            ISymbol closestWrappingSymbol = null;
             foreach (var modul in SymbolTables)
             {
-                var navigator = new SymbolTableNavigator();
+                INavigator navigator = new SymbolTableNavigator();
                 closestWrappingSymbol = navigator.TopDown(modul.Value, line, character);
             }
             return closestWrappingSymbol;
@@ -125,10 +125,10 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         ///
         /// "mxTest"
-        public SymbolInformation GetClosestSymbolByName(SymbolInformation entryPoint, string symbolName)
+        public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
         {
-            var navigator = new SymbolTableNavigator();
-            Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Name == symbolName;
+            INavigator navigator = new SymbolTableNavigator();
+            Predicate<ISymbol> filter = x => x.IsDeclaration && x.Name == symbolName;
             return navigator.BottomUpFirst(entryPoint, filter);
         }
 
@@ -136,10 +136,14 @@ namespace DafnyLanguageServer.SymbolTable
         /// This returns all symbol declaration that are in scope for the given symbol.
         /// This recursive and can be used for functions like auto completion. 
         /// </summary>
-        public List<SymbolInformation> GetAllDeclarationForSymbolInScope(SymbolInformation symbol)
+        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol)
         {
-            var navigator = new SymbolTableNavigator();
-            Predicate<SymbolInformation> filter = x => x.IsDeclaration && x.Kind != Kind.Constructor;
+            return GetAllDeclarationForSymbolInScope(symbol, new Predicate<ISymbol>(x => true));
+        }
+        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> preFilter)
+        {
+            INavigator navigator = new SymbolTableNavigator();
+            Predicate<ISymbol> filter = x => x.IsDeclaration && x.Kind != Kind.Constructor && preFilter.Invoke(x);
             return navigator.BottomUpAll(symbol, filter);
         }
 
@@ -147,7 +151,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// Return itself if it is already a declaration.
         /// Used for Go2Definition. 
         /// </summary>
-        public SymbolInformation GetOriginFromSymbol(SymbolInformation symbol)
+        public ISymbol GetOriginFromSymbol(ISymbol symbol)
         {
             return symbol.DeclarationOrigin;
         }
@@ -157,7 +161,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// Eg var instance = new ClassA();
         /// Calling this function with instance will return the symbol of ClassA (origin). 
         /// </summary>
-        public SymbolInformation GetClassOriginFromSymbol(SymbolInformation symbol)
+        public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
         {
             // todo mergen213 ClassMergen 
             var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
@@ -165,9 +169,32 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         // CodeLens
-        public List<SymbolInformation> GetUsagesOfSymbol(SymbolInformation symbol)
+        public List<ISymbol> GetUsagesOfSymbol(ISymbol symbol)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Gets all Symbols for features like CodeLens. 
+        /// </summary>
+        public List<ISymbol> GetAllSymbolDeclarations()
+        {
+            List<ISymbol> symbols = new List<ISymbol>();
+            INavigator navigator = new SymbolTableNavigator();
+            Predicate<ISymbol> filter = symbol => (
+                symbol.IsDeclaration && (
+                symbol.Kind == Kind.Class ||
+                symbol.Kind == Kind.Function ||
+                symbol.Kind == Kind.Method) &&
+                // no constructors and make sure no out-of-range root _defaults
+                symbol.Name != "_ctor" &&
+                symbol?.Line != null && symbol.Line > 0
+            );
+            foreach (var module in SymbolTables)
+            {
+                symbols.AddRange(navigator.TopDownAll(module.Value, filter));
+            }
+            return symbols;
         }
     }
 }

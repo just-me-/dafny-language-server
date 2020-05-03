@@ -16,9 +16,9 @@ namespace DafnyLanguageServer.Handler
     /// This handler provides the <c>go to definition</c> position for symbols.
     /// This class is work in progress. The content of this huge class should be outsourced into a <c>GoToDefinitionServiceProvider</c>.
     /// </summary>
-    public class DefinitionHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
+    public class DefinitionTaskHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
     {
-        public DefinitionHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        public DefinitionTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
         : base(router, workspaceManager, loggingFactory)
         {
         }
@@ -34,17 +34,18 @@ namespace DafnyLanguageServer.Handler
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
             _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
+            var msgService = new MessageSenderService(_router);
 
             try
             {
                 return await Task.Run(() =>
                 {
-                    List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
                     var manager = _workspaceManager.SymbolTableManager;
                     var selectedSymbol = manager.GetSymbolByPosition(line, col);
 
+                    List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
                     if (selectedSymbol == null)
                     {
                         _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
@@ -53,6 +54,10 @@ namespace DafnyLanguageServer.Handler
                     }
 
                     var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
+                    if (selectedSymbol == originSymbol)
+                    {
+                        msgService.SendInformation("This is already the definition."); // todo lang file #102
+                    }
 
                     Position position = new Position((long)originSymbol.Line - 1, (long)originSymbol.ColumnStart - 1);
                     Range range = new Range { Start = position, End = position };
@@ -67,9 +72,8 @@ namespace DafnyLanguageServer.Handler
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
-                new MessageSenderService(_router).SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
-
-                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+                msgService.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
+                return new List<LocationOrLocationLink>();
             }
         }
     }

@@ -14,7 +14,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 namespace DafnyLanguageServer.HandlerServices
 {
     /// <summary>
-    /// This service is used by the <c>TextDocumentSyncHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
+    /// This service is used by the <c>TextDocumentSyncTaskHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
     /// </summary>
     public class DiagnosticsService
     {

@@ -13,14 +13,14 @@ namespace DafnyLanguageServer.Handler
     public class LspBasicHandler<T>
     {
         protected readonly ILanguageServer _router;
-        protected readonly WorkspaceManager _workspaceManager;
+        protected readonly IWorkspaceManager _workspaceManager;
         protected readonly DocumentSelector _documentSelector;
         protected readonly ILoggerFactory _loggingFactory;
         protected readonly ILogger _log;
 
         protected T _capability; // needed by OmniSharp
 
-        public LspBasicHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
+        public LspBasicHandler(ILanguageServer router, IWorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
         {
             _router = router;
             _workspaceManager = workspaceManager;

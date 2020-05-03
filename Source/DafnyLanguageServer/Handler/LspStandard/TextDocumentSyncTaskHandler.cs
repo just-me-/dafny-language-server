@@ -21,11 +21,11 @@ namespace DafnyLanguageServer.Handler
     ///  Whenever this is the case, the intern <c>WorkspaceManager</c> gets updated.
     ///  An update of the buffer includes also a verify check for the Dafny source code in the fileRepository.
     /// </summary>
-    internal class TextDocumentSyncHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
+    internal class TextDocumentSyncTaskHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
 
-        public TextDocumentSyncHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        public TextDocumentSyncTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
         }

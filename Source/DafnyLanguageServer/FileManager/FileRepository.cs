@@ -74,11 +74,6 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
-        public FileSymboltableProcessor SymboleProcessor()
-        {
-            return new FileSymboltableProcessor(this.Symboltable());
-        }
-
         /// <summary>
         /// Invokes the CounterExampleProvider to extract counter examples.
         /// </summary>
