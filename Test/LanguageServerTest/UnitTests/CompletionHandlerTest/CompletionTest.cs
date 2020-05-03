@@ -7,7 +7,7 @@ namespace CompletionHandlerTest
     [Category("Unit")]
     public class CompletionTests
     {
-        private FileSymboltableProcessor symbolTable =  new FileSymboltableProcessor(new DafnyTranslationUnitFakeForCompletions().Symbols());
+        /*private FileSymboltableProcessor symbolTable = new FileSymboltableProcessor(new DafnyTranslationUnitFakeForCompletions().Symbols());
 
         [Test]
         public void FullList()
@@ -51,5 +51,6 @@ namespace CompletionHandlerTest
             var parent = symbolTable.GetParentForWord("ThisDoesNotExist95");
             Assert.AreEqual(null, parent);
         }
+        */
     }
 }

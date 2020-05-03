@@ -32,8 +32,6 @@ namespace DafnyLanguageServer.Handler
 
     public class CompileHandler : ICompile
     {
-
-
         private readonly WorkspaceManager _workspaceManager;
         private readonly ILogger _log;
 
@@ -55,7 +53,6 @@ namespace DafnyLanguageServer.Handler
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling compilation: " + e.Message);// todo lang file #102
-
                 return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }

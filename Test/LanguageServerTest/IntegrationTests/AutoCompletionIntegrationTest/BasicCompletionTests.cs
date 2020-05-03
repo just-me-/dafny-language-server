@@ -74,7 +74,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 15;
             int col = 4;
-            ArrayList exp = new ArrayList(){};
+            ArrayList exp = new ArrayList() { };
 
             GetCompletions(Files.ac_empty, line, col);
             VerifyCompletions(exp, line, col);

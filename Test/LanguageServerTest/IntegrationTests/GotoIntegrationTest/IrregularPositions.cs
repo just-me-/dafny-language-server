@@ -13,7 +13,7 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class IrregularPositions : GoToBase
     {
-       
+
         [Test]
         public void RandomSpot()
         {

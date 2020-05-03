@@ -148,9 +148,9 @@ namespace SymbolTableTest
 
             var dtu = new DafnyTranslationUnit(physFile);
             var dafnyProg = dtu.Verify().DafnyProgram;
-            var sm = new SymbolTableManager(dafnyProg);
-            var navigator = new SymbolTableNavigator();
-            Predicate<SymbolInformation> filter = x => x.Kind != Kind.BlockScope;
+            var sm = new SymbolTableManager(dafnyProg); // interface nutzen? todo
+            INavigator navigator = new SymbolTableNavigator();
+            Predicate<ISymbol> filter = x => x.Kind != Kind.BlockScope;
             var symbols = navigator.TopDownAll(sm.SymbolTables.First().Value, filter); // todo husthust
             var actual = symbols.Select(x => x.ToString()).ToList();
 

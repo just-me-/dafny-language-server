@@ -12,62 +12,52 @@ namespace DafnyLanguageServer.SymbolTable
     /// This class contains iterative functions that are used by the
     /// <c>SymbolTableManager</c> as well as by <c>Visitor</c>-Classes. 
     /// </summary>
-    public class SymbolTableNavigator
+    public class SymbolTableNavigator : INavigator
     {
-        private void test(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        public ISymbol TopDown(ISymbol rootEntry, int line, int character)
         {
-            // break expression? 
-            // yeald? 
-            // todo mergen213 ClassMergen 
-            //filter.Invoke(symbol.Children.ToArray());
-            symbol.Children.Where(filter.Invoke);
-        }
-
-        public void GetList()
-        {
-
-        }
-
-        public void GetFirstMatch()
-        {
-            SymbolInformation closestWrappingSymbol = null;
-
-
-        }
-
-        public SymbolInformation TopDown(SymbolInformation rootEntry, int line, int character)
-        {
-            SymbolInformation bestMatch = null;
+            if (rootEntry == null)
+            {
+                return null;
+            }
+            ISymbol bestMatch = null;
+            if (rootEntry.Wraps(line, character))
+            {
+                bestMatch = rootEntry;
+            }
             foreach (var child in rootEntry.Children)
             {
                 if (child.Wraps(line, character))
                 {
                     bestMatch = child;
-                    if (child.Children.Any())
+                    if (child.Children != null && child.Children.Any())
                     {
                         var match = TopDown(child, line, character);
                         bestMatch = match ?? bestMatch;
                     }
                 }
-
-                // sondercase für die default class imd default scope
-                // wenn bisher nix gefunden, dann ist "wraps" immer true
-                // für den default scope 
-                if (bestMatch == null && child.Name == "_default")
+                // in case no better match was found, 
+                // check default scope too 
+                if ((bestMatch == null || bestMatch == rootEntry) && child.Name == "_default")
                 {
                     if (child.Children.Any())
                     {
-                        var match = TopDown(child, line, character);
-                        bestMatch = match ?? bestMatch;
+                        bestMatch = TopDown(child, line, character);
                     }
                 }
             }
             return bestMatch;
         }
 
-        public SymbolInformation GetSymbolByPosition(SymbolInformation rootEntry, int line, int character)
+        public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
         {
             var wrappingSymbol = TopDown(rootEntry, line, character);
+            if (wrappingSymbol.Descendants == null)
+            {
+                // in case this symbol is not empty but does not contain childs; 
+                // it wraps itself (means it is the definition of itself)
+                return wrappingSymbol;
+            }
             foreach (var symbol in wrappingSymbol.Descendants)
             {
                 if (symbol.Wraps(line, character))
@@ -78,11 +68,11 @@ namespace DafnyLanguageServer.SymbolTable
             return null;
         }
 
-        public List<SymbolInformation> TopDownAll(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        public List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
 
-            var symbolList = new List<SymbolInformation>();
+            List<ISymbol> symbolList = new List<ISymbol>();
             if (filter.Invoke(symbol))
             {
                 symbolList.Add(symbol);
@@ -100,7 +90,7 @@ namespace DafnyLanguageServer.SymbolTable
             return symbolList;
         }
 
-        public SymbolInformation BottomUpFirst(SymbolInformation entryPoint, Predicate<SymbolInformation> filter)
+        public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
 
@@ -120,18 +110,17 @@ namespace DafnyLanguageServer.SymbolTable
                     return matchingSymbol;
                 }
             }
-
             return GetMatchingChild(parent["_default"], filter);
         }
-        private SymbolInformation GetMatchingChild(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter)
         {
-            var child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
+            ISymbol child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
             if (child == null)
             {
                 // habe ich geerbt? 
-                if (symbol.Kind == Kind.Class && (symbol.BaseClases?.Any() ?? false))
+                if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
                 {
-                    foreach (var baseScope in symbol.BaseClases)
+                    foreach (var baseScope in symbol.BaseClasses)
                     {
                         var baseclassSymbol = baseScope?.Children?.Where(filter.Invoke).FirstOrDefault();
                         if (baseclassSymbol != null)
@@ -144,32 +133,35 @@ namespace DafnyLanguageServer.SymbolTable
             return child;
         }
 
-        public List<SymbolInformation> BottomUpAll(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        public List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
 
-            List<SymbolInformation> list = new List<SymbolInformation>();
+            List<ISymbol> list = new List<ISymbol>();
+            if (symbol == null)
+            {
+                return list;
+            }
             list.AddRange(GetAllChildren(symbol, filter));
 
             var parent = symbol;
-            while (parent != null)
+            while (parent.Parent != null)
             {
                 parent = parent.Parent;
                 list.AddRange(GetAllChildren(parent, filter));
             }
-            list.AddRange(GetAllChildren(parent, filter));
             return list;
         }
 
-        private List<SymbolInformation> GetAllChildren(SymbolInformation symbol, Predicate<SymbolInformation> filter)
+        private List<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter)
         {
             var list = symbol?.Children?.Where(filter.Invoke).ToList();
             // habe ich geerbt? 
-            if (symbol.Kind == Kind.Class && (symbol.BaseClases?.Any() ?? false))
+            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
             {
-                foreach (var baseScope in symbol.BaseClases)
+                foreach (var baseScope in symbol.BaseClasses)
                 {
-                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("lolololol"));
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("Invalid Filter Operation"));
                 }
             }
             return list;

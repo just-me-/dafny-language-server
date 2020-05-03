@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.FileManager
     public class WorkspaceManager : IWorkspaceManager
     {
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
-        public SymbolTableManager SymbolTableManager { get; set; }
+        public IManager SymbolTableManager { get; set; }
 
         /// <summary>
         /// Requests the fileRepository to apply updates and store it in the buffer.

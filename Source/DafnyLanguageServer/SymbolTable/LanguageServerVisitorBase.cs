@@ -21,14 +21,14 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        public List<SymbolInformation> SymbolTable { get; set; } = new List<SymbolInformation>();
-        public SymbolInformation SurroundingScope { get; set; }
-        public SymbolInformation CurrentModule { get; set; }
-        public SymbolInformation CurrentClass { get; set; }
+        public List<ISymbol> SymbolTable { get; set; } = new List<ISymbol>();
+        public ISymbol SurroundingScope { get; set; }
+        public ISymbol CurrentModule { get; set; }
+        public ISymbol CurrentClass { get; set; }
 
-        private SymbolInformation _globalScope;
+        private ISymbol _globalScope;
 
-        public SymbolInformation GlobalScope
+        public ISymbol GlobalScope
         {
             get
             {
@@ -49,22 +49,22 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected SymbolInformation FindDeclaration(string target, SymbolInformation scope, Kind? type = null, bool goRecursive = true)
+        protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
-            var navigator = new SymbolTableNavigator();
-            Predicate<SymbolInformation> filter = s =>
+            INavigator navigator = new SymbolTableNavigator();
+            Predicate<ISymbol> filter = s =>
                 s.Name == target &&
                 s.IsDeclaration &&
                 (type == null || s.Kind == type);
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation()
             {
                 Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
-                ChildrenHash = new Dictionary<string, SymbolInformation>(),
-                Usages = new List<SymbolInformation>()
+                ChildrenHash = new Dictionary<string, ISymbol>(),
+                Usages = new List<ISymbol>()
             };
         }
 
-        protected SymbolInformation FindDeclaration(SymbolInformation target, SymbolInformation scope)  //evtl bei leave iwie
+        protected ISymbol FindDeclaration(ISymbol target, ISymbol scope)  //evtl bei leave iwie
         {
             return FindDeclaration(target.Name, scope);
         }
@@ -86,7 +86,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="canBeUsed">Default: true</param>
         /// <param name="addToSymbolTable">Default: true</param>
         /// <returns>Returns a SymbolInformation about the specific token.</returns>
-        protected SymbolInformation CreateSymbol(
+        protected ISymbol CreateSymbol(
             string name,
             IToken positionAsToken,
 
@@ -98,14 +98,14 @@ namespace DafnyLanguageServer.SymbolTable
             IToken bodyEndPosAsToken = null,
 
             bool isDeclaration = true,
-            SymbolInformation declarationSymbol = null,
+            ISymbol declarationSymbol = null,
             bool addUsageAtDeclaration = false,
             bool canHaveChildren = true,
             bool canBeUsed = true,
             bool addToSymbolTable = true
             )
         {
-            SymbolInformation result = new SymbolInformation();
+            ISymbol result = new SymbolInformation();
             result.Name = name;
             result.Parent = SurroundingScope; //is null for modules
 
@@ -146,7 +146,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (canBeUsed)
             {
-                result.Usages = new List<SymbolInformation>();
+                result.Usages = new List<ISymbol>();
             }
 
             if (isDeclaration)
@@ -169,8 +169,8 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (canHaveChildren)
             {
-                result.ChildrenHash = new Dictionary<string, SymbolInformation>();
-                result.Descendants = new List<SymbolInformation>();
+                result.ChildrenHash = new Dictionary<string, ISymbol>();
+                result.Descendants = new List<ISymbol>();
             }
 
             if (isDeclaration && SurroundingScope != null) //add child unless we are on toplevel scope.
@@ -210,11 +210,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected void Add(SymbolInformation symbol) => SymbolTable.Add(symbol);
-        protected void SetScope(SymbolInformation symbol) => SurroundingScope = symbol;
+        protected void Add(ISymbol symbol) => SymbolTable.Add(symbol);
+        protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
         protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
-        protected void SetModule(SymbolInformation symbol) => CurrentModule = symbol;
-        protected void SetClass(SymbolInformation symbol) => CurrentClass = symbol;
+        protected void SetModule(ISymbol symbol) => CurrentModule = symbol;
+        protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
 
         public override void Visit(IAstElement o) { }
 
