@@ -42,8 +42,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var stMan = _workspaceManager.SymbolTableManager;
-                    var line = request.Position.Line + 1;
-                    var col = request.Position.Character + 1;
+                    var line = (int)request.Position.Line + 1;
+                    var col = (int)request.Position.Character + 1;
                     var symbolAtCursor = stMan.GetSymbolByPosition(line, col); 
                     IEnumerable<ISymbol> symbolsToRename = stMan.GetAllOccurences(symbolAtCursor);
                     List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
