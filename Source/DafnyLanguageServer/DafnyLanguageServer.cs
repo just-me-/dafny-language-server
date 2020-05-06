@@ -6,9 +6,14 @@ using OmniSharp.Extensions.LanguageServer.Server;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.ProgramServices;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using Serilog;
+using DidChangeWatchedFilesHandler = DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler;
+using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
 using ILogger = Serilog.ILogger;
+using ShutdownHandler = DafnyLanguageServer.Handler.ShutdownHandler;
 
 namespace DafnyLanguageServer
 {
@@ -55,6 +60,8 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensTaskHandler>()
                     .WithHandler<DefinitionTaskHandler>()
+                    //.WithHandler<RenamePreparationTaskHandler>()
+                    .WithHandler<RenameTaskHandler>()
                     .WithHandler<ShutdownHandler>()
             );
 
