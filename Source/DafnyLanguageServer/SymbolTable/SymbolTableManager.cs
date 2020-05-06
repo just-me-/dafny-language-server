@@ -10,13 +10,16 @@ namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
     /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work. 
-    /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
-    /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
-    /// Mostly there is only one module - the default module (and class) for a single Dafny file. 
+    /// Mostly there is only one module - the default module (and class) for a single Dafny file.
+    /// This class also works as a facade for <c>SymbolNavigator</c>.
     /// </summary>
     public class SymbolTableManager : IManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
+        /// <summary>
+        /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
+        /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
+        /// </summary>
         public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
@@ -33,9 +36,7 @@ namespace DafnyLanguageServer.SymbolTable
                 module.Accept(declarationVisitor);
                 var declarationTable = declarationVisitor.SymbolTable;
 
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations();
-                deepVisitor.SymbolTable = declarationTable;
-
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations { SymbolTable = declarationTable };
                 module.Accept(deepVisitor);
 
                 if (deepVisitor.SymbolTable[0].Kind != Kind.Module)
@@ -69,7 +70,8 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         // ab hier das meiste auslagern(?)
-
+        // man kann das erst auslagern, wenn module als base symbol implementiert wurde. 
+        // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
 
         // weg 
         public ISymbol GetSymbolByPosition(int line, int character)
@@ -94,14 +96,6 @@ namespace DafnyLanguageServer.SymbolTable
             return SymbolTables[originPath[0]][originPath[1]];
         }
 
-        private bool PositionIsInSymbolsRange(int line, int character, ISymbol symbol)
-        {
-            return (symbol.Line <= line
-                    && symbol.Line >= line
-                    && symbol.ColumnStart <= character
-                    && symbol.ColumnEnd >= character);
-        }
-
         /// <summary>
         /// In case the user is typing and there can not be an entry point via a Symbol
         /// (eg for auto completion), the entry point has to be via the scope of the wrapping parent symbol.
@@ -123,8 +117,6 @@ namespace DafnyLanguageServer.SymbolTable
         /// Provide an entry point (symbol) and a string (name of a symbol) you are looking for.
         /// This method returns the nearest declaration with that name that can be found. 
         /// </summary>
-        ///
-        /// "mxTest"
         public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
         {
             INavigator navigator = new SymbolTableNavigator();
@@ -166,12 +158,6 @@ namespace DafnyLanguageServer.SymbolTable
             // todo mergen213 ClassMergen 
             var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
             return GetClassSymbolByPath(classPath);
-        }
-
-        // CodeLens
-        public List<ISymbol> GetUsagesOfSymbol(ISymbol symbol)
-        {
-            return null;
         }
 
         /// <summary>

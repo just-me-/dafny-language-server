@@ -10,10 +10,17 @@ namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
     /// This class contains iterative functions that are used by the
-    /// <c>SymbolTableManager</c> as well as by <c>Visitor</c>-Classes. 
+    /// <c>SymbolTableManager</c> as well as by <c>Visitor</c>-Classes.
+    /// If you are developing a feature (Handler class) do not use this class directly!
+    /// Do use the <c>SymbolTableManager</c>.
     /// </summary>
     public class SymbolTableNavigator : INavigator
     {
+        /// <summary>
+        /// Searches the tree down. Returns the found symbol or null.
+        /// Only takes definitions into account.
+        /// If you would like all symbols, not only definitions, use <c>GetSymbolByPosition</c>.
+        /// </summary>
         public ISymbol TopDown(ISymbol rootEntry, int line, int character)
         {
             if (rootEntry == null)
@@ -49,8 +56,17 @@ namespace DafnyLanguageServer.SymbolTable
             return bestMatch;
         }
 
+        /// <summary>
+        /// Searches the tree down. Returns the found symbol or null.
+        /// Pay attention to all symbols, not just definitions.
+        /// If you would like only definitions, use <c>TopDown</c>
+        /// </summary>
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
         {
+            if (rootEntry == null || !rootEntry.Wraps(line, character))
+            {
+                return null;
+            }
             var wrappingSymbol = TopDown(rootEntry, line, character);
             if (wrappingSymbol.Descendants == null)
             {
@@ -68,12 +84,15 @@ namespace DafnyLanguageServer.SymbolTable
             return null;
         }
 
+        /// <summary>
+        /// Searches all symbols (not just definitions). An optional filter for the conditions can be specified.
+        /// </summary>
         public List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
 
             List<ISymbol> symbolList = new List<ISymbol>();
-            if (filter.Invoke(symbol))
+            if (symbol != null && filter.Invoke(symbol))
             {
                 symbolList.Add(symbol);
             }
@@ -90,6 +109,10 @@ namespace DafnyLanguageServer.SymbolTable
             return symbolList;
         }
 
+        /// <summary>
+        /// Starts a search from the inside out. Returns the first symbol found.
+        /// An optional filter for the conditions can be specified.
+        /// </summary>
         public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
@@ -110,7 +133,9 @@ namespace DafnyLanguageServer.SymbolTable
                     return matchingSymbol;
                 }
             }
-            return GetMatchingChild(parent["_default"], filter);
+
+            var defaultSpace = parent["_default"];
+            return GetMatchingChild(defaultSpace, filter);
         }
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter)
         {
@@ -133,6 +158,10 @@ namespace DafnyLanguageServer.SymbolTable
             return child;
         }
 
+        /// <summary>
+        /// Starts a search from the inside out. Returns all symbols found.
+        /// An optional filter for the conditions can be specified.
+        /// </summary>
         public List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter)
         {
             filter ??= (s => true);
