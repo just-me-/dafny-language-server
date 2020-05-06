@@ -63,7 +63,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
         {
-            if (rootEntry == null || !rootEntry.Wraps(line, character))
+            if (rootEntry == null || (!rootEntry.Wraps(line, character) && !rootEntry.Name.Equals("_module")))
             {
                 return null;
             }
