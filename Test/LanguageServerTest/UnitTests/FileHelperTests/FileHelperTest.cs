@@ -10,7 +10,7 @@ namespace ContentManagerTests
         [Test]
         public void IsInRange()
         {
-            Range childRange = FileHelper.CreateRange( 1, 1, 0, 0);
+            Range childRange = FileHelper.CreateRange(1, 1, 0, 0);
             Range parentRange = FileHelper.CreateRange(0, 2, 0, 0);
             Assert.IsTrue(FileHelper.ChildIsContainedByParent(childRange, parentRange));
         }
@@ -244,5 +244,5 @@ namespace ContentManagerTests
             Assert.Throws<ArgumentException>(() => f.GetLengthOfLine(l));
         }
     }
-    
+
 }
