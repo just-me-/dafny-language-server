@@ -208,10 +208,16 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-        public override void Visit(BlockStmt o)
+
+        //todo: if, while, blockstatement:
+        //damit die als children beim parent gelten, und somit von TopDown durchsucht werden, muss man aktuell "isDeclartion: true" setzen.
+        //Evtl schöner: "addAsChild" boolean... möchte jetzt aber das rename machen.
+        //Weiteres Problem war: Hash Name muss ja unique sein, drum hab ich noch das + o.GetHashCode geadded.
+        //Tests 3, 7, 10schlagen entsprechend fehl, da ein zusätzliches Child nun drin ist und der Name auch den Hashcode beinhatlet.
+    public override void Visit(BlockStmt o)
         {
-            var name = "block-stmt-ghost";
-            var symbol = CreateSymbol(   // todo "createSymbol als unter factory? eig immer die selben parameter #103
+            var name = "block-stmt-ghost" + o.GetHashCode();
+            var symbol = CreateSymbol(   
                 name: name,
                 kind: Kind.BlockScope,
 
@@ -219,7 +225,7 @@ namespace DafnyLanguageServer.SymbolTable
                 bodyStartPosAsToken: o.Tok,
                 bodyEndPosAsToken: o.EndTok,
 
-                isDeclaration: false,
+                isDeclaration: true,
                 declarationSymbol: null,
                 addUsageAtDeclaration: false,
 
@@ -237,7 +243,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(WhileStmt o)
         {
-            var name = "while-stmt-ghost";
+            var name = "while-stmt-ghost" + o.GetHashCode();
             var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
@@ -246,7 +252,7 @@ namespace DafnyLanguageServer.SymbolTable
                 bodyStartPosAsToken: o.Tok,
                 bodyEndPosAsToken: o.EndTok,
 
-                isDeclaration: false,
+                isDeclaration: true, 
                 declarationSymbol: null,
                 addUsageAtDeclaration: false,
 
@@ -264,7 +270,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(IfStmt o)
         {
-            var name = "if-stmt-ghost";
+            var name = "if-stmt-ghost" + o.GetHashCode();
 
             var symbol = CreateSymbol(
                 name: name,
@@ -274,7 +280,7 @@ namespace DafnyLanguageServer.SymbolTable
                 bodyStartPosAsToken: o.Tok,
                 bodyEndPosAsToken: o.EndTok,
 
-                isDeclaration: false,
+                isDeclaration: true,
                 declarationSymbol: null,
                 addUsageAtDeclaration: false,
 

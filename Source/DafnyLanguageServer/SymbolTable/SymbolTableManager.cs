@@ -54,8 +54,13 @@ namespace DafnyLanguageServer.SymbolTable
             StringBuilder b = new StringBuilder();
             foreach (var kvp in SymbolTables)
             {
+                var nav = new SymbolTableNavigator();
                 b.AppendLine("Module: " + kvp.Key);
-                foreach (var symbol in kvp.Value.Children)
+                var rootSymbol = kvp.Value;
+
+                var allSymbs = nav.TopDownAll(rootSymbol);
+
+                foreach (var symbol in allSymbs)
                 {
                     b.AppendLine(symbol.ToString());
                 }
@@ -73,6 +78,10 @@ namespace DafnyLanguageServer.SymbolTable
         // man kann das erst auslagern, wenn module als base symbol implementiert wurde. 
         // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
 
+        public ISymbol GetSymbolByPosition(long line, long character)
+        {
+            return GetSymbolByPosition((int)line, (int)character); //cast should be safe in real world examples.
+        }
         // weg 
         public ISymbol GetSymbolByPosition(int line, int character)
         {
@@ -130,7 +139,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol)
         {
-            return GetAllDeclarationForSymbolInScope(symbol, new Predicate<ISymbol>(x => true));
+            return GetAllDeclarationForSymbolInScope(symbol, x => true);
         }
         public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> preFilter)
         {
@@ -181,6 +190,16 @@ namespace DafnyLanguageServer.SymbolTable
                 symbols.AddRange(navigator.TopDownAll(module.Value, filter));
             }
             return symbols;
+        }
+
+        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor)
+        {
+            var decl = symbolAtCursor.DeclarationOrigin;
+            yield return decl;
+            foreach (var usage in decl.Usages)
+            {
+                yield return usage;
+            }
         }
     }
 }

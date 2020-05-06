@@ -9,10 +9,10 @@ namespace VerificationIntegrationTest
     public class Warnings : VerificationBase
     {
 
-        [Test]
-        public void Warning()
+        //[Test]
+        public void Warning_BasedOnInclude()
         {
-            SendRequestAndAwaitDiagnostics(Files.vc_warning);
+            SendRequestAndAwaitDiagnostics(Files.vc_warning_include);
             List<string> expct = new List<string>()
             {
                 "R[L3 C22 - L3 C23] - Warning - the semi-colon that used to terminate a sub-module declaration has been deprecated; in the new syntax, just leave off the semi-colon at [ ; ]"
@@ -21,9 +21,34 @@ namespace VerificationIntegrationTest
             VerifyResults(expct);
         }
 
+        [Test]
+        public void ForAllWarning() {
+          SendRequestAndAwaitDiagnostics(Files.vc_warning);
+          List<string> expct = new List<string>()
+          {
+            "R[L8 C11 - L8 C57] - Warning - /!\\ No terms found to trigger on at [ forall ]",
+            "R[L2 C8 - L2 C45] - Information - Selected triggers: {t in s} at [ forall ]",
+            "R[L0 C7 - L0 C46] - Information - decreases s at [ minimum ]"
+          };
+
+          VerifyResults(expct);
+        }
+
+        [Test]
+        public void Information() {
+          SendRequestAndAwaitDiagnostics(Files.vc_information);
+          List<string> expct = new List<string>()
+          {
+            "R[L9 C10 - L9 C54] - Information - Selected triggers: {square(i)} at [ forall ]",
+            "R[L15 C16 - L15 C61] - Information - Selected triggers: {square(k)} at [ forall ]"
+          };
+
+          VerifyResults(expct);
+        }
 
 
 
-    }
+
+  }
 
 }
