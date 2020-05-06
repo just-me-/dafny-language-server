@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Files = TestCommons.Paths;
 
 namespace RenameTest
@@ -39,16 +40,13 @@ namespace RenameTest
 
 
         [Test]
-        public void ReservedWord() // todo vlt so ein basischeck für method, new, function, predicate, (?) - diese halt verbieten?
+        public void ReservedWord()
         {
+            result = new WorkspaceEdit();
             string text = "method";
             Run(f, 16, 17, text);
-            List<string> expected = new List<string>()
-            {
-                text + " at L15:C16 - L15:C19",
-                text + " at L16:C18 - L16:C21"
-            };
-            VerifyForSingleFile(expected);
+            Assert.IsNull(result);
+            
         }
 
 
