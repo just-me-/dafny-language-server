@@ -151,10 +151,11 @@ namespace SymbolTableTest
         {
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, "Child");
+            rootEntry.AddChild(mySymbol);
             mySymbol.SetParent(rootEntry);
             Predicate<ISymbol> filter = (s => s.Name.Equals("Child"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
-            Assert.Equals(mySymbol, symbol);
+            Assert.AreEqual(mySymbol, symbol);
         }
 
         [Test]
@@ -165,7 +166,7 @@ namespace SymbolTableTest
             mySymbol.SetParent(rootEntry);
             Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
-            Assert.Equals(rootEntry, symbol);
+            Assert.AreEqual(rootEntry, symbol);
         }
 
         [Test]
@@ -176,10 +177,45 @@ namespace SymbolTableTest
             mySymbol.SetParent(rootEntry);
             Predicate<ISymbol> filter = (s => s.Name.Equals("NotExists"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
-            Assert.Equals(null, symbol);
+            Assert.AreEqual(null, symbol);
         }
 
         // BottomUpAll
+        [Test]
+        public void BottomUpAllChild()
+        {
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, "Child");
+            rootEntry.AddChild(mySymbol);
+            mySymbol.SetParent(rootEntry);
+            Predicate<ISymbol> filter = (s => s.Name.Equals("Child"));
+            var symbol = nav.BottomUpAll(mySymbol, filter);
+            Assert.AreEqual(mySymbol, symbol.First());
+        }
 
+        [Test]
+        public void BottomUpAllParent()
+        {
+            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 5, 0, 0, "Module");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, "Child");
+            moduleFake.AddChild(rootEntry);
+            rootEntry.SetParent(moduleFake);
+            mySymbol.SetParent(rootEntry);
+            Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
+            var symbol = nav.BottomUpAll(mySymbol, filter);
+            Assert.AreEqual(rootEntry, symbol.First());
+        }
+
+        [Test]
+        public void BottomUpAllNoMatch()
+        {
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, "Child");
+            mySymbol.SetParent(rootEntry);
+            Predicate<ISymbol> filter = (s => s.Name.Equals("NotExists"));
+            var symbol = nav.BottomUpAll(mySymbol, filter);
+            Assert.False(symbol.Any());
+        }
     }
 }

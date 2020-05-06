@@ -60,7 +60,11 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol this[string index]
         {
-            get => ChildrenHash[index];
+            get
+            {
+                ChildrenHash.TryGetValue(index, out var value);
+                return value;
+            }
             set => ChildrenHash.Add(index, value);
         }
 

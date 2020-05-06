@@ -133,12 +133,14 @@ namespace DafnyLanguageServer.SymbolTable
                     return matchingSymbol;
                 }
             }
-
-            var defaultSpace = parent["_default"];
-            return GetMatchingChild(defaultSpace, filter);
+            return GetMatchingChild(parent["_default"], filter);
         }
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter)
         {
+            if (symbol == null)
+            {
+                return null;
+            }
             ISymbol child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
             if (child == null)
             {
