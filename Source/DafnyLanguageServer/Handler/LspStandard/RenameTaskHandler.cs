@@ -14,20 +14,13 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
 namespace DafnyLanguageServer.Handler.LspStandard
 {
-
- 
-
     public class RenameTaskHandler : LspBasicHandler<RenameCapability>, IRenameHandler
     {
-
-
-
         public RenameTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
         }
-
 
         public RenameRegistrationOptions GetRegistrationOptions()
         {
@@ -96,8 +89,6 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
         }
 
-
-
         private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",
@@ -113,6 +104,5 @@ namespace DafnyLanguageServer.Handler.LspStandard
             "set", "static", "string", "then", "this", "trait", "true", "type",
             "var", "where", "while", "yield", "yields"
         };
-
     }
 }
