@@ -161,8 +161,11 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpFirstParent()
         {
+            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 5, 0, 0, "Module");
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, "Child");
+            moduleFake.AddChild(rootEntry);
+            rootEntry.SetParent(moduleFake);
             mySymbol.SetParent(rootEntry);
             Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
