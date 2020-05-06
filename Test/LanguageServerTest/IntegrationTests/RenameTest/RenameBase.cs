@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;
 
@@ -17,16 +18,18 @@ namespace RenameTest
 
         protected WorkspaceEdit result;
 
-        public void Run(string testfile)
+        [SetUp]
+        public void ResetResults()
         {
-            int lineInEditor = 9;
-            int colInEditor = 16;
+            result = null;
+        }
 
-
+        public void Run(string testfile, int lineInEditor, int colInEditor, string newText = "newText")
+        {
             Client.TextDocument.DidOpen(testfile, "dfy");
             RenameParams p = new RenameParams()
             {
-                NewName = "nn",
+                NewName = newText,
                 Position = new Position(lineInEditor-1, colInEditor-1),
                 TextDocument = new TextDocumentIdentifier(new Uri(testfile))
             };
@@ -35,9 +38,11 @@ namespace RenameTest
 
         }
 
-        public void Verify()
+        public void VerifyForSingleFile(IList<string> expected)
         {
-
+            IEnumerable<TextEdit> changes = result.Changes.Values.First();
+            var actual = changes.ToStringList();
+            CollectionAssert.AreEquivalent(expected, actual);
         }
     }
 }

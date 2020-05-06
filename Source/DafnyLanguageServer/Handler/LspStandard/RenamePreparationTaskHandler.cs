@@ -23,7 +23,10 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
         public object GetRegistrationOptions() //todo richtig=? was muss ich hier machen? ... mal sehen obs tut xD
         {
-            return new object();
+            return new TextDocumentRegistrationOptions
+            {
+                DocumentSelector = _documentSelector
+            };
         }
 
         public Task<RangeOrPlaceholderRange> Handle(PrepareRenameParams request, CancellationToken cancellationToken)

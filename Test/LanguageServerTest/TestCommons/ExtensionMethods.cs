@@ -52,12 +52,27 @@ namespace TestCommons
             return result;
         }
 
-        public static List<string> ToStringList(this List<Diagnostic> source)
+        public static string ToCustomString(this TextEdit te)
+        {
+            if (te == null)
+            {
+                return null;
+            }
+
+            return $"{te.NewText} at L{te.Range.Start.Line}:C{te.Range.Start.Character} - L{te.Range.End.Line}:C{te.Range.End.Character}";
+        }
+
+        public static List<string> ToStringList(this IEnumerable<Diagnostic> source)
         {
             return GenericToStringList(source, ToCustomString);
         }
 
-        public static List<string> ToStringList(this List<CounterExample> source)
+        public static List<string> ToStringList(this IEnumerable<CounterExample> source)
+        {
+            return GenericToStringList(source, ToCustomString);
+        }
+
+        public static List<string> ToStringList(this IEnumerable<TextEdit> source)
         {
             return GenericToStringList(source, ToCustomString);
         }
