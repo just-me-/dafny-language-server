@@ -11,7 +11,7 @@ namespace RenameTest
         [Test]
         public void Test1()
         {
-            Run();
+            Run(f);
             Verify();
         }
     }
