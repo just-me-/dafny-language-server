@@ -19,6 +19,7 @@ namespace DafnyLanguageServer.Handler
         protected readonly ILogger _log;
 
         protected T _capability; // needed by OmniSharp
+        protected T Capability => _capability;
 
         public LspBasicHandler(ILanguageServer router, IWorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
         {

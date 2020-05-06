@@ -38,13 +38,18 @@ namespace DafnyLanguageServer.Handler.LspStandard
             {
                 return Task.Run(() =>
                 {
-                    //todo das komisch... müsste ich nicht iwie noch das file angeben, hust hust, wtf xD
-
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var stMan = _workspaceManager.SymbolTableManager;
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
-                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col); 
+
+                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col);
+
+                    if (symbolAtCursor == null)
+                    {
+                        return null;
+                    }
+
                     IEnumerable<ISymbol> symbolsToRename = stMan.GetAllOccurences(symbolAtCursor);
                     List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
 
