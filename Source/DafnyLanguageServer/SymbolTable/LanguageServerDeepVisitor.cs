@@ -25,7 +25,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             // Set scope but do not create new symbol.
             // Symbol should be the first symbol in table.
-            var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
+            var preDeclaredSymbol = SymbolList.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module ||
                 !preDeclaredSymbol.IsDeclaration)
             {

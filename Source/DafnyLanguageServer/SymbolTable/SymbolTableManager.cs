@@ -16,6 +16,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolTableManager : IManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
+
         /// <summary>
         /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
         /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
@@ -30,24 +31,36 @@ namespace DafnyLanguageServer.SymbolTable
 
         private void GenerateSymbolTable()
         {
+            Dictionary<string, List<ISymbol>> internalSymbolListsForVisitors = new Dictionary<string, List<ISymbol>>();
+
             foreach (var module in _dafnyProgram.Modules())
             {
                 var declarationVisitor = new LanguageServerDeclarationVisitor();
                 module.Accept(declarationVisitor);
-                var declarationTable = declarationVisitor.SymbolTable;
+                internalSymbolListsForVisitors.Add(module.Name, declarationVisitor.SymbolList);
+            }
 
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations { SymbolTable = declarationTable };
+            foreach (var module in _dafnyProgram.Modules())
+            {
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations
+                { SymbolList = internalSymbolListsForVisitors[module.Name] };
                 module.Accept(deepVisitor);
 
-                if (deepVisitor.SymbolTable[0].Kind != Kind.Module)
-                {
-                    throw new Exception("Mimimi komisch mimimumu");
-                }
-                SymbolTables.Add(module.Name, deepVisitor.SymbolTable[0]); // todo immer erstes modul #201
 
-                string debugMe = CreateDebugReadOut();
+                var listofSymbols = deepVisitor.SymbolList;
+                var symbolOfTopLevelModule = listofSymbols[0];
+                if (symbolOfTopLevelModule.Kind != Kind.Module)
+                {
+                    throw new InvalidOperationException("First Symbol after visiting a module must be the module, but it isnt.");
+                }
+
+                SymbolTables.Add(module.Name, symbolOfTopLevelModule);
             }
+
+            string debugMe = CreateDebugReadOut();
         }
+
+
 
         public string CreateDebugReadOut()
         {
@@ -64,14 +77,12 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     b.AppendLine(symbol.ToString());
                 }
+
+                b.AppendLine();
             }
             return b.ToString();
         }
 
-        public List<string> GetEntriesAsStringList()
-        {
-            return (from kvp in SymbolTables from symbol in kvp.Value.Children select symbol.ToString()).ToList();
-        }
 
 
         // ab hier das meiste auslagern(?)

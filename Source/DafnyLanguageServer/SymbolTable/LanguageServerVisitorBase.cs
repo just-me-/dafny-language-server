@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Serilog.Sinks.File;
-using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
-using LiteralExpr = Microsoft.Dafny.LiteralExpr;
-using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
@@ -21,28 +13,28 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        public List<ISymbol> SymbolTable { get; set; } = new List<ISymbol>();
+        public List<ISymbol> SymbolList { get; set; } = new List<ISymbol>();
         public ISymbol SurroundingScope { get; set; }
         public ISymbol CurrentModule { get; set; }
         public ISymbol CurrentClass { get; set; }
 
-        private ISymbol _globalScope;
+        private ISymbol _defaultClass;
 
-        public ISymbol GlobalScope
+        public ISymbol DefaultClass
         {
             get
             {
-                if (_globalScope != null)
+                if (_defaultClass != null)
                 {
-                    return _globalScope;
+                    return _defaultClass;
                 }
 
-                foreach (var symbol in SymbolTable)
+                foreach (var symbol in SymbolList)
                 {
                     if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Kind == Kind.Class)
                     {
-                        _globalScope = symbol;
-                        return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
+                        _defaultClass = symbol;
+                        return symbol; // todo this is basicly return _defaultClass; --> ne weil du willst das backing field ja setzen für die zukunft. drum 2 zeilen.
                     }
                 }
                 throw new InvalidOperationException(Resources.ExceptionMessages.global_class_not_registered);
@@ -210,7 +202,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected void Add(ISymbol symbol) => SymbolTable.Add(symbol);
+        protected void Add(ISymbol symbol) => SymbolList.Add(symbol);
         protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
         protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
         protected void SetModule(ISymbol symbol) => CurrentModule = symbol;
