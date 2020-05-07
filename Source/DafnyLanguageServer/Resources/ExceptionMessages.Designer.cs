@@ -10,8 +10,8 @@
 
 namespace DafnyLanguageServer.Resources {
     using System;
-    
-    
+
+
     /// <summary>
     ///   Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     /// </summary>
@@ -23,15 +23,15 @@ namespace DafnyLanguageServer.Resources {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ExceptionMessages {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal ExceptionMessages() {
         }
-        
+
         /// <summary>
         ///   Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
         /// </summary>
@@ -45,7 +45,7 @@ namespace DafnyLanguageServer.Resources {
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
         ///   Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
@@ -59,7 +59,7 @@ namespace DafnyLanguageServer.Resources {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die When symbol is a declaration, it cannot be a usage of itself. ähnelt.
         /// </summary>
@@ -68,7 +68,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("cannot_use_itself", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Can not add usage at unknown symbol. ähnelt.
         /// </summary>
@@ -77,7 +77,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("cannot_use_unknown_symbol", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Error while parsing json config. ähnelt.
         /// </summary>
@@ -86,7 +86,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("config_could_not_be_parsed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Config file not found at: ähnelt.
         /// </summary>
@@ -95,16 +95,16 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("config_file_not_found", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Error while collectiong (counter example) models. ähnelt.
+        ///   Looks up a localized string similar to Error while collecting (counter example) models..
         /// </summary>
         internal static string could_not_collect_models {
             get {
                 return ResourceManager.GetString("could_not_collect_models", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Error while executing compilation. ähnelt.
         /// </summary>
@@ -113,25 +113,25 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("could_not_execute_compilation", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die First symbol in table is not module. ähnelt.
-        /// </summary>
-        internal static string first_symbol_not_module {
-            get {
-                return ResourceManager.GetString("first_symbol_not_module", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Global Class Scope was not registered. ähnelt.
+        ///   Looks up a localized string similar to Global Class Scope was not registered..
         /// </summary>
         internal static string global_class_not_registered {
             get {
                 return ResourceManager.GetString("global_class_not_registered", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Module given to deep visitor as entry point..
+        /// </summary>
+        internal static string invalid_module_handed_to_deep_visitor {
+            get {
+                return ResourceManager.GetString("invalid_module_handed_to_deep_visitor", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die When symbol is not a declaration, its declarationOrigin must be given. ähnelt.
         /// </summary>
@@ -140,7 +140,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("missing_delcaration_origin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Line index must not be negative. ähnelt.
         /// </summary>
@@ -149,7 +149,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("negativ_line", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die There are not enough lines in the given source. ähnelt.
         /// </summary>
@@ -158,7 +158,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("not_enough_lines", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Error parsing launch arguments. Please refer to the readme.md ähnelt.
         /// </summary>
@@ -167,7 +167,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("not_supported_launch_args", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die StreamRedirection and Log must not be the same files. ähnelt.
         /// </summary>
@@ -176,7 +176,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("stream_and_log_are_same", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Expected string or TextDocumentChangeEvent-Container at text-document-change event request. ähnelt.
         /// </summary>
@@ -185,7 +185,7 @@ namespace DafnyLanguageServer.Resources {
                 return ResourceManager.GetString("unexpected_file_type", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die This visitor must only visit declarations. ähnelt.
         /// </summary>

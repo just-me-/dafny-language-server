@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Configuration;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Serilog.Sinks.File;
-using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
-using LiteralExpr = Microsoft.Dafny.LiteralExpr;
-using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
@@ -21,33 +14,24 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        public List<ISymbol> SymbolTable { get; set; } = new List<ISymbol>();
+        protected LanguageServerVisitorBase(ISymbol rootNode)
+        {
+            RootNode = rootNode;
+            SetScope(RootNode);
+        }
+
+        public ISymbol RootNode { get; set; }
+
+        //Zum Aufbau:
         public ISymbol SurroundingScope { get; set; }
-        public ISymbol CurrentModule { get; set; }
+
+        //Accessor for Convenience:
+        public ISymbol Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
         public ISymbol CurrentClass { get; set; }
 
-        private ISymbol _globalScope;
+        public ISymbol DefaultClass => Module.ChildrenHash.ContainsKey(DEFAULT_CLASS_NAME) ? Module[DEFAULT_CLASS_NAME] : null;
 
-        public ISymbol GlobalScope
-        {
-            get
-            {
-                if (_globalScope != null)
-                {
-                    return _globalScope;
-                }
-
-                foreach (var symbol in SymbolTable)
-                {
-                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Kind == Kind.Class)
-                    {
-                        _globalScope = symbol;
-                        return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
-                    }
-                }
-                throw new InvalidOperationException(Resources.ExceptionMessages.global_class_not_registered);
-            }
-        }
+        public ISymbol DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
 
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
@@ -101,8 +85,7 @@ namespace DafnyLanguageServer.SymbolTable
             ISymbol declarationSymbol = null,
             bool addUsageAtDeclaration = false,
             bool canHaveChildren = true,
-            bool canBeUsed = true,
-            bool addToSymbolTable = true
+            bool canBeUsed = true
             )
         {
             ISymbol result = new SymbolInformation();
@@ -182,10 +165,7 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope.Descendants.Add(result);
             }
 
-            if (addToSymbolTable)
-            {
-                Add(result);
-            }
+            result.Module = Module;
 
             return result;
         }
@@ -210,10 +190,9 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected void Add(ISymbol symbol) => SymbolTable.Add(symbol);
         protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
-        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
-        protected void SetModule(ISymbol symbol) => CurrentModule = symbol;
+        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+        protected void SetModule(ISymbol symbol) => Module = symbol;
         protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
 
         public override void Visit(IAstElement o) { }

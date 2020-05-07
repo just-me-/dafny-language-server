@@ -46,12 +46,15 @@ namespace DafnyLanguageServer.SymbolTable
         //public List<SymbolInformation> Children { get; set; } // key value hash machen 
         // hash als adapter machen, user soll nix geändert haben 
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
-        public List<ISymbol> Children => ChildrenHash?.Values.ToList();
+        public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: nur deklarationen
 
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
-        public List<ISymbol> Descendants { get; set; }
+        public List<ISymbol> Descendants { get; set; }                     //Descendants: alles was drunter liegt
         public bool IsDeclaration => DeclarationOrigin == this;
+
+        public ISymbol Module { get; set; }
+        public ISymbol AssociatedDefaultClass => Module["_default"];
 
         public override string ToString()
         {
@@ -68,15 +71,6 @@ namespace DafnyLanguageServer.SymbolTable
             set => ChildrenHash.Add(index, value);
         }
 
-        public override bool Equals(Object obj)
-        {
-            if (obj is SymbolInformation)
-            {
-                var symbol = (SymbolInformation)obj;
-                return (symbol.Name == Name && symbol.Line == Line && symbol.ColumnStart == ColumnStart);
-            }
-            return false;
-        }
 
         public override int GetHashCode()
         {
@@ -95,34 +89,24 @@ namespace DafnyLanguageServer.SymbolTable
             return false;
         }
 
+        /// <summary>
+        /// Checks if the given position (line, character) is included in the symbols range. 
+        /// </summary>
         public bool Wraps(int line, int character)
         {
-            return HasLine()
-                   &&
-                   (
-                    WrapsLine(line)
-                    || WrapsCharOnSameLine(line, character)
-                    || WrapsAsCondition(line, character) // in case symbol is a pre- or post-condition
-                   );
-        }
-
-        private bool WrapsAsCondition(int line, int character)
-        {
-            return (Line != null
-                    && Line <= line
-                    && LineStart >= line);
+            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character));
         }
 
         private bool HasLine()
         {
-            return (LineStart != null && LineEnd != null);
+            return (Line != null && LineEnd != null);
         }
 
         private bool WrapsLine(int line)
         {
-            return (LineStart <= line
+            return (Line <= line
                     && LineEnd >= line
-                    && LineStart != LineEnd);
+                    && Line != LineEnd);
         }
 
         private bool WrapsCharOnSameLine(int line, int character)
@@ -132,10 +116,23 @@ namespace DafnyLanguageServer.SymbolTable
                     && ColumnStart <= character
                     && ColumnEnd >= character);
         }
+
+        private bool WrapsAsCondition(int line, int character)
+        {
+            return (Line != null
+                    && Line <= line
+                    && LineStart >= line);
+        }
+
+
+
+
+
     }
 
     public enum Kind
     {
+        RootNode,
         Module,
         Class,
         Method,

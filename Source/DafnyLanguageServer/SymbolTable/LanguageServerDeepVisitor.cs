@@ -21,27 +21,34 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
+        public SymbolTableVisitorEverythingButDeclarations(ISymbol rootNode) : base(rootNode)
+        {
+            GoesDeep = true;
+        }
+
         public override void Visit(ModuleDefinition o)
         {
             // Set scope but do not create new symbol.
-            // Symbol should be the first symbol in table.
-            var preDeclaredSymbol = SymbolTable.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
-            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module ||
-                !preDeclaredSymbol.IsDeclaration)
+
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
+
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
-                throw new InvalidOperationException(Resources.ExceptionMessages.first_symbol_not_module);
+                throw new InvalidOperationException(Resources.ExceptionMessages.invalid_module_handed_to_deep_visitor);
             }
+
             SetScope(preDeclaredSymbol);
             SetModule(preDeclaredSymbol);
         }
 
-        #region navigate-through-declarations
 
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
-            SetModule(null);
         }
+
+        #region navigate-through-declarations
+
 
         public override void Visit(ClassDecl o)
         {
@@ -215,8 +222,8 @@ namespace DafnyLanguageServer.SymbolTable
         //Weiteres Problem war: Hash Name muss ja unique sein, drum hab ich noch das + o.GetHashCode geadded.
         //Tests 3, 7, 10schlagen entsprechend fehl, da ein zusätzliches Child nun drin ist und der Name auch den Hashcode beinhatlet.
     public override void Visit(BlockStmt o)
-        {
-            var name = "block-stmt-ghost" + o.GetHashCode();
+    {
+        var name = "block-stmt-ghost-" + o.Tok.line;
             var symbol = CreateSymbol(   
                 name: name,
                 kind: Kind.BlockScope,
@@ -230,8 +237,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }
@@ -243,7 +249,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(WhileStmt o)
         {
-            var name = "while-stmt-ghost" + o.GetHashCode();
+            var name = "while-stmt-ghost-" + o.Tok.line;
             var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
@@ -257,8 +263,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }
@@ -270,7 +275,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(IfStmt o)
         {
-            var name = "if-stmt-ghost" + o.GetHashCode();
+            var name = "if-stmt-ghost-" + o.Tok.line;
 
             var symbol = CreateSymbol(
                 name: name,
@@ -285,8 +290,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }

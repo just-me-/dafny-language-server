@@ -8,6 +8,7 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public interface IManager
     {
+        ISymbol DafnyProgramRootSymbol { get; }
         ISymbol GetSymbolByPosition(int line, int character); // das gehört in den navigator... 
         ISymbol GetSymbolWrapperForCurrentScope(int line, int character);
         ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName);
@@ -19,6 +20,5 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbol GetOriginFromSymbol(ISymbol symbol);
         ISymbol GetClassOriginFromSymbol(ISymbol symbol);
         List<ISymbol> GetAllSymbolDeclarations();
-        IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor);
     }
 }

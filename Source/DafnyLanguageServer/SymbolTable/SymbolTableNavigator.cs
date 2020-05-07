@@ -132,8 +132,10 @@ namespace DafnyLanguageServer.SymbolTable
                     return matchingSymbol;
                 }
             }
-            return GetMatchingChild(parent["_default"], filter);
+
+            return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
         }
+
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
             if (symbol == null)
@@ -182,6 +184,23 @@ namespace DafnyLanguageServer.SymbolTable
                 list.AddRange(GetAllChildren(parent, filter));
             }
             return list;
+        }
+
+        /// <summary>
+        /// REturns all occurences of a symbol.
+        /// That is, the declaration and all usages.
+        /// Targeted for Rename-Feature.
+        /// </summary>
+        /// <param name="symbolAtCursor">Symbol you are interested in.</param>
+        /// <returns></returns>
+        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor) //@navigator
+        {
+            var decl = symbolAtCursor.DeclarationOrigin;
+            yield return decl;
+            foreach (var usage in decl.Usages)
+            {
+                yield return usage;
+            }
         }
 
         private List<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)

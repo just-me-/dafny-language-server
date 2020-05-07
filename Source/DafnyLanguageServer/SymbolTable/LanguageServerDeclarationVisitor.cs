@@ -22,7 +22,8 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {
-        public LanguageServerDeclarationVisitor()
+
+        public LanguageServerDeclarationVisitor(ISymbol rootNode) : base(rootNode)
         {
             GoesDeep = false;
         }
@@ -45,6 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: false
             );
+            symbol.Module = symbol;
             SetScope(symbol);
             SetModule(symbol);
         }
@@ -52,7 +54,6 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
-            SetModule(null);
         }
 
         public override void Visit(ClassDecl o)
@@ -181,9 +182,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: true,
-
-                addToSymbolTable: true
+                canBeUsed: true
             );
             SetScope(symbol); //technically not necessary since we dont go deeper.
         }
