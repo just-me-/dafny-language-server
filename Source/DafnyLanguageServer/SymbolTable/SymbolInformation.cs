@@ -71,6 +71,18 @@ namespace DafnyLanguageServer.SymbolTable
             set => ChildrenHash.Add(index, value);
         }
 
+        public override bool Equals(Object obj)
+        {
+            if (obj is SymbolInformation)
+            {
+                var symbol = (SymbolInformation)obj;
+                return (symbol.Name == Name
+                        && symbol.Line == Line
+                        && symbol.ColumnStart == ColumnStart
+                        && symbol.ColumnEnd == ColumnEnd);
+            }
+            return false;
+        }
 
         public override int GetHashCode()
         {
@@ -116,18 +128,6 @@ namespace DafnyLanguageServer.SymbolTable
                     && ColumnStart <= character
                     && ColumnEnd >= character);
         }
-
-        private bool WrapsAsCondition(int line, int character)
-        {
-            return (Line != null
-                    && Line <= line
-                    && LineStart >= line);
-        }
-
-
-
-
-
     }
 
     public enum Kind

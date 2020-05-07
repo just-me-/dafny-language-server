@@ -45,7 +45,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch == rootEntry) && child.Name == "_default")
+                if ((bestMatch == null || bestMatch.Equals(rootEntry)) && child.Name == "_default")
                 {
                     if (child.Children.Any())
                     {
