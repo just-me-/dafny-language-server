@@ -34,10 +34,17 @@ namespace GotoIntegrationTest
 
         }
 
-        //[Test]
+        [Test]
         public void RightMost()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 28);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void DefinitionItSelf()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, 9, 10);
             SpecificVerificationWithGoalInSameFile();
         }
 
@@ -73,7 +80,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void RightMost_ClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 28);
@@ -112,7 +119,7 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void RightMost_MethodInClassA()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 19);
@@ -138,21 +145,21 @@ namespace GotoIntegrationTest
 
         private const int l = 24;
 
-        //[Test]
+        [Test]
         public void LeftMost_MethodInClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 11);
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void MidWord_MethodInClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 14);
             SpecificVerificationWithGoalInSameFile();
         }
 
-        //[Test]
+        [Test]
         public void RightMost_MethodInClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 19);
@@ -193,7 +200,7 @@ namespace GotoIntegrationTest
         }
 
 
-        //[Test]
+        [Test]
         public void RightMost_MultiReturnMethod()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 33);
@@ -310,14 +317,14 @@ namespace GotoIntegrationTest
 
         private const int l = 29;
 
-        //[Test]
+        [Test]
         public void LeftMost_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 16);
             VerifyResult(file, 26, 8);   //todo, das failed, uninitialized variable
         }
 
-        //[Test]
+        [Test]
         public void MidWord_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 18);
@@ -325,13 +332,12 @@ namespace GotoIntegrationTest
         }
 
 
-        //[Test]
+        [Test]
         public void RightMost_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 20);
             VerifyResult(file, 26, 8);
         }
-
     }
 
     [TestFixture]
@@ -364,7 +370,6 @@ namespace GotoIntegrationTest
             SetGoToDefinitionWithoutZeroIndexing(file, l, 27);
             VerifyResult(file, 26, 8);
         }
-
     }
 
 
@@ -379,14 +384,13 @@ namespace GotoIntegrationTest
             VerifyResult(file, 31, 8);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
         }
 
-        //[Test]
+        [Test]
         public void RightMost_InitializedVariableA()
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 16);
             VerifyResult(file, 31, 8);
         }
-
     }
 
     [TestFixture]
@@ -400,17 +404,12 @@ namespace GotoIntegrationTest
             VerifyResult(file, 32, 8);
         }
 
-
-        //[Test]
+        [Test]
         public void RightMost_InitializedVariableB()
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 20);
             VerifyResult(file, 32, 8);
         }
-
     }
-
-
-
 }

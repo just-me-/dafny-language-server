@@ -22,17 +22,8 @@ namespace GotoIntegrationTest
             Assert.IsEmpty(goneTo);
         }
 
-
         [Test]
-        public void UnrealSpot1()
-        {
-            string file = Files.gt_goto;
-            SetGoToDefinitionWithoutZeroIndexing(file, 22, 500);
-            Assert.IsEmpty(goneTo);
-        }
-
-        [Test]
-        public void UnrealSpot2()
+        public void UnrealSpot()
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 20000, 5);
