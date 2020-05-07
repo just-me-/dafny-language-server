@@ -97,24 +97,40 @@ namespace DafnyLanguageServer.SymbolTable
 
         public bool Wraps(int line, int character)
         {
-            var symbolStartLine = LineStart;
-            var symbolEndLine = LineEnd;
-
-            var symbolStartChar = ColumnStart;
-            var symbolEndChar = ColumnEnd;
-
-            return (symbolStartLine != null && symbolEndLine != null)
+            return HasLine()
                    &&
                    (
-                       (symbolStartLine <= line
-                        && symbolEndLine >= line
-                        && symbolStartLine != symbolEndLine)
-                       || // if it is on one line - check position 
-                       (symbolStartLine == symbolEndLine
-                        && symbolStartLine == line
-                        && symbolStartChar <= character
-                        && symbolEndChar >= character)
+                    WrapsLine(line)
+                    || WrapsCharOnSameLine(line, character)
+                    || WrapsAsCondition(line, character) // in case symbol is a pre- or post-condition
                    );
+        }
+
+        private bool WrapsAsCondition(int line, int character)
+        {
+            return (Line != null
+                    && Line <= line
+                    && LineStart >= line);
+        }
+
+        private bool HasLine()
+        {
+            return (LineStart != null && LineEnd != null);
+        }
+
+        private bool WrapsLine(int line)
+        {
+            return (LineStart <= line
+                    && LineEnd >= line
+                    && LineStart != LineEnd);
+        }
+
+        private bool WrapsCharOnSameLine(int line, int character)
+        {
+            return (LineStart == LineEnd
+                    && LineStart == line
+                    && ColumnStart <= character
+                    && ColumnEnd >= character);
         }
     }
 
