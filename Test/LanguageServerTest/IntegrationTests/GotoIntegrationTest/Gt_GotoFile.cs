@@ -208,6 +208,98 @@ namespace GotoIntegrationTest
         }
     }
 
+    [TestFixture]
+    public class PreCondition : GoToBase
+    {
+        public PreCondition() : base(1, 35, Files.gt_goto)
+        {
+        }
+
+        private const int l = 2;
+
+        [Test]
+        public void PreCondition_left()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 13);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void PreCondition_middle()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 15);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void PreCondition_right()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 17);
+            SpecificVerificationWithGoalInSameFile();
+        }
+    }
+
+    [TestFixture]
+    public class PostCondition : GoToBase
+    {
+        public PostCondition() : base(1, 24, Files.gt_goto)
+        {
+        }
+
+        private const int l = 3;
+
+        [Test]
+        public void PostCondition_left()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 19);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void PostCondition_middle()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 21);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void PostCondition_right()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 23);
+            SpecificVerificationWithGoalInSameFile();
+        }
+    }
+
+    [TestFixture]
+    public class OutParameter : GoToBase
+    {
+        public OutParameter() : base(1, 55, Files.gt_goto)
+        {
+        }
+        private const int l = 5;
+        [Test]
+        public void Parameter()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 4);
+            SpecificVerificationWithGoalInSameFile();
+        }
+    }
+
+    [TestFixture]
+    public class GetParameter : GoToBase
+    {
+        public GetParameter() : base(1, 24, Files.gt_goto)
+        {
+        }
+        private const int l = 5;
+        [Test]
+        public void Parameter()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, l, 12);
+            SpecificVerificationWithGoalInSameFile();
+        }
+    }
+
 
     [TestFixture]
     public class UninitializedVariableMore : GoToBase
@@ -284,7 +376,7 @@ namespace GotoIntegrationTest
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 15);
-            VerifyResult(file, 31,  8);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
+            VerifyResult(file, 31, 8);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
         }
 
         //[Test]
