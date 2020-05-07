@@ -53,19 +53,17 @@ namespace DafnyLanguageServer.SymbolTable
 
         private void GenerateSymbolTable()
         {
-            Dictionary<string, ISymbol> internalSymbolListsForVisitorsVERYTEMPPPPP = new Dictionary<string, ISymbol>();
 
             foreach (var module in _dafnyProgram.Modules())
             {
                 var declarationVisitor = new LanguageServerDeclarationVisitor(DafnyProgramRootSymbol);
                 module.Accept(declarationVisitor);
                 var symbolForModuleThatWasVisited = declarationVisitor.Module;
-                internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.Module);
             }
 
             foreach (var module in _dafnyProgram.Modules())
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( internalSymbolListsForVisitorsVERYTEMPPPPP[module.Name] );
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( DafnyProgramRootSymbol );
                 module.Accept(deepVisitor);
 
 

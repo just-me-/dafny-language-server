@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Configuration;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
@@ -27,8 +28,10 @@ namespace DafnyLanguageServer.SymbolTable
         //Accessor for Convenience:
         public ISymbol Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
         public ISymbol CurrentClass { get; set; }
-        public ISymbol DefaultClass => Module[DEFAULT_CLASS_NAME]; //ist mir iwie unsynmpatscih... brauhcen wir das? weil dann weiss man gar nicht recht in welchem modul man jetzt rumturnt. jedes modul hat ja ihre eigene default class. wobei, es wäre halt immer die defualtclass die zum jeweiligen symbol dazu gheört. ne. ist eigentlich gut. is eig fancy. lassenw ir.
-        public ISymbol DefaultModule => RootNode[DEFAULT_MODULE_NAME];
+
+        public ISymbol DefaultClass => Module.ChildrenHash.ContainsKey(DEFAULT_CLASS_NAME) ? Module[DEFAULT_CLASS_NAME] : null;
+
+        public ISymbol DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
 
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
@@ -82,8 +85,7 @@ namespace DafnyLanguageServer.SymbolTable
             ISymbol declarationSymbol = null,
             bool addUsageAtDeclaration = false,
             bool canHaveChildren = true,
-            bool canBeUsed = true,
-            bool addToSymbolTable = true
+            bool canBeUsed = true
             )
         {
             ISymbol result = new SymbolInformation();
@@ -163,10 +165,7 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope.Descendants.Add(result);
             }
 
-            //if (addToSymbolTable)
-            //{
-            //    Add(result);
-            //}
+            result.Module = Module;
 
             return result;
         }

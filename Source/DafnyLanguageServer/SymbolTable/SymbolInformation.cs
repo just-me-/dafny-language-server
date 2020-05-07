@@ -53,6 +53,9 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbol> Descendants { get; set; }                     //Descendants: alles was drunter liegt
         public bool IsDeclaration => DeclarationOrigin == this;
 
+        public ISymbol Module { get; set; }
+        public ISymbol AssociatedDefaultClass => Module["_default"];
+
         public override string ToString()
         {
             return $"[L{Line}:C{Column}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
@@ -68,15 +71,6 @@ namespace DafnyLanguageServer.SymbolTable
             set => ChildrenHash.Add(index, value);
         }
 
-        public override bool Equals(Object obj)
-        {
-            if (obj is SymbolInformation)
-            {
-                var symbol = (SymbolInformation)obj;
-                return (symbol.Name == Name && symbol.Line == Line && symbol.ColumnStart == ColumnStart);
-            }
-            return false;
-        }
 
         public override int GetHashCode()
         {

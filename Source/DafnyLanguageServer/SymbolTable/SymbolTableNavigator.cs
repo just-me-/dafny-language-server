@@ -132,8 +132,10 @@ namespace DafnyLanguageServer.SymbolTable
                     return matchingSymbol;
                 }
             }
-            return GetMatchingChild(parent["_default"], filter);
+
+            return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
         }
+
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
             if (symbol == null)

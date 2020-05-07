@@ -237,8 +237,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }
@@ -264,8 +263,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }
@@ -292,8 +290,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false,
-                addToSymbolTable: false
+                canBeUsed: false
             );
             SetScope(symbol);
         }

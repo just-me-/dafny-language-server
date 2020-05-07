@@ -25,6 +25,10 @@ namespace DafnyLanguageServer.SymbolTable
         List<ISymbol> BaseClasses { get; set; }
         List<ISymbol> Descendants { get; set; }
         bool IsDeclaration { get; }
+        ISymbol Module { get; set; }
+        ISymbol AssociatedDefaultClass { get; }
+    
+
 
         string ToString();
 

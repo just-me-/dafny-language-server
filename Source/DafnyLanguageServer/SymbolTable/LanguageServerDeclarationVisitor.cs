@@ -46,6 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: false
             );
+            symbol.Module = symbol;
             SetScope(symbol);
             SetModule(symbol);
         }
@@ -181,9 +182,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: true,
-
-                addToSymbolTable: true
+                canBeUsed: true
             );
             SetScope(symbol); //technically not necessary since we dont go deeper.
         }
