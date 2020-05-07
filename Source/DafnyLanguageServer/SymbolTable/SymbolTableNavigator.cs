@@ -68,20 +68,17 @@ namespace DafnyLanguageServer.SymbolTable
                 return null;
             }
             var wrappingSymbol = TopDown(rootEntry, line, character);
-            if (wrappingSymbol.Descendants == null)
+            if (wrappingSymbol?.Descendants != null)
             {
-                // in case this symbol is not empty but does not contain childs;
-                // it wraps itself (means it is the definition of itself)
-                return wrappingSymbol;
-            }
-            foreach (var symbol in wrappingSymbol.Descendants)
-            {
-                if (symbol.Wraps(line, character))
+                foreach (var symbol in wrappingSymbol.Descendants)
                 {
-                    return symbol;
+                    if (symbol.Wraps(line, character))
+                    {
+                        return symbol;
+                    }
                 }
             }
-            return null;
+            return wrappingSymbol;
         }
 
 
