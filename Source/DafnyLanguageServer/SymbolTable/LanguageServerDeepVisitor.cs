@@ -21,15 +21,21 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
+        public SymbolTableVisitorEverythingButDeclarations(ISymbol entryModule)
+        {
+            Module = entryModule;
+        }
         public override void Visit(ModuleDefinition o)
         {
             // Set scope but do not create new symbol.
-            // Symbol should be the first symbol in table.
-            var preDeclaredSymbol = CurrentModule; //VERASERASRASFE TEMP TEMP TEMP TEMP TEMP GEFährlich sonst!! todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
+
+            var preDeclaredSymbol = Module; //vlt können wir hier dann den ultra root mitgeben später.
+
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
-                throw new InvalidOperationException(Resources.ExceptionMessages.first_symbol_not_module);
+                throw new InvalidOperationException(Resources.ExceptionMessages.invalid_module_handed_to_deep_visitor);
             }
+
             SetScope(preDeclaredSymbol);
             SetModule(preDeclaredSymbol);
         }
@@ -38,7 +44,6 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
-            //SetModule(null);
         }
 
         #region navigate-through-declarations
@@ -78,6 +83,10 @@ namespace DafnyLanguageServer.SymbolTable
 
             SetScope(preDeclaredSymbol);
             SetClass(preDeclaredSymbol);
+            if (preDeclaredSymbol.Name == DEFAULT_CLASS_NAME)
+            {
+                SetDefaultClass(preDeclaredSymbol);
+            }
         }
 
         public override void Leave(ClassDecl o)

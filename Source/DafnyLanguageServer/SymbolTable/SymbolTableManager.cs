@@ -55,16 +55,17 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 var declarationVisitor = new LanguageServerDeclarationVisitor();
                 module.Accept(declarationVisitor);
-                internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.CurrentModule);
+                var symbolForModuleThatWasVisited = declarationVisitor.Module;
+                internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.Module);
             }
 
             foreach (var module in _dafnyProgram.Modules())
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations { CurrentModule = internalSymbolListsForVisitorsVERYTEMPPPPP[module.Name] };
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( internalSymbolListsForVisitorsVERYTEMPPPPP[module.Name] );
                 module.Accept(deepVisitor);
 
 
-                var symbolOfTopLevelModule = deepVisitor.CurrentModule;
+                var symbolOfTopLevelModule = deepVisitor.Module;
 
                 if (symbolOfTopLevelModule.Kind != Kind.Module)
                 {

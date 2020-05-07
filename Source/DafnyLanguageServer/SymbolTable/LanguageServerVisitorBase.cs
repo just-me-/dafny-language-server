@@ -13,33 +13,10 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        public List<ISymbol> SymbolList { get; set; } = new List<ISymbol>();
         public ISymbol SurroundingScope { get; set; }
-        public ISymbol CurrentModule { get; set; }
+        public ISymbol Module { get; set; }
         public ISymbol CurrentClass { get; set; }
-
-        private ISymbol _defaultClass;
-
-        public ISymbol DefaultClass
-        {
-            get
-            {
-                if (_defaultClass != null)
-                {
-                    return _defaultClass;
-                }
-
-                foreach (var symbol in SymbolList)
-                {
-                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Kind == Kind.Class)
-                    {
-                        _defaultClass = symbol;
-                        return symbol; // todo this is basicly return _defaultClass; --> ne weil du willst das backing field ja setzen für die zukunft. drum 2 zeilen.
-                    }
-                }
-                throw new InvalidOperationException(Resources.ExceptionMessages.global_class_not_registered);
-            }
-        }
+        public ISymbol DefaultClass { get; set; }
 
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
@@ -202,11 +179,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected void Add(ISymbol symbol) => SymbolList.Add(symbol);
         protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
-        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
-        protected void SetModule(ISymbol symbol) => CurrentModule = symbol;
+        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+        protected void SetModule(ISymbol symbol) => Module = symbol;
         protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
+        protected void SetDefaultClass(ISymbol symbol) => DefaultClass = symbol;
 
         public override void Visit(IAstElement o) { }
 
