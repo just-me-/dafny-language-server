@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Handler
                     }
 
                     var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
-                    if (selectedSymbol == originSymbol)
+                    if (selectedSymbol.Equals(originSymbol))
                     {
                         msgService.SendInformation("This is already the definition."); // todo lang file #102
                     }
