@@ -7,6 +7,7 @@ namespace ContentManagerTests
 {
     internal class ParentChildTests
     {
+        /*
         [Test]
         public void IsInRange()
         {
@@ -243,6 +244,6 @@ namespace ContentManagerTests
 
             Assert.Throws<ArgumentException>(() => f.GetLengthOfLine(l));
         }
+    */
     }
-
 }

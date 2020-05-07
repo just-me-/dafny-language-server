@@ -18,6 +18,7 @@ namespace DafnyLanguageServer.HandlerServices
 
         public CompletionType GetSupposedDesire(int colPos, string line, out string symbolName)
         {
+            symbolName = "TMP";
             return CompletionType.afterNew;
         }
         private CompletionType oLDGetSupposedDesire(int colPos, string line, out string symbolName) // hmm evt doch besser ins file selbst? 
