@@ -163,8 +163,8 @@ namespace RenameTest
             Run(f, 4, 12);
             List<string> expected = new List<string>()
             {
-                "newText at L0:C6 - L0:C13",
-                "newText at L28:C17 - L28:C24"
+                "newText at L3:C11 - L3:C18",
+                "newText at L29:C6 - L29:C13"
             };
             VerifyForSingleFile(expected);
         }
