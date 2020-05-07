@@ -19,6 +19,5 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbol GetOriginFromSymbol(ISymbol symbol);
         ISymbol GetClassOriginFromSymbol(ISymbol symbol);
         List<ISymbol> GetAllSymbolDeclarations();
-        IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor);
     }
 }

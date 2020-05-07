@@ -120,7 +120,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             INavigator navigator = new SymbolTableNavigator();
             ISymbol symbol = null;
-            foreach (var modul in SymbolTables)
+            foreach (var modul in SymbolTables) //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
                 symbol ??= navigator.GetSymbolByPosition(modul.Value, line, character);
             }
@@ -135,7 +135,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
             }
-            return SymbolTables[originPath[0]][originPath[1]];
+            return SymbolTables[originPath[0]][originPath[1]];  //todo: neu wäre das rootNode[ 0path ding] [1pathding]  (bei merge concflcict: nicht dieses nehmen)
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol GetSymbolWrapperForCurrentScope(int line, int character)
         {
             ISymbol closestWrappingSymbol = null;
-            foreach (var modul in SymbolTables)
+            foreach (var modul in SymbolTables)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
             {
                 INavigator navigator = new SymbolTableNavigator();
                 closestWrappingSymbol = navigator.TopDown(modul.Value, line, character);
@@ -218,21 +218,11 @@ namespace DafnyLanguageServer.SymbolTable
                 symbol.Name != "_ctor" &&
                 symbol?.Line != null && symbol.Line > 0
             );
-            foreach (var module in SymbolTables)
+            foreach (var module in SymbolTables)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
                 symbols.AddRange(navigator.TopDownAll(module.Value, filter));
             }
             return symbols;
-        }
-
-        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor) //@navigator
-        {
-            var decl = symbolAtCursor.DeclarationOrigin;
-            yield return decl;
-            foreach (var usage in decl.Usages)
-            {
-                yield return usage;
-            }
         }
     }
 }

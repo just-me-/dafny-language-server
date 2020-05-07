@@ -13,5 +13,7 @@ namespace DafnyLanguageServer.SymbolTable
         List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter);
         ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter);
         List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter);
+        IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor);
+
     }
 }
