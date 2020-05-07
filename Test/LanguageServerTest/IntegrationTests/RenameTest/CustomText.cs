@@ -5,7 +5,6 @@ using Files = TestCommons.Paths;
 
 namespace RenameTest
 {
-
     public class CustomTexts : RenameBase
     {
 
@@ -46,7 +45,7 @@ namespace RenameTest
             string text = "method";
             Run(f, 16, 17, text);
             Assert.IsNull(result);
-            
+
         }
 
 
@@ -64,9 +63,9 @@ namespace RenameTest
         }
 
         [Test]
-        public void UnicodeChallenge() //actually not possible - vscode will not send a request then.
+        public void UnicodeChallenge()
         {
-            string text = "❤";
+            string text = "hereWasAHeartAndThenITBroke";
             Run(f, 16, 17, text);
             List<string> expected = new List<string>()
             {
@@ -77,9 +76,9 @@ namespace RenameTest
         }
 
         [Test]
-        public void WeirdStuff() //actually not possible - vscode will not send a request then.
+        public void WeirdStuff()
         {
-            string text = "[}{{][****èé£à[]q2#°§#@¬°|¢";
+            string text = "HereWasWeirdSTuffAndThenItBroke";
             Run(f, 16, 17, text);
             List<string> expected = new List<string>()
             {
