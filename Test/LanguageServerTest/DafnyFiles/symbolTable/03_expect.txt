@@ -10,14 +10,14 @@
 [L9:C15] "field" | P : [L4]aMethod | D : [L8]field | C :  | U : 
 [L10:C15] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 
 [L10:C20] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 
-[L12:C9] "block-stmt-ghost44903056" | P : [L4]aMethod | D : self | C : 1 | U : 
-[L13:C19] "field" | P : [L12]block-stmt-ghost44903056 | D : [L8]field | C :  | U : 
-[L14:C19] "this" | P : [L12]block-stmt-ghost44903056 | D : [L1]MyClass | C :  | U : 
-[L14:C24] "field" | P : [L12]block-stmt-ghost44903056 | D : [L2]field | C :  | U : 
-[L16:C17] "field" | P : [L12]block-stmt-ghost44903056 | D : self | C :  | U : 1
-[L17:C19] "field" | P : [L12]block-stmt-ghost44903056 | D : [L16]field | C :  | U : 
-[L18:C19] "this" | P : [L12]block-stmt-ghost44903056 | D : [L1]MyClass | C :  | U : 
-[L18:C24] "field" | P : [L12]block-stmt-ghost44903056 | D : [L2]field | C :  | U : 
+[L12:C9] "block-stmt-ghost-12" | P : [L4]aMethod | D : self | C : 1 | U : 
+[L13:C19] "field" | P : [L12]block-stmt-ghost-12 | D : [L8]field | C :  | U : 
+[L14:C19] "this" | P : [L12]block-stmt-ghost-12 | D : [L1]MyClass | C :  | U : 
+[L14:C24] "field" | P : [L12]block-stmt-ghost-12 | D : [L2]field | C :  | U : 
+[L16:C17] "field" | P : [L12]block-stmt-ghost-12 | D : self | C :  | U : 1
+[L17:C19] "field" | P : [L12]block-stmt-ghost-12 | D : [L16]field | C :  | U : 
+[L18:C19] "this" | P : [L12]block-stmt-ghost-12 | D : [L1]MyClass | C :  | U : 
+[L18:C24] "field" | P : [L12]block-stmt-ghost-12 | D : [L2]field | C :  | U : 
 [L21:C15] "field" | P : [L4]aMethod | D : [L8]field | C :  | U : 
 [L22:C15] "this" | P : [L4]aMethod | D : [L1]MyClass | C :  | U : 
 [L22:C20] "field" | P : [L4]aMethod | D : [L2]field | C :  | U : 

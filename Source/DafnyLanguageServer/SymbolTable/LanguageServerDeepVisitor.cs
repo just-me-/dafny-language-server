@@ -222,8 +222,8 @@ namespace DafnyLanguageServer.SymbolTable
         //Weiteres Problem war: Hash Name muss ja unique sein, drum hab ich noch das + o.GetHashCode geadded.
         //Tests 3, 7, 10schlagen entsprechend fehl, da ein zusätzliches Child nun drin ist und der Name auch den Hashcode beinhatlet.
     public override void Visit(BlockStmt o)
-        {
-            var name = "block-stmt-ghost" + o.GetHashCode();
+    {
+        var name = "block-stmt-ghost-" + o.Tok.line;
             var symbol = CreateSymbol(   
                 name: name,
                 kind: Kind.BlockScope,
@@ -250,7 +250,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(WhileStmt o)
         {
-            var name = "while-stmt-ghost" + o.GetHashCode();
+            var name = "while-stmt-ghost-" + o.Tok.line;
             var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
@@ -277,7 +277,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(IfStmt o)
         {
-            var name = "if-stmt-ghost" + o.GetHashCode();
+            var name = "if-stmt-ghost-" + o.Tok.line;
 
             var symbol = CreateSymbol(
                 name: name,
