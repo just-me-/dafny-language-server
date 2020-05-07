@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie;
 using Microsoft.Dafny;
+using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -33,6 +35,26 @@ namespace DafnyLanguageServer.SymbolTable
         {
             Dictionary<string, List<ISymbol>> internalSymbolListsForVisitors = new Dictionary<string, List<ISymbol>>();
 
+            SymbolInformation programRoot = new SymbolInformation()
+            {
+                BaseClasses = null,
+                ChildrenHash = new Dictionary<string, ISymbol>(),
+                DeclarationOrigin = null,
+                Descendants = new List<ISymbol>(),
+                Kind = Kind.Undefined,
+                Name = "_programRootNode",
+                Parent = null,
+                Position = new TokenPosition()
+                {
+                    Token = new Token(0, 0),
+                    BodyStartToken = new Token(0, 0),
+                    BodyEndToken = new Token(int.MaxValue, int.MaxValue)
+                },
+                Type = null,
+                Usages = null,
+
+            };
+            programRoot.DeclarationOrigin = programRoot;
             foreach (var module in _dafnyProgram.Modules())
             {
                 var declarationVisitor = new LanguageServerDeclarationVisitor();
