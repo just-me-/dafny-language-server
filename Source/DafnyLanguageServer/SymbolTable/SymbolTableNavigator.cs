@@ -78,7 +78,7 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            return wrappingSymbol;
+            return null;
         }
 
 
