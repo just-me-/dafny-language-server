@@ -60,8 +60,8 @@ namespace DafnyLanguageServer
                     .WithHandler<CounterExampleHandler>()
                     .WithHandler<CodeLensTaskHandler>()
                     .WithHandler<DefinitionTaskHandler>()
-                    //.WithHandler<RenamePreparationTaskHandler>()
                     .WithHandler<RenameTaskHandler>()
+                    .WithHandler<RenamePreparationTaskHandler>()
                     .WithHandler<ShutdownHandler>()
             );
 

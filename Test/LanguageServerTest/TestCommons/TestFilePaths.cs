@@ -147,6 +147,10 @@ namespace TestCommons
         public static readonly string st_10e = CreateTestfilePath("symbolTable/10_expect.txt");
 
 
+        //Rename
+        public static readonly string rn_scopes = CreateTestfilePath("rename/renameWithScopes.dfy");
+
+
 
 
         private static string CreateTestfilePath(string s)

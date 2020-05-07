@@ -22,7 +22,6 @@ namespace DafnyLanguageServer.Handler.LspStandard
         {
         }
 
-
         public RenameRegistrationOptions GetRegistrationOptions()
         {
             return new RenameRegistrationOptions
@@ -38,13 +37,24 @@ namespace DafnyLanguageServer.Handler.LspStandard
             {
                 return Task.Run(() =>
                 {
-                    //todo das komisch... müsste ich nicht iwie noch das file angeben, hust hust, wtf xD
-
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var stMan = _workspaceManager.SymbolTableManager;
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
-                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col); 
+
+                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col);
+
+                    if (symbolAtCursor == null)
+                    {
+                        return null;
+                    }
+
+                    if (reservedWords.Contains(request.NewName))
+                    {
+                        return null;
+                        //todo #341 message sender hier iwie möglich?
+                    }
+
                     IEnumerable<ISymbol> symbolsToRename = stMan.GetAllOccurences(symbolAtCursor);
                     List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
 
@@ -79,5 +89,20 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
         }
 
+        private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
+        {
+            "abstract", "array", "as", "assert", "assume", "bool", "break",
+            "calc", "case", "char", "class", "codatatype", "colemma",
+            "constructor", "copredicate", "datatype", "decreases",
+            "default", "else", "ensures", "exists", "extends", "false",
+            "forall", "free", "fresh", "function", "ghost", "if", "imap", "import",
+            "in", "include", "inductive", "int", "invariant", "iset", "iterator", "label",
+            "lemma", "map", "match", "method", "modifies", "modify",
+            "module", "multiset", "nat", "new", "newtype", "null", "object",
+            "old", "opened", "predicate", "print", "protected",
+            "reads", "real", "refines", "requires", "return", "returns", "seq",
+            "set", "static", "string", "then", "this", "trait", "true", "type",
+            "var", "where", "while", "yield", "yields"
+        };
     }
 }

@@ -192,7 +192,7 @@ namespace DafnyLanguageServer.SymbolTable
             return symbols;
         }
 
-        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor)
+        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor) //@navigator
         {
             var decl = symbolAtCursor.DeclarationOrigin;
             yield return decl;

@@ -24,9 +24,11 @@ class MyClass {
 
 }
 
-/*
+
 method Main() {  
     var a := new MyClass();
     a.aMethod();
+	OtherMethod();
 } 
-*/
+
+method OtherMethod() {}
