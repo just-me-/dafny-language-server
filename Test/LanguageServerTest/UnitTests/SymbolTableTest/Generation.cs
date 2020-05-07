@@ -10,7 +10,10 @@ using Files = TestCommons.Paths;
 
 namespace SymbolTableTest
 {
-    public class Basics
+    /// <summary>
+    /// Tests the creation of Symbol Tables
+    /// </summary>
+    public class Generation
     {
 
         [Test]
@@ -137,6 +140,22 @@ namespace SymbolTableTest
 
             CollectionAssert.AreEquivalent(excpected, actual);
         }
+
+        [Test]
+        public void Test11_ModulesWithinASingleFile()
+        {
+            var fa = Files.st_11;
+            var fe = Files.st_11e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            //CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
+
+
+
 
         private List<string> GetSymbolsAsList(string f)
         {
