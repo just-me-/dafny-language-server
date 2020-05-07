@@ -167,17 +167,20 @@ namespace SymbolTableTest
 
             var dtu = new DafnyTranslationUnit(physFile);
             var dafnyProg = dtu.Verify().DafnyProgram;
-            var sm = new SymbolTableManager(dafnyProg); // interface nutzen? todo
+            IManager sm = new SymbolTableManager(dafnyProg);
             INavigator navigator = new SymbolTableNavigator();
             List<ISymbol> symbols = new List<ISymbol>();
-            foreach (var modul in sm.SymbolTables.Values) //halt iwie unschön... ein rootroot symbol "project" einführen?
+
+            var root = sm.DafnyProgramRootSymbol;
+
+            foreach (var modul in root.Children)
             {
-                symbols.AddRange(navigator.TopDownAll(modul, x => x.Kind != Kind.BlockScope)); 
+                symbols.AddRange(navigator.TopDownAll(modul)); 
             }
             var actual = symbols.Select(x => x.ToString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);
-            Console.Write(sm.CreateDebugReadOut());
+            Console.Write(((SymbolTableManager)sm).CreateDebugReadOut());
 
             return actual;
         }

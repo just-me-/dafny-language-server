@@ -5,7 +5,7 @@
 [L25:C13] "i" | P : [L23]foo | D : self | C :  | U : 6
 [L27:C9] "while-stmt-ghost-27" | P : [L23]foo | D : self | C : 0 | U : 
 [L30:C22] "i" | P : [L27]while-stmt-ghost-27 | D : [L25]i | C :  | U : 
-[L28:C19] "isPos" | P : [L27]while-stmt-ghost-27 | D : sthherewrong :( | C :  | U : 
+[L28:C19] "isPos" | P : [L27]while-stmt-ghost-27 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
 [L28:C25] "i" | P : [L27]while-stmt-ghost-27 | D : [L25]i | C :  | U : 
 [L29:C19] "i" | P : [L27]while-stmt-ghost-27 | D : [L25]i | C :  | U : 
 [L27:C17] "i" | P : [L27]while-stmt-ghost-27 | D : [L25]i | C :  | U : 

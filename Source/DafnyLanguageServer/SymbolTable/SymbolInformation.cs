@@ -130,25 +130,10 @@ namespace DafnyLanguageServer.SymbolTable
                     && LineStart >= line);
         }
 
-        private bool HasLine()
-        {
-            return (LineStart != null && LineEnd != null);
-        }
 
-        private bool WrapsLine(int line)
-        {
-            return (LineStart <= line
-                    && LineEnd >= line
-                    && LineStart != LineEnd);
-        }
 
-        private bool WrapsCharOnSameLine(int line, int character)
-        {
-            return (LineStart == LineEnd
-                    && LineStart == line
-                    && ColumnStart <= character
-                    && ColumnEnd >= character);
-        }
+
+
     }
 
     public enum Kind
