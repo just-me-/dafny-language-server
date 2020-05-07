@@ -48,5 +48,6 @@ namespace SymbolTableTest
             ISymbol symbol = new SymbolInformationFake(0, 0, 0, 2);
             Assert.False(symbol.Wraps(0, 5));
         }
+        // equals testen todo
     }
 }

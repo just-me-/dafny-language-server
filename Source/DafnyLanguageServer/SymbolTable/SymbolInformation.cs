@@ -95,15 +95,32 @@ namespace DafnyLanguageServer.SymbolTable
             return false;
         }
 
+        /// <summary>
+        /// Checks if the given position (line, character) is included in the symbols range. 
+        /// </summary>
         public bool Wraps(int line, int character)
         {
-            return HasLine()
-                   &&
-                   (
-                    WrapsLine(line)
-                    || WrapsCharOnSameLine(line, character)
-                    || WrapsAsCondition(line, character) // in case symbol is a pre- or post-condition
-                   );
+            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character));
+        }
+
+        private bool HasLine()
+        {
+            return (Line != null && LineEnd != null);
+        }
+
+        private bool WrapsLine(int line)
+        {
+            return (Line <= line
+                    && LineEnd >= line
+                    && Line != LineEnd);
+        }
+
+        private bool WrapsCharOnSameLine(int line, int character)
+        {
+            return (LineStart == LineEnd
+                    && LineStart == line
+                    && ColumnStart <= character
+                    && ColumnEnd >= character);
         }
 
         private bool WrapsAsCondition(int line, int character)
