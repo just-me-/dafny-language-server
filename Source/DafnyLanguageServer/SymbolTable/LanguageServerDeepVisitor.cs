@@ -21,15 +21,16 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-        public SymbolTableVisitorEverythingButDeclarations(ISymbol entryModule)
+        public SymbolTableVisitorEverythingButDeclarations(ISymbol rootNode) : base(rootNode)
         {
-            Module = entryModule;
+            GoesDeep = true;
         }
+
         public override void Visit(ModuleDefinition o)
         {
             // Set scope but do not create new symbol.
 
-            var preDeclaredSymbol = Module; //vlt können wir hier dann den ultra root mitgeben später.
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
 
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
@@ -83,10 +84,6 @@ namespace DafnyLanguageServer.SymbolTable
 
             SetScope(preDeclaredSymbol);
             SetClass(preDeclaredSymbol);
-            if (preDeclaredSymbol.Name == DEFAULT_CLASS_NAME)
-            {
-                SetDefaultClass(preDeclaredSymbol);
-            }
         }
 
         public override void Leave(ClassDecl o)

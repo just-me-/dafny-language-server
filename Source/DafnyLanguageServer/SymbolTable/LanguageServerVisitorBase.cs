@@ -13,10 +13,22 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
+        protected LanguageServerVisitorBase(ISymbol rootNode)
+        {
+            RootNode = rootNode;
+            SetScope(RootNode);
+        }
+
+        public ISymbol RootNode { get; set; }
+
+        //Zum Aufbau:
         public ISymbol SurroundingScope { get; set; }
-        public ISymbol Module { get; set; }
+
+        //Accessor for Convenience:
+        public ISymbol Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
         public ISymbol CurrentClass { get; set; }
-        public ISymbol DefaultClass { get; set; }
+        public ISymbol DefaultClass => Module[DEFAULT_CLASS_NAME]; //ist mir iwie unsynmpatscih... brauhcen wir das? weil dann weiss man gar nicht recht in welchem modul man jetzt rumturnt. jedes modul hat ja ihre eigene default class. wobei, es wäre halt immer die defualtclass die zum jeweiligen symbol dazu gheört. ne. ist eigentlich gut. is eig fancy. lassenw ir.
+        public ISymbol DefaultModule => RootNode[DEFAULT_MODULE_NAME];
 
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
@@ -183,7 +195,6 @@ namespace DafnyLanguageServer.SymbolTable
         protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
         protected void SetModule(ISymbol symbol) => Module = symbol;
         protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
-        protected void SetDefaultClass(ISymbol symbol) => DefaultClass = symbol;
 
         public override void Visit(IAstElement o) { }
 

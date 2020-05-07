@@ -24,6 +24,10 @@ namespace DafnyLanguageServer.SymbolTable
         /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
         /// </summary>
         public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
+
+        /// <summary>
+        /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
+        /// </summary>
         public ISymbol DafnyProgramRootSymbol { get; private set; }
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
@@ -53,7 +57,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             foreach (var module in _dafnyProgram.Modules())
             {
-                var declarationVisitor = new LanguageServerDeclarationVisitor();
+                var declarationVisitor = new LanguageServerDeclarationVisitor(DafnyProgramRootSymbol);
                 module.Accept(declarationVisitor);
                 var symbolForModuleThatWasVisited = declarationVisitor.Module;
                 internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.Module);
