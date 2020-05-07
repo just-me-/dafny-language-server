@@ -132,13 +132,13 @@
     <value>Config file not found at:</value>
   </data>
   <data name="could_not_collect_models" xml:space="preserve">
-    <value>Error while collectiong (counter example) models.</value>
+    <value>Error while collecting (counter example) models.</value>
   </data>
   <data name="could_not_execute_compilation" xml:space="preserve">
     <value>Error while executing compilation.</value>
   </data>
-  <data name="first_symbol_not_module" xml:space="preserve">
-    <value>First symbol in table is not module.</value>
+  <data name="invalid_module_handed_to_deep_visitor" xml:space="preserve">
+    <value>Invalid Module given to deep visitor as entry point.</value>
     <comment>Used in the visitor.</comment>
   </data>
   <data name="global_class_not_registered" xml:space="preserve">

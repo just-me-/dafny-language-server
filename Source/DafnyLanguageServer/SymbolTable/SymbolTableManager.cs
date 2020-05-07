@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie;
 using Microsoft.Dafny;
+using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -16,38 +18,71 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolTableManager : IManager
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
+
         /// <summary>
         /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
         /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
         /// </summary>
         public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
 
+        /// <summary>
+        /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
+        /// </summary>
+        public ISymbol DafnyProgramRootSymbol { get; private set; }
+
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
             _dafnyProgram = dafnyProgram;
+            DafnyProgramRootSymbol = new SymbolInformation()
+            {
+                ChildrenHash = new Dictionary<string, ISymbol>(),
+                Descendants = new List<ISymbol>(),
+                Kind = Kind.RootNode,
+                Name = "_programRootNode",
+                Position = new TokenPosition()
+                {
+                    Token = new Token(0, 0),
+                    BodyStartToken = new Token(0, 0),
+                    BodyEndToken = new Token(int.MaxValue, int.MaxValue)
+                }
+            };
+            DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
+
             GenerateSymbolTable();
         }
 
         private void GenerateSymbolTable()
         {
+            Dictionary<string, ISymbol> internalSymbolListsForVisitorsVERYTEMPPPPP = new Dictionary<string, ISymbol>();
+
             foreach (var module in _dafnyProgram.Modules())
             {
-                var declarationVisitor = new LanguageServerDeclarationVisitor();
+                var declarationVisitor = new LanguageServerDeclarationVisitor(DafnyProgramRootSymbol);
                 module.Accept(declarationVisitor);
-                var declarationTable = declarationVisitor.SymbolTable;
+                var symbolForModuleThatWasVisited = declarationVisitor.Module;
+                internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.Module);
+            }
 
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations { SymbolTable = declarationTable };
+            foreach (var module in _dafnyProgram.Modules())
+            {
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( internalSymbolListsForVisitorsVERYTEMPPPPP[module.Name] );
                 module.Accept(deepVisitor);
 
-                if (deepVisitor.SymbolTable[0].Kind != Kind.Module)
-                {
-                    throw new Exception("Mimimi komisch mimimumu");
-                }
-                SymbolTables.Add(module.Name, deepVisitor.SymbolTable[0]); // todo immer erstes modul #201
 
-                string debugMe = CreateDebugReadOut();
+                var symbolOfTopLevelModule = deepVisitor.Module;
+
+                if (symbolOfTopLevelModule.Kind != Kind.Module)
+                {
+                    throw new InvalidOperationException("First Symbol after visiting a module must be the module, but it isnt.");
+                }
+
+                SymbolTables.Add(module.Name, symbolOfTopLevelModule);
             }
+
+            string debugMe = CreateDebugReadOut();
         }
+
+
 
         public string CreateDebugReadOut()
         {
@@ -64,14 +99,12 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     b.AppendLine(symbol.ToString());
                 }
+
+                b.AppendLine();
             }
             return b.ToString();
         }
 
-        public List<string> GetEntriesAsStringList()
-        {
-            return (from kvp in SymbolTables from symbol in kvp.Value.Children select symbol.ToString()).ToList();
-        }
 
 
         // ab hier das meiste auslagern(?)
@@ -87,7 +120,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             INavigator navigator = new SymbolTableNavigator();
             ISymbol symbol = null;
-            foreach (var modul in SymbolTables)
+            foreach (var modul in SymbolTables) //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
                 symbol ??= navigator.GetSymbolByPosition(modul.Value, line, character);
             }
@@ -102,7 +135,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
             }
-            return SymbolTables[originPath[0]][originPath[1]];
+            return SymbolTables[originPath[0]][originPath[1]];  //todo: neu wäre das rootNode[ 0path ding] [1pathding]  (bei merge concflcict: nicht dieses nehmen)
         }
 
         /// <summary>
@@ -114,7 +147,7 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol GetSymbolWrapperForCurrentScope(int line, int character)
         {
             ISymbol closestWrappingSymbol = null;
-            foreach (var modul in SymbolTables)
+            foreach (var modul in SymbolTables)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
             {
                 INavigator navigator = new SymbolTableNavigator();
                 closestWrappingSymbol = navigator.TopDown(modul.Value, line, character);
@@ -185,21 +218,11 @@ namespace DafnyLanguageServer.SymbolTable
                 symbol.Name != "_ctor" &&
                 symbol?.Line != null && symbol.Line > 0
             );
-            foreach (var module in SymbolTables)
+            foreach (var module in SymbolTables)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
                 symbols.AddRange(navigator.TopDownAll(module.Value, filter));
             }
             return symbols;
-        }
-
-        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor) //@navigator
-        {
-            var decl = symbolAtCursor.DeclarationOrigin;
-            yield return decl;
-            foreach (var usage in decl.Usages)
-            {
-                yield return usage;
-            }
         }
     }
 }

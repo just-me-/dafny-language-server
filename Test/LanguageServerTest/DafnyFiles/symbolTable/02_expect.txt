@@ -1,4 +1,4 @@
-[L0:C0] "_module" | P : [L] | D : self | C : 3 | U : 
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 3 | U : 
 [L6:C7] "MyClass" | P : [L0]_module | D : self | C : 3 | U : 1
 [L8:C9] "field" | P : [L6]MyClass | D : self | C :  | U : 0
 [L10:C13] "addOne" | P : [L6]MyClass | D : self | C : 2 | U : 1

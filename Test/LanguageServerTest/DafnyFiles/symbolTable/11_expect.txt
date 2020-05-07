@@ -1,0 +1,73 @@
+Module: M1
+[L3:C8] "M1" | P : [L] | D : self | C : 2 | U : 
+[L4:C11] "M1_Class" | P : [L3]M1 | D : self | C : 2 | U : 0
+[L5:C9] "_ctor" | P : [L4]M1_Class | D : self | C : 0 | U : 0
+[L6:C16] "M1_Class_Method" | P : [L4]M1_Class | D : self | C : 0 | U : 0
+[L0:C0] "_default" | P : [L3]M1 | D : self | C : 1 | U : 0
+[L9:C12] "M1_Method" | P : [L0]_default | D : self | C : 0 | U : 0
+
+Module: M2
+[L12:C8] "M2" | P : [L] | D : self | C : 2 | U : 
+[L13:C15] "M2_Class" | P : [L12]M2 | D : self | C : 2 | U : 0
+[L14:C9] "_ctor" | P : [L13]M2_Class | D : self | C : 0 | U : 0
+[L15:C16] "M2_Class_Method" | P : [L13]M2_Class | D : self | C : 0 | U : 0
+[L0:C0] "_default" | P : [L12]M2 | D : self | C : 1 | U : 0
+[L18:C12] "M2_Method" | P : [L0]_default | D : self | C : 0 | U : 0
+
+Module: _module
+[L0:C0] "_module" | P : [L] | D : self | C : 2 | U : 
+[L23:C7] "GlobalClass" | P : [L0]_module | D : self | C : 2 | U : 0
+[L24:C5] "_ctor" | P : [L23]GlobalClass | D : self | C : 0 | U : 0
+[L25:C12] "Method" | P : [L23]GlobalClass | D : self | C : 0 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L27:C8] "Global_Method" | P : [L0]_default | D : self | C : 0 | U : 0
+
+Module: ImportWithIdentifier
+[L31:C8] "ImportWithIdentifier" | P : [L] | D : self | C : 1 | U : 
+[L0:C0] "_default" | P : [L31]ImportWithIdentifier | D : self | C : 1 | U : 0
+[L33:C12] "test1" | P : [L0]_default | D : self | C : 1 | U : 0
+[L34:C13] "m1" | P : [L33]test1 | D : self | C :  | U : 1
+[L34:C27] "M1_Class" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L35:C9] "m1" | P : [L33]test1 | D : [L34]m1 | C :  | U : 
+[L35:C12] "M1_Class_Method" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L36:C9] "Mod" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L36:C13] "M1_Method" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+Module: ImportWithName
+[L39:C8] "ImportWithName" | P : [L] | D : self | C : 1 | U : 
+[L0:C0] "_default" | P : [L39]ImportWithName | D : self | C : 1 | U : 0
+[L41:C12] "test2" | P : [L0]_default | D : self | C : 1 | U : 0
+[L42:C13] "m1" | P : [L41]test2 | D : self | C :  | U : 1
+[L42:C26] "M1_Class" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L43:C9] "m1" | P : [L41]test2 | D : [L42]m1 | C :  | U : 
+[L43:C12] "M1_Class_Method" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L44:C9] "M1" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L44:C12] "M1_Method" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+
+Module: ImportOpened
+[L49:C8] "ImportOpened" | P : [L] | D : self | C : 1 | U : 
+[L0:C0] "_default" | P : [L49]ImportOpened | D : self | C : 1 | U : 0
+[L51:C12] "test3" | P : [L0]_default | D : self | C : 1 | U : 0
+[L52:C13] "m2" | P : [L51]test3 | D : self | C :  | U : 1
+[L52:C23] "M2_Class" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L53:C9] "m2" | P : [L51]test3 | D : [L52]m2 | C :  | U : 
+[L53:C12] "M2_Class_Method" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L54:C9] "M2_Method" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+
+Module: ImportMultiple
+[L58:C8] "ImportMultiple" | P : [L] | D : self | C : 1 | U : 
+[L0:C0] "_default" | P : [L58]ImportMultiple | D : self | C : 1 | U : 0
+[L61:C12] "test3" | P : [L0]_default | D : self | C : 2 | U : 0
+[L62:C13] "m1" | P : [L61]test3 | D : self | C :  | U : 0
+[L62:C26] "M1_Class" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L63:C13] "m2" | P : [L61]test3 | D : self | C :  | U : 1
+[L63:C26] "M2_Class" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L64:C9] "m2" | P : [L61]test3 | D : [L63]m2 | C :  | U : 
+[L64:C12] "M2_Class_Method" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L65:C9] "M1" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L65:C12] "M1_Method" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+
+Module: UsingGlobals
+[L69:C8] "UsingGlobals" | P : [L] | D : self | C : 1 | U : 
+[L0:C0] "_default" | P : [L69]UsingGlobals | D : self | C : 1 | U : 0
+[L70:C12] "test3" | P : [L0]_default | D : self | C : 0 | U : 0
+

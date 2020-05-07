@@ -97,7 +97,7 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while collectiong (counter example) models..
+        ///   Looks up a localized string similar to Error while collecting (counter example) models..
         /// </summary>
         internal static string could_not_collect_models {
             get {
@@ -115,20 +115,20 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First symbol in table is not module..
-        /// </summary>
-        internal static string first_symbol_not_module {
-            get {
-                return ResourceManager.GetString("first_symbol_not_module", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Global Class Scope was not registered..
         /// </summary>
         internal static string global_class_not_registered {
             get {
                 return ResourceManager.GetString("global_class_not_registered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Module given to deep visitor as entry point..
+        /// </summary>
+        internal static string invalid_module_handed_to_deep_visitor {
+            get {
+                return ResourceManager.GetString("invalid_module_handed_to_deep_visitor", resourceCulture);
             }
         }
         

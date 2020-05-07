@@ -10,7 +10,10 @@ using Files = TestCommons.Paths;
 
 namespace SymbolTableTest
 {
-    public class Basics
+    /// <summary>
+    /// Tests the creation of Symbol Tables
+    /// </summary>
+    public class Generation
     {
 
         [Test]
@@ -138,6 +141,22 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
+        [Test]
+        public void Test11_ModulesWithinASingleFile()
+        {
+            var fa = Files.st_11;
+            var fe = Files.st_11e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            //CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
+
+
+
+
         private List<string> GetSymbolsAsList(string f)
         {
             var physFile = new PhysicalFile
@@ -150,8 +169,11 @@ namespace SymbolTableTest
             var dafnyProg = dtu.Verify().DafnyProgram;
             var sm = new SymbolTableManager(dafnyProg); // interface nutzen? todo
             INavigator navigator = new SymbolTableNavigator();
-            Predicate<ISymbol> filter = x => x.Kind != Kind.BlockScope;
-            var symbols = navigator.TopDownAll(sm.SymbolTables.First().Value, filter); // todo husthust
+            List<ISymbol> symbols = new List<ISymbol>();
+            foreach (var modul in sm.SymbolTables.Values) //halt iwie unschön... ein rootroot symbol "project" einführen?
+            {
+                symbols.AddRange(navigator.TopDownAll(modul, x => x.Kind != Kind.BlockScope)); 
+            }
             var actual = symbols.Select(x => x.ToString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);

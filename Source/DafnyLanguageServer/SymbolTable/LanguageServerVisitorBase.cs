@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Serilog.Sinks.File;
-using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
-using LiteralExpr = Microsoft.Dafny.LiteralExpr;
-using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
@@ -21,33 +13,22 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        public List<ISymbol> SymbolTable { get; set; } = new List<ISymbol>();
-        public ISymbol SurroundingScope { get; set; }
-        public ISymbol CurrentModule { get; set; }
-        public ISymbol CurrentClass { get; set; }
-
-        private ISymbol _globalScope;
-
-        public ISymbol GlobalScope
+        protected LanguageServerVisitorBase(ISymbol rootNode)
         {
-            get
-            {
-                if (_globalScope != null)
-                {
-                    return _globalScope;
-                }
-
-                foreach (var symbol in SymbolTable)
-                {
-                    if (symbol.Name == DEFAULT_CLASS_NAME && symbol.Kind == Kind.Class)
-                    {
-                        _globalScope = symbol;
-                        return symbol; // todo this is basicly return _globalScope; ... if verinheitlichbar? #104
-                    }
-                }
-                throw new InvalidOperationException(Resources.ExceptionMessages.global_class_not_registered);
-            }
+            RootNode = rootNode;
+            SetScope(RootNode);
         }
+
+        public ISymbol RootNode { get; set; }
+
+        //Zum Aufbau:
+        public ISymbol SurroundingScope { get; set; }
+
+        //Accessor for Convenience:
+        public ISymbol Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
+        public ISymbol CurrentClass { get; set; }
+        public ISymbol DefaultClass => Module[DEFAULT_CLASS_NAME]; //ist mir iwie unsynmpatscih... brauhcen wir das? weil dann weiss man gar nicht recht in welchem modul man jetzt rumturnt. jedes modul hat ja ihre eigene default class. wobei, es wäre halt immer die defualtclass die zum jeweiligen symbol dazu gheört. ne. ist eigentlich gut. is eig fancy. lassenw ir.
+        public ISymbol DefaultModule => RootNode[DEFAULT_MODULE_NAME];
 
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
@@ -182,10 +163,10 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope.Descendants.Add(result);
             }
 
-            if (addToSymbolTable)
-            {
-                Add(result);
-            }
+            //if (addToSymbolTable)
+            //{
+            //    Add(result);
+            //}
 
             return result;
         }
@@ -210,10 +191,9 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        protected void Add(ISymbol symbol) => SymbolTable.Add(symbol);
         protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
-        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent; // besseres naming todo
-        protected void SetModule(ISymbol symbol) => CurrentModule = symbol;
+        protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+        protected void SetModule(ISymbol symbol) => Module = symbol;
         protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
 
         public override void Visit(IAstElement o) { }

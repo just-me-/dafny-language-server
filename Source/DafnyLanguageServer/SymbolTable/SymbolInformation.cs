@@ -46,11 +46,11 @@ namespace DafnyLanguageServer.SymbolTable
         //public List<SymbolInformation> Children { get; set; } // key value hash machen 
         // hash als adapter machen, user soll nix geändert haben 
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
-        public List<ISymbol> Children => ChildrenHash?.Values.ToList();
+        public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: nur deklarationen
 
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
-        public List<ISymbol> Descendants { get; set; }
+        public List<ISymbol> Descendants { get; set; }                     //Descendants: alles was drunter liegt
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public override string ToString()
@@ -153,6 +153,7 @@ namespace DafnyLanguageServer.SymbolTable
 
     public enum Kind
     {
+        RootNode,
         Module,
         Class,
         Method,
