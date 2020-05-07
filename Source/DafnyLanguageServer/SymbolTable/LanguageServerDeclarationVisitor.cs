@@ -52,7 +52,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
-            SetModule(null);
+            //SetModule(null);
         }
 
         public override void Visit(ClassDecl o)

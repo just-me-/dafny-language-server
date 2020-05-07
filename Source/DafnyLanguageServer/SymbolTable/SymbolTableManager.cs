@@ -24,53 +24,48 @@ namespace DafnyLanguageServer.SymbolTable
         /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
         /// </summary>
         public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
+        public ISymbol DafnyProgramRootSymbol { get; private set; }
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
             _dafnyProgram = dafnyProgram;
-            GenerateSymbolTable();
-        }
-
-        private void GenerateSymbolTable()
-        {
-            Dictionary<string, List<ISymbol>> internalSymbolListsForVisitors = new Dictionary<string, List<ISymbol>>();
-
-            SymbolInformation programRoot = new SymbolInformation()
+            DafnyProgramRootSymbol = new SymbolInformation()
             {
-                BaseClasses = null,
                 ChildrenHash = new Dictionary<string, ISymbol>(),
-                DeclarationOrigin = null,
                 Descendants = new List<ISymbol>(),
-                Kind = Kind.Undefined,
+                Kind = Kind.RootNode,
                 Name = "_programRootNode",
-                Parent = null,
                 Position = new TokenPosition()
                 {
                     Token = new Token(0, 0),
                     BodyStartToken = new Token(0, 0),
                     BodyEndToken = new Token(int.MaxValue, int.MaxValue)
-                },
-                Type = null,
-                Usages = null,
-
+                }
             };
-            programRoot.DeclarationOrigin = programRoot;
+            DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
+
+            GenerateSymbolTable();
+        }
+
+        private void GenerateSymbolTable()
+        {
+            Dictionary<string, ISymbol> internalSymbolListsForVisitorsVERYTEMPPPPP = new Dictionary<string, ISymbol>();
+
             foreach (var module in _dafnyProgram.Modules())
             {
                 var declarationVisitor = new LanguageServerDeclarationVisitor();
                 module.Accept(declarationVisitor);
-                internalSymbolListsForVisitors.Add(module.Name, declarationVisitor.SymbolList);
+                internalSymbolListsForVisitorsVERYTEMPPPPP.Add(module.Name, declarationVisitor.CurrentModule);
             }
 
             foreach (var module in _dafnyProgram.Modules())
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations
-                { SymbolList = internalSymbolListsForVisitors[module.Name] };
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations { CurrentModule = internalSymbolListsForVisitorsVERYTEMPPPPP[module.Name] };
                 module.Accept(deepVisitor);
 
 
-                var listofSymbols = deepVisitor.SymbolList;
-                var symbolOfTopLevelModule = listofSymbols[0];
+                var symbolOfTopLevelModule = deepVisitor.CurrentModule;
+
                 if (symbolOfTopLevelModule.Kind != Kind.Module)
                 {
                     throw new InvalidOperationException("First Symbol after visiting a module must be the module, but it isnt.");

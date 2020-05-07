@@ -174,10 +174,10 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope.Descendants.Add(result);
             }
 
-            if (addToSymbolTable)
-            {
-                Add(result);
-            }
+            //if (addToSymbolTable)
+            //{
+            //    Add(result);
+            //}
 
             return result;
         }

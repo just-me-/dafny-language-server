@@ -25,9 +25,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             // Set scope but do not create new symbol.
             // Symbol should be the first symbol in table.
-            var preDeclaredSymbol = SymbolList.First(); //todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
-            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module ||
-                !preDeclaredSymbol.IsDeclaration)
+            var preDeclaredSymbol = CurrentModule; //VERASERASRASFE TEMP TEMP TEMP TEMP TEMP GEFährlich sonst!! todo revisit this after modulesa re impelemented... steht der wirklich immer zuoberst? darf ich das einfach so machen dann?
+            if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
                 throw new InvalidOperationException(Resources.ExceptionMessages.first_symbol_not_module);
             }
@@ -35,13 +34,15 @@ namespace DafnyLanguageServer.SymbolTable
             SetModule(preDeclaredSymbol);
         }
 
-        #region navigate-through-declarations
 
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
-            SetModule(null);
+            //SetModule(null);
         }
+
+        #region navigate-through-declarations
+
 
         public override void Visit(ClassDecl o)
         {
