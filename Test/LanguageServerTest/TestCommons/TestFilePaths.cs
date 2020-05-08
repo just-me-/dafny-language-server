@@ -135,6 +135,8 @@ namespace TestCommons
         public static readonly string st_10 = CreateTestfilePath("symbolTable/10_logical_statements.dfy");
         public static readonly string st_11 = CreateTestfilePath("symbolTable/11_modules.dfy");
         public static readonly string st_12 = CreateTestfilePath("symbolTable/12_nestedModules.dfy");
+        public static readonly string st_13 = CreateTestfilePath("symbolTable/13_moduleFromDefaultScope.dfy");
+        public static readonly string st_14 = CreateTestfilePath("symbolTable/14_includedModules.dfy");
 
 
         public static readonly string st_01e = CreateTestfilePath("symbolTable/01_expect.txt");
@@ -149,6 +151,8 @@ namespace TestCommons
         public static readonly string st_10e = CreateTestfilePath("symbolTable/10_expect.txt");
         public static readonly string st_11e = CreateTestfilePath("symbolTable/11_expect.txt");
         public static readonly string st_12e = CreateTestfilePath("symbolTable/12_expect.txt");
+        public static readonly string st_13e = CreateTestfilePath("symbolTable/13_expect.txt");
+        public static readonly string st_14e = CreateTestfilePath("symbolTable/14_expect.txt");
 
 
         //Rename

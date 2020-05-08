@@ -162,7 +162,31 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            //CollectionAssert.AreEquivalent(excpected, actual);
+            CollectionAssert.AreEquivalent(excpected, actual); //todo
+        }
+
+        [Test]
+        public void Test13_AccessModuleFromGlobalScope()
+        {
+            var fa = Files.st_13;
+            var fe = Files.st_13e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual); //todo
+        }
+
+        [Test]
+        public void Test14_IncludedModule()
+        {
+            var fa = Files.st_14;
+            var fe = Files.st_14e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            //CollectionAssert.AreEquivalent(excpected, actual); //todo
         }
 
 
