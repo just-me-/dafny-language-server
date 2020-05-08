@@ -90,6 +90,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
         }
 
+        // todo das in ein json oder so für konfigurierbarkeit 
         private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",
