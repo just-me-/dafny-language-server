@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             // Set scope but do not create new symbol.
 
-            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
+             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
 
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
@@ -42,9 +42,30 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
+
+
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
+        }
+
+        public override void Visit(AliasModuleDecl o)
+        {
+            var s = CreateSymbol(
+                name: o.Name,
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.tok,
+                bodyEndPosAsToken: o.tok,
+                kind: Kind.Module,
+                type: null,
+                isDeclaration: true,
+                addUsageAtDeclaration: false,
+                canHaveChildren: false,
+                canBeUsed: true
+            );
+        }
+        public override void Leave(AliasModuleDecl o)
+        {
         }
 
         #region navigate-through-declarations
@@ -307,21 +328,23 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
-            if (e.Type is UserDefinedType type)   //can it be anything else?
-                t = type;
-
-            var declaration = FindDeclaration(t.Name, SurroundingScope);
-
-            UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)
             {
-                userType = e.Type as UserDefinedType;
+                t = e.Type as UserDefinedType;
             }
+            else
+            {
+                string x = "heyo i was something else xD"; //this is for debug. is this ever triggering??
+            }
+
+            var nav = new SymbolTableNavigator();
+            var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
+
             var symbol = CreateSymbol(
                 name: t.Name,
                 kind: Kind.Class,
                 type: e.Type,
-                typeDefinition: userType,
+                typeDefinition: t,
 
                 positionAsToken: t.tok,
                 bodyStartPosAsToken: e.Tok,  //"new"
@@ -357,7 +380,14 @@ namespace DafnyLanguageServer.SymbolTable
         //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
-            var declaration = FindDeclaration(e.Name, SurroundingScope);
+
+            var nav = new SymbolTableNavigator();
+            var resolvedSymbol = nav.GetSymbolByPosition(RootNode, e.ResolvedExpression.tok);
+
+            var declaration = FindDeclaration(e.Name, resolvedSymbol);
+
+
+            //var declaration = FindDeclaration(e.SuffixName, definingItem);
 
             UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)
@@ -389,9 +419,22 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ExprDotName e)
         {
-            string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
-            var declaration = FindDeclaration(e.SuffixName, definingClass);
+            MemberSelectExpr mse = null;
+            if (e.ResolvedExpression is MemberSelectExpr)
+            {
+                mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen.
+            }
+            else
+            {
+                string s = "ever triggering???";
+            }
+
+            var nav = new SymbolTableNavigator();
+            var definingItem = nav.GetSymbolByPosition(RootNode, mse.Member.tok);
+            
+            //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
+            //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
+            var declaration = FindDeclaration(e.SuffixName, definingItem);
 
             UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)

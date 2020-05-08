@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.SymbolTable
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public ISymbol Module { get; set; }
-        public ISymbol AssociatedDefaultClass => Module["_default"];
+        public ISymbol AssociatedDefaultClass => Module?["_default"];
 
         public override string ToString()
         {
