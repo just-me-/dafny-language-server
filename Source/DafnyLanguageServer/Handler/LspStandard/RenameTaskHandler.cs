@@ -39,7 +39,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 {
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var stMan = _workspaceManager.SymbolTableManager;
-                    var nav = new SymbolTableNavigator();
+                    var nav = new SymbolTableNavigator(); // navigator should not be used here.. use manager.. todo
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
 
@@ -56,7 +56,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                         //todo #341 message sender hier iwie möglich?
                     }
 
-                    IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurences(symbolAtCursor);
+                    IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurrences(symbolAtCursor);
                     List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
 
                     foreach (var symbol in symbolsToRename)
@@ -66,8 +66,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
                             NewText = request.NewName,
                             Range = new Range()
                             {
-                                Start = new Position(symbol.Line-1 ?? 0, symbol.Column-1 ?? 0),
-                                End = new Position(symbol.Line-1 ?? 0, symbol.ColumnEnd-1 ?? 0)
+                                Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
+                                End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
                             }
                         };
                         editsForOneFile.Add(textEdit);
@@ -90,6 +90,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
         }
 
+        // todo das in ein json oder so für konfigurierbarkeit 
         private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",

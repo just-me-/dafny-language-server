@@ -64,7 +64,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
         {
-            if (rootEntry == null || (!rootEntry.Wraps(line, character) && !rootEntry.Name.Equals("_module")))
+            if (rootEntry == null || (!rootEntry.Wraps(line, character) && (rootEntry.Name != "_module")))
             {
                 return null;
             }
@@ -79,16 +79,17 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            return wrappingSymbol;
+            if (line == wrappingSymbol.Line && character <= wrappingSymbol.ColumnEnd)
+            {
+                return wrappingSymbol;
+            }
+            return null;
         }
 
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, IToken token)
         {
             return GetSymbolByPosition(rootEntry, token.line, token.col);
         }
-
-
-
 
         /// <summary>
         /// Searches all symbols (not just definitions). An optional filter for the conditions can be specified.
@@ -114,7 +115,6 @@ namespace DafnyLanguageServer.SymbolTable
             }
             return symbolList;
         }
-
 
         /// <summary>
         /// Starts a search from the inside out. Returns the first symbol found.
@@ -159,15 +159,15 @@ namespace DafnyLanguageServer.SymbolTable
             ISymbol child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
             if (child == null)
             {
-                // habe ich geerbt?
+                // inherited?
                 if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
                 {
                     foreach (var baseScope in symbol.BaseClasses)
                     {
-                        var baseclassSymbol = baseScope?.Children?.Where(filter.Invoke).FirstOrDefault();
-                        if (baseclassSymbol != null)
+                        var baseClassSymbol = baseScope?.Children?.Where(filter.Invoke).FirstOrDefault();
+                        if (baseClassSymbol != null)
                         {
-                            return baseclassSymbol;
+                            return baseClassSymbol;
                         }
                     }
                 }
@@ -200,13 +200,11 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// REturns all occurences of a symbol.
+        /// Returns all occurrences of a symbol.
         /// That is, the declaration and all usages.
         /// Targeted for Rename-Feature.
         /// </summary>
-        /// <param name="symbolAtCursor">Symbol you are interested in.</param>
-        /// <returns></returns>
-        public IEnumerable<ISymbol> GetAllOccurences(ISymbol symbolAtCursor) //@navigator
+        public IEnumerable<ISymbol> GetAllOccurrences(ISymbol symbolAtCursor)
         {
             var decl = symbolAtCursor.DeclarationOrigin;
             yield return decl;
@@ -221,11 +219,12 @@ namespace DafnyLanguageServer.SymbolTable
             filter ??= (s => true);
 
             var list = symbol?.Children?.Where(filter.Invoke).ToList();
-            // habe ich geerbt?
+            // inherited?
             if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
+                    // todo translation file
                     list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("Invalid Filter Operation"));
                 }
             }
