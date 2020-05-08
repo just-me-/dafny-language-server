@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch.Equals(rootEntry) && (child.Name == "_default" || child.Name == "_module")) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
+                if (bestMatch == null || bestMatch.Equals(rootEntry) && (child.Name == "_default" || child.Name == "_module"))
                 {
                     if (child.Children.Any())
                     {
@@ -64,7 +64,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
         {
-            if (rootEntry == null || (!rootEntry.Wraps(line, character) && !rootEntry.Name.Equals("_module")))
+            if (rootEntry == null || (!rootEntry.Wraps(line, character) && (rootEntry.Name != "_module")))
             {
                 return null;
             }
@@ -91,9 +91,6 @@ namespace DafnyLanguageServer.SymbolTable
             return GetSymbolByPosition(rootEntry, token.line, token.col);
         }
 
-
-
-
         /// <summary>
         /// Searches all symbols (not just definitions). An optional filter for the conditions can be specified.
         /// </summary>
@@ -118,7 +115,6 @@ namespace DafnyLanguageServer.SymbolTable
             }
             return symbolList;
         }
-
 
         /// <summary>
         /// Starts a search from the inside out. Returns the first symbol found.
