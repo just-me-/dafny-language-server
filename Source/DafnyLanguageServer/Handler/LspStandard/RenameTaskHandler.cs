@@ -38,12 +38,12 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 return Task.Run(() =>
                 {
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
-                    var stMan = _workspaceManager.SymbolTableManager;
+                    var manager = _workspaceManager.SymbolTableManager;
                     var nav = new SymbolTableNavigator(); // navigator should not be used here.. use manager.. todo
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
 
-                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col);
+                    var symbolAtCursor = manager.GetSymbolByPosition(line, col);
 
                     if (symbolAtCursor == null)
                     {
@@ -56,10 +56,9 @@ namespace DafnyLanguageServer.Handler.LspStandard
                         //todo #341 message sender hier iwie möglich?
                     }
 
-                    IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurrences(symbolAtCursor);
                     List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
 
-                    foreach (var symbol in symbolsToRename)
+                    foreach (var symbol in symbolAtCursor.GetAllOccurrences())
                     {
                         var textEdit = new TextEdit
                         {

@@ -137,6 +137,22 @@ namespace DafnyLanguageServer.SymbolTable
                     && ColumnStart <= character
                     && ColumnEnd >= character);
         }
+
+
+        /// <summary>
+        /// Returns all occurrences of a symbol.
+        /// That is, the declaration and all usages.
+        /// Targeted for Rename-Feature.
+        /// </summary>
+        public IEnumerable<ISymbol> GetAllOccurrences()
+        {
+            var decl = DeclarationOrigin;
+            yield return decl;
+            foreach (var usage in decl.Usages)
+            {
+                yield return usage;
+            }
+        }
     }
 
     public enum Kind

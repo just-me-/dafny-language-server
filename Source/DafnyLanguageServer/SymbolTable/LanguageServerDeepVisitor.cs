@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             // Set scope but do not create new symbol.
 
-             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
+            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
 
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
@@ -242,10 +242,10 @@ namespace DafnyLanguageServer.SymbolTable
         //Evtl schöner: "addAsChild" boolean... möchte jetzt aber das rename machen.
         //Weiteres Problem war: Hash Name muss ja unique sein, drum hab ich noch das + o.GetHashCode geadded.
         //Tests 3, 7, 10schlagen entsprechend fehl, da ein zusätzliches Child nun drin ist und der Name auch den Hashcode beinhatlet.
-    public override void Visit(BlockStmt o)
-    {
-        var name = "block-stmt-ghost-" + o.Tok.line;
-            var symbol = CreateSymbol(   
+        public override void Visit(BlockStmt o)
+        {
+            var name = "block-stmt-ghost-" + o.Tok.line;
+            var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
 
@@ -279,7 +279,7 @@ namespace DafnyLanguageServer.SymbolTable
                 bodyStartPosAsToken: o.Tok,
                 bodyEndPosAsToken: o.EndTok,
 
-                isDeclaration: true, 
+                isDeclaration: true,
                 declarationSymbol: null,
                 addUsageAtDeclaration: false,
 
@@ -412,9 +412,9 @@ namespace DafnyLanguageServer.SymbolTable
         //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
-
             var nav = new SymbolTableNavigator();
-            var resolvedSymbol = nav.TopDown(RootNode, e.ResolvedExpression.tok);
+            var token = e.ResolvedExpression.tok;
+            var resolvedSymbol = nav.TopDown(RootNode, token.line, token.col);
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
 
@@ -462,8 +462,9 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var definingItem = nav.TopDown(RootNode, mse.Member.tok);
-            
+            var token = e.ResolvedExpression.tok;
+            var definingItem = nav.TopDown(RootNode, token.line, token.col);
+
             //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
             //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
             var declaration = FindDeclaration(e.SuffixName, definingItem);

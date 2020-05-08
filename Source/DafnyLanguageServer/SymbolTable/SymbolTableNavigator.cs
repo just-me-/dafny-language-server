@@ -57,12 +57,6 @@ namespace DafnyLanguageServer.SymbolTable
             return bestMatch;
         }
 
-        public ISymbol TopDown(ISymbol rootEntry, IToken t)
-        {
-            return TopDown(rootEntry, t.line, t.col);
-        }
-
-
         /// <summary>
         /// Searches the tree down. Returns the found symbol or null.
         /// Pay attention to all symbols, not just definitions.
@@ -203,21 +197,6 @@ namespace DafnyLanguageServer.SymbolTable
                 list.AddRange(GetAllChildren(parent, filter));
             }
             return list;
-        }
-
-        /// <summary>
-        /// Returns all occurrences of a symbol.
-        /// That is, the declaration and all usages.
-        /// Targeted for Rename-Feature.
-        /// </summary>
-        public IEnumerable<ISymbol> GetAllOccurrences(ISymbol symbolAtCursor)
-        {
-            var decl = symbolAtCursor.DeclarationOrigin;
-            yield return decl;
-            foreach (var usage in decl.Usages)
-            {
-                yield return usage;
-            }
         }
 
         private List<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)

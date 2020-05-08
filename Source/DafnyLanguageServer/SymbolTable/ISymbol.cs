@@ -36,6 +36,8 @@ namespace DafnyLanguageServer.SymbolTable
         bool Wraps(ISymbol child);
         bool Wraps(int line, int character);
 
+        IEnumerable<ISymbol> GetAllOccurrences();
+
         ISymbol this[string index] { get; set; }
 
         bool Equals(Object obj); // todo is this used? 
