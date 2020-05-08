@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch == rootEntry) && (child.Name == "_default" || child.Name == "_module")) //in case merge conflict das module muss hier sein weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat.
+                if ((bestMatch == null || bestMatch == rootEntry) && (child.Name == "_default" || child.Name == "_module")) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
                 {
                     if (child.Children.Any())
                     {
