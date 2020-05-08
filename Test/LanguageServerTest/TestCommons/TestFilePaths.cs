@@ -134,7 +134,7 @@ namespace TestCommons
         public static readonly string st_09 = CreateTestfilePath("symbolTable/09_traits.dfy");
         public static readonly string st_10 = CreateTestfilePath("symbolTable/10_logical_statements.dfy");
         public static readonly string st_11 = CreateTestfilePath("symbolTable/11_modules.dfy");
-        public static readonly string st_12 = CreateTestfilePath("symbolTable/11_nestedModules.dfy");
+        public static readonly string st_12 = CreateTestfilePath("symbolTable/12_nestedModules.dfy");
 
 
         public static readonly string st_01e = CreateTestfilePath("symbolTable/01_expect.txt");
