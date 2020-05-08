@@ -49,8 +49,6 @@ namespace DafnyLanguageServer.SymbolTable
             SetScope(null);
         }
 
-
-
         public override void Visit(AliasModuleDecl o)
         {
             var s = CreateSymbol(
@@ -330,21 +328,28 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
-            if (e.Type is UserDefinedType type)   //can it be anything else?
-                t = type;
-
-            var declaration = FindDeclaration(t.Name, SurroundingScope);
-
-            UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)
             {
-                userType = e.Type as UserDefinedType;
+                t = e.Type as UserDefinedType;
             }
+            else
+            {
+                string x = "heyo i was something else xD";
+            }
+
+            //var declaration = FindDeclaration(t.Name, SurroundingScope);
+
+            var typeToken = t.ResolvedClass.tok;
+            var nav = new SymbolTableNavigator();
+            var declaration = nav.GetSymbolByPosition(RootNode, typeToken.line, typeToken.col);
+
+
+
             var symbol = CreateSymbol(
                 name: t.Name,
                 kind: Kind.Class,
                 type: e.Type,
-                typeDefinition: userType,
+                typeDefinition: t,
 
                 positionAsToken: t.tok,
                 bodyStartPosAsToken: e.Tok,  //"new"
