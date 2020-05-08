@@ -358,6 +358,9 @@ namespace DafnyLanguageServer.SymbolTable
                 canBeUsed: false
             );
 
+            /*Would suggest to leave that... would also add various microsoft and dafny ghost symbols and stuff....
+             
+             
             //if accessed by modul accessors, lets create symbols for these as well.
             var accessors = t.NamePath.ToString().Split('.').ToList();
             LinkedList<string> a2 = new LinkedList<string>(accessors);
@@ -384,7 +387,7 @@ namespace DafnyLanguageServer.SymbolTable
                     canBeUsed: false
                 );
             }
-
+            */
 
         }
 
