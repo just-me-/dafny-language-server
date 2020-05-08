@@ -133,7 +133,12 @@ namespace DafnyLanguageServer.SymbolTable
                 }
             }
 
-            return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
+            if (entryPoint.Kind != Kind.RootNode)
+            {
+                return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
+            }
+
+            return null;
         }
 
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)

@@ -44,7 +44,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false
+                canBeUsed: true
             );
             symbol.Module = symbol;
             SetScope(symbol);
