@@ -106,7 +106,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public bool Wraps(int line, int character)
         {
-            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character));
+            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
         }
 
         private bool HasLine()
@@ -125,6 +125,15 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return (LineStart == LineEnd
                     && LineStart == line
+                    && ColumnStart <= character
+                    && ColumnEnd >= character);
+        }
+
+        private bool WrapsAsClassField(int line, int character)
+        {
+            // Class fields do not have LineStart/LineEnd. This fields are a special case.
+            return (Kind == Kind.Field && LineEnd == 0
+                    && Line == line
                     && ColumnStart <= character
                     && ColumnEnd >= character);
         }

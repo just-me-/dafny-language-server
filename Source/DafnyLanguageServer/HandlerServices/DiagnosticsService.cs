@@ -31,15 +31,15 @@ namespace DafnyLanguageServer.HandlerServices
         {
             _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
 
-                var rawDiagnosticElements = fileRepository.Result.DiagnosticElements;
-                var diagnostics = CreateLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
-                PublishDiagnosticsParams p = new PublishDiagnosticsParams
-                {
-                    Uri = fileRepository.PhysicalFile.Uri,
-                    Diagnostics = new Container<Diagnostic>(diagnostics)
-                };
-                _router.Document.PublishDiagnostics(p);
-                _msgSenderService.SendCountedErrors(diagnostics.Count);
+            var rawDiagnosticElements = fileRepository.Result.DiagnosticElements;
+            var diagnostics = CreateLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
+            PublishDiagnosticsParams p = new PublishDiagnosticsParams
+            {
+                Uri = fileRepository.PhysicalFile.Uri,
+                Diagnostics = new Container<Diagnostic>(diagnostics)
+            };
+            _router.Document.PublishDiagnostics(p);
+            _msgSenderService.SendCountedErrors(diagnostics.Count);
         }
 
         public Collection<Diagnostic> CreateLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)
@@ -102,7 +102,7 @@ namespace DafnyLanguageServer.HandlerServices
             Diagnostic d = new Diagnostic
             {
                 Message = msg,
-                Range = FileHelper.CreateRange(line, col, length),
+                Range = this.CreateRange(line, col, length),
                 Severity = severity,
                 Source = src
             };
@@ -122,7 +122,7 @@ namespace DafnyLanguageServer.HandlerServices
                 int auxline = aux.Tok.line - 1;
                 int auxcol = aux.Tok.col - 1;
                 int auxlength = file.GetLengthOfLine(auxline) - auxcol;
-                Range auxrange = FileHelper.CreateRange(auxline, auxcol, auxlength);
+                Range auxrange = CreateRange(auxline, auxcol, auxlength);
 
                 string src = file.FileName;
                 Diagnostic relatedDiagnostic = new Diagnostic()
@@ -136,6 +136,18 @@ namespace DafnyLanguageServer.HandlerServices
                 relatedInformations.Add(relatedDiagnostic);
             }
             return relatedInformations;
+        }
+
+        private Range CreateRange(long line, long chr, long length)
+        {
+            if (length < 0)
+            {
+                length = Math.Abs(length);
+                chr -= length;
+            }
+            Position start = new Position(line, chr);
+            Position end = new Position(line, chr + length);
+            return new Range(start, end);
         }
     }
 }
