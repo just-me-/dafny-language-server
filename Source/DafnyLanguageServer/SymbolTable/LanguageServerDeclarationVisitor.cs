@@ -192,6 +192,16 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
+        public override void Leave(AliasModuleDecl o)
+        {
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Visit(AliasModuleDecl o)
+        {
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
         public override void Visit(ExprDotName e)
         {
             throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);

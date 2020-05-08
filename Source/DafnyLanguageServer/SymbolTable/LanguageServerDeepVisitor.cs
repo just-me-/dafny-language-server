@@ -42,9 +42,32 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
+
+
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
+        }
+
+
+
+        public override void Visit(AliasModuleDecl o)
+        {
+            var s = CreateSymbol(
+                name: o.Name,
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.tok,
+                bodyEndPosAsToken: o.tok,
+                kind: Kind.Module,
+                type: null,
+                isDeclaration: true,
+                addUsageAtDeclaration: false,
+                canHaveChildren: false,
+                canBeUsed: true
+            );
+        }
+        public override void Leave(AliasModuleDecl o)
+        {
         }
 
         #region navigate-through-declarations
