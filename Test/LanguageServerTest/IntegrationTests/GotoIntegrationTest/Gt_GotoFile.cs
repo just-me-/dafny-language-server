@@ -80,6 +80,28 @@ namespace GotoIntegrationTest
         }
     }
 
+    [TestFixture]
+    public class ClassC : GoToBase
+    {
+        public ClassC() : base(40, 8, Files.gt_goto)
+        {
+        }
+
+        [Test]
+        public void ClassFieldDeclaration()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, 40, 10);
+            SpecificVerificationWithGoalInSameFile();
+        }
+
+        [Test]
+        public void ClassFieldUsage()
+        {
+            SetGoToDefinitionWithoutZeroIndexing(file, 36, 9);
+            SpecificVerificationWithGoalInSameFile();
+        }
+    }
+
 
     [TestFixture]
     public class MethodInClassA : GoToBase

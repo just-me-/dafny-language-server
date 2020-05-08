@@ -31,4 +31,13 @@ method Main() {
    var a := 1;
    var b := 2;
    var sum := a + b;
+
+   var abc := new ClassC();
+   abc.ABC := 1;
+}
+
+class ClassC {
+   var ABC: int;
+   constructor () { }
+   method myMethod() { /* do something */ }
 }

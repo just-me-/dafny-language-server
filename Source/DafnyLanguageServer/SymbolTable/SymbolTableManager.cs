@@ -28,7 +28,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
         /// </summary>
-        public ISymbol DafnyProgramRootSymbol { get; private set; }
+        public ISymbol DafnyProgramRootSymbol { get; }
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -63,7 +63,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             foreach (var module in _dafnyProgram.Modules())
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( DafnyProgramRootSymbol );
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(DafnyProgramRootSymbol);
                 module.Accept(deepVisitor);
 
 
@@ -213,7 +213,7 @@ namespace DafnyLanguageServer.SymbolTable
                 symbol.Kind == Kind.Function ||
                 symbol.Kind == Kind.Method) &&
                 // no constructors and make sure no out-of-range root _defaults
-                symbol.Name != "_ctor" &&
+                symbol.Kind != Kind.Constructor &&
                 symbol?.Line != null && symbol.Line > 0
             );
             foreach (var module in SymbolTables)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
