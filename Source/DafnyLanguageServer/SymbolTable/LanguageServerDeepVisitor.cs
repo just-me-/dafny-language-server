@@ -380,7 +380,14 @@ namespace DafnyLanguageServer.SymbolTable
         //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
-            var declaration = FindDeclaration(e.Name, SurroundingScope);
+
+            var nav = new SymbolTableNavigator();
+            var resolvedSymbol = nav.GetSymbolByPosition(RootNode, e.ResolvedExpression.tok);
+
+            var declaration = FindDeclaration(e.Name, resolvedSymbol);
+
+
+            //var declaration = FindDeclaration(e.SuffixName, definingItem);
 
             UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)
