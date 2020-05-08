@@ -28,12 +28,20 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
         /// </summary>
-        public ISymbol DafnyProgramRootSymbol { get; }
+        public ISymbol DafnyProgramRootSymbol { get; } // todo SymbolTable ersetzen durch diesen einstiegspunkt? 
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
             _dafnyProgram = dafnyProgram;
-            DafnyProgramRootSymbol = new SymbolInformation()
+            DafnyProgramRootSymbol = CreateRootNode();
+            DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
+
+            GenerateSymbolTable();
+        }
+
+        private ISymbol CreateRootNode()
+        {
+            return new SymbolInformation()
             {
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Descendants = new List<ISymbol>(),
@@ -46,9 +54,6 @@ namespace DafnyLanguageServer.SymbolTable
                     BodyEndToken = new Token(int.MaxValue, int.MaxValue)
                 }
             };
-            DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
-
-            GenerateSymbolTable();
         }
 
         private void GenerateSymbolTable()
