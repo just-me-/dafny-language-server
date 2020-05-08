@@ -21,8 +21,13 @@ module M {
             count := addOne(count);
         }
 
-        method Get() returns (r: nat) {
+        method get() returns (r: nat) {
             return count;
+        }
+
+        method write() {
+            var c := get();
+            print c, '\n';
         }
     }
 }
