@@ -20,17 +20,6 @@ module M2 {
     method MethodIn_default() {}
 }
 
-//Global Module Definitions 
-
-class GlobalClass {
-    constructor(){}
-    method Method() {}
-    var field : int;
-}
-method Global_Method() {}
-
-
-
 //Tests
 
 module ImportWithIdentifier { 
