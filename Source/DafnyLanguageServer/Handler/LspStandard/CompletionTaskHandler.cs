@@ -4,18 +4,12 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using DafnyLanguageServer.HandlerServices;
 using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
-using DafnyServer;
-using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
-using SymbolInformation = DafnyLanguageServer.SymbolTable.SymbolInformation;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -48,7 +42,7 @@ namespace DafnyLanguageServer.Handler
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() => FindCompletionItems(line, col, codeLine));
+                return await Task.Run(() => GetCompletionItems(line, col, codeLine));
             }
             catch (Exception e)
             {
@@ -58,69 +52,19 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        private List<CompletionItem> FindCompletionItems(int line, int col, string codeLine)
+        private List<CompletionItem> GetCompletionItems(int line, int col, string codeLine)
         {
-            var service = new CompletionService();
-            var desire = service.GetSupposedDesire(col, codeLine, out var extractedSymbolName);
+            var service = new CompletionService(_workspaceManager.SymbolTableManager);
 
-            var manager = _workspaceManager.SymbolTableManager;
-            var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
-            switch (desire)
-            {
-                case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 
-                                              // modul1.modul2.class ist auch möglich
-                                              // und
-                                              // object.variable gibts auch... not supported yet 
-                    var selectedSymbol = manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
-                    return GetSymbolsProperties(manager, selectedSymbol);
-                case CompletionType.afterNew:
-                    return GetClassSymbolsInScope(manager, wrappingEntrypointSymbol);
-                case CompletionType.allInScope:
-                    return GetAllSymbolsInScope(manager, wrappingEntrypointSymbol);
-                default:
-                    throw new ArgumentException("Users desire is not supported yet.");
-            }
-        }
-
-        private List<CompletionItem> GetSymbolsProperties(IManager manager, ISymbol selectedSymbol)
-        {
             var completionItems = new List<CompletionItem>();
-            // if selectedSymbol is null... error iwas... not found mässig... todo
-            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
-            foreach (var suggestionElement in classSymbol.Children)
+            foreach (var symbol in service.GetSymbols())
             {
-                // strip constructor 2do 
-                /*
-                var ignoredSymbols = new[] { "_ctor", "_default" };
-                list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
-                return list;
-                */
-                AddCompletionItem(completionItems, suggestionElement);
+                completionItems.Add(CreateCompletionItem(symbol));
             }
             return completionItems;
         }
 
-        private List<CompletionItem> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
-        {
-            var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => x.Kind == Kind.Class)))
-            {
-                AddCompletionItem(completionItems, suggestionElement);
-            }
-            return completionItems;
-        }
-
-        private List<CompletionItem> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
-        {
-            var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol))
-            {
-                AddCompletionItem(completionItems, suggestionElement);
-            }
-            return completionItems;
-        }
-
-        private void AddCompletionItem(List<CompletionItem> items, ISymbol symbol)
+        private CompletionItem CreateCompletionItem(ISymbol symbol)
         {
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
@@ -134,7 +78,7 @@ namespace DafnyLanguageServer.Handler
                 //Range = range
             };
 
-            items.Add(
+            return
                 new CompletionItem
                 {
 #if DEBUG
@@ -145,7 +89,7 @@ namespace DafnyLanguageServer.Handler
 #endif
                     Kind = kind,
                     TextEdit = textEdit
-                });
+                };
         }
     }
 }
