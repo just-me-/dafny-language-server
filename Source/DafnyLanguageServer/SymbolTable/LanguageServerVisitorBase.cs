@@ -14,10 +14,15 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        protected LanguageServerVisitorBase(ISymbol rootNode)
+        protected LanguageServerVisitorBase(ISymbol entryPoint)
         {
-            RootNode = rootNode;
-            SetScope(RootNode);
+            SetScope(entryPoint);
+            var root = entryPoint;
+            while (root.Kind != Kind.RootNode)
+            {
+                root = root.Parent;
+            }
+            RootNode = root;
         }
 
         public ISymbol RootNode { get; set; }

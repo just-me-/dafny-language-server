@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {
 
-        public LanguageServerDeclarationVisitor(ISymbol rootNode) : base(rootNode)
+        public LanguageServerDeclarationVisitor(ISymbol entryPoint) : base(entryPoint)
         {
             GoesDeep = false;
         }
@@ -53,7 +53,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Leave(ModuleDefinition o)
         {
-            SetScope(null);
+            JumpUpInScope();
         }
 
         public override void Visit(ClassDecl o)

@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-        public SymbolTableVisitorEverythingButDeclarations(ISymbol rootNode) : base(rootNode)
+        public SymbolTableVisitorEverythingButDeclarations(ISymbol entryPoint) : base(entryPoint)
         {
             GoesDeep = true;
         }
@@ -357,6 +357,38 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
+
+            /*Would suggest to leave that... would also add various microsoft and dafny ghost symbols and stuff....
+             
+             
+            //if accessed by modul accessors, lets create symbols for these as well.
+            var accessors = t.NamePath.ToString().Split('.').ToList();
+            LinkedList<string> a2 = new LinkedList<string>(accessors);
+            a2.RemoveLast(); //wen ich da iweder mit removeAt(Length-1^) blabla wieder 100 fehler, kein bokc
+
+            foreach (string accessor in a2)
+            {
+                var modulDecl = FindDeclaration(accessor, declaration);
+                CreateSymbol(
+                    name: accessor,
+                    kind: Kind.Module,
+                    type: null,
+                    typeDefinition: null,
+
+                    positionAsToken: t.NamePath.tok, //todo ist das ganze ding.. [M1.M2.M3.Class] hier scheitert es. an den einzelnen tok komm ich glaube ich nicht ran. manuell machen, naja.
+                    bodyStartPosAsToken: null,
+                    bodyEndPosAsToken: null,
+
+                    isDeclaration: false,
+                    declarationSymbol: declaration,
+                    addUsageAtDeclaration: true,
+
+                    canHaveChildren: false,
+                    canBeUsed: false
+                );
+            }
+            */
+
         }
 
         public override void Leave(TypeRhs e) { }
@@ -422,7 +454,7 @@ namespace DafnyLanguageServer.SymbolTable
             MemberSelectExpr mse = null;
             if (e.ResolvedExpression is MemberSelectExpr)
             {
-                mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen.
+                mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen. //geht net weil ich brauch ja auch e ansich.
             }
             else
             {

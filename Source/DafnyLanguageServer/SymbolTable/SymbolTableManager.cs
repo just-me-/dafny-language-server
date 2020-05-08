@@ -11,7 +11,7 @@ using Type = Microsoft.Dafny.Type;
 namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
-    /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work. 
+    /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work.
     /// Mostly there is only one module - the default module (and class) for a single Dafny file.
     /// This class also works as a facade for <c>SymbolNavigator</c>.
     /// </summary>
@@ -28,7 +28,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
         /// </summary>
-        public ISymbol DafnyProgramRootSymbol { get; } // todo SymbolTable ersetzen durch diesen einstiegspunkt? 
+        public ISymbol DafnyProgramRootSymbol { get; } // todo SymbolTable ersetzen durch diesen einstiegspunkt?
 
         public SymbolTableManager(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -56,30 +56,48 @@ namespace DafnyLanguageServer.SymbolTable
             };
         }
 
-        private void GenerateSymbolTable()
+        private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
+
+
+        private ISymbol GetRootNode(ModuleDefinition m)
         {
 
-            foreach (var module in _dafnyProgram.Modules())
+            var hierarchy = m.FullName.Split('.').ToList();
+
+            var rootForVisitor = DafnyProgramRootSymbol;
+
+            while (hierarchy.Count > 1)
             {
-                var declarationVisitor = new LanguageServerDeclarationVisitor(DafnyProgramRootSymbol);
-                module.Accept(declarationVisitor);
-                var symbolForModuleThatWasVisited = declarationVisitor.Module;
+                rootForVisitor = rootForVisitor[hierarchy.First()];
+                hierarchy.RemoveAt(0);
             }
 
-            foreach (var module in _dafnyProgram.Modules())
+            return rootForVisitor;
+        }
+
+        private void GenerateSymbolTable()
+        {
+            var modules = _dafnyProgram.Modules().ToList();
+            modules.Sort((m1, m2) => Depth(m1) - Depth(m2));
+
+
+            foreach (var module in modules)
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(DafnyProgramRootSymbol);
+                ISymbol rootForVisitor = GetRootNode(module);
+                var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
+                module.Accept(declarationVisitor);
+            }
+
+            foreach (var module in modules)
+            {
+                ISymbol rootForVisitor = GetRootNode(module);
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
 
-
-                var symbolOfTopLevelModule = deepVisitor.Module;
-
-                if (symbolOfTopLevelModule.Kind != Kind.Module)
+                if (Depth(module) == 0)
                 {
-                    throw new InvalidOperationException("First Symbol after visiting a module must be the module, but it isnt.");
+                    SymbolTables.Add(module.Name, deepVisitor.Module);
                 }
-
-                SymbolTables.Add(module.Name, symbolOfTopLevelModule);
             }
 
             string debugMe = CreateDebugReadOut();
@@ -111,14 +129,14 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         // ab hier das meiste auslagern(?)
-        // man kann das erst auslagern, wenn module als base symbol implementiert wurde. 
+        // man kann das erst auslagern, wenn module als base symbol implementiert wurde.
         // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
 
         public ISymbol GetSymbolByPosition(long line, long character)
         {
             return GetSymbolByPosition((int)line, (int)character); //cast should be safe in real world examples.
         }
-        // weg 
+        // weg
         public ISymbol GetSymbolByPosition(int line, int character)
         {
             INavigator navigator = new SymbolTableNavigator();
@@ -144,9 +162,9 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// In case the user is typing and there can not be an entry point via a Symbol
         /// (eg for auto completion), the entry point has to be via the scope of the wrapping parent symbol.
-        /// Use this method to get the parent symbol as en entry point. 
+        /// Use this method to get the parent symbol as en entry point.
         /// </summary>
-        //  weg 
+        //  weg
         public ISymbol GetSymbolWrapperForCurrentScope(int line, int character)
         {
             ISymbol closestWrappingSymbol = null;
@@ -160,7 +178,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         /// <summary>
         /// Provide an entry point (symbol) and a string (name of a symbol) you are looking for.
-        /// This method returns the nearest declaration with that name that can be found. 
+        /// This method returns the nearest declaration with that name that can be found.
         /// </summary>
         public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
         {
@@ -171,7 +189,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         /// <summary>
         /// This returns all symbol declaration that are in scope for the given symbol.
-        /// This recursive and can be used for functions like auto completion. 
+        /// This recursive and can be used for functions like auto completion.
         /// </summary>
         public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol)
         {
@@ -186,7 +204,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         /// <summary>
         /// Return itself if it is already a declaration.
-        /// Used for Go2Definition. 
+        /// Used for Go2Definition.
         /// </summary>
         public ISymbol GetOriginFromSymbol(ISymbol symbol)
         {
@@ -196,17 +214,17 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// For instances of classes - returns the origins "class type" as Smybol.
         /// Eg var instance = new ClassA();
-        /// Calling this function with instance will return the symbol of ClassA (origin). 
+        /// Calling this function with instance will return the symbol of ClassA (origin).
         /// </summary>
         public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
         {
-            // todo mergen213 ClassMergen 
+            // todo mergen213 ClassMergen
             var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
             return GetClassSymbolByPath(classPath);
         }
 
         /// <summary>
-        /// Gets all Symbols for features like CodeLens. 
+        /// Gets all Symbols for features like CodeLens.
         /// </summary>
         public List<ISymbol> GetAllSymbolDeclarations()
         {
