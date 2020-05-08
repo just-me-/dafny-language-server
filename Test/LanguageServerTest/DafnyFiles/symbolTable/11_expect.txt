@@ -1,73 +1,72 @@
-Module: M1
-[L3:C8] "M1" | P : [L0]_programRootNode | D : self | C : 2 | U : 2
-[L4:C11] "M1_Class" | P : [L3]M1 | D : self | C : 2 | U : 0
-[L5:C9] "_ctor" | P : [L4]M1_Class | D : self | C : 0 | U : 0
-[L6:C16] "M1_Class_Method" | P : [L4]M1_Class | D : self | C : 0 | U : 0
+[L3:C8] "M1" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L4:C11] "Class" | P : [L3]M1 | D : self | C : 3 | U : 3
+[L5:C13] "field" | P : [L4]Class | D : self | C :  | U : 3
+[L6:C9] "_ctor" | P : [L4]Class | D : self | C : 0 | U : 0
+[L7:C16] "Method" | P : [L4]Class | D : self | C : 0 | U : 3
 [L0:C0] "_default" | P : [L3]M1 | D : self | C : 1 | U : 0
-[L9:C12] "M1_Method" | P : [L0]_default | D : self | C : 0 | U : 0
-
-Module: M2
-[L12:C8] "M2" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
-[L13:C15] "M2_Class" | P : [L12]M2 | D : self | C : 2 | U : 0
-[L14:C9] "_ctor" | P : [L13]M2_Class | D : self | C : 0 | U : 0
-[L15:C16] "M2_Class_Method" | P : [L13]M2_Class | D : self | C : 0 | U : 0
-[L0:C0] "_default" | P : [L12]M2 | D : self | C : 1 | U : 0
-[L18:C12] "M2_Method" | P : [L0]_default | D : self | C : 0 | U : 0
-
-Module: ImportWithIdentifier
-[L31:C8] "ImportWithIdentifier" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
-[L0:C0] "_default" | P : [L31]ImportWithIdentifier | D : self | C : 1 | U : 0
-[L33:C12] "test1" | P : [L0]_default | D : self | C : 1 | U : 0
-[L34:C13] "m1" | P : [L33]test1 | D : self | C :  | U : 1
-[L34:C27] "M1_Class" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L35:C9] "m1" | P : [L33]test1 | D : [L34]m1 | C :  | U : 
-[L35:C12] "M1_Class_Method" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L36:C9] "Mod" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L36:C13] "M1_Method" | P : [L33]test1 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-
-Module: ImportWithName
-[L39:C8] "ImportWithName" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
-[L0:C0] "_default" | P : [L39]ImportWithName | D : self | C : 1 | U : 0
-[L41:C12] "test2" | P : [L0]_default | D : self | C : 1 | U : 0
-[L42:C13] "m1" | P : [L41]test2 | D : self | C :  | U : 1
-[L42:C26] "M1_Class" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L43:C9] "m1" | P : [L41]test2 | D : [L42]m1 | C :  | U : 
-[L43:C12] "M1_Class_Method" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L44:C9] "M1" | P : [L41]test2 | D : [L3]M1 | C :  | U : 
-[L44:C12] "M1_Method" | P : [L41]test2 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-
-Module: ImportOpened
-[L49:C8] "ImportOpened" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
-[L0:C0] "_default" | P : [L49]ImportOpened | D : self | C : 1 | U : 0
-[L51:C12] "test3" | P : [L0]_default | D : self | C : 1 | U : 0
-[L52:C13] "m2" | P : [L51]test3 | D : self | C :  | U : 1
-[L52:C23] "M2_Class" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L53:C9] "m2" | P : [L51]test3 | D : [L52]m2 | C :  | U : 
-[L53:C12] "M2_Class_Method" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L54:C9] "M2_Method" | P : [L51]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-
-Module: ImportMultiple
-[L58:C8] "ImportMultiple" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
-[L0:C0] "_default" | P : [L58]ImportMultiple | D : self | C : 1 | U : 0
-[L61:C12] "test3" | P : [L0]_default | D : self | C : 2 | U : 0
-[L62:C13] "m1" | P : [L61]test3 | D : self | C :  | U : 0
-[L62:C26] "M1_Class" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L63:C13] "m2" | P : [L61]test3 | D : self | C :  | U : 1
-[L63:C26] "M2_Class" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L64:C9] "m2" | P : [L61]test3 | D : [L63]m2 | C :  | U : 
-[L64:C12] "M2_Class_Method" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-[L65:C9] "M1" | P : [L61]test3 | D : [L3]M1 | C :  | U : 
-[L65:C12] "M1_Method" | P : [L61]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
-
-Module: UsingGlobals
-[L69:C8] "UsingGlobals" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
-[L0:C0] "_default" | P : [L69]UsingGlobals | D : self | C : 1 | U : 0
-[L70:C12] "test3" | P : [L0]_default | D : self | C : 0 | U : 0
-
-Module: _module
-[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
-[L23:C7] "GlobalClass" | P : [L0]_module | D : self | C : 2 | U : 0
-[L24:C5] "_ctor" | P : [L23]GlobalClass | D : self | C : 0 | U : 0
-[L25:C12] "Method" | P : [L23]GlobalClass | D : self | C : 0 | U : 0
-[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
-[L27:C8] "Global_Method" | P : [L0]_default | D : self | C : 0 | U : 0
+[L10:C12] "MethodIn_default" | P : [L0]_default | D : self | C : 0 | U : 3
+[L13:C8] "M2" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L14:C11] "Class" | P : [L13]M2 | D : self | C : 3 | U : 2
+[L15:C13] "field" | P : [L14]Class | D : self | C :  | U : 2
+[L16:C9] "_ctor" | P : [L14]Class | D : self | C : 0 | U : 0
+[L17:C16] "Method" | P : [L14]Class | D : self | C : 0 | U : 2
+[L0:C0] "_default" | P : [L13]M2 | D : self | C : 1 | U : 0
+[L20:C12] "MethodIn_default" | P : [L0]_default | D : self | C : 0 | U : 1
+[L25:C8] "ImportWithIdentifier" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L25]ImportWithIdentifier | D : self | C : 1 | U : 0
+[L27:C12] "test1" | P : [L0]_default | D : self | C : 1 | U : 0
+[L28:C13] "m1" | P : [L27]test1 | D : self | C :  | U : 2
+[L28:C27] "Class" | P : [L27]test1 | D : [L4]Class | C :  | U : 
+[L29:C9] "m1" | P : [L27]test1 | D : [L28]m1 | C :  | U : 
+[L29:C12] "Method" | P : [L27]test1 | D : [L7]Method | C :  | U : 
+[L30:C15] "m1" | P : [L27]test1 | D : [L28]m1 | C :  | U : 
+[L30:C18] "field" | P : [L27]test1 | D : [L5]field | C :  | U : 
+[L31:C9] "Mod" | P : [L27]test1 | D : [L26]Mod | C :  | U : 
+[L31:C13] "MethodIn_default" | P : [L27]test1 | D : [L10]MethodIn_default | C :  | U : 
+[L26:C12] "Mod" | P : [L25]ImportWithIdentifier | D : self | C :  | U : 1
+[L34:C8] "ImportWithName" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L34]ImportWithName | D : self | C : 1 | U : 0
+[L36:C12] "test2" | P : [L0]_default | D : self | C : 1 | U : 0
+[L37:C13] "m1" | P : [L36]test2 | D : self | C :  | U : 2
+[L37:C26] "Class" | P : [L36]test2 | D : [L4]Class | C :  | U : 
+[L38:C9] "m1" | P : [L36]test2 | D : [L37]m1 | C :  | U : 
+[L38:C12] "Method" | P : [L36]test2 | D : [L7]Method | C :  | U : 
+[L39:C15] "m1" | P : [L36]test2 | D : [L37]m1 | C :  | U : 
+[L39:C18] "field" | P : [L36]test2 | D : [L5]field | C :  | U : 
+[L40:C9] "M1" | P : [L36]test2 | D : [L35]M1 | C :  | U : 
+[L40:C12] "MethodIn_default" | P : [L36]test2 | D : [L10]MethodIn_default | C :  | U : 
+[L35:C12] "M1" | P : [L34]ImportWithName | D : self | C :  | U : 1
+[L45:C8] "ImportOpened" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L45]ImportOpened | D : self | C : 1 | U : 0
+[L47:C12] "test3" | P : [L0]_default | D : self | C : 1 | U : 0
+[L48:C13] "m2" | P : [L47]test3 | D : self | C :  | U : 2
+[L48:C23] "Class" | P : [L47]test3 | D : [L14]Class | C :  | U : 
+[L49:C9] "m2" | P : [L47]test3 | D : [L48]m2 | C :  | U : 
+[L49:C12] "Method" | P : [L47]test3 | D : [L17]Method | C :  | U : 
+[L50:C15] "m2" | P : [L47]test3 | D : [L48]m2 | C :  | U : 
+[L50:C18] "field" | P : [L47]test3 | D : [L15]field | C :  | U : 
+[L51:C9] "MethodIn_default" | P : [L47]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L46:C19] "M2" | P : [L45]ImportOpened | D : self | C :  | U : 0
+[L55:C8] "ImportMultiple" | P : [L0]_programRootNode | D : self | C : 3 | U : 0
+[L0:C0] "_default" | P : [L55]ImportMultiple | D : self | C : 1 | U : 0
+[L58:C12] "test3" | P : [L0]_default | D : self | C : 2 | U : 0
+[L59:C13] "m1" | P : [L58]test3 | D : self | C :  | U : 2
+[L59:C26] "Class" | P : [L58]test3 | D : [L4]Class | C :  | U : 
+[L60:C13] "m2" | P : [L58]test3 | D : self | C :  | U : 2
+[L60:C26] "Class" | P : [L58]test3 | D : [L14]Class | C :  | U : 
+[L61:C15] "m1" | P : [L58]test3 | D : [L59]m1 | C :  | U : 
+[L61:C18] "field" | P : [L58]test3 | D : [L5]field | C :  | U : 
+[L62:C15] "m2" | P : [L58]test3 | D : [L60]m2 | C :  | U : 
+[L62:C18] "field" | P : [L58]test3 | D : [L15]field | C :  | U : 
+[L63:C9] "m1" | P : [L58]test3 | D : [L59]m1 | C :  | U : 
+[L63:C12] "Method" | P : [L58]test3 | D : [L7]Method | C :  | U : 
+[L64:C9] "m2" | P : [L58]test3 | D : [L60]m2 | C :  | U : 
+[L64:C12] "Method" | P : [L58]test3 | D : [L17]Method | C :  | U : 
+[L65:C9] "M1" | P : [L58]test3 | D : [L56]M1 | C :  | U : 
+[L65:C12] "MethodIn_default" | P : [L58]test3 | D : [L10]MethodIn_default | C :  | U : 
+[L66:C9] "M2" | P : [L58]test3 | D : [L57]M2 | C :  | U : 
+[L66:C12] "MethodIn_default" | P : [L58]test3 | D : [L20]MethodIn_default | C :  | U : 
+[L56:C12] "M1" | P : [L55]ImportMultiple | D : self | C :  | U : 1
+[L57:C12] "M2" | P : [L55]ImportMultiple | D : self | C :  | U : 1
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 0 | U : 0

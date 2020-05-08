@@ -150,7 +150,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            //CollectionAssert.AreEquivalent(excpected, actual);
+            CollectionAssert.AreEquivalent(excpected, actual);
         }
 
 
