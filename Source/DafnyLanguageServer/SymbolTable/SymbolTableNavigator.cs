@@ -78,7 +78,13 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            return wrappingSymbol;
+
+            if (line == wrappingSymbol.Line && character <= wrappingSymbol.ColumnEnd)
+            {
+                return wrappingSymbol;
+            }
+
+            return null;
         }
 
 
