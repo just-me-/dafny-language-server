@@ -382,7 +382,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
 
             var nav = new SymbolTableNavigator();
-            var resolvedSymbol = nav.GetSymbolByPosition(RootNode, e.ResolvedExpression.tok);
+            var resolvedSymbol = nav.TopDown(RootNode, e.ResolvedExpression.tok);
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
 
@@ -430,7 +430,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var definingItem = nav.GetSymbolByPosition(RootNode, mse.Member.tok);
+            var definingItem = nav.TopDown(RootNode, mse.Member.tok);
             
             //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
             //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition

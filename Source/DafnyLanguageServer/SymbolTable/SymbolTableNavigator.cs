@@ -57,6 +57,12 @@ namespace DafnyLanguageServer.SymbolTable
             return bestMatch;
         }
 
+        public ISymbol TopDown(ISymbol rootEntry, IToken t)
+        {
+            return TopDown(rootEntry, t.line, t.col);
+        }
+
+
         /// <summary>
         /// Searches the tree down. Returns the found symbol or null.
         /// Pay attention to all symbols, not just definitions.
