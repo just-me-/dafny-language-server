@@ -33,5 +33,4 @@ module TestModul2 {
         Mod3.gmeth();
         //Mod2.M3.gmeth(); //not allowed
     }
-
 }
