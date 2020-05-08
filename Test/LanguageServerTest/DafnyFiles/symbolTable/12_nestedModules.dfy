@@ -17,6 +17,8 @@ module TestModul1 {
     import M1
     method test() {
         var x := new M1.M2.M3.Class();
+        x.meth();
+        print x.field;
         //M1.M2.M3.gmeth(); seems not to be supported by Dafny
     }
 }
@@ -28,8 +30,13 @@ module TestModul2 {
     method test() {
         var x := new Mod2.M3.Class();
         var z := new Mod3.Class();
+        
         x.meth();
+        print x.field;
+
         z.meth();
+        print z.field;
+
         Mod3.gmeth();
         //Mod2.M3.gmeth(); //not allowed
     }

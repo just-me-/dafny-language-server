@@ -51,14 +51,41 @@ namespace DafnyLanguageServer.SymbolTable
             GenerateSymbolTable();
         }
 
+        private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;
+
+
+
+        private Dictionary<string, ISymbol> _rootModulesForVisitors = new Dictionary<string, ISymbol>();
+
+        private ISymbol GetRootNode(ModuleDefinition m)
+        {
+    
+            var hierarchy = m.FullName.Split('.').ToList();
+
+            var rootForVisitor = DafnyProgramRootSymbol;
+
+            while (hierarchy.Count != 1)
+            {
+                rootForVisitor = rootForVisitor[hierarchy.First()];
+            }
+
+            return rootForVisitor;
+        }
+
         private void GenerateSymbolTable()
         {
+            var modules = _dafnyProgram.Modules().ToList();
+            modules.Sort((m1, m2) => Depth(m1) - Depth(m2)); //gäbe height iwas.
 
-            foreach (var module in _dafnyProgram.Modules())
+
+            foreach (var module in modules)
             {
-                var declarationVisitor = new LanguageServerDeclarationVisitor(DafnyProgramRootSymbol);
+                ISymbol rootForVisitor = GetRootNode(module);
+                var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
                 module.Accept(declarationVisitor);
+
                 var symbolForModuleThatWasVisited = declarationVisitor.Module;
+
             }
 
             foreach (var module in _dafnyProgram.Modules())
