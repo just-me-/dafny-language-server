@@ -8,7 +8,6 @@ using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
 
-//Notiz: Alle failenden tests sind aukommentiert damit CI nicht ausrastet. Wird später gefixed im Milestone 5 wenn wir Symbol Table haben. Alle Todos Ticket 71 todo
 {
     [TestFixture]
     public class ClassA : GoToBase
@@ -349,26 +348,26 @@ namespace GotoIntegrationTest
 
         private const int l = 29;
 
-        //[Test]
+        [Test]
         public void LeftMost_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 23);
-            VerifyResult(file, 26, 8);   //todo, das failed, uninitialized variable
+            VerifyResult(file, 27, 8);
         }
 
-        //[Test]
+        [Test]
         public void MidWord_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 25);
-            VerifyResult(file, 26, 8);
+            VerifyResult(file, 27, 8);
         }
 
 
-        //[Test]
+        [Test]
         public void RightMost_UnitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 27);
-            VerifyResult(file, 26, 8);
+            VerifyResult(file, 27, 8);
         }
     }
 
