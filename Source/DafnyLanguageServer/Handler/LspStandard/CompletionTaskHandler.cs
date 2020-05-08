@@ -55,9 +55,11 @@ namespace DafnyLanguageServer.Handler
         private List<CompletionItem> GetCompletionItems(int line, int col, string codeLine)
         {
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
+            var desire = service.GetSupposedDesire(codeLine, col);
+            var entryPoint = service.GetWrappingEntrypointSymbol(line, col);
 
             var completionItems = new List<CompletionItem>();
-            foreach (var symbol in service.GetSymbols())
+            foreach (var symbol in service.GetSymbols(desire, entryPoint))
             {
                 completionItems.Add(CreateCompletionItem(symbol));
             }

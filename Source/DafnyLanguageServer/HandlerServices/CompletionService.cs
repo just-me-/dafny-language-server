@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
@@ -17,7 +14,6 @@ namespace DafnyLanguageServer.HandlerServices
 
     public class CompletionService
     {
-        public CompletionType Desire { get; private set; }
         public string ExtractedSymbol { get; private set; }
         public IManager Manager { get; }
 
@@ -26,10 +22,20 @@ namespace DafnyLanguageServer.HandlerServices
             Manager = manager;
         }
 
-        public void AnalyzeSupposedDesire(string line, int col)
+        /// <summary>
+        /// Analyzes the user's intent. Sets the extracted symbol as a side effect as a string (necessary for individual functions like "AfterDot").
+        /// Symbol can be requested as property <c>ExtractedSymbol</c>. (eg for testing this component)
+        /// </summary>
+        public CompletionType GetSupposedDesire(string line, int col)
         {
-            ExtractedSymbol = "TMP";
-            Desire = CompletionType.AfterNew;
+            //ExtractedSymbol = "TMP";
+            //return CompletionType.AfterNew;
+
+            // tmp to write first test... test driven design ;) 
+            string symbolName;
+            var desire = OLDGetSupposedDesire(col, line, out symbolName);
+            ExtractedSymbol = symbolName;
+            return desire;
         }
 
         private CompletionType OLDGetSupposedDesire(int colPos, string line, out string symbolName) // hmm evt doch besser ins file selbst? 
@@ -78,22 +84,32 @@ namespace DafnyLanguageServer.HandlerServices
             return CompletionType.AllInScope;
         }
 
-        public IEnumerable<ISymbol> GetSymbols(string line, int col)
+        /// <summary>
+        /// Returns the wrapping symbol for the given scope.
+        /// Can be used as entry point to call <c>GetSymbols</c>.
+        /// </summary>
+        public ISymbol GetWrappingEntrypointSymbol(int line, int col)
         {
-            AnalyzeSupposedDesire(line, col);
-            var wrappingEntrypointSymbol = Manager.GetSymbolWrapperForCurrentScope(line, col);
+            return Manager.GetSymbolWrapperForCurrentScope(line, col);
+        }
 
-            switch (Desire)
+        /// <summary>
+        /// Call <c>GetSupposedDesire</c> before this function to get the <c>CompletionType</c> parameter.
+        /// Call <c>GetWrappingEntrypointSymbol</c> to get the entry point parameter. 
+        /// </summary>
+        public IEnumerable<ISymbol> GetSymbols(CompletionType desire, ISymbol wrappingEntrypointSymbol)
+        {
+            switch (desire)
             {
                 case CompletionType.AfterDot:
-                    var selectedSymbol = Manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
+                    var selectedSymbol = Manager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
                     return GetSymbolsProperties(Manager, selectedSymbol);
                 case CompletionType.AfterNew:
                     return GetClassSymbolsInScope(Manager, wrappingEntrypointSymbol);
                 case CompletionType.AllInScope:
                     return GetAllSymbolsInScope(Manager, wrappingEntrypointSymbol);
                 default:
-                    throw new ArgumentException("Users desire is not supported yet.");
+                    throw new ArgumentException("Users desire is not supported yet."); // todo lang file
             }
         }
 
