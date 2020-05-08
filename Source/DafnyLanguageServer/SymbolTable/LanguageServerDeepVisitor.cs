@@ -30,7 +30,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             // Set scope but do not create new symbol.
 
-            var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
+             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Module);
 
             if (preDeclaredSymbol.Name != o.Name || preDeclaredSymbol.Kind != Kind.Module || !preDeclaredSymbol.IsDeclaration)
             {
