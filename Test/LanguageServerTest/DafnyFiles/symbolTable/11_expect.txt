@@ -1,4 +1,3 @@
-SymboleTable for G:\Dokumente\VisualStudio\BA\dafny-language-server\Test\LanguageServerTest\DafnyFiles\symbolTable\11_modules.dfy
 Module: M1
 [L3:C8] "M1" | P : [L0]_programRootNode | D : self | C : 2 | U : 2
 [L4:C11] "M1_Class" | P : [L3]M1 | D : self | C : 2 | U : 0
