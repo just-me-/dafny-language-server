@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie;
 using Microsoft.Boogie.VCExprAST;
 using Microsoft.Extensions.Logging;
 
@@ -80,6 +81,13 @@ namespace DafnyLanguageServer.SymbolTable
             }
             return wrappingSymbol;
         }
+
+        public ISymbol GetSymbolByPosition(ISymbol rootEntry, IToken token)
+        {
+            return GetSymbolByPosition(rootEntry, token.line, token.col);
+        }
+
+
 
 
         /// <summary>

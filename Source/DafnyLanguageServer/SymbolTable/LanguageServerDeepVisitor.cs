@@ -334,12 +334,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                string x = "heyo i was something else xD"; //this is for debug.
+                string x = "heyo i was something else xD"; //this is for debug. is this ever triggering??
             }
 
-            var typeToken = t.ResolvedClass.tok;
             var nav = new SymbolTableNavigator();
-            var declaration = nav.GetSymbolByPosition(RootNode, typeToken.line, typeToken.col);
+            var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
 
             var symbol = CreateSymbol(
                 name: t.Name,
@@ -413,9 +412,22 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ExprDotName e)
         {
-            string definingClassName = e.Lhs.Type.ToString();
-            var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
-            var declaration = FindDeclaration(e.SuffixName, definingClass);
+            MemberSelectExpr mse = null;
+            if (e.ResolvedExpression is MemberSelectExpr)
+            {
+                mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen.
+            }
+            else
+            {
+                string s = "ever triggering???";
+            }
+
+            var nav = new SymbolTableNavigator();
+            var definingItem = nav.GetSymbolByPosition(RootNode, mse.Member.tok);
+            
+            //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
+            //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
+            var declaration = FindDeclaration(e.SuffixName, definingItem);
 
             UserDefinedType userType = null;
             if (e.Type != null && e.Type is UserDefinedType)
