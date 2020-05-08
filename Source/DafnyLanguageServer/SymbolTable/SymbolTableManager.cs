@@ -51,11 +51,8 @@ namespace DafnyLanguageServer.SymbolTable
             GenerateSymbolTable();
         }
 
-        private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;
+        private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
 
-
-
-        private Dictionary<string, ISymbol> _rootModulesForVisitors = new Dictionary<string, ISymbol>();
 
         private ISymbol GetRootNode(ModuleDefinition m)
         {
@@ -64,9 +61,10 @@ namespace DafnyLanguageServer.SymbolTable
 
             var rootForVisitor = DafnyProgramRootSymbol;
 
-            while (hierarchy.Count != 1)
+            while (hierarchy.Count > 1)
             {
                 rootForVisitor = rootForVisitor[hierarchy.First()];
+                hierarchy.RemoveAt(0);
             }
 
             return rootForVisitor;
@@ -75,7 +73,7 @@ namespace DafnyLanguageServer.SymbolTable
         private void GenerateSymbolTable()
         {
             var modules = _dafnyProgram.Modules().ToList();
-            modules.Sort((m1, m2) => Depth(m1) - Depth(m2)); //gäbe height iwas.
+            modules.Sort((m1, m2) => Depth(m1) - Depth(m2));
 
 
             foreach (var module in modules)
@@ -83,25 +81,18 @@ namespace DafnyLanguageServer.SymbolTable
                 ISymbol rootForVisitor = GetRootNode(module);
                 var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
                 module.Accept(declarationVisitor);
-
-                var symbolForModuleThatWasVisited = declarationVisitor.Module;
-
             }
 
-            foreach (var module in _dafnyProgram.Modules())
+            foreach (var module in modules)
             {
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations ( DafnyProgramRootSymbol );
+                ISymbol rootForVisitor = GetRootNode(module);
+                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
 
-
-                var symbolOfTopLevelModule = deepVisitor.Module;
-
-                if (symbolOfTopLevelModule.Kind != Kind.Module)
+                if (Depth(module) == 0)
                 {
-                    throw new InvalidOperationException("First Symbol after visiting a module must be the module, but it isnt.");
+                    SymbolTables.Add(module.Name, deepVisitor.Module);
                 }
-
-                SymbolTables.Add(module.Name, symbolOfTopLevelModule);
             }
 
             string debugMe = CreateDebugReadOut();

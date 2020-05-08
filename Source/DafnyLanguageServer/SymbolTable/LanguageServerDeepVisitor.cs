@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-        public SymbolTableVisitorEverythingButDeclarations(ISymbol rootNode) : base(rootNode)
+        public SymbolTableVisitorEverythingButDeclarations(ISymbol entryPoint) : base(entryPoint)
         {
             GoesDeep = true;
         }
