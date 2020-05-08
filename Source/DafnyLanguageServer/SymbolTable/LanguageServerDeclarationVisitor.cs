@@ -44,7 +44,7 @@ namespace DafnyLanguageServer.SymbolTable
                 addUsageAtDeclaration: false,
 
                 canHaveChildren: true,
-                canBeUsed: false
+                canBeUsed: true
             );
             symbol.Module = symbol;
             SetScope(symbol);
@@ -190,6 +190,16 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(Function o)
         {
             JumpUpInScope();
+        }
+
+        public override void Leave(AliasModuleDecl o)
+        {
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Visit(AliasModuleDecl o)
+        {
+            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(ExprDotName e)

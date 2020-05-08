@@ -1,4 +1,4 @@
-[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 3 | U : 
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 3 | U : 0
 [L1:C7] "A" | P : [L0]_module | D : self | C : 3 | U : 0
 [L2:C5] "_ctor" | P : [L1]A | D : self | C : 0 | U : 0
 [L3:C12] "a" | P : [L1]A | D : self | C : 1 | U : 0

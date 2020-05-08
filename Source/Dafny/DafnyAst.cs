@@ -3295,6 +3295,12 @@ namespace Microsoft.Dafny {
        Exports = exports;
     }
     public override object Dereference() { return Signature.ModuleDef; }
+
+    public override void Accept(Visitor v)
+    {
+        v.Visit(this);
+        v.Leave(this);
+    }
   }
 
   // Represents "module name as path [ = compilePath];", where name is a identifier and path is a possibly qualified name.
@@ -3533,10 +3539,23 @@ namespace Microsoft.Dafny {
     public void Accept(Visitor v)
     {
         v.Visit(this);
+
+        if (v.GoesDeep)
+        {
+            foreach (var moduleImport in TopLevelDecls)
+            {
+                if (moduleImport is AliasModuleDecl amd)
+                {
+                    amd.Accept(v);
+                }
+            }
+        }
+
         foreach (var class1 in AllClasses(TopLevelDecls))
         {
             class1.Accept(v);
         }
+
         v.Leave(this);
     }
 
@@ -11840,6 +11859,8 @@ namespace Microsoft.Dafny {
 
         public abstract void Leave(ModuleDefinition o);
         public abstract void Visit(ModuleDefinition o);
+        public abstract void Leave(AliasModuleDecl o);
+        public abstract void Visit(AliasModuleDecl o);
 
         public abstract void Visit(ExprDotName e);
         public abstract void Leave(ExprDotName e);

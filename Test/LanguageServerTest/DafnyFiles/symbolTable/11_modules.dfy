@@ -1,57 +1,54 @@
 //Module Definitions
 
 module M1 {
-    class M1_Class {
+    class Class {
+        var field : nat;
         constructor(){}
-        method M1_Class_Method() {}
+        method Method() {}
     }
 
-    method M1_Method() {}
+    method MethodIn_default() {}
 }
 
 module M2 {
-        class M2_Class {
+    class Class {
+        var field : nat;
         constructor(){}
-        method M2_Class_Method() {}
+        method Method() {}
     }
 
-    method M2_Method() {}
+    method MethodIn_default() {}
 }
-
-//Global Module Definitions
-
-class GlobalClass {
-    constructor(){}
-    method Method() {}
-}
-method Global_Method() {}
 
 //Tests
 
-module ImportWithIdentifier {
+module ImportWithIdentifier { 
     import Mod = M1
     method test1() {
-        var m1 := new Mod.M1_Class();
-        m1.M1_Class_Method();
-        Mod.M1_Method();
+        var m1 := new Mod.Class();
+        m1.Method();
+        print m1.field;
+        Mod.MethodIn_default();
     }
 }
 module ImportWithName {
-    import M1
+    import M1                        
     method test2() {
-        var m1 := new M1.M1_Class();
-        m1.M1_Class_Method();
-        M1.M1_Method();
+        var m1 := new M1.Class();
+        m1.Method();
+        print m1.field;
+        M1.MethodIn_default();
     }
 
 }
 
-module ImportOpened{
+module ImportOpened{ 
     import opened M2
     method test3() {
-        var m2 := new M2_Class();
-        m2.M2_Class_Method();
-        M2_Method();
+        var m2 := new Class();
+        m2.Method();
+        print m2.field;
+        MethodIn_default();
     }
 }
 
@@ -59,17 +56,13 @@ module ImportMultiple{
     import M1
     import M2
     method test3() {
-        var m1 := new M1.M1_Class();
-        var m2 := new M2.M2_Class();
-        m2.M2_Class_Method();
-        M1.M1_Method();
-    }
-}
-
-module UsingGlobals{
-    method test3() {
-        //var g := new GlobalClass();
-        //g.Method();
-        //Global_Method();   //not supported by language
+        var m1 := new M1.Class();
+        var m2 := new M2.Class();
+        print m1.field;
+        print m2.field;
+        m1.Method();
+        m2.Method();
+        M1.MethodIn_default();
+        M2.MethodIn_default();
     }
 }

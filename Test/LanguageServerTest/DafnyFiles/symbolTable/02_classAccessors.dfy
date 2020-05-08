@@ -28,6 +28,7 @@ class OtherClass {
 	
     method hotStuff() modifies this { 
         var mc := new MyClass();
+        field := mc.field;
         field := mc.addOne(2);
         field := this.addOne(2);
         field := addOne(2);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Boogie;
 using Microsoft.Boogie.VCExprAST;
 using Microsoft.Extensions.Logging;
 
@@ -45,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch.Equals(rootEntry)) && child.Name == "_default")
+                if ((bestMatch == null || bestMatch.Equals(rootEntry) && (child.Name == "_default" || child.Name == "_module")) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
                 {
                     if (child.Children.Any())
                     {
@@ -80,6 +81,13 @@ namespace DafnyLanguageServer.SymbolTable
             }
             return wrappingSymbol;
         }
+
+        public ISymbol GetSymbolByPosition(ISymbol rootEntry, IToken token)
+        {
+            return GetSymbolByPosition(rootEntry, token.line, token.col);
+        }
+
+
 
 
         /// <summary>
@@ -133,7 +141,12 @@ namespace DafnyLanguageServer.SymbolTable
                 }
             }
 
-            return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
+            if (entryPoint.Kind != Kind.RootNode)
+            {
+                return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
+            }
+
+            return null;
         }
 
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)
