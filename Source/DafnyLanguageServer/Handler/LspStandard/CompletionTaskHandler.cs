@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DafnyLanguageServer.HandlerServices;
 using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
 using DafnyServer;
@@ -24,13 +25,6 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionTaskHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
-        private enum CompletionType
-        {
-            afterDot,
-            afterNew,
-            allInScope
-        }
-
         public CompletionTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
@@ -48,7 +42,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions..." + Resources.ExceptionMessages.negative_position); // todo lang file #102 
+            _log.LogInformation("Completions..."); // todo lang file #102 
             try
             {
                 var line = (int)request.Position.Line + 1;
@@ -66,7 +60,8 @@ namespace DafnyLanguageServer.Handler
 
         private List<CompletionItem> FindCompletionItems(int line, int col, string codeLine)
         {
-            var desire = GetSupposedDesire(col, codeLine, out var extractedSymbolName);
+            var service = new CompletionService();
+            var desire = service.GetSupposedDesire(col, codeLine, out var extractedSymbolName);
 
             var manager = _workspaceManager.SymbolTableManager;
             var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
@@ -151,52 +146,6 @@ namespace DafnyLanguageServer.Handler
                     Kind = kind,
                     TextEdit = textEdit
                 });
-        }
-
-        private CompletionType GetSupposedDesire(int colPos, string line, out string symbolName)
-        {
-            // diese ganze funktion ist hässlich und buggy. 
-            var characters = line.ToCharArray();
-            int position = colPos - 2;
-            if (position > characters.Length || position < 0)
-            {
-                throw new ArgumentException("Curser position ist ausserhalb der Zeilenreichweite "); // todo translation 
-            }
-            if (characters[position] == '.')
-            {
-                position--;
-                var symbolString = "";
-                while (position >= 0)
-                {
-                    if (char.IsLetter(characters[position])
-                        || char.IsNumber(characters[position])
-                        || characters[position] == '_'
-                        || characters[position] == '-'
-                    ) // hmm ned mit regex weil chars... testen ob das a-zA-Z0-9-_ gleichwertig ist... 
-                    {
-                        symbolString += characters[position];
-                        position--;
-                    }
-                    else // das else iwie streichen mit != 
-                    {
-                        break;
-                    }
-                }
-                char[] symbolCharArray = symbolString.ToCharArray();
-                Array.Reverse(symbolCharArray);
-                symbolName = new string(symbolCharArray);
-                return CompletionType.afterDot;
-            }
-            symbolName = "";
-            if (characters.Length >= 3 && position >= 3
-                && characters[position] == ' '
-                && characters[position - 1] == 'w'
-                && characters[position - 2] == 'e'
-                && characters[position - 3] == 'n')
-            {
-                return CompletionType.afterNew;
-            }
-            return CompletionType.allInScope;
         }
     }
 }
