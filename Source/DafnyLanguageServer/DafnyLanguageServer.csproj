@@ -207,7 +207,6 @@
     <Compile Include="DafnyAccess\IDafnyTranslationUnit.cs" />
     <Compile Include="FileManager\FileRepository.cs" />
     <Compile Include="Handler\LspStandard\DefinitionTaskHandler.cs" />
-    <Compile Include="FileManager\FileHelper.cs" />
     <Compile Include="FileManager\IWorkspaceManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

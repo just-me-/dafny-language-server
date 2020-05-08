@@ -68,10 +68,7 @@ namespace DafnyLanguageServer.FileManager
                 var symbolTable = new DafnyServer.OldSymbolTable(Result.DafnyProgram);
                 return symbolTable.CalculateSymbols();
             }
-            else
-            {
-                return new List<DafnyServer.OldSymbolTable.OldSymbolInformation>();
-            }
+            return new List<DafnyServer.OldSymbolTable.OldSymbolInformation>();
         }
 
         /// <summary>
@@ -87,13 +84,10 @@ namespace DafnyLanguageServer.FileManager
                     return new CounterExampleProvider(PhysicalFile).LoadCounterModel();
                 }
             }
-
             catch (Exception e)
             {
                 throw new InvalidOperationException(Resources.ExceptionMessages.could_not_collect_models + " " + e.Message);
-
             }
-
             return new CounterExampleResults();
         }
 

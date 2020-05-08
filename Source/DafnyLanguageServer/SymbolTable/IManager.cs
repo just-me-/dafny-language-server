@@ -9,7 +9,7 @@ namespace DafnyLanguageServer.SymbolTable
     public interface IManager
     {
         ISymbol DafnyProgramRootSymbol { get; }
-        ISymbol GetSymbolByPosition(int line, int character); // das gehört in den navigator... 
+        ISymbol GetSymbolByPosition(int line, int character);
         ISymbol GetSymbolWrapperForCurrentScope(int line, int character);
         ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName);
         List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol);
