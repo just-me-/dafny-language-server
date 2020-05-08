@@ -334,16 +334,12 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                string x = "heyo i was something else xD";
+                string x = "heyo i was something else xD"; //this is for debug.
             }
-
-            //var declaration = FindDeclaration(t.Name, SurroundingScope);
 
             var typeToken = t.ResolvedClass.tok;
             var nav = new SymbolTableNavigator();
             var declaration = nav.GetSymbolByPosition(RootNode, typeToken.line, typeToken.col);
-
-
 
             var symbol = CreateSymbol(
                 name: t.Name,
