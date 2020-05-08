@@ -46,13 +46,6 @@ namespace GotoIntegrationTest
             SetGoToDefinitionWithoutZeroIndexing(file, 9, 10);
             SpecificVerificationWithGoalInSameFile();
         }
-
-        //[Test]
-        public void RightMostAfterBracket()
-        {
-            SetGoToDefinitionWithoutZeroIndexing(file, l, 30);
-            SpecificVerificationWithGoalInSameFile();
-        }
     }
 
 
@@ -83,13 +76,6 @@ namespace GotoIntegrationTest
         public void RightMost_ClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 28);
-            SpecificVerificationWithGoalInSameFile();
-        }
-
-        //[Test]
-        public void RightMostAfterBrackets_ClassB()
-        {
-            SetGoToDefinitionWithoutZeroIndexing(file, l, 30);
             SpecificVerificationWithGoalInSameFile();
         }
     }
@@ -123,14 +109,6 @@ namespace GotoIntegrationTest
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 19);
             SpecificVerificationWithGoalInSameFile();
-
-        }
-
-        //[Test]
-        public void RightMostAfterBrackets_MethodInClassA()
-        {
-            SetGoToDefinitionWithoutZeroIndexing(file, l, 21);
-            SpecificVerificationWithGoalInSameFile();
         }
     }
 
@@ -162,14 +140,6 @@ namespace GotoIntegrationTest
         public void RightMost_MethodInClassB()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 19);
-            SpecificVerificationWithGoalInSameFile();
-
-        }
-
-        //[Test]
-        public void RightMostAfterBrackets_MethodInClassB()
-        {
-            SetGoToDefinitionWithoutZeroIndexing(file, l, 21);
             SpecificVerificationWithGoalInSameFile();
         }
     }
@@ -203,13 +173,6 @@ namespace GotoIntegrationTest
         public void RightMost_MultiReturnMethod()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 33);
-            SpecificVerificationWithGoalInSameFile();
-        }
-
-        //[Test]
-        public void RightMostAfterBrackets_MultiReturnMethod()
-        {
-            SetGoToDefinitionWithoutZeroIndexing(file, l, 38);
             SpecificVerificationWithGoalInSameFile();
         }
     }
@@ -317,22 +280,21 @@ namespace GotoIntegrationTest
         private const int l = 29;
 
         [Test]
-        public void LeftMost_UnitializedVariableMore()
+        public void LeftMost_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 16);
             VerifyResult(file, 26, 8);   //todo, das failed, uninitialized variable
         }
 
         [Test]
-        public void MidWord_UnitializedVariableMore()
+        public void MidWord_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 18);
             VerifyResult(file, 26, 8);
         }
 
-
         [Test]
-        public void RightMost_UnitializedVariableMore()
+        public void RightMost_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 20);
             VerifyResult(file, 26, 8);
@@ -349,22 +311,21 @@ namespace GotoIntegrationTest
         private const int l = 29;
 
         [Test]
-        public void LeftMost_UnitializedVariableMore()
+        public void LeftMost_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 23);
             VerifyResult(file, 27, 8);
         }
 
         [Test]
-        public void MidWord_UnitializedVariableMore()
+        public void MidWord_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 25);
             VerifyResult(file, 27, 8);
         }
 
-
         [Test]
-        public void RightMost_UnitializedVariableMore()
+        public void RightMost_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 27);
             VerifyResult(file, 27, 8);
