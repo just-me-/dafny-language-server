@@ -132,18 +132,18 @@ namespace DafnyLanguageServer.SymbolTable
         // man kann das erst auslagern, wenn module als base symbol implementiert wurde.
         // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
 
-        public ISymbol GetSymbolByPosition(long line, long character)
+        public ISymbol GetSymbolByPosition(Uri file, long line, long character)
         {
-            return GetSymbolByPosition((int)line, (int)character); //cast should be safe in real world examples.
+            return GetSymbolByPosition(file, (int)line, (int)character); //cast should be safe in real world examples.
         }
         // weg
-        public ISymbol GetSymbolByPosition(int line, int character)
+        public ISymbol GetSymbolByPosition(Uri file, int line, int character)
         {
             INavigator navigator = new SymbolTableNavigator();
             ISymbol symbol = null;
             foreach (var modul in SymbolTables) //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
-                symbol ??= navigator.GetSymbolByPosition(modul.Value, line, character);
+                symbol ??= navigator.GetSymbolByPosition(modul.Value, file, line, character);
             }
             return symbol;
         }
@@ -151,6 +151,7 @@ namespace DafnyLanguageServer.SymbolTable
         private ISymbol GetClassSymbolByPath(string classPath)
         {
             // todo better do a split? is there rly every time "just one module and one class"? #212
+            //siehe zteile +/- 70
             string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
             if (originPath.Length != 2)
             {
@@ -165,13 +166,13 @@ namespace DafnyLanguageServer.SymbolTable
         /// Use this method to get the parent symbol as en entry point.
         /// </summary>
         //  weg
-        public ISymbol GetSymbolWrapperForCurrentScope(int line, int character)
+        public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
             ISymbol closestWrappingSymbol = null;
             foreach (var modul in SymbolTables)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
             {
                 INavigator navigator = new SymbolTableNavigator();
-                closestWrappingSymbol = navigator.TopDown(modul.Value, line, character);
+                closestWrappingSymbol = navigator.TopDown(modul.Value, file, line, character);
             }
             return closestWrappingSymbol;
         }

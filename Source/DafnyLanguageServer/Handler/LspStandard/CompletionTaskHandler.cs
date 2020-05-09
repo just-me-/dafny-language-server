@@ -48,7 +48,7 @@ namespace DafnyLanguageServer.Handler
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() => FindCompletionItems(line, col, codeLine));
+                return await Task.Run(() => FindCompletionItems(request.TextDocument.Uri, line, col, codeLine));
             }
             catch (Exception e)
             {
@@ -58,13 +58,13 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        private List<CompletionItem> FindCompletionItems(int line, int col, string codeLine)
+        private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
             var service = new CompletionService();
             var desire = service.GetSupposedDesire(col, codeLine, out var extractedSymbolName);
 
             var manager = _workspaceManager.SymbolTableManager;
-            var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(line, col);
+            var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(file, line, col);
             switch (desire)
             {
                 case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1... 

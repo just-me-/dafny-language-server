@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.Handler
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
                     var manager = _workspaceManager.SymbolTableManager;
-                    var selectedSymbol = manager.GetSymbolByPosition(line, col);
+                    var selectedSymbol = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
                     List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
                     if (selectedSymbol == null)

@@ -97,7 +97,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             if (child is SymbolInformation childSymbol)
             {
-                return childSymbol != null && this.Wraps((int)childSymbol.Line, (int)childSymbol.Column);
+                return childSymbol != null && this.Wraps(child.File, (int)childSymbol.Line, (int)childSymbol.Column);
             }
             return false;
         }
@@ -105,9 +105,14 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Checks if the given position (line, character) is included in the symbols range. 
         /// </summary>
-        public bool Wraps(int line, int character)
+        public bool Wraps(Uri file, int line, int character)
         {
-            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+            return IsSameFile(file) && HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+        }
+
+        private bool IsSameFile(Uri file)
+        {
+            return this.File == file;
         }
 
         private bool HasLine()

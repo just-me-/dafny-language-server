@@ -22,25 +22,25 @@ namespace DafnyLanguageServer.SymbolTable
         /// Only takes definitions into account.
         /// If you would like all symbols, not only definitions, use <c>GetSymbolByPosition</c>.
         /// </summary>
-        public ISymbol TopDown(ISymbol rootEntry, int line, int character)
+        public ISymbol TopDown(ISymbol rootEntry, Uri file, int line, int character)
         {
             if (rootEntry == null)
             {
                 return null;
             }
             ISymbol bestMatch = null;
-            if (rootEntry.Wraps(line, character)) //notiz fü rmich: übera ll file mitgeben, wenn file nicht überienstimmt, false returenn? reichrt das hcohn?
-            {                                     //notiz zwei... funzt das danna uch mit mehreren default scopes?
+            if (rootEntry.Wraps(file, line, character))
+            {
                 bestMatch = rootEntry;
             }
             foreach (var child in rootEntry.Children)
             {
-                if (child.Wraps(line, character))
+                if (child.Wraps(file, line, character))
                 {
                     bestMatch = child;
                     if (child.Children != null && child.Children.Any())
                     {
-                        var match = TopDown(child, line, character);
+                        var match = TopDown(child, file, line, character);
                         bestMatch = match ?? bestMatch;
                     }
                 }
@@ -50,7 +50,7 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     if (child.Children.Any())
                     {
-                        bestMatch = TopDown(child, line, character);
+                        bestMatch = TopDown(child, file, line, character);
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol TopDown(ISymbol rootEntry, IToken t)
         {
-            return TopDown(rootEntry, t.line, t.col);
+            return TopDown(rootEntry, new Uri(t.filename), t.line, t.col);
         }
 
 
@@ -68,18 +68,18 @@ namespace DafnyLanguageServer.SymbolTable
         /// Pay attention to all symbols, not just definitions.
         /// If you would like only definitions, use <c>TopDown</c>
         /// </summary>
-        public ISymbol GetSymbolByPosition(ISymbol rootEntry, int line, int character)
+        public ISymbol GetSymbolByPosition(ISymbol rootEntry, Uri file, int line, int character)
         {
-            if (rootEntry == null || (!rootEntry.Wraps(line, character) && (rootEntry.Name != "_module")))
+            if (rootEntry == null || (!rootEntry.Wraps(file, line, character) && (rootEntry.Name != "_module")))
             {
                 return null;
             }
-            var wrappingSymbol = TopDown(rootEntry, line, character);
+            var wrappingSymbol = TopDown(rootEntry, file, line, character);
             if (wrappingSymbol?.Descendants != null)
             {
                 foreach (var symbol in wrappingSymbol.Descendants)
                 {
-                    if (symbol.Wraps(line, character))
+                    if (symbol.Wraps(file, line, character))
                     {
                         return symbol;
                     }
@@ -94,7 +94,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, IToken token)
         {
-            return GetSymbolByPosition(rootEntry, token.line, token.col);
+            return GetSymbolByPosition(rootEntry, new Uri(token.filename), token.line, token.col);
         }
 
         /// <summary>

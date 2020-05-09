@@ -35,7 +35,7 @@ namespace DafnyLanguageServer.SymbolTable
         string ToString();
 
         bool Wraps(ISymbol child);
-        bool Wraps(int line, int character);
+        bool Wraps(Uri file, int line, int character);
 
         ISymbol this[string index] { get; set; }
 
