@@ -44,5 +44,22 @@ namespace RenameTest
             var actual = changes.ToStringList();
             CollectionAssert.AreEquivalent(expected, actual);
         }
+
+        public void VerifyForMultiFiles(IList<string> expected)
+        {
+            List<string> actual = new List<string>();
+            foreach (var kvp in result.Changes)
+            {
+                var fname = System.IO.Path.GetFileName(kvp.Key.LocalPath);
+                foreach (var change in kvp.Value)
+                {
+                    string entry = change.ToCustomString() + " in " + fname;
+                    actual.Add(entry);
+                    Console.WriteLine(entry);
+                }
+            }
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
     }
 }

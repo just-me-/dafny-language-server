@@ -41,6 +41,7 @@ namespace TestCommons
         public static readonly string cp_identifier = CreateTestfilePath("compile/unknown_identifier_error.dfy");
         public static readonly string cp_postcondition = CreateTestfilePath("compile/postcondition_violation.dfy");
         public static readonly string cp_semiexpected = CreateTestfilePath("compile/semi_expected_error.dfy");
+        public static readonly string cp_include_main = CreateTestfilePath("compile/include_main.dfy");
         public static readonly string cp_empty = CreateTestfilePath("compile/empty.dfy");
         public static readonly string cp_otherlang_java = CreateTestfilePath("compile/otherlang_java.java");
         public static readonly string cp_otherlang_java_dfyending = CreateTestfilePath("compile/otherlang_java.dfy");
@@ -155,6 +156,8 @@ namespace TestCommons
 
         //Rename
         public static readonly string rn_scopes = CreateTestfilePath("rename/renameWithScopes.dfy");
+        public static readonly string rn_include_main = CreateTestfilePath("rename/include_main.dfy");
+        public static readonly string rn_includee = CreateTestfilePath("rename/include_includee.dfy");
 
 
 

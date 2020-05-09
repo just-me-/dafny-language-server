@@ -29,6 +29,11 @@ namespace TestCommons
         [SetUp]
         public void Setup()
         {
+            foreach (var process in Process.GetProcessesByName("DafnyLanguageServer.exe"))
+            {
+                process.Kill();
+            }
+
             CancellationSource = new CancellationTokenSource();
             CancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
 

@@ -24,12 +24,21 @@ namespace GotoIntegrationTest
 
 
         [Test]
-        public void MemberOfExternalClass()
+        public void MethodOfExternalClass()
         {
             Client.TextDocument.DidOpen(Files.gt_include_main, "dfy");
-            goneTo = Client.TextDocument.Definition(Files.gt_include_main,  4 - 1, 17 - 1).Result;
+            goneTo = Client.TextDocument.Definition(Files.gt_include_main, 4 - 1, 17 - 1).Result;
 
             VerifyResult(Files.gt_includee, 3, 21);
+        }
+
+        [Test]
+        public void FieldOfExternalClass()
+        {
+            Client.TextDocument.DidOpen(Files.gt_include_main, "dfy");
+            goneTo = Client.TextDocument.Definition(Files.gt_include_main, 5 - 1, 12 - 1).Result;
+
+            VerifyResult(Files.gt_includee, 6, 9);
         }
 
     }
