@@ -461,10 +461,12 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var definingItem = nav.TopDown(RootNode, e.ResolvedExpression.tok);
+            var definingItem = nav.TopDown(RootNode, mse.Member.tok);
+
 
             //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
             //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
+
             var declaration = FindDeclaration(e.SuffixName, definingItem);
 
             UserDefinedType userType = null;
