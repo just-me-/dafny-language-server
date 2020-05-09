@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,6 +10,7 @@ using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -51,6 +53,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                         return null;
                     }
 
+                    var reservedWords = GetReservedWords();
                     if (reservedWords.Contains(request.NewName))
                     {
                         return null;
@@ -102,6 +105,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             {
                 output.Add(kvp.Key, kvp.Value);
             }
+
             return output;
         }
 
@@ -117,11 +121,11 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 textEditsPerFile = new List<TextEdit>();
                 Changes.Add(symbol.File, textEditsPerFile);
             }
+
             return textEditsPerFile;
         }
 
-        // todo das in ein json oder so für konfigurierbarkeit
-        private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
+        private static readonly HashSet<string> defaultReservedWords = new HashSet<string>
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",
             "calc", "case", "char", "class", "codatatype", "colemma",
@@ -136,5 +140,26 @@ namespace DafnyLanguageServer.Handler.LspStandard
             "set", "static", "string", "then", "this", "trait", "true", "type",
             "var", "where", "while", "yield", "yields"
         };
+
+        private HashSet<string> GetReservedWords()
+        {
+            //Folders
+            string assemblyPath = Path.GetDirectoryName(typeof(RenameTaskHandler).Assembly.Location);
+            string jsonFile = Path.GetFullPath(Path.Combine(assemblyPath, "ReservedDafnyWords.json"));
+
+            if (!File.Exists(jsonFile))
+            {
+                return defaultReservedWords;
+            }
+
+            JObject j = JObject.Parse(File.ReadAllText(jsonFile));
+
+            var words = j["words"];
+            JArray a = (JArray)words;
+
+            IList<string> l = a.ToObject<IList<string>>();
+            return new HashSet<string>(l);
+        }
     }
 }
+
