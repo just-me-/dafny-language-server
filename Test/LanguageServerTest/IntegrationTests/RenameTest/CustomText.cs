@@ -65,7 +65,7 @@ namespace RenameTest
         [Test]
         public void UnicodeChallenge()
         {
-            string text = "hereWasAHeartAndThenITBroke";
+            string text = "♥";
             Run(f, 16, 17, text);
             List<string> expected = new List<string>()
             {
@@ -78,7 +78,7 @@ namespace RenameTest
         [Test]
         public void WeirdStuff()
         {
-            string text = "HereWasWeirdSTuffAndThenItBroke";
+            string text = "{}[]]@##@#";
             Run(f, 16, 17, text);
             List<string> expected = new List<string>()
             {
