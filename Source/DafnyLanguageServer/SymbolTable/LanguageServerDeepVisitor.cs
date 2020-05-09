@@ -414,7 +414,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
 
             var nav = new SymbolTableNavigator();
-            var resolvedSymbol = nav.TopDown(RootNode, e.ResolvedExpression.tok);
+            var resolvedSymbol = nav.TopDown(RootNode, e.ResolvedExpression.tok); //topdwon findet hier in modul m iwo ein symbol, nicht im main. es kuckt halt nicht, in welchem file es sich aufhält. muss man iwie was machen.
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
 

@@ -19,7 +19,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolInformation : ISymbol
     {
         public TokenPosition Position { get; set; } //todo we only need main token probably.
-        public string File => Position.Token.filename;
+        public Uri File => new Uri(Position.Token.filename);
         public virtual int? Line => Position?.Token.line; // Line of "Symbol" ... can this be LineStart like ColumnStart? todo 
         public virtual int? LineStart => Position?.BodyStartToken?.line; // Line that Symbol Wraps {
         public virtual int? LineEnd => Position?.BodyEndToken?.line; // Endline of Wrap }

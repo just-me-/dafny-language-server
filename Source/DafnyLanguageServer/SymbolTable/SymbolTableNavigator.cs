@@ -29,8 +29,8 @@ namespace DafnyLanguageServer.SymbolTable
                 return null;
             }
             ISymbol bestMatch = null;
-            if (rootEntry.Wraps(line, character))
-            {
+            if (rootEntry.Wraps(line, character)) //notiz fü rmich: übera ll file mitgeben, wenn file nicht überienstimmt, false returenn? reichrt das hcohn?
+            {                                     //notiz zwei... funzt das danna uch mit mehreren default scopes?
                 bestMatch = rootEntry;
             }
             foreach (var child in rootEntry.Children)

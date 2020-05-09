@@ -9,7 +9,7 @@ namespace DafnyLanguageServer.SymbolTable
     public interface ISymbol
     {
         TokenPosition Position { get; set; }
-        string File { get; }
+        Uri File { get; }
         int? Line { get; }
         int? Column { get; }
         int? ColumnStart { get; }

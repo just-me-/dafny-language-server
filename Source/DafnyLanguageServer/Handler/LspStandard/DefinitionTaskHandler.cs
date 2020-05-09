@@ -61,7 +61,7 @@ namespace DafnyLanguageServer.Handler
 
                     Position position = new Position((long)originSymbol.Line - 1, (long)originSymbol.ColumnStart - 1);
                     Range range = new Range { Start = position, End = position };
-                    var location = new Location { Uri = request.TextDocument.Uri, Range = range };
+                    var location = new Location { Uri = originSymbol.File, Range = range };
 
                     links.Add(new LocationOrLocationLink(location));
 

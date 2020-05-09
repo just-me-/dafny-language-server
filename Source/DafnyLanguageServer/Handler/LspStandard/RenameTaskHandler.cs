@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -57,7 +58,9 @@ namespace DafnyLanguageServer.Handler.LspStandard
                     }
 
                     IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurrences(symbolAtCursor);
-                    List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
+
+                    Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
+
 
                     foreach (var symbol in symbolsToRename)
                     {
@@ -70,15 +73,15 @@ namespace DafnyLanguageServer.Handler.LspStandard
                                 End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
                             }
                         };
-                        editsForOneFile.Add(textEdit);
+                        var editsForAffectedFile = GetOrCreate(changes, symbol);
+                        editsForAffectedFile.Add(textEdit);
                     }
+
+                    var changesAsEnumerable = ConvertDict(changes);
 
                     var result = new WorkspaceEdit
                     {
-                        Changes = new Dictionary<Uri, IEnumerable<TextEdit>>
-                        {
-                            {request.TextDocument.Uri, editsForOneFile}
-                        }
+                        Changes = changesAsEnumerable
                     };
                     return result;
                 });
@@ -86,8 +89,34 @@ namespace DafnyLanguageServer.Handler.LspStandard
             catch (Exception e)
             {
                 _log.LogError("Error Handling Rename Execution: " + e.Message);
-                return null;
+                new MessageSenderService(_router).SendError("Error Handling Rename Request.");
+                return Task.FromResult(new WorkspaceEdit());
             }
+        }
+
+        private Dictionary<Uri, IEnumerable<TextEdit>> ConvertDict(Dictionary<Uri, List<TextEdit>> input)
+        {
+            Dictionary<Uri, IEnumerable<TextEdit>> output = new Dictionary<Uri, IEnumerable<TextEdit>>();
+            foreach (var kvp in input)
+            {
+                output.Add(kvp.Key, kvp.Value);
+            }
+            return output;
+        }
+
+        //private Dictionary<Uri, IEnumerable<TextEdit> ConvertDict(Dictionary<Uri, IList<TextEdit>> changes)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
+        {
+            if (!Changes.TryGetValue(symbol.File, out var textEditsPerFile))
+            {
+                textEditsPerFile = new List<TextEdit>();
+                Changes.Add(symbol.File, textEditsPerFile);
+            }
+            return textEditsPerFile;
         }
 
         // todo das in ein json oder so für konfigurierbarkeit 
