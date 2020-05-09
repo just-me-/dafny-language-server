@@ -209,6 +209,7 @@
     <Compile Include="Handler\LspStandard\DefinitionTaskHandler.cs" />
     <Compile Include="FileManager\IWorkspaceManager.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramServices\ReservedWordsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handler\LspExtension\CompileHandler.cs" />
     <Compile Include="Handler\LspStandard\TextDocumentSyncTaskHandler.cs" />

@@ -19,10 +19,15 @@ namespace DafnyLanguageServer.Handler.LspStandard
 {
     public class RenameTaskHandler : LspBasicHandler<RenameCapability>, IRenameHandler
     {
+        private static HashSet<string> _reservedWords = new ReservedWordsProvider().GetReservedWords();
+
+        private readonly MessageSenderService _mss;
         public RenameTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
+            _mss = new MessageSenderService(_router);
+
         }
 
         public RenameRegistrationOptions GetRegistrationOptions()
@@ -48,23 +53,14 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
                     var symbolAtCursor = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
-                    if (symbolAtCursor == null)
+                    if (RenameIsInvalid(request, symbolAtCursor, line, col))
                     {
                         return null;
-                    }
-
-                    var reservedWords = GetReservedWords();
-                    if (reservedWords.Contains(request.NewName))
-                    {
-                        return null;
-                        //todo #341 message sender hier iwie möglich?
                     }
 
                     IEnumerable<ISymbol> symbolsToRename = symbolAtCursor.GetAllOccurrences();
 
                     Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
-
-
 
                     foreach (var symbol in symbolAtCursor.GetAllOccurrences())
                     {
@@ -93,9 +89,32 @@ namespace DafnyLanguageServer.Handler.LspStandard
             catch (Exception e)
             {
                 _log.LogError("Error Handling Rename Execution: " + e.Message);
-                new MessageSenderService(_router).SendError("Error Handling Rename Request.");
+                _mss.SendError("Error Handling Rename Request.");
                 return Task.FromResult(new WorkspaceEdit());
             }
+        }
+
+        private bool RenameIsInvalid(RenameParams request, ISymbol symbolAtCursor, int line, int col)
+        {
+            if (symbolAtCursor == null)
+            {
+                _mss.SendInformation($"There is no renameable symbol at L{line}:C{col}");
+                return true;
+            }
+
+            if (_reservedWords.Contains(request.NewName))
+            {
+                _mss.SendInformation($"{request.NewName} is a reserved word.");
+                return true;
+            }
+
+            if (request.NewName.StartsWith("_"))
+            {
+                _mss.SendInformation($"Identifier names must not start with an underscore.");
+                return true;
+            }
+
+            return false;
         }
 
         private Dictionary<Uri, IEnumerable<TextEdit>> ConvertDict(Dictionary<Uri, List<TextEdit>> input)
@@ -109,11 +128,6 @@ namespace DafnyLanguageServer.Handler.LspStandard
             return output;
         }
 
-        //private Dictionary<Uri, IEnumerable<TextEdit> ConvertDict(Dictionary<Uri, IList<TextEdit>> changes)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
         {
             if (!Changes.TryGetValue(symbol.File, out var textEditsPerFile))
@@ -125,41 +139,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             return textEditsPerFile;
         }
 
-        private static readonly HashSet<string> defaultReservedWords = new HashSet<string>
-        {
-            "abstract", "array", "as", "assert", "assume", "bool", "break",
-            "calc", "case", "char", "class", "codatatype", "colemma",
-            "constructor", "copredicate", "datatype", "decreases",
-            "default", "else", "ensures", "exists", "extends", "false",
-            "forall", "free", "fresh", "function", "ghost", "if", "imap", "import",
-            "in", "include", "inductive", "int", "invariant", "iset", "iterator", "label",
-            "lemma", "map", "match", "method", "modifies", "modify",
-            "module", "multiset", "nat", "new", "newtype", "null", "object",
-            "old", "opened", "predicate", "print", "protected",
-            "reads", "real", "refines", "requires", "return", "returns", "seq",
-            "set", "static", "string", "then", "this", "trait", "true", "type",
-            "var", "where", "while", "yield", "yields"
-        };
 
-        private HashSet<string> GetReservedWords()
-        {
-            //Folders
-            string assemblyPath = Path.GetDirectoryName(typeof(RenameTaskHandler).Assembly.Location);
-            string jsonFile = Path.GetFullPath(Path.Combine(assemblyPath, "ReservedDafnyWords.json"));
-
-            if (!File.Exists(jsonFile))
-            {
-                return defaultReservedWords;
-            }
-
-            JObject j = JObject.Parse(File.ReadAllText(jsonFile));
-
-            var words = j["words"];
-            JArray a = (JArray)words;
-
-            IList<string> l = a.ToObject<IList<string>>();
-            return new HashSet<string>(l);
-        }
     }
 }
 
