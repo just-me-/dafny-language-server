@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,8 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolInformation : ISymbol
     {
         public TokenPosition Position { get; set; } //todo we only need main token probably.
-        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
+        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");  //evtl rename nach FileUri aber grad kein bock auf die konflikte und alles und alle kommentare die es dann falsch renamed weil "File" so generisch ist halt.
+        public string FileName => Path.GetFileName(File.LocalPath);
         public virtual int? Line => Position?.Token.line; // Line of "Symbol" ... can this be LineStart like ColumnStart? todo 
         public virtual int? LineStart => Position?.BodyStartToken?.line; // Line that Symbol Wraps {
         public virtual int? LineEnd => Position?.BodyEndToken?.line; // Endline of Wrap }
@@ -56,10 +58,19 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol Module { get; set; }
         public ISymbol AssociatedDefaultClass => Module?["_default"];
+        public string ToNiceString()
+        {
+            return $"{Name} at Line {Line} in {FileName}";
+        }
+
+        public string ToDebugString()
+        {
+            return $"[L{Line}:C{Column}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
+        }
 
         public override string ToString()
         {
-            return $"[L{Line}:C{Column}] \"{Name}\" | P : [L{Parent?.Line}]{Parent?.Name} | D : {(IsDeclaration ? "self" : "[L" + DeclarationOrigin?.Line + "]" + DeclarationOrigin?.Name)} | C : {Children?.Count} | U : {Usages?.Count}";
+            return ToNiceString();
         }
 
         public ISymbol this[string index]

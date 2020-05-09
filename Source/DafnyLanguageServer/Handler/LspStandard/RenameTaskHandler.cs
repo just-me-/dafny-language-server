@@ -47,7 +47,6 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 {
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var manager = _workspaceManager.SymbolTableManager;
-                    var nav = new SymbolTableNavigator(); // navigator should not be used here.. use manager.. todo
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
 

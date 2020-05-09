@@ -10,6 +10,7 @@ namespace DafnyLanguageServer.SymbolTable
     {
         TokenPosition Position { get; set; }
         Uri File { get; }
+        string FileName { get; }
         int? Line { get; }
         int? Column { get; }
         int? ColumnStart { get; }
@@ -32,7 +33,9 @@ namespace DafnyLanguageServer.SymbolTable
 
 
 
-        string ToString();
+        string ToNiceString();
+        string ToDebugString();
+
 
         bool Wraps(ISymbol child);
         bool Wraps(Uri file, int line, int character);

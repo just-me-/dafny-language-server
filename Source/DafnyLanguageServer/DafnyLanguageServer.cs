@@ -61,6 +61,7 @@ namespace DafnyLanguageServer
                     .WithHandler<CodeLensTaskHandler>()
                     .WithHandler<DefinitionTaskHandler>()
                     .WithHandler<RenameTaskHandler>()
+                    .WithHandler<HoverTaskHandler>()
                     .WithHandler<RenamePreparationTaskHandler>()
                     .WithHandler<ShutdownHandler>()
             );
