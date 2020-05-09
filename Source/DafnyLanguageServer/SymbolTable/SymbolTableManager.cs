@@ -59,11 +59,9 @@ namespace DafnyLanguageServer.SymbolTable
         private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
 
 
-        private ISymbol GetRootNode(ModuleDefinition m)
+        private ISymbol GetEntryPoint(ModuleDefinition m)
         {
-
             var hierarchy = m.FullName.Split('.').ToList();
-
             var rootForVisitor = DafnyProgramRootSymbol;
 
             while (hierarchy.Count > 1)
@@ -83,14 +81,14 @@ namespace DafnyLanguageServer.SymbolTable
 
             foreach (var module in modules)
             {
-                ISymbol rootForVisitor = GetRootNode(module);
+                ISymbol rootForVisitor = GetEntryPoint(module);
                 var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
                 module.Accept(declarationVisitor);
             }
 
             foreach (var module in modules)
             {
-                ISymbol rootForVisitor = GetRootNode(module);
+                ISymbol rootForVisitor = GetEntryPoint(module);
                 var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
 
