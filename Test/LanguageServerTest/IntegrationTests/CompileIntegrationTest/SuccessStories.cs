@@ -26,7 +26,7 @@ namespace CompileIntegrationTest
         public void Included_File()
         {
             RunCompilation(Files.cp_include_main);
-            VerifyResults(false, false, "Compiled assembly into basic.dll");
+            VerifyResults(false, true, "Compiled assembly into include_main.exe");
         }
 
     }

@@ -213,7 +213,7 @@ namespace SymbolTableTest
             {
                 symbols.AddRange(navigator.TopDownAll(modul)); 
             }
-            var actual = symbols.Select(x => x.ToString()).ToList();
+            var actual = symbols.Select(x => x.ToDebugString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);
             Console.Write(((SymbolTableManager)sm).CreateDebugReadOut());

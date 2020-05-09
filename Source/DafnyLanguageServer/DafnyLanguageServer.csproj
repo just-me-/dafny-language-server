@@ -189,6 +189,7 @@
     <Compile Include="DafnyLanguageServer.cs" />
     <Compile Include="HandlerServices\CompilationService.cs" />
     <Compile Include="HandlerServices\CompletionService.cs" />
+    <Compile Include="Handler\LspStandard\HoverTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\RenamePreparationTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\RenameTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\ShutdownHandler.cs" />
