@@ -11,6 +11,7 @@ namespace SymbolTableTest
 {
     class SymbolInformationTest
     {
+        private static readonly Uri defaultUri = new Uri(@"C:/file.dfy");
         [Test]
         public void SymbolWrapsSymbol()
         {
@@ -30,28 +31,28 @@ namespace SymbolTableTest
         public void SymbolWrapsPosition()
         {
             ISymbol symbol = new SymbolInformationFake(0, 2, 0, 0);
-            Assert.True(symbol.Wraps(1, 0));
+            Assert.True(symbol.Wraps(defaultUri, 1, 0));
         }
 
         [Test]
         public void SymbolWrapsPositionOnSameLine()
         {
             ISymbol symbol = new SymbolInformationFake(0, 0, 0, 2);
-            Assert.True(symbol.Wraps(0, 1));
+            Assert.True(symbol.Wraps(defaultUri, 0, 1));
         }
 
         [Test]
         public void SymbolDoesNotWrapPosition()
         {
             ISymbol symbol = new SymbolInformationFake(0, 0, 0, 2);
-            Assert.False(symbol.Wraps(1, 1));
+            Assert.False(symbol.Wraps(defaultUri, 1, 1));
         }
 
         [Test]
         public void SymbolDoesNotWrapPositionOnSameLine()
         {
             ISymbol symbol = new SymbolInformationFake(0, 0, 0, 2);
-            Assert.False(symbol.Wraps(0, 5));
+            Assert.False(symbol.Wraps(defaultUri, 0, 5));
         }
 
         [Test]

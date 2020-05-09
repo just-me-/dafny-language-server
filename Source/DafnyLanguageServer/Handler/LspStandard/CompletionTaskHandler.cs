@@ -36,13 +36,13 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions..."); // todo lang file #102 
+            _log.LogInformation("Completions..."); // todo lang file #102
             try
             {
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() => GetCompletionItems(line, col, codeLine));
+                return await Task.Run(() => FindCompletionItems(request.TextDocument.Uri, line, col, codeLine));  //todo merge conflict: auf dem adneren branch heisyxst es "GetCompletion., msus es get heissen?"
             }
             catch (Exception e)
             {
@@ -52,12 +52,64 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        private List<CompletionItem> GetCompletionItems(int line, int col, string codeLine)
+        private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine) //todo merge conflict: auf dem adneren branch heisyxst es "GetCompletion., msus es get heissen?
         {
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
             var entryPoint = service.GetWrappingEntrypointSymbol(line, col);
 
+            //todo merge von hier bis, siehe unten, ka, auf dem master alles weg? muiss das weg?? ich denk es muss eher weg ich hab hier eig eh nix gemacht??
+            var manager = _workspaceManager.SymbolTableManager;
+            var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(file, line, col);
+            switch (desire)
+            {
+                case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1...
+                                              // modul1.modul2.class ist auch möglich
+                                              // und
+                                              // object.variable gibts auch... not supported yet
+                    var selectedSymbol = manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
+                    return GetSymbolsProperties(manager, selectedSymbol);
+                case CompletionType.afterNew:
+                    return GetClassSymbolsInScope(manager, wrappingEntrypointSymbol);
+                case CompletionType.allInScope:
+                    return GetAllSymbolsInScope(manager, wrappingEntrypointSymbol);
+                default:
+                    throw new ArgumentException("Users desire is not supported yet.");
+            }
+        }
+
+        private List<CompletionItem> GetSymbolsProperties(IManager manager, ISymbol selectedSymbol)
+        {
+            var completionItems = new List<CompletionItem>();
+            // if selectedSymbol is null... error iwas... not found mässig... todo
+            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
+            foreach (var suggestionElement in classSymbol.Children)
+            {
+                // strip constructor 2do
+                /*
+                var ignoredSymbols = new[] { "_ctor", "_default" };
+                list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
+                return list;
+                */
+                AddCompletionItem(completionItems, suggestionElement);
+            }
+            return completionItems;
+        }
+
+        private List<CompletionItem> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
+        {
+            var completionItems = new List<CompletionItem>();
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => x.Kind == Kind.Class)))
+            {
+                AddCompletionItem(completionItems, suggestionElement);
+            }
+            return completionItems;
+        }
+
+        private List<CompletionItem> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
+        {
+
+          //todo merge bis here
             var completionItems = new List<CompletionItem>();
             foreach (var symbol in service.GetSymbols(desire, entryPoint))
             {
@@ -72,7 +124,7 @@ namespace DafnyLanguageServer.Handler
                 ? kind
                 : CompletionItemKind.Reference;
 
-            // is this range rly neeeded? 
+            // is this range rly neeeded?
             ///Range range = FileHelper.CreateRange(request.Position.Line, request.Position.Character, symbol.Name.Length);
             TextEdit textEdit = new TextEdit
             {

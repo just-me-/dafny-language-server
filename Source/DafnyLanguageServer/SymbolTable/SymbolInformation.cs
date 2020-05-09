@@ -19,6 +19,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolInformation : ISymbol
     {
         public TokenPosition Position { get; set; } //todo we only need main token probably.
+        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
         public virtual int? Line => Position?.Token.line; // Line of "Symbol" ... can this be LineStart like ColumnStart? todo 
         public virtual int? LineStart => Position?.BodyStartToken?.line; // Line that Symbol Wraps {
         public virtual int? LineEnd => Position?.BodyEndToken?.line; // Endline of Wrap }
@@ -96,7 +97,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             if (child is SymbolInformation childSymbol)
             {
-                return childSymbol != null && this.Wraps((int)childSymbol.Line, (int)childSymbol.Column);
+                return childSymbol != null && this.Wraps(child.File, (int)childSymbol.Line, (int)childSymbol.Column);
             }
             return false;
         }
@@ -104,9 +105,14 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Checks if the given position (line, character) is included in the symbols range. 
         /// </summary>
-        public bool Wraps(int line, int character)
+        public bool Wraps(Uri file, int line, int character)
         {
-            return HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+            return IsSameFile(file) && HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+        }
+
+        private bool IsSameFile(Uri file)
+        {
+            return this.Kind == Kind.RootNode || this.File == file;
         }
 
         private bool HasLine()
@@ -165,7 +171,6 @@ namespace DafnyLanguageServer.SymbolTable
         Function,
         Field,
         Variable, //besser: Local Variable?
-        Call,     //was das? wird nie bentuzt
         Undefined,
         BlockScope,
     }

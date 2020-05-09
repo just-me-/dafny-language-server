@@ -9,6 +9,7 @@ namespace DafnyLanguageServer.SymbolTable
     public interface ISymbol
     {
         TokenPosition Position { get; set; }
+        Uri File { get; }
         int? Line { get; }
         int? Column { get; }
         int? ColumnStart { get; }
@@ -34,7 +35,7 @@ namespace DafnyLanguageServer.SymbolTable
         string ToString();
 
         bool Wraps(ISymbol child);
-        bool Wraps(int line, int character);
+        bool Wraps(Uri file, int line, int character);
 
         IEnumerable<ISymbol> GetAllOccurrences();
 

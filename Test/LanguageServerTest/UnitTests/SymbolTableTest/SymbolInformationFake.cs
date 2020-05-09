@@ -22,13 +22,15 @@ namespace SymbolTableTest
         private int _lineEnd;
         private int _columnStart;
         private int _columnEnd;
+        private Uri _file;
 
-        public SymbolInformationFake(int lineStart, int lineEnd, int columnStart, int columnEnd, string name = "no_name")
+        public SymbolInformationFake(int lineStart, int lineEnd, int columnStart, int columnEnd, Uri file = null, string name = "no_name")
         {
             _lineStart = lineStart;
             _lineEnd = lineEnd;
             _columnStart = columnStart;
             _columnEnd = columnEnd;
+            _file = file ?? new Uri(@"C:/file.dfy");
             Name = name;
             ChildrenHash = new Dictionary<string, ISymbol>();
             Descendants = null;

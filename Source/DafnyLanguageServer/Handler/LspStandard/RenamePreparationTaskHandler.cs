@@ -39,7 +39,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                     var stMan = _workspaceManager.SymbolTableManager;
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
-                    var symbolAtCursor = stMan.GetSymbolByPosition(line, col);
+                    var symbolAtCursor = stMan.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
                     if (symbolAtCursor == null)
                     {

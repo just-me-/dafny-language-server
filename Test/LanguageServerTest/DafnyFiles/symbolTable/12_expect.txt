@@ -1,0 +1,43 @@
+[L3:C8] "M1" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L3]M1 | D : self | C : 0 | U : 0
+[L4:C12] "M2" | P : [L3]M1 | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L4]M2 | D : self | C : 0 | U : 0
+[L5:C16] "M3" | P : [L4]M2 | D : self | C : 2 | U : 0
+[L6:C19] "Class" | P : [L5]M3 | D : self | C : 3 | U : 3
+[L7:C17] "_ctor" | P : [L6]Class | D : self | C : 0 | U : 0
+[L8:C21] "field" | P : [L6]Class | D : self | C :  | U : 3
+[L9:C24] "meth" | P : [L6]Class | D : self | C : 0 | U : 3
+[L0:C0] "_default" | P : [L5]M3 | D : self | C : 1 | U : 0
+[L11:C20] "gmeth" | P : [L0]_default | D : self | C : 0 | U : 1
+[L16:C8] "TestModul1" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L0:C0] "_default" | P : [L16]TestModul1 | D : self | C : 1 | U : 0
+[L18:C12] "test" | P : [L0]_default | D : self | C : 1 | U : 0
+[L19:C13] "x" | P : [L18]test | D : self | C :  | U : 2
+[L19:C31] "Class" | P : [L18]test | D : [L6]Class | C :  | U : 
+[L20:C9] "x" | P : [L18]test | D : [L19]x | C :  | U : 
+[L20:C11] "meth" | P : [L18]test | D : [L9]meth | C :  | U : 
+[L21:C15] "x" | P : [L18]test | D : [L19]x | C :  | U : 
+[L21:C17] "field" | P : [L18]test | D : [L8]field | C :  | U : 
+[L17:C12] "M1" | P : [L16]TestModul1 | D : self | C :  | U : 0
+[L26:C8] "TestModul2" | P : [L0]_programRootNode | D : self | C : 4 | U : 0
+[L0:C0] "_default" | P : [L26]TestModul2 | D : self | C : 1 | U : 0
+[L30:C12] "test" | P : [L0]_default | D : self | C : 2 | U : 0
+[L31:C13] "x" | P : [L30]test | D : self | C :  | U : 2
+[L31:C30] "Class" | P : [L30]test | D : [L6]Class | C :  | U : 
+[L32:C13] "z" | P : [L30]test | D : self | C :  | U : 2
+[L32:C27] "Class" | P : [L30]test | D : [L6]Class | C :  | U : 
+[L34:C9] "x" | P : [L30]test | D : [L31]x | C :  | U : 
+[L34:C11] "meth" | P : [L30]test | D : [L9]meth | C :  | U : 
+[L35:C15] "x" | P : [L30]test | D : [L31]x | C :  | U : 
+[L35:C17] "field" | P : [L30]test | D : [L8]field | C :  | U : 
+[L37:C9] "z" | P : [L30]test | D : [L32]z | C :  | U : 
+[L37:C11] "meth" | P : [L30]test | D : [L9]meth | C :  | U : 
+[L38:C15] "z" | P : [L30]test | D : [L32]z | C :  | U : 
+[L38:C17] "field" | P : [L30]test | D : [L8]field | C :  | U : 
+[L40:C9] "Mod3" | P : [L30]test | D : [L29]Mod3 | C :  | U : 
+[L40:C14] "gmeth" | P : [L30]test | D : [L11]gmeth | C :  | U : 
+[L27:C12] "Mod1" | P : [L26]TestModul2 | D : self | C :  | U : 0
+[L28:C12] "Mod2" | P : [L26]TestModul2 | D : self | C :  | U : 0
+[L29:C12] "Mod3" | P : [L26]TestModul2 | D : self | C :  | U : 1
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 0 | U : 0

@@ -132,6 +132,20 @@ namespace DafnyLanguageServer.SymbolTable
                 BodyEndToken = bodyEndPosAsToken ?? positionAsToken
             };
 
+
+            //debug stuff
+            try
+            {
+                var x = result.File == null;
+            }
+            catch
+            {
+                throw new Exception("yyy???");
+            }
+
+
+
+
             if (canBeUsed)
             {
                 result.Usages = new List<ISymbol>();

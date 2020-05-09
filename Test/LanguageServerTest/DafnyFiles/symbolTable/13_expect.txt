@@ -1,0 +1,8 @@
+[L2:C8] "M" | P : [L0]_programRootNode | D : self | C : 1 | U : 1
+[L0:C0] "_default" | P : [L2]M | D : self | C : 1 | U : 0
+[L3:C12] "foo" | P : [L0]_default | D : self | C : 0 | U : 1
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L6:C8] "Main" | P : [L0]_default | D : self | C : 0 | U : 0
+[L7:C5] "M" | P : [L6]Main | D : [L2]M | C :  | U : 
+[L7:C7] "foo" | P : [L6]Main | D : [L3]foo | C :  | U : 

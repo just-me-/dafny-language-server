@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -43,7 +44,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
 
-                    var symbolAtCursor = manager.GetSymbolByPosition(line, col);
+                    var symbolAtCursor = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
                     if (symbolAtCursor == null)
                     {
@@ -56,7 +57,12 @@ namespace DafnyLanguageServer.Handler.LspStandard
                         //todo #341 message sender hier iwie möglich?
                     }
 
-                    List<TextEdit> editsForOneFile = new List<TextEdit>(); //todo multifile, import, blabla
+                    //todo merge marcels refafctoring einbeziehen. symbolatCuror.getall 
+                    IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurrences(symbolAtCursor);
+
+                    Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
+
+
 
                     foreach (var symbol in symbolAtCursor.GetAllOccurrences())
                     {
@@ -69,15 +75,15 @@ namespace DafnyLanguageServer.Handler.LspStandard
                                 End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
                             }
                         };
-                        editsForOneFile.Add(textEdit);
+                        var editsForAffectedFile = GetOrCreate(changes, symbol);
+                        editsForAffectedFile.Add(textEdit);
                     }
+
+                    var changesAsEnumerable = ConvertDict(changes);
 
                     var result = new WorkspaceEdit
                     {
-                        Changes = new Dictionary<Uri, IEnumerable<TextEdit>>
-                        {
-                            {request.TextDocument.Uri, editsForOneFile}
-                        }
+                        Changes = changesAsEnumerable
                     };
                     return result;
                 });
@@ -85,11 +91,37 @@ namespace DafnyLanguageServer.Handler.LspStandard
             catch (Exception e)
             {
                 _log.LogError("Error Handling Rename Execution: " + e.Message);
-                return null;
+                new MessageSenderService(_router).SendError("Error Handling Rename Request.");
+                return Task.FromResult(new WorkspaceEdit());
             }
         }
 
-        // todo das in ein json oder so für konfigurierbarkeit 
+        private Dictionary<Uri, IEnumerable<TextEdit>> ConvertDict(Dictionary<Uri, List<TextEdit>> input)
+        {
+            Dictionary<Uri, IEnumerable<TextEdit>> output = new Dictionary<Uri, IEnumerable<TextEdit>>();
+            foreach (var kvp in input)
+            {
+                output.Add(kvp.Key, kvp.Value);
+            }
+            return output;
+        }
+
+        //private Dictionary<Uri, IEnumerable<TextEdit> ConvertDict(Dictionary<Uri, IList<TextEdit>> changes)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
+        {
+            if (!Changes.TryGetValue(symbol.File, out var textEditsPerFile))
+            {
+                textEditsPerFile = new List<TextEdit>();
+                Changes.Add(symbol.File, textEditsPerFile);
+            }
+            return textEditsPerFile;
+        }
+
+        // todo das in ein json oder so für konfigurierbarkeit
         private static readonly HashSet<string> reservedWords = new HashSet<string> //Hashset for turbospeed.
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",
