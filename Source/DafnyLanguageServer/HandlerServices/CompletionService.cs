@@ -88,9 +88,9 @@ namespace DafnyLanguageServer.HandlerServices
         /// Returns the wrapping symbol for the given scope.
         /// Can be used as entry point to call <c>GetSymbols</c>.
         /// </summary>
-        public ISymbol GetWrappingEntrypointSymbol(int line, int col)
+        public ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
         {
-            return Manager.GetSymbolWrapperForCurrentScope(line, col);
+            return Manager.GetSymbolWrapperForCurrentScope(file, line, col);
         }
 
         /// <summary>

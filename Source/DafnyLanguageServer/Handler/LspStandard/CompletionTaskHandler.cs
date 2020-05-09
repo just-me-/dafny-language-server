@@ -56,60 +56,8 @@ namespace DafnyLanguageServer.Handler
         {
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
-            var entryPoint = service.GetWrappingEntrypointSymbol(line, col);
-
-            //todo merge von hier bis, siehe unten, ka, auf dem master alles weg? muiss das weg?? ich denk es muss eher weg ich hab hier eig eh nix gemacht??
-            var manager = _workspaceManager.SymbolTableManager;
-            var wrappingEntrypointSymbol = manager.GetSymbolWrapperForCurrentScope(file, line, col);
-            switch (desire)
-            {
-                case CompletionType.afterDot: // so its a class.... not a dmodule(?) - for v1...
-                                              // modul1.modul2.class ist auch möglich
-                                              // und
-                                              // object.variable gibts auch... not supported yet
-                    var selectedSymbol = manager.GetClosestSymbolByName(wrappingEntrypointSymbol, extractedSymbolName);
-                    return GetSymbolsProperties(manager, selectedSymbol);
-                case CompletionType.afterNew:
-                    return GetClassSymbolsInScope(manager, wrappingEntrypointSymbol);
-                case CompletionType.allInScope:
-                    return GetAllSymbolsInScope(manager, wrappingEntrypointSymbol);
-                default:
-                    throw new ArgumentException("Users desire is not supported yet.");
-            }
-        }
-
-        private List<CompletionItem> GetSymbolsProperties(IManager manager, ISymbol selectedSymbol)
-        {
-            var completionItems = new List<CompletionItem>();
-            // if selectedSymbol is null... error iwas... not found mässig... todo
-            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
-            foreach (var suggestionElement in classSymbol.Children)
-            {
-                // strip constructor 2do
-                /*
-                var ignoredSymbols = new[] { "_ctor", "_default" };
-                list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
-                return list;
-                */
-                AddCompletionItem(completionItems, suggestionElement);
-            }
-            return completionItems;
-        }
-
-        private List<CompletionItem> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
-        {
-            var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => x.Kind == Kind.Class)))
-            {
-                AddCompletionItem(completionItems, suggestionElement);
-            }
-            return completionItems;
-        }
-
-        private List<CompletionItem> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
-        {
-
-          //todo merge bis here
+            var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
+            
             var completionItems = new List<CompletionItem>();
             foreach (var symbol in service.GetSymbols(desire, entryPoint))
             {

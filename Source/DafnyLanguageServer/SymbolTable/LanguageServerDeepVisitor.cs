@@ -461,8 +461,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var token = e.ResolvedExpression.tok;
-            var definingItem = nav.TopDown(RootNode, token.line, token.col);
+            var definingItem = nav.TopDown(RootNode, e.ResolvedExpression.tok);
 
             //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
             //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition

@@ -57,8 +57,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                         //todo #341 message sender hier iwie möglich?
                     }
 
-                    //todo merge marcels refafctoring einbeziehen. symbolatCuror.getall 
-                    IEnumerable<ISymbol> symbolsToRename = nav.GetAllOccurrences(symbolAtCursor);
+                    IEnumerable<ISymbol> symbolsToRename = symbolAtCursor.GetAllOccurrences();
 
                     Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
 
