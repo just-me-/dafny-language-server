@@ -8,20 +8,28 @@ using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
 
-//Notiz: ALle failenden tests sind aukommentiert damit CI nicht ausrastet. Wird später gefixed im Milestone 5 wenn wir Symbol Table haben. Alle Todos Ticket 71
 {
     [TestFixture]
     public class IncludedFile : GoToBase
     {
 
-        //[Test]
-        public void Included_File()
+        [Test]
+        public void ExternalClassDefinition()
         {
-            Client.TextDocument.DidOpen(Files.ic_includee, "dfy");
-            Client.TextDocument.DidOpen(Files.ic_basic, "dfy");
-            goneTo = Client.TextDocument.Definition(Files.ic_basic, 3 - 1, 18 - 1).Result;
+            Client.TextDocument.DidOpen(Files.gt_include_main, "dfy");
+            goneTo = Client.TextDocument.Definition(Files.gt_include_main, 3 - 1, 18 - 1).Result;
 
-            VerifyResult(Files.ic_includee, 1, 7); //todo, multi file support, ich glaub test läuft auch nicht korrekt
+            VerifyResult(Files.gt_includee, 1, 7);
+        }
+
+
+        [Test]
+        public void MemberOfExternalClass()
+        {
+            Client.TextDocument.DidOpen(Files.gt_include_main, "dfy");
+            goneTo = Client.TextDocument.Definition(Files.gt_include_main,  4 - 1, 17 - 1).Result;
+
+            VerifyResult(Files.gt_includee, 3, 21);
         }
 
     }

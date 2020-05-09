@@ -81,10 +81,8 @@ namespace TestCommons
 
         //Goto
         public static readonly string gt_goto = CreateTestfilePath("goto/goto.dfy");
-
-        //Include
-        public static readonly string ic_basic = CreateTestfilePath("include/basic.dfy");
-        public static readonly string ic_includee = CreateTestfilePath("include/includee.dfy");
+        public static readonly string gt_include_main = CreateTestfilePath("goto/include_main.dfy");
+        public static readonly string gt_includee = CreateTestfilePath("goto/include_includee.dfy");
 
         //AutoCompletion
         public static readonly string ac_basic_var = CreateTestfilePath("autocompletion/basic_var.dfy");
