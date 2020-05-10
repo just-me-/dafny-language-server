@@ -47,7 +47,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CounterExampleProviderUnitT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymbolTableTest", "..\Test\LanguageServerTest\UnitTests\SymbolTableTest\SymbolTableTest.csproj", "{270DD504-F805-4AC7-988E-6323CF561320}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenameTest", "..\Test\LanguageServerTest\IntegrationTests\RenameTest\RenameTest.csproj", "{A509052A-FE1C-4A72-9B29-A5211AA7D15B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenameTest", "..\Test\LanguageServerTest\IntegrationTests\RenameTest\RenameTest.csproj", "{A509052A-FE1C-4A72-9B29-A5211AA7D15B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionServiceTest", "CompletionServiceTest\CompletionServiceTest.csproj", "{7AB5578A-2763-4697-8CDA-66D0429E4A5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -672,6 +674,38 @@ Global
 		{A509052A-FE1C-4A72-9B29-A5211AA7D15B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A509052A-FE1C-4A72-9B29-A5211AA7D15B}.Release|x86.ActiveCfg = Release|Any CPU
 		{A509052A-FE1C-4A72-9B29-A5211AA7D15B}.Release|x86.Build.0 = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|.NET.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|.NET.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|Any CPU.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|x86.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Checked|x86.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|.NET.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Debug|x86.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|.NET.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|.NET.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|Any CPU.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|x86.ActiveCfg = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.QED|x86.Build.0 = Debug|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|.NET.ActiveCfg = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|.NET.Build.0 = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -695,6 +729,7 @@ Global
 		{F58A1C1C-09FC-4C17-A6B1-5A8E85118361} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 		{270DD504-F805-4AC7-988E-6323CF561320} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 		{A509052A-FE1C-4A72-9B29-A5211AA7D15B} = {B4FC70C5-7863-41CC-A8E1-99F9AA645077}
+		{7AB5578A-2763-4697-8CDA-66D0429E4A5C} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99B9F147-1557-41C6-883E-E773DA068F27}

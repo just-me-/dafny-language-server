@@ -42,7 +42,7 @@ namespace DafnyLanguageServer.Handler
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() => FindCompletionItems(request.TextDocument.Uri, line, col, codeLine));  //todo merge conflict: auf dem adneren branch heisyxst es "GetCompletion., msus es get heissen?"
+                return await Task.Run(() => FindCompletionItems(request.TextDocument.Uri, line, col, codeLine));
             }
             catch (Exception e)
             {
@@ -52,12 +52,12 @@ namespace DafnyLanguageServer.Handler
             }
         }
 
-        private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine) //todo merge conflict: auf dem adneren branch heisyxst es "GetCompletion., msus es get heissen?
+        private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
             var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
-            
+
             var completionItems = new List<CompletionItem>();
             foreach (var symbol in service.GetSymbols(desire, entryPoint))
             {
