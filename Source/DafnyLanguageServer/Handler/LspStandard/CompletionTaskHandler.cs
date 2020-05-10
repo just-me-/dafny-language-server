@@ -48,12 +48,29 @@ namespace DafnyLanguageServer.Handler
             {
                 _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
                 new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+
+                /*
+                var list = new List<CompletionItem>();
+                list.Add(new CompletionItem
+                {
+                    Label = "hello" + e.Message
+                });
+                return list; ; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+                */
+                return null;
             }
         }
 
         private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
+            /*
+            var list = new List<CompletionItem>();
+            list.Add(new CompletionItem
+            {
+                Label = "hello2"
+            });
+            return list;
+            */
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
             var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
