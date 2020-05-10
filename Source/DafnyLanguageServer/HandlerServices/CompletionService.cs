@@ -38,9 +38,8 @@ namespace DafnyLanguageServer.HandlerServices
             return desire;
         }
 
-        private CompletionType OLDGetSupposedDesire(int colPos, string line, out string symbolName) // hmm evt doch besser ins file selbst? 
+        private CompletionType OLDGetSupposedDesire(int colPos, string line, out string symbolName)
         {
-            // diese ganze funktion ist hässlich und buggy. 
             var characters = line.ToCharArray();
             int position = colPos - 2;
             if (position > characters.Length || position < 0)
@@ -57,7 +56,7 @@ namespace DafnyLanguageServer.HandlerServices
                         || char.IsNumber(characters[position])
                         || characters[position] == '_'
                         || characters[position] == '-'
-                    ) // hmm ned mit regex weil chars... testen ob das a-zA-Z0-9-_ gleichwertig ist... 
+                    )
                     {
                         symbolString += characters[position];
                         position--;
