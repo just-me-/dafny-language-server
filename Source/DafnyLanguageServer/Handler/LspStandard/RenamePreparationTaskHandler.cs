@@ -48,17 +48,18 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
                     var range = new Range()
                     {
-                        Start = new Position(symbolAtCursor.Line-1 ?? 0, symbolAtCursor.Column-1 ?? 0),
-                        End = new Position(symbolAtCursor.Line-1 ?? 0, symbolAtCursor.ColumnEnd-1 ?? 0)
+                        Start = new Position(symbolAtCursor.Line - 1 ?? 0, symbolAtCursor.Column - 1 ?? 0),
+                        End = new Position(symbolAtCursor.Line - 1 ?? 0, symbolAtCursor.ColumnEnd - 1 ?? 0)
                     };
                     var result = new RangeOrPlaceholderRange(range); //?? richitg?? was mach ich hier? wtf ist ein placeholderrange?
 
                     return result;
                 });
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 _log.LogError("Error Handling Rename Preparation: " + e.Message);
-                return null; 
+                return null;
             }
         }
     }

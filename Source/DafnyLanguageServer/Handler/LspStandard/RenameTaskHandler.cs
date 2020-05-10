@@ -47,10 +47,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 {
                     var file = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                     var manager = _workspaceManager.SymbolTableManager;
-                    var req = new LspBasicRequestParser<RenameParams>();
-                    var line = req.GetLine(request);
-                    var col = req.GetCol(request);
-
+                    var line = (int)request.Position.Line + 1;
+                    var col = (int)request.Position.Character + 1;
                     var symbolAtCursor = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
                     if (RenameIsInvalid(request, symbolAtCursor, line, col))
