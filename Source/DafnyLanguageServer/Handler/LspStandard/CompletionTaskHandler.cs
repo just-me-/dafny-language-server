@@ -78,24 +78,43 @@ namespace DafnyLanguageServer.Handler
             var completionItems = new List<CompletionItem>();
             foreach (var symbol in service.GetSymbols(desire, entryPoint))
             {
-                completionItems.Add(CreateCompletionItem(symbol));
+                if (!symbol.Name.StartsWith("_"))
+                {
+                    completionItems.Add(CreateCompletionItem(symbol, line, col));
+                }
             }
             return completionItems;
         }
 
-        private CompletionItem CreateCompletionItem(ISymbol symbol)
+        private CompletionItem CreateCompletionItem(ISymbol symbol, int line, int col)
         {
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
                 : CompletionItemKind.Reference;
 
-            // is this range rly neeeded?
-            ///Range range = FileHelper.CreateRange(request.Position.Line, request.Position.Character, symbol.Name.Length);
-            TextEdit textEdit = new TextEdit
-            {
-                NewText = symbol.Name,
-                //Range = range
-            };
+            //Range range = new Range
+            //{
+            //    Start = new Position(line-1, col-3),
+            //    End = new Position(line-1, col-1)
+            //};
+            //TextEdit textEdit = new TextEdit
+            //{
+            //    NewText = symbol.Name,
+            //    Range = range
+            //};
+
+
+            //Es gibt auch di eMöglichkeit, statt dem Textedit einrfach das "Inserttext" zu nehmen - da hast du nur text. Siehe unten.
+
+            //Ein TextEdit enthält neben dem neuen Text auch noch einen Range. Das TextEdit löscht dann alles in dem Range, udn ersetzt es durch den neuen Text.
+            //das ist z.b. beim rename der fall: alter text löschen, neuen einfügen.
+
+            //Damit hätte mand ie möglichkeit, wenn der User z.B. schon () geschrieben hat, diese klammern wie zu überschreiben durch die autocompletion.
+            //nicht sicher, ob wir das brauchen.
+
+            //der range muss die cursor postion enthalten, muss gültig sein, also nicht über die zeilenlänge rausgehen etc. scheint merh insgesamt dann doch etwas heikel.
+            //habe es mal auf insertText geändret.
+
 
             return
                 new CompletionItem
@@ -107,7 +126,7 @@ namespace DafnyLanguageServer.Handler
                         Label = $"{symbol.Name}",
 #endif
                     Kind = kind,
-                    TextEdit = textEdit
+                    InsertText = symbol.Name
                 };
         }
     }

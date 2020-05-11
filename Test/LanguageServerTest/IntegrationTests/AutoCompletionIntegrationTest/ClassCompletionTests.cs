@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;
@@ -17,7 +18,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 10;
             int col = 11;
-            ArrayList exp = new ArrayList(){ };
+            var exp = new List<string>(){ };
 
             GetCompletions(Files.ac_c_empty, line, col);
             VerifyCompletions(exp, line, col);
@@ -28,7 +29,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 14;
             int col = 11;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
                 "meth",
             };
@@ -42,7 +43,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 24;
             int col = 11;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
                 "right",
             };
@@ -56,7 +57,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 18;
             int col = 14;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
                 "method_c",
             };

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;
@@ -17,7 +18,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 3;
             int col = 4;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
                 "a",
                 "Main",
@@ -31,11 +32,8 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 15;
             int col = 4;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
-                "a",
-                "b",
-                "m",
                 "c",
                 "acc1",
                 "acc2",
@@ -50,15 +48,10 @@ namespace AutoCompletionIntegrationTest
         [Test]
         public void MultipleClasses()
         {
-            int line = 15;
+            int line = 22;
             int col = 4;
-            ArrayList exp = new ArrayList()
+            var exp = new List<string>()
             {
-                "a",
-                "am",
-                "m",
-                "b",
-                "bm",
                 "c",
                 "Main",
                 "A",
@@ -72,12 +65,11 @@ namespace AutoCompletionIntegrationTest
         [Test]
         public void Empty()
         {
-            int line = 15;
-            int col = 4;
-            ArrayList exp = new ArrayList() { };
+            int line = 1;
+            int col = 1;
 
             GetCompletions(Files.ac_empty, line, col);
-            VerifyCompletions(exp, line, col);
+            Assert.IsNull(completions);
         }
     }
 }
