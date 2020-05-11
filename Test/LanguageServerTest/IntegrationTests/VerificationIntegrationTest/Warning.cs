@@ -9,7 +9,7 @@ namespace VerificationIntegrationTest
     public class Warnings : VerificationBase
     {
 
-        //[Test]
+        [Test]
         public void Warning_BasedOnInclude()
         {
             SendRequestAndAwaitDiagnostics(Files.vc_warning_include);
