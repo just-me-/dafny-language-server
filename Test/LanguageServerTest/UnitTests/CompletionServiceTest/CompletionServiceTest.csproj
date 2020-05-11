@@ -12,18 +12,11 @@
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.15.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj" />
-    <ProjectReference Include="..\..\..\..\Source\DafnyServer\DafnyServer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="BoogieExecutionEngine">
-      <HintPath>..\..\..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\TestCommons\TestCommons.csproj" />
   </ItemGroup>
 
 </Project>

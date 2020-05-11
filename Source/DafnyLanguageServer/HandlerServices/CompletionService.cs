@@ -44,7 +44,7 @@ namespace DafnyLanguageServer.HandlerServices
             int position = colPos - 2;
             if (position > characters.Length || position < 0)
             {
-                throw new ArgumentException("Curser position ist ausserhalb der Zeilenreichweite "); // todo translation 
+                throw new ArgumentException("Cursor position is exceeding line width"); // todo resx auslagern
             }
             if (characters[position] == '.')
             {
