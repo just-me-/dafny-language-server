@@ -58,10 +58,28 @@ namespace CompletionServiceTest
         [Test]
         public void Desire_AfterDot_ComplexSpecialCharWord()
         {
+            var line = "wrap my_Sub3Var. wrap";
+            var desire = _service.GetSupposedDesire(line, 17);
+            Assert.AreEqual(CompletionType.AfterDot, desire);
+            Assert.AreEqual("my_Sub3Var", _service.ExtractedSymbol);
+        }
+
+        [Test]
+        public void Desire_AfterDot_MinusWord()
+        {
             var line = "wrap my_Sub3-Var. wrap";
             var desire = _service.GetSupposedDesire(line, 18);
             Assert.AreEqual(CompletionType.AfterDot, desire);
-            Assert.AreEqual("my_Sub3-Var", _service.ExtractedSymbol);
+            Assert.AreEqual("Var", _service.ExtractedSymbol);
+        }
+
+        [Test]
+        public void Desire_AfterDot_PlusWord()
+        {
+            var line = "wrap my_Sub3+Var. wrap";
+            var desire = _service.GetSupposedDesire(line, 18);
+            Assert.AreEqual(CompletionType.AfterDot, desire);
+            Assert.AreEqual("Var", _service.ExtractedSymbol);
         }
 
         [Test]

@@ -48,29 +48,12 @@ namespace DafnyLanguageServer.Handler
             {
                 _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
                 new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-
-                /*
-                var list = new List<CompletionItem>();
-                list.Add(new CompletionItem
-                {
-                    Label = "hello" + e.Message
-                });
-                return list; ; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
-                */
-                return null;
+                return null;//todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
 
         private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
-            /*
-            var list = new List<CompletionItem>();
-            list.Add(new CompletionItem
-            {
-                Label = "hello2"
-            });
-            return list;
-            */
             var service = new CompletionService(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
             var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
@@ -80,13 +63,13 @@ namespace DafnyLanguageServer.Handler
             {
                 if (!symbol.Name.StartsWith("_"))
                 {
-                    completionItems.Add(CreateCompletionItem(symbol, line, col));
+                    completionItems.Add(CreateCompletionItem(symbol, desire, line, col));
                 }
             }
             return completionItems;
         }
 
-        private CompletionItem CreateCompletionItem(ISymbol symbol, int line, int col)
+        private CompletionItem CreateCompletionItem(ISymbol symbol, CompletionType desire, int line, int col)
         {
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
@@ -103,18 +86,7 @@ namespace DafnyLanguageServer.Handler
             //    Range = range
             //};
 
-
-            //Es gibt auch di eMöglichkeit, statt dem Textedit einrfach das "Inserttext" zu nehmen - da hast du nur text. Siehe unten.
-
-            //Ein TextEdit enthält neben dem neuen Text auch noch einen Range. Das TextEdit löscht dann alles in dem Range, udn ersetzt es durch den neuen Text.
-            //das ist z.b. beim rename der fall: alter text löschen, neuen einfügen.
-
-            //Damit hätte mand ie möglichkeit, wenn der User z.B. schon () geschrieben hat, diese klammern wie zu überschreiben durch die autocompletion.
-            //nicht sicher, ob wir das brauchen.
-
-            //der range muss die cursor postion enthalten, muss gültig sein, also nicht über die zeilenlänge rausgehen etc. scheint merh insgesamt dann doch etwas heikel.
-            //habe es mal auf insertText geändret.
-
+            var insertCode = GetCompletionCodeFragment(symbol, desire);
 
             return
                 new CompletionItem
@@ -126,8 +98,22 @@ namespace DafnyLanguageServer.Handler
                         Label = $"{symbol.Name}",
 #endif
                     Kind = kind,
-                    InsertText = symbol.Name
+                    InsertText = insertCode
                 };
+        }
+
+        private string GetCompletionCodeFragment(ISymbol symbol, CompletionType desire)
+        {
+            // todo evt in completion service auslagern damit man das dann auch noch testen kann, ist ja logik.. 
+            switch (desire)
+            {
+                case CompletionType.AfterNew:
+                    return symbol.Name + "()";
+                case CompletionType.AfterDot:
+                    return symbol.Kind == Kind.Method || symbol.Kind == Kind.Function ? symbol.Name + "()" : symbol.Name;
+                default:
+                    return symbol.Name;
+            }
         }
     }
 }
