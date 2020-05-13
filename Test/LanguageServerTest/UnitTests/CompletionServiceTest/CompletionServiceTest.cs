@@ -134,7 +134,7 @@ namespace CompletionServiceTest
         {
             var line = "new   ";
             var desire = _service.GetSupposedDesire(line, 6);
-            Assert.AreEqual(CompletionType.AllInScope, desire);
+            Assert.AreEqual(CompletionType.AfterNew, desire);
         }
 
         [Test]

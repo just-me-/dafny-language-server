@@ -18,7 +18,7 @@ namespace AutoCompletionIntegrationTest
         {
             int line = 10;
             int col = 11;
-            var exp = new List<string>(){ };
+            var exp = new List<string>() { };
 
             GetCompletions(Files.ac_c_empty, line, col);
             VerifyCompletions(exp, line, col);
@@ -31,7 +31,7 @@ namespace AutoCompletionIntegrationTest
             int col = 11;
             var exp = new List<string>()
             {
-                "meth",
+                "meth()",
             };
 
             GetCompletions(Files.ac_c_one_method, line, col);
@@ -45,7 +45,7 @@ namespace AutoCompletionIntegrationTest
             int col = 11;
             var exp = new List<string>()
             {
-                "right",
+                "right()",
             };
 
             GetCompletions(Files.ac_c_multiple, line, col);
@@ -59,7 +59,7 @@ namespace AutoCompletionIntegrationTest
             int col = 14;
             var exp = new List<string>()
             {
-                "method_c",
+                "method_c()",
             };
 
             GetCompletions(Files.ac_c_in_class, line, col);

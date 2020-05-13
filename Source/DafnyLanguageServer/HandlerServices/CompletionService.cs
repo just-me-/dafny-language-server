@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
@@ -28,14 +29,30 @@ namespace DafnyLanguageServer.HandlerServices
         /// </summary>
         public CompletionType GetSupposedDesire(string line, int col)
         {
-            //ExtractedSymbol = "TMP";
-            //return CompletionType.AfterNew;
+            col--;
+            ExtractedSymbol = "";
 
-            // tmp to write first test... test driven design ;) 
-            string symbolName;
-            var desire = OLDGetSupposedDesire(col, line, out symbolName);
-            ExtractedSymbol = symbolName;
-            return desire;
+            if (line.Length < col || col < 0)
+            {
+                throw new ArgumentException("Cursor position is exceeding line width"); // todo resx auslagern
+            }
+
+            line = line.Substring(0, col);
+
+            // get word before point 
+            var match = Regex.Match(line, @"([a-zA-Z_]\w*)\.$");
+            if (match.Success)
+            {
+                ExtractedSymbol = match.Groups[1].Value;
+                return CompletionType.AfterDot;
+            }
+            // matches "new "
+            match = Regex.Match(line, @"new\s+$");
+            if (match.Success)
+            {
+                return CompletionType.AfterNew;
+            }
+            return CompletionType.AllInScope;
         }
 
         private CompletionType OLDGetSupposedDesire(int colPos, string line, out string symbolName)
@@ -145,6 +162,5 @@ namespace DafnyLanguageServer.HandlerServices
                 yield return suggestionElement;
             }
         }
-
     }
 }
