@@ -91,14 +91,12 @@ namespace DafnyLanguageServer.Handler
             return
                 new CompletionItem
                 {
-#if DEBUG
-                    Label =
-                        $"{symbol.Name} (Kind: {symbol.Kind}) (Parent: {symbol.Parent.Name})", // todo lang file #102
-#else
-                        Label = $"{symbol.Name}",
-#endif
+                    Label = symbol.Name,
                     Kind = kind,
-                    InsertText = insertCode
+                    InsertText = insertCode,
+#if DEBUG
+                    Detail = $"Kind: { symbol.Kind } \n Parent: { symbol.Parent.Name }"
+#endif
                 };
         }
 
