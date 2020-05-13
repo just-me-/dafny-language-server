@@ -87,7 +87,7 @@ namespace DafnyLanguageServer.Handler
                     };
                     locations.Add(new Location
                     {
-                        Uri = request.TextDocument.Uri, // this wont work in references to other files... 
+                        Uri = usage.File,
                         Range = new Range(startPos, endPos)
                     });
                 }
