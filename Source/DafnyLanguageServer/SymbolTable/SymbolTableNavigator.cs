@@ -102,7 +102,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
-            filter ??= (s => true);
+            filter = DefaultPredicateFilter(filter);
 
             List<ISymbol> symbolList = new List<ISymbol>();
             if (symbol != null && filter.Invoke(symbol))
@@ -128,7 +128,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter = null)
         {
-            filter ??= (s => true);
+            filter = DefaultPredicateFilter(filter);
 
             var matchingSymbol = GetMatchingChild(entryPoint, filter);
             if (matchingSymbol != null)
@@ -161,7 +161,8 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 return null;
             }
-            filter ??= (s => true);
+            filter = DefaultPredicateFilter(filter);
+
             ISymbol child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
             if (child == null)
             {
@@ -187,7 +188,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
-            filter ??= (s => true);
+            filter = DefaultPredicateFilter(filter);
 
             List<ISymbol> list = new List<ISymbol>();
             if (symbol == null)
@@ -207,7 +208,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         private List<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
-            filter ??= (s => true);
+            filter = DefaultPredicateFilter(filter);
 
             var list = symbol?.Children?.Where(filter.Invoke).ToList();
             // inherited?
@@ -220,6 +221,16 @@ namespace DafnyLanguageServer.SymbolTable
                 }
             }
             return list;
+        }
+
+        /// <summary>
+        /// Since mono is used for Ci, the ??= Operator is not valid (C#8 feature not supported)
+        /// Predicates can not have default predicate as function parameters.
+        /// Therefore this function is used to set a default predicate it the given predicate was null. 
+        /// </summary>
+        private Predicate<ISymbol> DefaultPredicateFilter(Predicate<ISymbol> filter)
+        {
+            return filter ?? (s => true);
         }
     }
 }

@@ -141,7 +141,11 @@ namespace DafnyLanguageServer.SymbolTable
             ISymbol symbol = null;
             foreach (var modul in SymbolTables) //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
-                symbol ??= navigator.GetSymbolByPosition(modul.Value, file, line, character);
+                symbol = navigator.GetSymbolByPosition(modul.Value, file, line, character);
+                if (symbol != null)
+                {
+                    return symbol;
+                }
             }
             return symbol;
         }
