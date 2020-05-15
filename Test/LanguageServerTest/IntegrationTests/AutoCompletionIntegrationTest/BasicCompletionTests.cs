@@ -69,7 +69,8 @@ namespace AutoCompletionIntegrationTest
             int col = 1;
 
             GetCompletions(Files.ac_empty, line, col);
-            Assert.IsNull(completions);
+            var exp = new List<string>();
+            VerifyCompletions(exp, line, col);
         }
     }
 }
