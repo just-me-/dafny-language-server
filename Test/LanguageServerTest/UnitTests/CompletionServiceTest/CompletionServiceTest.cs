@@ -83,15 +83,6 @@ namespace CompletionServiceTest
         }
 
         [Test]
-        public void Desire_AfterDot_ComplexUmlauts()
-        {
-            var line = "wrap heÖöl. wrap";
-            var desire = _service.GetSupposedDesire(line, 12);
-            Assert.AreEqual(CompletionType.AfterDot, desire);
-            Assert.AreEqual("heÖöl", _service.ExtractedSymbol);
-        }
-
-        [Test]
         public void Desire_UnderflowSpot()
         {
             var line = "ohno";
