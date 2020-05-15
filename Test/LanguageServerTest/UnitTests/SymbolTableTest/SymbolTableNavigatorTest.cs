@@ -67,7 +67,7 @@ namespace SymbolTableTest
         [Test]
         public void GetSymbolByPositionTopLevel()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 1, defaultUri, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
             rootEntry.AddChild(mySymbol);
             ISymbol symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 1, 1);
@@ -77,8 +77,8 @@ namespace SymbolTableTest
         [Test]
         public void GetSymbolByPositionNested()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 1, defaultUri, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 1, defaultUri, "Child");
             rootEntry.AddChild(mySymbol);
             ISymbol symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 2, 1);
             Assert.AreEqual(mySymbol, symbol);

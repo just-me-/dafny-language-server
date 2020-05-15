@@ -85,8 +85,7 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            if (wrappingSymbol != null && (wrappingSymbol.Wraps(file, line, character) || wrappingSymbol.Name == "module"))
-            //if (line == wrappingSymbol?.Line && character <= wrappingSymbol?.ColumnEnd) //merge notzi: hier ? geadded weil z.b. ganz am anfang des docs sonst exception.
+            if (line == wrappingSymbol?.Line && character <= wrappingSymbol?.ColumnEnd)
             {
                 return wrappingSymbol;
             }
