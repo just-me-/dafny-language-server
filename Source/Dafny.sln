@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DafnyLanguageServer", "Dafn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{37A085B6-5F76-4255-BF6B-5DD5DE1023EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DafnyServer", "DafnyServer\DafnyServer.csproj", "{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompilationServiceTest", "..\Test\LanguageServerTest\UnitTests\CompileHandlerTest\CompilationServiceTest.csproj", "{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentManagerTest", "..\Test\LanguageServerTest\UnitTests\FileHelperTests\ContentManagerTest.csproj", "{CF8199EB-A1E2-4598-A414-4C4761CEC091}"
@@ -47,9 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymbolTableTest", "..\Test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenameTest", "..\Test\LanguageServerTest\IntegrationTests\RenameTest\RenameTest.csproj", "{A509052A-FE1C-4A72-9B29-A5211AA7D15B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionServiceTest", "..\Test\LanguageServerTest\UnitTests\CompletionServiceTest\CompletionServiceTest.csproj", "{D53EA19B-FC2F-4531-814B-6967A307F1D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompletionServiceTest", "..\Test\LanguageServerTest\UnitTests\CompletionServiceTest\CompletionServiceTest.csproj", "{D53EA19B-FC2F-4531-814B-6967A307F1D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeLensIntegrationTest", "..\Test\LanguageServerTest\IntegrationTests\CodeLensIntegrationTest\CodeLensIntegrationTest.csproj", "{59167F89-4492-4D27-95B5-4B9DB2897E88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeLensIntegrationTest", "..\Test\LanguageServerTest\IntegrationTests\CodeLensIntegrationTest\CodeLensIntegrationTest.csproj", "{59167F89-4492-4D27-95B5-4B9DB2897E88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -194,38 +192,6 @@ Global
 		{6D4E722B-FC78-4989-A239-13887C8751F2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6D4E722B-FC78-4989-A239-13887C8751F2}.Release|x86.ActiveCfg = Release|Any CPU
 		{6D4E722B-FC78-4989-A239-13887C8751F2}.Release|x86.Build.0 = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|.NET.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|.NET.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|Any CPU.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|Any CPU.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|Mixed Platforms.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|Mixed Platforms.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|x86.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Checked|x86.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|.NET.Build.0 = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Debug|x86.Build.0 = Debug|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|.NET.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|.NET.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|Any CPU.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|Any CPU.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|Mixed Platforms.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|Mixed Platforms.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|x86.ActiveCfg = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.QED|x86.Build.0 = Checked|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|.NET.ActiveCfg = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|.NET.Build.0 = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|x86.ActiveCfg = Release|Any CPU
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2}.Release|x86.Build.0 = Release|Any CPU
 		{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}.Checked|.NET.ActiveCfg = Debug|Any CPU
 		{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}.Checked|.NET.Build.0 = Debug|Any CPU
 		{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD}.Checked|Any CPU.ActiveCfg = Debug|Any CPU
@@ -714,7 +680,6 @@ Global
 		{63400D1F-05B2-453E-9592-1EAB74B2C9CC} = {CEEAD6CB-D3C5-442A-9198-9E27E39DE871}
 		{FE44674A-1633-4917-99F4-57635E6FA740} = {CEEAD6CB-D3C5-442A-9198-9E27E39DE871}
 		{3E2944E9-3E1D-4E03-A881-FB04A7A6ED67} = {CEEAD6CB-D3C5-442A-9198-9E27E39DE871}
-		{AC9B21AE-EBC1-4A27-AD11-ED031FC7B4A2} = {CEEAD6CB-D3C5-442A-9198-9E27E39DE871}
 		{A3EEB459-8DEE-4205-B1FB-BFA90C94A1DD} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 		{CF8199EB-A1E2-4598-A414-4C4761CEC091} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}
 		{FFBA869B-B661-4809-AE99-7F6913F3C9A5} = {37A085B6-5F76-4255-BF6B-5DD5DE1023EA}

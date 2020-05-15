@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
-using DafnyServer;
 using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -62,7 +61,7 @@ namespace DafnyLanguageServer.Handler
                 }
             };
 
-             return Task.FromResult(result);
+            return Task.FromResult(result);
 
         }
 

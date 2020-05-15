@@ -1,7 +1,6 @@
 ﻿using Microsoft.Boogie;
 using System.Collections.Generic;
 using DafnyLanguageServer.Handler;
-using DafnyServer;
 using DafnyLanguageServer.FileManager;
 
 namespace DafnyLanguageServer.DafnyAccess

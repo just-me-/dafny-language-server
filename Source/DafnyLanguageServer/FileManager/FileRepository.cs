@@ -60,17 +60,6 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
-        private List<DafnyServer.OldSymbolTable.OldSymbolInformation> Symboltable()
-        {
-            if (Result.TranslationStatus >= TranslationStatus.Resolved && Result.DafnyProgram != null) //todo
-            {
-                Type.ResetScopes();
-                var symbolTable = new DafnyServer.OldSymbolTable(Result.DafnyProgram);
-                return symbolTable.CalculateSymbols();
-            }
-            return new List<DafnyServer.OldSymbolTable.OldSymbolInformation>();
-        }
-
         /// <summary>
         /// Invokes the CounterExampleProvider to extract counter examples.
         /// </summary>

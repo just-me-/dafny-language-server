@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
-using DafnyServer;
 using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
