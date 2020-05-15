@@ -9,7 +9,7 @@ namespace CodeLensIntegrationTest
     public class IrregularFiles : CodeLensBase
     {
 
-        [Test]
+        //[Test]
         public void FirstTest()
         {
             RunCodeLens(Files.gt_goto);

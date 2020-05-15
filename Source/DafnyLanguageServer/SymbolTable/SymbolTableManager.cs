@@ -106,9 +106,9 @@ namespace DafnyLanguageServer.SymbolTable
         public string CreateDebugReadOut()
         {
             StringBuilder b = new StringBuilder();
+            INavigator nav = new SymbolTableNavigator();
             foreach (var kvp in SymbolTables)
             {
-                var nav = new SymbolTableNavigator();
                 b.AppendLine("Module: " + kvp.Key);
                 var rootSymbol = kvp.Value;
 
@@ -167,9 +167,9 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
             ISymbol closestWrappingSymbol = null;
+            INavigator navigator = new SymbolTableNavigator();
             foreach (var modul in SymbolTables)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
             {
-                INavigator navigator = new SymbolTableNavigator();
                 closestWrappingSymbol = navigator.TopDown(modul.Value, file, line, character);
             }
             return closestWrappingSymbol;
