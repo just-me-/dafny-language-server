@@ -1,8 +1,6 @@
 ﻿using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.HandlerServices;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 

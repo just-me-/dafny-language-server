@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.HandlerServices;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
 using NUnit.Framework;
 using Files = TestCommons.Paths;
@@ -176,7 +177,7 @@ namespace CompilationServiceTest
                 Result = results
             };
 
-            compilerResults = new CompilationService(repo, args).Compile();
+            compilerResults = new CompileProvider(repo, args).Compile();
         }
 
         private void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)

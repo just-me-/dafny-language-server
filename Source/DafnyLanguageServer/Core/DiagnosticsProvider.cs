@@ -1,27 +1,26 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
-namespace DafnyLanguageServer.HandlerServices
+namespace DafnyLanguageServer.Core
 {
     /// <summary>
     /// This service is used by the <c>TextDocumentSyncTaskHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
     /// </summary>
-    public class DiagnosticsService
+    public class DiagnosticsProvider : IDiagnosticsProvider
     {
         private readonly ILanguageServer _router;
         private readonly MessageSenderService _msgSenderService;
 
-        public DiagnosticsService(ILanguageServer router)
+        public DiagnosticsProvider(ILanguageServer router)
         {
             _router = router;
             _msgSenderService = new MessageSenderService(router);
@@ -32,7 +31,7 @@ namespace DafnyLanguageServer.HandlerServices
             _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
 
             var rawDiagnosticElements = fileRepository.Result.DiagnosticElements;
-            var diagnostics = CreateLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
+            var diagnostics = ConvertToLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
             PublishDiagnosticsParams p = new PublishDiagnosticsParams
             {
                 Uri = fileRepository.PhysicalFile.Uri,
@@ -42,7 +41,7 @@ namespace DafnyLanguageServer.HandlerServices
             _msgSenderService.SendCountedErrors(diagnostics.Count);
         }
 
-        public Collection<Diagnostic> CreateLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)
+        public Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)
         {
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
             foreach (DiagnosticElement e in errors)

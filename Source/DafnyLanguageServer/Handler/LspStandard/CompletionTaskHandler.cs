@@ -1,14 +1,14 @@
-﻿using DafnyLanguageServer.FileManager;
-using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+﻿using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.HandlerServices;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -19,7 +19,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionTaskHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
-        public CompletionTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
+        public CompletionTaskHandler(ILanguageServer router, Workspace workspaceManager,
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Handler
 
         private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
-            var service = new CompletionService(_workspaceManager.SymbolTableManager);
+            var service = new CompletionProvider(_workspaceManager.SymbolTableManager);
             var desire = service.GetSupposedDesire(codeLine, col);
             var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
 

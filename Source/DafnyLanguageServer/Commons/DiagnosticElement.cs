@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 
-namespace DafnyLanguageServer.DafnyAccess
+namespace DafnyLanguageServer.Commons
 {
     /// <summary>
     /// This class represents DiagnosticElements, such as an Error or a Warning.

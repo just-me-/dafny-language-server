@@ -1,10 +1,10 @@
 ﻿using System;
-using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.DafnyAccess;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -39,10 +39,10 @@ namespace DafnyLanguageServer.Handler
 
     public class CounterExampleHandler : ICounterExample
     {
-        private readonly WorkspaceManager _workspaceManager;
+        private readonly Workspace _workspaceManager;
         private readonly ILogger _log;
 
-        public CounterExampleHandler(WorkspaceManager b, ILoggerFactory loggerFactory)
+        public CounterExampleHandler(Workspace b, ILoggerFactory loggerFactory)
         {
             _workspaceManager = b;
             _log = loggerFactory.CreateLogger("");

@@ -1,11 +1,10 @@
-﻿using DafnyLanguageServer.DafnyAccess;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
-namespace DafnyLanguageServer.FileManager
+namespace DafnyLanguageServer.WorkspaceManager
 {
     /// <summary>
     /// This <c>WorkspaceManager</c> buffers for every Dafny file a valid intermediate version.
@@ -13,7 +12,7 @@ namespace DafnyLanguageServer.FileManager
     /// This buffer is needed to have always a valid intermediate file version to provide features like <c>AutoCompletion</c>
     /// even if the current file state would not be valid Dafny code (eg the user is typing a new line in his Dafny source file.)
     /// </summary>
-    public class WorkspaceManager : IWorkspaceManager
+    public class Workspace : IWorkspace
     {
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
         public IManager SymbolTableManager { get; set; }
@@ -49,6 +48,13 @@ namespace DafnyLanguageServer.FileManager
             //Generate new fancy Symbol Table for Testing:
             //kommt dann glaub eher in das filerepo rein
             // dokuuu "table ist auf workspace (vscode) basis, ned auf file basis oder so
+            // wir müssen das noch diskutierne. das wäre natürlich die 'geile' lösung
+            // aber das kreige wir ja niemals hin :O.
+            // ich glaube, es wäre robuster,w enn wir wirklich pro file ein table machen.
+            // das 'dafnyProgram' und der ganze bums ist ja auch einfach 'einmal pro file'^in den tranlsation results drin.
+            // dies obwohl das dafnyProgram ja eignetlich alle includes und so enthält....
+            // das wäre denk ich was aka "es wäre gut, aber wir haben es jetzt so gemacht, weil blabla".
+            // aka dann etwas für die nächsten hust hstu xd.
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
                 SymbolTableManager = new SymbolTableManager(fileRepository.Result.DafnyProgram);

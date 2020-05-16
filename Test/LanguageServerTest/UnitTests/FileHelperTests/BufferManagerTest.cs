@@ -1,5 +1,5 @@
 ﻿using System;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.WorkspaceManager;
 using NUnit.Framework;
 
 namespace ContentManagerTests
@@ -8,7 +8,7 @@ namespace ContentManagerTests
     [Category("Unit")]
     internal class BufferManagerTests
     {
-        private IWorkspaceManager b;
+        private IWorkspace b;
         readonly Uri uri1 = new Uri(@"C:\file1.txt");
         readonly Uri uri2 = new Uri(@"C:\file2.txt");
         readonly Uri unregisteredUri = new Uri(@"C:\file3.txt");
@@ -26,7 +26,7 @@ namespace ContentManagerTests
         [SetUp]
         public void createBuffer()
         {
-            b = new WorkspaceManager();
+            b = new Workspace();
             b.UpdateFile(uri1, source1);
             b.UpdateFile(uri2, source2);
         }
@@ -40,7 +40,7 @@ namespace ContentManagerTests
         [Test]
         public void GetAllFilesEmpty()
         {
-            IWorkspaceManager t = new WorkspaceManager();
+            IWorkspace t = new Workspace();
             Assert.IsTrue(t.GetAllFiles().IsEmpty);
         }
 

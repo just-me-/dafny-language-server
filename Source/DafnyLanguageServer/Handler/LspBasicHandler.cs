@@ -1,4 +1,4 @@
-﻿using DafnyLanguageServer.FileManager;
+﻿using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.Handler
     public class LspBasicHandler<T>
     {
         protected readonly ILanguageServer _router;
-        protected readonly IWorkspaceManager _workspaceManager;
+        protected readonly IWorkspace _workspaceManager;
         protected readonly DocumentSelector _documentSelector;
         protected readonly ILoggerFactory _loggingFactory;
         protected readonly ILogger _log;
@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.Handler
         protected T _capability; // needed by OmniSharp
         protected T Capability => _capability;
 
-        public LspBasicHandler(ILanguageServer router, IWorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
+        public LspBasicHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory = null)
         {
             _router = router;
             _workspaceManager = workspaceManager;

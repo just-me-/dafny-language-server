@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
     public class RenamePreparationTaskHandler : LspBasicHandler<RenameCapability>, IPrepareRenameHandler
     {
 
-        public RenamePreparationTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory = null)
+        public RenamePreparationTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
         }

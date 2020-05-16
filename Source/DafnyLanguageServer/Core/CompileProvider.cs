@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler;
-using Microsoft.Boogie;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Dafny;
-using ErrorProc = Microsoft.Boogie.ErrorProc;
 using Type = Microsoft.Dafny.Type;
 
-namespace DafnyLanguageServer.HandlerServices
+namespace DafnyLanguageServer.Core
 {
     /// <summary>
     ///  This service is used by the <c>CompileHandler</c>. 
     /// </summary>
-    public class CompilationService
+    public class CompileProvider : ICompileProvider
     {
         private string[] CompilationArgs { get; }
 
@@ -27,7 +19,7 @@ namespace DafnyLanguageServer.HandlerServices
         private string Path => FileRepo.PhysicalFile.Filepath;
         private Microsoft.Dafny.Program Dp => FileRepo.Result.DafnyProgram;
 
-        public CompilationService(FileRepository fileRepo, string[] args)
+        public CompileProvider(FileRepository fileRepo, string[] args)
         {
             FileRepo = fileRepo;
 

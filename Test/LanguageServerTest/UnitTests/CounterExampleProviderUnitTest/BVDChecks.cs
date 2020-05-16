@@ -2,9 +2,9 @@ using DafnyLanguageServer.DafnyAccess;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.HandlerServices;
 using TestCommons;
 using Files = TestCommons.Paths;
 

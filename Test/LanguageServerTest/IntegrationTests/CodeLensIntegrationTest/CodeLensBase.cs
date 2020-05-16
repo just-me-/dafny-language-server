@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.HandlerServices;
 using NUnit.Framework;
 using TestCommons;
 

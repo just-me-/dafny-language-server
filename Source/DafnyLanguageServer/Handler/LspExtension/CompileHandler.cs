@@ -2,8 +2,7 @@
 using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.HandlerServices;
+using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -32,10 +31,10 @@ namespace DafnyLanguageServer.Handler
 
     public class CompileHandler : ICompile
     {
-        private readonly WorkspaceManager _workspaceManager;
+        private readonly Workspace _workspaceManager;
         private readonly ILogger _log;
 
-        public CompileHandler(WorkspaceManager b, ILoggerFactory lf)
+        public CompileHandler(Workspace b, ILoggerFactory lf)
         {
             _workspaceManager = b;
             _log = lf.CreateLogger("");

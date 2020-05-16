@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -22,7 +22,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
         private static HashSet<string> _reservedWords = new ReservedWordsProvider().GetReservedWords();
 
         private readonly MessageSenderService _mss;
-        public RenameTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
+        public RenameTaskHandler(ILanguageServer router, Workspace workspaceManager,
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {

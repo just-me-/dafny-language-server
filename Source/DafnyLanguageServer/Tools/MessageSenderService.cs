@@ -1,6 +1,6 @@
 ﻿using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
-namespace DafnyLanguageServer.ProgramServices
+namespace DafnyLanguageServer.Tools
 {
     /// <summary>
     /// This service provides for each client supported message an own function for an easy usage.

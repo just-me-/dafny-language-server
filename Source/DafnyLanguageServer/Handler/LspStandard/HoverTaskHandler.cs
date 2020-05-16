@@ -1,5 +1,4 @@
 ﻿using System;
-using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -10,8 +9,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.ProgramServices;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -25,7 +24,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class HoverTaskHandler : LspBasicHandler<HoverCapability>, IHoverHandler
     {
-        public HoverTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager,
+        public HoverTaskHandler(ILanguageServer router, Workspace workspaceManager,
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {

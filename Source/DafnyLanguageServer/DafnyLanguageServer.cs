@@ -1,5 +1,4 @@
-﻿using DafnyLanguageServer.FileManager;
-using DafnyLanguageServer.Handler;
+﻿using DafnyLanguageServer.Handler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Server;
@@ -7,7 +6,8 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Handler.LspStandard;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using Serilog;
 using DidChangeWatchedFilesHandler = DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler;
@@ -147,7 +147,7 @@ namespace DafnyLanguageServer
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<WorkspaceManager>();
+            services.AddSingleton<Workspace>();
             services.AddLogging();
         }
     }

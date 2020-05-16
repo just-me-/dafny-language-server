@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
-using DafnyLanguageServer.FileManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -18,7 +18,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class DefinitionTaskHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
     {
-        public DefinitionTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        public DefinitionTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
         : base(router, workspaceManager, loggingFactory)
         {
         }

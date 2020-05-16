@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Commons;
 using NUnit.Framework;
 
 namespace ProgramTest

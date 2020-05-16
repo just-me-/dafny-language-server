@@ -1,4 +1,5 @@
-﻿using DafnyLanguageServer.DafnyAccess;
+﻿using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.DafnyAccess;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 

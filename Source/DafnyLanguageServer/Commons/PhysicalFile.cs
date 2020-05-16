@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
-namespace DafnyLanguageServer.FileManager
+namespace DafnyLanguageServer.Commons
 {
     /// <summary>
     /// This class represents a physical Dafny file. The content of this file is not buffered.

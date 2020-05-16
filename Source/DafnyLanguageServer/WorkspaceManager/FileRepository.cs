@@ -1,14 +1,12 @@
-﻿using DafnyLanguageServer.DafnyAccess;
+﻿using System;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Core;
+using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Handler;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using DafnyLanguageServer.HandlerServices;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
-using Type = Microsoft.Dafny.Type;
+using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
 
-namespace DafnyLanguageServer.FileManager
+namespace DafnyLanguageServer.WorkspaceManager
 {
     /// <summary>
     /// This class represents a buffered version of a Dafny file.
@@ -60,6 +58,9 @@ namespace DafnyLanguageServer.FileManager
             }
         }
 
+
+
+        //todo das wäre besser aufgehoben wieter oben, aka new Provider(FileRepo) wenn mand en dependency graph ankuckt.
         /// <summary>
         /// Invokes the CounterExampleProvider to extract counter examples.
         /// </summary>
@@ -89,7 +90,7 @@ namespace DafnyLanguageServer.FileManager
         {
             try
             {
-                return new CompilationService(this, requestCompilationArguments).Compile();
+                return new CompileProvider(this, requestCompilationArguments).Compile();
             }
             catch (Exception e)
             {

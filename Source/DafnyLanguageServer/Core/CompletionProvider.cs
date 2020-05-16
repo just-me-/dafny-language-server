@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
-namespace DafnyLanguageServer.HandlerServices
+namespace DafnyLanguageServer.Core
 {
     public enum CompletionType
     {
@@ -13,12 +13,12 @@ namespace DafnyLanguageServer.HandlerServices
         AllInScope
     }
 
-    public class CompletionService
+    public class CompletionProvider : ICompletionProvider
     {
         public string ExtractedSymbol { get; private set; }
         public IManager Manager { get; }
 
-        public CompletionService(IManager manager)
+        public CompletionProvider(IManager manager)
         {
             Manager = manager;
         }

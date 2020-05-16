@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler;
 using Microsoft.Boogie;
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 
-namespace DafnyLanguageServer.HandlerServices
+namespace DafnyLanguageServer.Core
 {
-    public static class CounterExampleDefaultModelFile
+    public static class CounterExampleDefaultModelFile //todo weg.. aufwärts ref von iwo unten iuwas, dafny access da holt sich das hier ab -> nach ressource da iwo tun wenn ich das mit dem assembly zeugs habe.
     {
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleDefaultModelFile).Assembly.Location);
         public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, Resources.ConfigurationStrings.model_path));
@@ -31,7 +31,7 @@ namespace DafnyLanguageServer.HandlerServices
     /// To generate a model.bvd, one needs to compile with the argument /mv:[PathtoModel.bvd]
     /// The .bvd can also be injected for unit testing.
     /// </summary>
-    public class CounterExampleProvider
+    public class CounterExampleProvider : ICounterExampleProvider
     {
         public string ModelBvd { get; }
         private PhysicalFile PhysicalFile { get; }

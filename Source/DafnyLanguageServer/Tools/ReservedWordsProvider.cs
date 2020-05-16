@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Handler.LspStandard;
 using Newtonsoft.Json.Linq;
 
-namespace DafnyLanguageServer.ProgramServices
+namespace DafnyLanguageServer.Tools
 {
     public class ReservedWordsProvider
     {

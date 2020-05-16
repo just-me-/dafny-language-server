@@ -1,5 +1,4 @@
-﻿using DafnyLanguageServer.FileManager;
-using MediatR;
+﻿using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -9,8 +8,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.HandlerServices;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Core;
+using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
@@ -25,7 +25,7 @@ namespace DafnyLanguageServer.Handler
     {
         public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
 
-        public TextDocumentSyncTaskHandler(ILanguageServer router, WorkspaceManager workspaceManager, ILoggerFactory loggingFactory)
+        public TextDocumentSyncTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
         }
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Handler
                 _log.LogInformation("Updating File " + uri); // todo lang file #102
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
                 _log.LogInformation("Calculating Diagnostics"); // todo lang file #102
-                new DiagnosticsService(_router).SendDiagnostics(fileRepository);
+                new DiagnosticsProvider(_router).SendDiagnostics(fileRepository);
                 _log.LogInformation("Update Request successfully handled."); // todo lang file #102
 
             }

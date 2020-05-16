@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer;
-using DafnyLanguageServer.ProgramServices;
+using DafnyLanguageServer.Tools;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using Files = TestCommons.Paths;

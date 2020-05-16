@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DafnyLanguageServer.FileManager;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Handler;
-using DafnyLanguageServer.HandlerServices;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Bpl = Microsoft.Boogie;
-using CounterExampleProvider = DafnyLanguageServer.HandlerServices.CounterExampleProvider;
+using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
