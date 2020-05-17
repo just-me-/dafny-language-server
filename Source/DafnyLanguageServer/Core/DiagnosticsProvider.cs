@@ -15,12 +15,12 @@ namespace DafnyLanguageServer.Core
     /// <summary>
     /// This service is used by the <c>TextDocumentSyncTaskHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
     /// </summary>
-    public class DiagnosticsProvider : IDiagnosticsProvider
+    public class DiagnosticProvider : IDiagnosticsProvider
     {
         private readonly ILanguageServer _router;
         private readonly MessageSenderService _msgSenderService;
 
-        public DiagnosticsProvider(ILanguageServer router)
+        public DiagnosticProvider(ILanguageServer router)
         {
             _router = router;
             _msgSenderService = new MessageSenderService(router);

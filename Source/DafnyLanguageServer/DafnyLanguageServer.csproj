@@ -220,7 +220,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handler\LspExtension\CompileHandler.cs" />
     <Compile Include="Handler\LspStandard\TextDocumentSyncTaskHandler.cs" />
-    <Compile Include="Core\DiagnosticProvider.cs" />
+    <Compile Include="Core\DiagnosticsProvider.cs" />
     <Compile Include="Resources\ConfigurationStrings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
