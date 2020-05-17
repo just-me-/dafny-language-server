@@ -8,7 +8,7 @@ using DafnyLanguageServer.SymbolTable;
 
 namespace DafnyLanguageServer.Core
 {
-    interface ICompletionProvider
+    public interface ICompletionProvider
     {
         CompletionType GetSupposedDesire(string line, int col);
         ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col);

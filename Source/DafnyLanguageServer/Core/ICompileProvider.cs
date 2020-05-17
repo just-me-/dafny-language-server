@@ -7,7 +7,7 @@ using DafnyLanguageServer.Handler;
 
 namespace DafnyLanguageServer.Core
 {
-    interface ICompileProvider
+    public interface ICompileProvider
     {
         CompilerResults Compile();
     }

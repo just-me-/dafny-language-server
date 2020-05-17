@@ -11,7 +11,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.Core
 {
-    interface IDiagnosticsProvider
+    public interface IDiagnosticsProvider
     {
         void SendDiagnostics(FileRepository fileRepository);
         Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file);

@@ -8,7 +8,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.Core
 {
-    interface ICodeLensProvider
+    public interface ICodeLensProvider
     {
         CodeLensContainer GetCodeLensContainer();
     }

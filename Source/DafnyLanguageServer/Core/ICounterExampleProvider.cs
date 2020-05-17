@@ -7,7 +7,7 @@ using DafnyLanguageServer.Handler;
 
 namespace DafnyLanguageServer.Core
 {
-    interface ICounterExampleProvider
+    public interface ICounterExampleProvider
     {
         CounterExampleResults LoadCounterModel();
     }
