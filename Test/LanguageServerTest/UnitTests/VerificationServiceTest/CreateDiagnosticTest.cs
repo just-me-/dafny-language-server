@@ -12,7 +12,7 @@ namespace VerificationServiceTest
     public class CreateDiagnosticTest
     {
         private static readonly string randomFakeSource = "aa\naa\naa\naa\n";
-        private static DiagnosticsProvider diagnosticsService = new DiagnosticsProvider(null); //todo Ticket#281
+        private static DiagnosticProvider diagnosticsService = new DiagnosticProvider(null); //todo Ticket#281
         private Token token;
 
         private PhysicalFile createFakeFile(string name, string code)

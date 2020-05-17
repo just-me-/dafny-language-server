@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Handler
                 _log.LogInformation("Updating File " + uri); // todo lang file #102
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
                 _log.LogInformation("Calculating Diagnostics"); // todo lang file #102
-                new DiagnosticsProvider(_router).SendDiagnostics(fileRepository);
+                new DiagnosticProvider(_router).SendDiagnostics(fileRepository);
                 _log.LogInformation("Update Request successfully handled."); // todo lang file #102
 
             }
