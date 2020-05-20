@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.WorkspaceManager;
@@ -33,35 +34,16 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
-            var manager = _workspaceManager.SymbolTableManager;
-            var line = (int)request.Position.Line + 1;
-            var col = (int)request.Position.Character + 1;
-            var symbol = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
-
-            if (symbol == null)
+            return Task.Run(() =>
             {
+                var manager = _workspaceManager.SymbolTableManager;
+                var uri = request.TextDocument.Uri;
+                var line = (int) request.Position.Line + 1;
+                var col = (int) request.Position.Character + 1;
 
-                return Task.FromResult<Hover>(null);
-
-            }
-
-            MarkedString m1 = new MarkedString("Symbol: " + symbol.ToNiceString());
-            MarkedString m2 = new MarkedString("Type: " + symbol.Type);
-            MarkedString m3 = new MarkedString("Scope: " + symbol.Parent.Name);
-            MarkedString m4 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? "This symbol is a declaration." : symbol.DeclarationOrigin.ToNiceString()));
-
-            Hover result = new Hover()
-            {
-                Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4),
-                Range = new Range()
-                {
-                    Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
-                    End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
-                }
-            };
-
-            return Task.FromResult(result);
-
+                var provider = new HoverProvider(manager);
+                return provider.GetHoverInformation(uri, line, col);
+            });
         }
 
 
