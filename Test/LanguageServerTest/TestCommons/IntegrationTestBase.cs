@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Resources;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using Serilog;
@@ -45,7 +46,7 @@ namespace TestCommons
 
             LoggerFactory = new SerilogLoggerFactory(MyLog);
 
-            Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(Files.langServExe)
+            Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(FileAndFolderLocator.langServExe)
             {
                 Arguments = $"/log ../Logs/Test_{Name}.txt /loglevel 0"
             });
@@ -54,7 +55,7 @@ namespace TestCommons
 
             Client = new LanguageClient(LoggerFactory, Server);
             Client.Initialize(
-                workspaceRoot: Files.testFilesPath,
+                workspaceRoot: FileAndFolderLocator.testFilesPath,
                 initializationOptions: new { },
                 cancellationToken: CancellationSource.Token
             ).Wait();

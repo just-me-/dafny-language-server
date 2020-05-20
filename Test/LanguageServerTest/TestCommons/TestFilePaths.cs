@@ -1,18 +1,12 @@
 ﻿using System.IO;
+using DafnyLanguageServer.Resources;
 
 namespace TestCommons
 {
 
     public static class Paths
     {
-        //Folders
-        public static readonly string assemblyPath = Path.GetDirectoryName(typeof(Paths).Assembly.Location);
-        public static readonly string rootPath = Path.GetFullPath(Path.Combine(assemblyPath, "../"));
-        public static readonly string testFilesPath = Path.GetFullPath(Path.Combine(rootPath, "Test/LanguageServerTest/DafnyFiles"));
 
-        //Executables
-        public static readonly string dafnyExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/Dafny.exe"));
-        public static readonly string langServExe = Path.GetFullPath(Path.Combine(rootPath, "Binaries/DafnyLanguageServer.exe"));
 
         /***CONFIG READER TEST***/
         /************************/
@@ -180,6 +174,6 @@ namespace TestCommons
             return path;
         }
 
-        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(testFilesPath, s));
+        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(FileAndFolderLocator.testFilesPath, s));
     }
 }
