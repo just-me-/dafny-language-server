@@ -42,7 +42,12 @@ namespace DafnyLanguageServer.Handler
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() => FindCompletionItems(request.TextDocument.Uri, line, col, codeLine));
+                return await Task.Run(() =>
+                {
+                    var provider = new CompletionProvider(_workspaceManager.SymbolTableManager);
+                    return provider.FindCompletionItems(request.TextDocument.Uri, line, col, codeLine);
+                });
+
             }
             catch (Exception e)
             {
@@ -51,53 +56,6 @@ namespace DafnyLanguageServer.Handler
                 return null;//todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
-
-        private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
-        {
-            ICompletionProvider provider = new CompletionProvider(_workspaceManager.SymbolTableManager);
-            var desire = provider.GetSupposedDesire(codeLine, col);
-            var entryPoint = provider.GetWrappingEntrypointSymbol(file, line, col);
-
-            var completionItems = new List<CompletionItem>();
-            foreach (var symbol in provider.GetSymbols(desire, entryPoint))
-            {
-                completionItems.Add(CreateCompletionItem(symbol, desire, line, col));
-            }
-            return completionItems;
-        }
-
-        private CompletionItem CreateCompletionItem(ISymbol symbol, CompletionType desire, int line, int col)
-        {
-            CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
-                ? kind
-                : CompletionItemKind.Reference;
-
-            var insertCode = GetCompletionCodeFragment(symbol, desire);
-
-            return
-                new CompletionItem
-                {
-                    Label = symbol.Name,
-                    Kind = kind,
-                    InsertText = insertCode,
-#if DEBUG
-                    Detail = $"Kind: { symbol.Kind } \n Parent: { symbol.Parent.Name }"
-#endif
-                };
-        }
-
-        private string GetCompletionCodeFragment(ISymbol symbol, CompletionType desire)
-        {
-            // todo evt in completion service auslagern damit man das dann auch noch testen kann, ist ja logik.. 
-            switch (desire)
-            {
-                case CompletionType.AfterNew:
-                    return symbol.Name + "()";
-                case CompletionType.AfterDot:
-                    return symbol.Kind == Kind.Method || symbol.Kind == Kind.Function ? symbol.Name + "()" : symbol.Name;
-                default:
-                    return symbol.Name;
-            }
-        }
+        
     }
 }
