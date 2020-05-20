@@ -1,7 +1,8 @@
 {
 	"logging": {
-		"stream": "a.txt",
-		"log": "b.txt",
+		"stream": "Logs/a.txt",
+		"log": "Logs/b.txt",
 		"loglevel": 0
-	}
+	},
+	"syncKind" : "full"
 }

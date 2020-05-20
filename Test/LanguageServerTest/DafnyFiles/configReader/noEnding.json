@@ -1,7 +1,8 @@
 {
 	"logging": {
-		"stream": "../Logs/StreamRedirection",
-		"log": "../Logs/Log",
+		"stream": "Logs/LanguageServerStreamRedirection",
+		"log": "Logs/LanguageServerLog",
 		"loglevel": 4
-	}
+	},
+	"syncKind" : "incremental"
 }

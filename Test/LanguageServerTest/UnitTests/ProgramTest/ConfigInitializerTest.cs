@@ -47,15 +47,17 @@ namespace ProgramTest
         }
 
         [Test]
-        public void Fine()
+        public void GoodCustomValues()
         {
             string configFile = Files.cr_fine;
             var ci = new ConfigInitializer(new string[] { }, configFile);
             ci.SetUp();
 
-            string expectedLogFile = CombineWithDefaultLogFolder("./Binaries/b.txt");
-            string expectedStreamFile = CombineWithDefaultLogFolder("./Binaries/a.txt");
+            string expectedLogFile = CombineWithDefaultLogFolder("./b.txt");
+            string expectedStreamFile = CombineWithDefaultLogFolder("./a.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Full;
+
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -64,6 +66,8 @@ namespace ProgramTest
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
+
         }
 
         [Test]
@@ -76,6 +80,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -84,6 +89,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("same files"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -97,12 +103,14 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
@@ -116,11 +124,13 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
@@ -135,12 +145,14 @@ namespace ProgramTest
             string expectedLogFile = CombineWithDefaultLogFolder("StreamRedirection.log");
             string expectedStreamFile = CombineWithDefaultLogFolder("Log.log");
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
@@ -154,12 +166,14 @@ namespace ProgramTest
             string expectedLogFile = CombineWithDefaultLogFolder("StreamRedirection");
             string expectedStreamFile = CombineWithDefaultLogFolder("Log");
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
@@ -175,6 +189,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -182,6 +197,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("escape sequence"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -195,6 +211,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -202,6 +219,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -215,6 +233,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -222,6 +241,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -235,6 +255,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -242,6 +263,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("exceeds"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -255,12 +277,14 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsTrue(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -272,14 +296,16 @@ namespace ProgramTest
             ci.SetUp();
 
             string expectedLogFile = defaultLog;
-            string expectedStreamFile = CombineWithDefaultLogFolder("./Binaries/1"); //int as path will just use this as file name
+            string expectedStreamFile = CombineWithDefaultLogFolder("../1"); //int as path will just use this as file name
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -291,15 +317,17 @@ namespace ProgramTest
             var ci = new ConfigInitializer(new string[] { }, configFile);
             ci.SetUp();
 
-            string expectedLogFile = CombineWithDefaultLogFolder("./Binaries/2");
+            string expectedLogFile = CombineWithDefaultLogFolder("../2");
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -316,6 +344,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -323,6 +352,7 @@ namespace ProgramTest
             Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("file not found"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -342,12 +372,14 @@ namespace ProgramTest
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -363,12 +395,14 @@ namespace ProgramTest
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsFalse(ci.InitializationErrors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -383,6 +417,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -391,6 +426,7 @@ namespace ProgramTest
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -405,6 +441,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -413,6 +450,7 @@ namespace ProgramTest
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -427,6 +465,7 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
@@ -436,6 +475,7 @@ namespace ProgramTest
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -450,12 +490,14 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
@@ -470,12 +512,14 @@ namespace ProgramTest
             string expectedLogFile = defaultLog;
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
+            TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 

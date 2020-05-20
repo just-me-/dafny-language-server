@@ -1,7 +1,8 @@
 {
 	"logging": {
-		"stream": "../Logs/a.txt",
-		"log": "../Logs/a.txt",
+		"stream": "Logs/a.txt",
+		"log": "Logs/a.txt",
 		"loglevel": 4
-	}
+	},
+	"syncKind" : "incremental"
 }

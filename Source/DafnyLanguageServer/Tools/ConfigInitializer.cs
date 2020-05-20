@@ -75,7 +75,7 @@ namespace DafnyLanguageServer.Tools
 
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
-                var cfgLevel = cfg["logging"]["LogLevel"];
+                var cfgLevel = cfg["logging"]["loglevel"];
                 var syncKind = cfg["syncKind"];
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)

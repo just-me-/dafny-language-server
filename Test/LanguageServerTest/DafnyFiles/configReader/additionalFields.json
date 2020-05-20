@@ -1,9 +1,10 @@
 {
 	"logging": {
 		"stuff": 355,
-		"stream": "../Logs/StreamRedirection.txt",
-		"log": "../Logs/Log.txt",
+		"stream": "Logs/LanguageServerStreamRedirection.txt",
+		"log": "Logs/LanguageServerLog.txt",
 		"loglevel": 4,
 		"stuffuf": "bla"
-	}
+	},
+	"syncKind" : "incremental"
 }
