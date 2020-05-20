@@ -13,6 +13,9 @@ namespace DafnyLanguageServer.Tools
     /// <summary>
     /// This is a reader service for the server configuration file. It is used once by the server start up. 
     /// </summary>
+
+
+    //todo das ganze teil hier ist noch urkomisch... evtl einfach sobald iwas schief läuft die efaults nutzen statt so halb halb? ist aber mega viel aufwand und interessiert eh keinen....
     public class ConfigInitializer
     {
         public ConfigInitializationErrors InitializationErrors { get; } = new ConfigInitializationErrors();

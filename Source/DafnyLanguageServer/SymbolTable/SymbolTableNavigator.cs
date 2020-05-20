@@ -214,8 +214,9 @@ namespace DafnyLanguageServer.SymbolTable
             filter = DefaultPredicateFilter(filter);
 
             var list = symbol?.Children?.Where(filter.Invoke).ToList();  //list todo könnte null sein... was tun?
-            // inherited?
-            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))  //symbol todo könnte null sein... was tun?
+            
+            // The following branch checks if the symbol is inherited by a base class
+            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))           //symbol todo könnte null sein... was tun?
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {

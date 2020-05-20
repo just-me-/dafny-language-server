@@ -28,7 +28,6 @@ namespace DafnyLanguageServer.WorkspaceManager
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
-            //todo remove this just a test
             if (typeof(T) == typeof(string)) //Sync Kind Full
             {
                 var text = changes as string;
