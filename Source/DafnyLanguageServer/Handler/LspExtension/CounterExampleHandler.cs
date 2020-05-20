@@ -40,17 +40,12 @@ namespace DafnyLanguageServer.Handler
     {
     }
 
-    public class CounterExampleHandler : ICounterExample
+    public class CounterExampleHandler : LspBasicHandler<object>, ICounterExample
     {
-        private readonly Workspace _workspaceManager;
-        private readonly ILogger _log;
-        private readonly MessageSenderService _mss;
 
         public CounterExampleHandler(ILanguageServer router, Workspace b, ILoggerFactory loggerFactory)
+        : base(router, b, loggerFactory)
         {
-            _workspaceManager = b;
-            _log = loggerFactory.CreateLogger("");
-            _mss = new MessageSenderService(router);
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)

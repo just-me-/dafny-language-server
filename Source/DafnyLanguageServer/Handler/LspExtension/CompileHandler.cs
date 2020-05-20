@@ -31,18 +31,11 @@ namespace DafnyLanguageServer.Handler
     [Serial, Method("compile")]
     public interface ICompile : IJsonRpcRequestHandler<CompilerParams, CompilerResults> { }
 
-    public class CompileHandler : ICompile
+    public class CompileHandler : LspBasicHandler<object>, ICompile
     {
-        private readonly Workspace _workspaceManager;
-        private readonly ILogger _log;
-        private readonly MessageSenderService _mss;
-
         public CompileHandler(ILanguageServer router, Workspace b, ILoggerFactory lf)
+            : base(router, b, lf)
         {
-            _workspaceManager = b;
-            _log = lf.CreateLogger("");
-            _mss = new MessageSenderService(router);
-
         }
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
