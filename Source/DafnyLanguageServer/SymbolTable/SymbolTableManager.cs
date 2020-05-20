@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
@@ -46,7 +47,7 @@ namespace DafnyLanguageServer.SymbolTable
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Descendants = new List<ISymbol>(),
                 Kind = Kind.RootNode,
-                Name = "_programRootNode",
+                Name = SymbolTableStrings.root_node,
                 Position = new TokenPosition()
                 {
                     Token = new Token(0, 0),
@@ -57,7 +58,6 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
-
 
         private ISymbol GetEntryPoint(ModuleDefinition m)
         {
@@ -176,6 +176,13 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 closestWrappingSymbol = navigator.TopDown(modul.Value, file, line, character);
             }
+
+            if (closestWrappingSymbol == null
+                && SymbolTables.ContainsKey(SymbolTableStrings.default_module)
+                && SymbolTables[SymbolTableStrings.default_module] != null)
+            {
+                return SymbolTables[SymbolTableStrings.default_module];
+            }
             return closestWrappingSymbol;
         }
 
@@ -237,7 +244,7 @@ namespace DafnyLanguageServer.SymbolTable
                 symbol.IsDeclaration && (
                 symbol.Kind == Kind.Class ||
                 symbol.Kind == Kind.Function ||
-                symbol.Kind == Kind.Method) &&
+                (symbol.Kind == Kind.Method && symbol.Name != SymbolTableStrings.dafnys_entry_point)) &&
                 // no constructors and make sure no out-of-range root _defaults
                 symbol.Kind != Kind.Constructor &&
                 symbol?.Line != null && symbol.Line > 0

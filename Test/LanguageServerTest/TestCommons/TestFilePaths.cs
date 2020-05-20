@@ -47,7 +47,7 @@ namespace TestCommons
         public static readonly string cp_otherlang_java_dfyending = CreateTestfilePath("compile/otherlang_java.dfy");
         public static readonly string cp_otherlang_py = CreateTestfilePath("compile/otherlang_python.py");
         public static readonly string cp_otherlang_py_dfyending = CreateTestfilePath("compile/otherlang_python.dfy");
-        
+
         //Compile Outputs
         public static readonly string cp_out_dll = AddTestFolderPrefix("compile/compiles_as_dll.dll");
         public static readonly string cp_out_exe = AddTestFolderPrefix("compile/compiles_as_exe.exe");
@@ -85,6 +85,12 @@ namespace TestCommons
         public static readonly string gt_include_main = CreateTestfilePath("goto/include_main.dfy");
         public static readonly string gt_includee = CreateTestfilePath("goto/include_includee.dfy");
 
+        // CodeLens
+        public static readonly string cl_basic = CreateTestfilePath("codelens/basic.dfy");
+        public static readonly string cl_include_main = CreateTestfilePath("codelens/include_main.dfy");
+        public static readonly string cl_includee = CreateTestfilePath("codelens/include_includee.dfy");
+        public static readonly string cl_empty = CreateTestfilePath("codelens/empty.dfy");
+
         //AutoCompletion
         public static readonly string ac_basic_var = CreateTestfilePath("autocompletion/basic_var.dfy");
         public static readonly string ac_basic_var_class = CreateTestfilePath("autocompletion/basic_var_and_class.dfy");
@@ -95,6 +101,8 @@ namespace TestCommons
         public static readonly string ac_c_multiple = CreateTestfilePath("autocompletion/class_multiple.dfy");
         public static readonly string ac_c_in_class = CreateTestfilePath("autocompletion/class_in_class.dfy");
         public static readonly string ac_c_partial = CreateTestfilePath("autocompletion/class_partial.dfy");
+        public static readonly string ac_include_main = CreateTestfilePath("autocompletion/include_main.dfy");
+        public static readonly string ac_includee = CreateTestfilePath("autocompletion/include_includee.dfy");
 
         //Verification
         public static readonly string vc_lo_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");

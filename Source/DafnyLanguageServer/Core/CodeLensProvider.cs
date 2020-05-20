@@ -12,21 +12,20 @@ namespace DafnyLanguageServer.Core
 {
     public class CodeLensProvider : ICodeLensProvider
     {
-        private IManager manager;
-        private Uri uri;
+        private IManager _manager;
+        private Uri _uri;
 
         public CodeLensProvider(IManager manager, Uri uri)
         {
-            this.manager = manager;
-            this.uri = uri;
+            this._manager = manager;
+            this._uri = uri;
         }
 
         public CodeLensContainer GetCodeLensContainer()
         {
             List<CodeLens> items = new List<CodeLens>();
-            
 
-            foreach (var symbolInformation in manager.GetAllSymbolDeclarations())
+            foreach (var symbolInformation in _manager.GetAllSymbolDeclarations())
             {
                 items.Add(CreateCodeLensItem(symbolInformation));
             }
@@ -73,7 +72,7 @@ namespace DafnyLanguageServer.Core
                 }
                 else
                 {
-                    msgTitle = $"{symbolInformation.Usages.Count} reference(s) to {symbolInformation.Name}";
+                    msgTitle = $"{symbolInformation.Usages.Count} references to {symbolInformation.Name}";
                 }
             }
             else
@@ -83,8 +82,8 @@ namespace DafnyLanguageServer.Core
 
             var args = new
             {
-                Uri = uri,
-                Position = position, // where to show the codelens popup
+                Uri = _uri,
+                Position = position, // where to show the CodeLens popup
                 Locations = locations // what should be in the pop up displayed 
             };
             Command command = new Command
@@ -95,7 +94,7 @@ namespace DafnyLanguageServer.Core
             };
             return new CodeLens
             {
-                Data = uri,
+                Data = _uri,
                 Range = range,
                 Command = command
             };

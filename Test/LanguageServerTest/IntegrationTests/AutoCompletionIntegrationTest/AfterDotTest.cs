@@ -11,7 +11,7 @@ namespace AutoCompletionIntegrationTest
     /// This class is testing method suggestion based on a class reference. 
     /// </summary>
     [TestFixture]
-    public class ClassCompletionTests : AutoCompletionBase
+    public class AfterDotTest : AutoCompletionBase
     {
         [Test]
         public void EmptyClass()
@@ -66,16 +66,14 @@ namespace AutoCompletionIntegrationTest
             VerifyCompletions(exp, line, col);
         }
 
-        /* This does not work yet... Only "clean" suggestions are supported server side. Partial is a VSCode feature */
-        /*
         [Test]
-        public void PartialCorrect()
+        public void NoConstructor()
         {
             int line = 14;
-            int col = 15;
-            ArrayList exp = new ArrayList()
+            int col = 11;
+            var exp = new List<string>()
             {
-                "my_match",
+                "my_match()",
             };
 
             GetCompletions(Files.ac_c_partial, line, col);
@@ -83,15 +81,18 @@ namespace AutoCompletionIntegrationTest
         }
 
         [Test]
-        public void PartialNotExists()
+        public void OtherFile()
         {
-            int line = 15;
-            int col = 15;
-            ArrayList exp = new ArrayList(){};
+            int line = 4;
+            int col = 14;
+            var exp = new List<string>()
+            {
+                "field",
+                "increase()",
+            };
 
-            GetCompletions(Files.ac_c_partial, line, col);
+            GetCompletions(Files.ac_include_main, line, col);
             VerifyCompletions(exp, line, col);
         }
-        */
     }
 }

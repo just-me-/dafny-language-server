@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
@@ -135,20 +136,17 @@ namespace DafnyLanguageServer.Core
             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
             foreach (var suggestionElement in classSymbol.Children)
             {
-                // strip constructor 2do 
-                /*
-                var ignoredSymbols = new[] { "_ctor", "_default" };
-                list?.RemoveAll(x => ignoredSymbols.Any(x.Name.Contains));
-                return list;
-                */
-                yield return suggestionElement;
+                if (IsNoDefaultNamespace(suggestionElement))
+                {
+                    yield return suggestionElement;
+                }
             }
         }
 
         private IEnumerable<ISymbol> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => x.Kind == Kind.Class)))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => (x.Kind == Kind.Class) && IsNoDefaultNamespace(x))))
             {
                 yield return suggestionElement;
             }
@@ -157,10 +155,17 @@ namespace DafnyLanguageServer.Core
         private IEnumerable<ISymbol> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(IsNoDefaultNamespace)))
             {
                 yield return suggestionElement;
             }
+        }
+
+        private bool IsNoDefaultNamespace(ISymbol element)
+        {
+            return (element.Name != SymbolTableStrings.default_class &&
+                    element.Name != SymbolTableStrings.default_module &&
+                    element.Kind != Kind.Constructor);
         }
     }
 }

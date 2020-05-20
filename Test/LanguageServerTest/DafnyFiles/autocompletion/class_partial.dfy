@@ -11,7 +11,6 @@ class C {
 method Main() {
    var a := 3;
    var ref := new C();
-   // ref.my_m
-   // ref.my_n
+   // ref.
 }
 
