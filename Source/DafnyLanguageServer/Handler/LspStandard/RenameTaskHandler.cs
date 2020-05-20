@@ -58,8 +58,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
                 {
                     _log.LogError("Error Handling Rename Execution: " + e.Message);
                     _mss.SendError("Error Handling Rename Request.");
-                    return new WorkspaceEdit();
-
+                    return null;
                 }
             });
         }

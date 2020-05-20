@@ -50,7 +50,7 @@ namespace DafnyLanguageServer.Handler
                 {
                     _log.LogError("Error Handling Rename Execution: " + e.Message);
                     new MessageSenderService(_router).SendError("Error Handling Rename Request.");
-                    return new Hover();
+                    return null;
                 }
             });
         }

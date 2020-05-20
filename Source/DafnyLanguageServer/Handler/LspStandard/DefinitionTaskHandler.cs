@@ -66,7 +66,7 @@ namespace DafnyLanguageServer.Handler
                 {
                     _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
                     _mss.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
-                    return new List<LocationOrLocationLink>();
+                    return null;
                 }
             });
 

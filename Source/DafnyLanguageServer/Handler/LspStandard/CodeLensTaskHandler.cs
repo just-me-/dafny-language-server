@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.Handler
             {
                 _log.LogInformation("Handling Code Lens"); // todo lang file #102
                 var manager = _workspaceManager.SymbolTableManager;
-                var uri = request.TextDocument.Uri
+                var uri = request.TextDocument.Uri;
                 try
                 {
                     ICodeLensProvider provider = new CodeLensProvider(manager, uri);
@@ -56,7 +56,7 @@ namespace DafnyLanguageServer.Handler
                 {
                     _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
                     _mss.SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                    return new CodeLensContainer();
+                    return null;
                 }
             });
 
