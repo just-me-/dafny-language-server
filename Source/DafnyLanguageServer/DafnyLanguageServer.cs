@@ -44,14 +44,18 @@ namespace DafnyLanguageServer
 
             var server = await LanguageServer.From(options =>
                 options
+
+                    //Log and Console
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
                     .ConfigureLogging(x => x
                         .AddSerilog(log)
                         .AddLanguageServer()
                     )
+
                     // Service group 
                     .WithServices(ConfigureServices)
+
                     // Handler group 
                     .WithHandler<TextDocumentSyncTaskHandler>()
                     .WithHandler<DidChangeWatchedFilesHandler>()

@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DafnyLanguageServer.Resources;
 using Newtonsoft.Json.Linq;
 
 namespace DafnyLanguageServer.Tools
 {
+    /// <summary>
+    /// Provides a HashSet of reserved Dafny words that are not suited as names.
+    /// </summary>
     public class ReservedWordsProvider
     {
-
+        /// <summary>
+        /// Inline defined list as backup, in case no custom file is provided.
+        /// </summary>
         private static readonly HashSet<string> defaultReservedWords = new HashSet<string>
         {
             "abstract", "array", "as", "assert", "assume", "bool", "break",
@@ -25,21 +31,26 @@ namespace DafnyLanguageServer.Tools
 
         public HashSet<string> GetReservedWords()
         {
-            string assemblyPath = Path.GetDirectoryName(typeof(ReservedWordsProvider).Assembly.Location);
-            string jsonFile = Path.GetFullPath(Path.Combine(assemblyPath, "ReservedDafnyWords.json"));
+            string jsonFile = FileAndFolderLocator.reservedWordList;
 
             if (!File.Exists(jsonFile))
             {
                 return defaultReservedWords;
             }
 
-            JObject j = JObject.Parse(File.ReadAllText(jsonFile));
+            try
+            {
+                JObject j = JObject.Parse(File.ReadAllText(jsonFile));
 
-            var words = j["words"];
-            JArray a = (JArray)words;
-
-            IList<string> l = a.ToObject<IList<string>>();
-            return new HashSet<string>(l);
+                var words = j["words"];
+                JArray a = (JArray) words;
+                IList<string> l = a.ToObject<IList<string>>();
+                return new HashSet<string>(l);
+            }
+            catch
+            {
+                return defaultReservedWords;
+            }
         }
     }
 }
