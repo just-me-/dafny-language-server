@@ -30,11 +30,8 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbol Module { get; set; }
         ISymbol AssociatedDefaultClass { get; }
 
-
-
         string ToNiceString();
         string ToDebugString();
-
 
         bool Wraps(ISymbol child);
         bool Wraps(Uri file, int line, int character);
@@ -42,8 +39,5 @@ namespace DafnyLanguageServer.SymbolTable
         IEnumerable<ISymbol> GetAllOccurrences();
 
         ISymbol this[string index] { get; set; }
-
-        bool Equals(object obj); // todo is this used?
-        int GetHashCode();
     }
 }

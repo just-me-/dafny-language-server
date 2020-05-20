@@ -132,13 +132,14 @@ namespace DafnyLanguageServer
                 case LogLevel.Warning:
                     loggerconfig.MinimumLevel.Warning();
                     break;
-                case LogLevel.Error:
-                default:
-                    loggerconfig.MinimumLevel.Error();
-                    break;
                 case LogLevel.Critical:
                     loggerconfig.MinimumLevel.Fatal();
                     break;
+
+                default:
+                    loggerconfig.MinimumLevel.Error();
+                    break;
+
             }
 
             log = loggerconfig

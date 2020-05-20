@@ -75,7 +75,6 @@ namespace DafnyLanguageServer.SymbolTable
             var modules = _dafnyProgram.Modules().ToList();
             modules.Sort((m1, m2) => Depth(m1) - Depth(m2));
 
-
             foreach (var module in modules)
             {
                 ISymbol rootForVisitor = GetEntryPoint(module);
@@ -94,8 +93,6 @@ namespace DafnyLanguageServer.SymbolTable
                     SymbolTables.Add(module.Name, deepVisitor.Module);
                 }
             }
-
-            string debugMe = CreateDebugReadOut();
         }
 
 
@@ -202,11 +199,11 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return GetAllDeclarationForSymbolInScope(symbol, x => true);
         }
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> preFilter)
+        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter)
         {
             INavigator navigator = new SymbolTableNavigator();
-            bool filter(ISymbol x) => x.IsDeclaration && x.Kind != Kind.Constructor && preFilter.Invoke(x);
-            return navigator.BottomUpAll(symbol, filter);
+            bool extendedFilter(ISymbol x) => x.IsDeclaration && x.Kind != Kind.Constructor && filter.Invoke(x);
+            return navigator.BottomUpAll(symbol, extendedFilter);
         }
 
         /// <summary>

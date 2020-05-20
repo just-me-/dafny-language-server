@@ -127,20 +127,6 @@ namespace DafnyLanguageServer.SymbolTable
                 BodyEndToken = bodyEndPosAsToken ?? positionAsToken
             };
 
-
-            //debug stuff
-            try
-            {
-                var x = result.File == null;
-            }
-            catch
-            {
-                throw new Exception("yyy???");
-            }
-
-
-
-
             if (canBeUsed)
             {
                 result.Usages = new List<ISymbol>();
@@ -156,7 +142,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                //null? self? //todo
+                throw new InvalidOperationException("SymbolCreationError: Symbol is not stated as declaration, but neither was a declarationOrigin given.");
             }
 
             if (addUsageAtDeclaration)
@@ -180,26 +166,6 @@ namespace DafnyLanguageServer.SymbolTable
             result.Module = Module;
 
             return result;
-        }
-
-        protected static void PerformArgChecks(bool isDeclaration, SymbolInformation declarationSymbol,
-            bool addUsageAtDeclaration)
-        {
-            if (!isDeclaration && declarationSymbol == null)
-            {
-                throw new ArgumentNullException(nameof(declarationSymbol),
-                    Resources.ExceptionMessages.missing_delcaration_origin);
-            }
-
-            if (isDeclaration && addUsageAtDeclaration)
-            {
-                throw new ArgumentException(Resources.ExceptionMessages.cannot_use_itself);
-            }
-
-            if (addUsageAtDeclaration && declarationSymbol == null)
-            {
-                throw new ArgumentException(Resources.ExceptionMessages.cannot_use_unknown_symbol);
-            }
         }
 
         protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;

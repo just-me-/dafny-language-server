@@ -35,7 +35,7 @@ namespace DafnyLanguageServer.SymbolTable
                 if (child.Wraps(file, line, character))
                 {
                     bestMatch = child;
-                    if (child.Children != null && child.Children.Any())
+                    if (child.Children != null && child.Children.Any())             //todo sonar hat noch gewagtt, dass .Children eig shclecht ist, weil da ne liste kopiert wrid... man könnt echt "HasChidlre" machen und gelich aufm hashset das prüfen.
                     {
                         var match = TopDown(child, file, line, character);
                         bestMatch = match ?? bestMatch;
@@ -43,13 +43,13 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch.Equals(rootEntry))
-                    && (child.Name == SymbolTableStrings.default_class || child.Name == SymbolTableStrings.default_module)) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
+                if (
+                    (bestMatch == null || bestMatch.Equals(rootEntry))
+                    && (child.Name == SymbolTableStrings.default_class || child.Name == SymbolTableStrings.default_module)
+                    && (child.Children?.Any() ?? false)
+                )
                 {
-                    if (child.Children.Any())
-                    {
-                        bestMatch = TopDown(child, file, line, character);
-                    }
+                    bestMatch = TopDown(child, file, line, character);
                 }
             }
             return bestMatch;
@@ -161,19 +161,17 @@ namespace DafnyLanguageServer.SymbolTable
             }
             filter = DefaultPredicateFilter(filter);
 
-            ISymbol child = symbol.Children?.Where(filter.Invoke).FirstOrDefault();
-            if (child == null)
+            ISymbol child = symbol.Children?.FirstOrDefault(filter.Invoke);
+            
+            // inherited?
+            if (child == null && symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
             {
-                // inherited?
-                if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
+                foreach (var baseScope in symbol.BaseClasses)
                 {
-                    foreach (var baseScope in symbol.BaseClasses)
+                    var baseClassSymbol = baseScope?.Children?.FirstOrDefault(filter.Invoke);
+                    if (baseClassSymbol != null)
                     {
-                        var baseClassSymbol = baseScope?.Children?.Where(filter.Invoke).FirstOrDefault();
-                        if (baseClassSymbol != null)
-                        {
-                            return baseClassSymbol;
-                        }
+                        return baseClassSymbol;
                     }
                 }
             }
@@ -215,14 +213,14 @@ namespace DafnyLanguageServer.SymbolTable
         {
             filter = DefaultPredicateFilter(filter);
 
-            var list = symbol?.Children?.Where(filter.Invoke).ToList();
+            var list = symbol?.Children?.Where(filter.Invoke).ToList();  //list todo könnte null sein... was tun?
             // inherited?
-            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
+            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))  //symbol todo könnte null sein... was tun?
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
                     // todo translation file
-                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("Invalid Filter Operation"));
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("Invalid Filter Operation"));   
                 }
             }
             return list;

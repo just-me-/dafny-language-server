@@ -18,12 +18,12 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolInformation : ISymbol
     {
-        public TokenPosition Position { get; set; } //todo we only need main token probably.
-        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");  //evtl rename nach FileUri aber grad kein bock auf die konflikte und alles und alle kommentare die es dann falsch renamed weil "File" so generisch ist halt.
+        public TokenPosition Position { get; set; }
+        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l"); //todo nach FileUri renamen damit klarer is. Sonar will den string da weg aber ich hatte grosse probleme ohne was anzugeben. sehr schnell sehr viele null exception, und das root symbol hat in gottes namen keine uri.
         public string FileName => Path.GetFileName(File.LocalPath);
-        public virtual int? Line => Position?.Token.line; // Line of "Symbol" ... can this be LineStart like ColumnStart? todo 
-        public virtual int? LineStart => Position?.BodyStartToken?.line; // Line that Symbol Wraps {
-        public virtual int? LineEnd => Position?.BodyEndToken?.line; // Endline of Wrap }
+        public virtual int? Line => Position?.Token.line;                      //todo, êig hat doch jedes symbol eine line, oder? warum das int? war das im eifer des gefeachts' rehsarper hat nun hitnedran oft gemeckert, dass so (int)Line casts unsave sind.
+        public virtual int? LineStart => Position?.BodyStartToken?.line;
+        public virtual int? LineEnd => Position?.BodyEndToken?.line;
         public virtual int? Column => ColumnStart;
         public virtual int? ColumnStart => Position?.Token.col;
         public virtual int? ColumnEnd => ColumnStart + Name.Length;
@@ -33,11 +33,11 @@ namespace DafnyLanguageServer.SymbolTable
         public Type Type { get; set; }
 
         public UserDefinedType UserTypeDefinition { get; set; }
-        //ich würde hier: so machen: dann müsste man den gar nie setzen, oder das snippet auch net auslagern in ne methode.
+        //todo das müsste gehen... ich würde hier: so machen: dann müsste man den gar nie setzen, oder das snippet auch net auslagern in ne methode.
         /*
          * get
           {
-            if (Type != null && Type is UserDefinedType) {
+            if (Type != null && Type is UserDefinedType) {  //todo hier dann aber das null ding da mit dem is mergen so wie resharper/sonar vorschlagen.
               _userType = Type as UserDefinedType;
             }
       }
@@ -48,11 +48,11 @@ namespace DafnyLanguageServer.SymbolTable
         //public List<SymbolInformation> Children { get; set; } // key value hash machen 
         // hash als adapter machen, user soll nix geändert haben 
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
-        public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: nur deklarationen
+        public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
 
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
-        public List<ISymbol> Descendants { get; set; }                     //Descendants: alles was drunter liegt
+        public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
         public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
 
         public ISymbol Module { get; set; }
@@ -84,13 +84,12 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override bool Equals(object obj)
         {
-            if (obj is SymbolInformation)
+            if (obj is SymbolInformation symbol)
             {
-                var symbol = (SymbolInformation)obj;
                 return symbol.Name == Name
-                        && symbol.Line == Line
-                        && symbol.ColumnStart == ColumnStart
-                        && symbol.ColumnEnd == ColumnEnd;
+                       && symbol.Line == Line
+                       && symbol.ColumnStart == ColumnStart
+                       && symbol.ColumnEnd == ColumnEnd;
             }
             return false;
         }

@@ -86,7 +86,7 @@ namespace DafnyLanguageServer.SymbolTable
                 userType = type;
             }
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: o.Name,
                 kind: Kind.Field,
                 type: o.Type,
@@ -335,12 +335,12 @@ namespace DafnyLanguageServer.SymbolTable
             throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
-        public override void Leave(IdentifierExpr o)
+        public override void Leave(IdentifierExpr e)
         {
             throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
-        public override void Visit(IdentifierExpr o)
+        public override void Visit(IdentifierExpr e)
         {
             throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
         }

@@ -45,9 +45,10 @@ namespace DafnyLanguageServer.SymbolTable
             SetScope(null);
         }
 
+
         public override void Visit(AliasModuleDecl o)
         {
-            var s = CreateSymbol(
+            CreateSymbol(
                 name: o.Name,
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.tok,
@@ -172,12 +173,12 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(NonglobalVariable o)
         {
             UserDefinedType userType = null;
-            if (o.Type != null && o.Type is UserDefinedType)
+            if (o.Type != null && o.Type is UserDefinedType)       //TODO: das sind auch sonar und resharpesr issues und der code ist immer gelich -> auslagern!! ich hab aber angst das alles kaputt geht drum später machen ;) iwo in nem getter hab ich das schonmal vorbereitet gehabt.
             {
                 userType = o.Type as UserDefinedType;
             }
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
                 type: o.Type,
@@ -209,7 +210,7 @@ namespace DafnyLanguageServer.SymbolTable
                 userType = o.Type as UserDefinedType;
             }
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
                 type: o.Type,
@@ -264,16 +265,16 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        public override void Visit(WhileStmt o)
+        public override void Visit(WhileStmt s)
         {
-            var name = "while-stmt-ghost-" + o.Tok.line;
+            var name = "while-stmt-ghost-" + s.Tok.line;
             var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
 
-                positionAsToken: o.Tok,
-                bodyStartPosAsToken: o.Tok,
-                bodyEndPosAsToken: o.EndTok,
+                positionAsToken: s.Tok,
+                bodyStartPosAsToken: s.Tok,
+                bodyEndPosAsToken: s.EndTok,
 
                 isDeclaration: true,
                 declarationSymbol: null,
@@ -290,17 +291,17 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        public override void Visit(IfStmt o)
+        public override void Visit(IfStmt e)
         {
-            var name = "if-stmt-ghost-" + o.Tok.line;
+            var name = "if-stmt-ghost-" + e.Tok.line;
 
             var symbol = CreateSymbol(
                 name: name,
                 kind: Kind.BlockScope,
 
-                positionAsToken: o.Tok,
-                bodyStartPosAsToken: o.Tok,
-                bodyEndPosAsToken: o.EndTok,
+                positionAsToken: e.Tok,
+                bodyStartPosAsToken: e.Tok,
+                bodyEndPosAsToken: e.EndTok,
 
                 isDeclaration: true,
                 declarationSymbol: null,
@@ -328,15 +329,17 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 t = e.Type as UserDefinedType;
             }
-            else
+
+            if (t == null)
             {
-                string x = "heyo i was something else xD"; //this is for debug. is this ever triggering??
+                throw new InvalidOperationException("TypeRhs shoudl ahve a UserDefinedType"); //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
             }
+
 
             var nav = new SymbolTableNavigator();
             var declaration = nav.GetSymbolByPosition(RootNode, t?.ResolvedClass.tok);
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: t.Name,
                 kind: Kind.Class,
                 type: e.Type,
@@ -353,38 +356,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-
-            /*Would suggest to leave that... would also add various microsoft and dafny ghost symbols and stuff....
-
-
-            //if accessed by modul accessors, lets create symbols for these as well.
-            var accessors = t.NamePath.ToString().Split('.').ToList();
-            LinkedList<string> a2 = new LinkedList<string>(accessors);
-            a2.RemoveLast(); //wen ich da iweder mit removeAt(Length-1^) blabla wieder 100 fehler, kein bokc
-
-            foreach (string accessor in a2)
-            {
-                var modulDecl = FindDeclaration(accessor, declaration);
-                CreateSymbol(
-                    name: accessor,
-                    kind: Kind.Module,
-                    type: null,
-                    typeDefinition: null,
-
-                    positionAsToken: t.NamePath.tok, //todo ist das ganze ding.. [M1.M2.M3.Class] hier scheitert es. an den einzelnen tok komm ich glaube ich nicht ran. manuell machen, naja.
-                    bodyStartPosAsToken: null,
-                    bodyEndPosAsToken: null,
-
-                    isDeclaration: false,
-                    declarationSymbol: declaration,
-                    addUsageAtDeclaration: true,
-
-                    canHaveChildren: false,
-                    canBeUsed: false
-                );
-            }
-            */
-
         }
 
         public override void Leave(TypeRhs e) { }
@@ -392,10 +363,10 @@ namespace DafnyLanguageServer.SymbolTable
         //A AutoGhostIndentifierExpr is when we have a VarDeclStmt: var a:= b.
         //This VarDecl Stmt contains a Update stmt, and the left side contains ghostVars, aka the 'a'.
         //We do nth since within the VarDeclStmt, the 'a' gets registered.
-        public override void Visit(AutoGhostIdentifierExpr e) { } //do nth since handled in localVar //todo nth? statt // /// verwenden fèr code doku #104
+        public override void Visit(AutoGhostIdentifierExpr e) { }
         public override void Leave(AutoGhostIdentifierExpr e) { }
 
-        public override void Visit(LiteralExpr e) { } //do nth
+        public override void Visit(LiteralExpr e) { }
         public override void Leave(LiteralExpr e) { }
 
 
@@ -451,17 +422,9 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen. //geht net weil ich brauch ja auch e ansich.
             }
-            else
-            {
-                string s = "ever triggering???";
-            }
 
             var nav = new SymbolTableNavigator();
             var definingItem = nav.TopDown(RootNode, mse?.Member.tok);
-
-
-            //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
-            //var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class); // todo ist gleich wie typeDefinition
 
             var declaration = FindDeclaration(e.SuffixName, definingItem);
 
@@ -470,13 +433,13 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 userType = e.Type as UserDefinedType;
             }
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: e.SuffixName,
                 kind: null,
                 type: e.Type,
                 typeDefinition: userType,
 
-                positionAsToken: e.tok, //nimmt den ganze, net nur den suffix.
+                positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
                 bodyEndPosAsToken: null,
 
@@ -502,7 +465,7 @@ namespace DafnyLanguageServer.SymbolTable
             var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
             var declaration = definingClass;
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: "this",
                 kind: Kind.Class,
 
@@ -512,7 +475,7 @@ namespace DafnyLanguageServer.SymbolTable
 
                 isDeclaration: false,
                 declarationSymbol: declaration,
-                addUsageAtDeclaration: false,    //fänd ich komisch. jedes mal "this" = zusätzliche referenz? oder?
+                addUsageAtDeclaration: false,
 
                 canHaveChildren: false,
                 canBeUsed: false
@@ -525,7 +488,6 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Expression o)
         {
-            // todo mergen213
             var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
             UserDefinedType userType = null;
@@ -533,7 +495,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 userType = o.Type as UserDefinedType;
             }
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: o.tok.val + "** General Expression Visit Used!! **",
                 kind: null,
                 type: o.Type,
@@ -569,7 +531,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: o.Tok.val,
                 kind: Kind.Variable,
 
