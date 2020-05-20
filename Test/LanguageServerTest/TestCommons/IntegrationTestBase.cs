@@ -55,7 +55,7 @@ namespace TestCommons
 
             Client = new LanguageClient(LoggerFactory, Server);
             Client.Initialize(
-                workspaceRoot: FileAndFolderLocator.testFilesPath,
+                workspaceRoot: FileAndFolderLocator.testFilesFolder,
                 initializationOptions: new { },
                 cancellationToken: CancellationSource.Token
             ).Wait();

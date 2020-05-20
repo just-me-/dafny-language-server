@@ -174,6 +174,6 @@ namespace TestCommons
             return path;
         }
 
-        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(FileAndFolderLocator.testFilesPath, s));
+        private static string AddTestFolderPrefix(string s) => Path.GetFullPath(Path.Combine(FileAndFolderLocator.testFilesFolder, s));
     }
 }

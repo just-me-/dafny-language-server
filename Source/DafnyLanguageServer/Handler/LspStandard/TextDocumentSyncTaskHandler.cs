@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
@@ -23,7 +24,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class TextDocumentSyncTaskHandler : LspBasicHandler<SynchronizationCapability>, ITextDocumentSyncHandler
     {
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
+        public TextDocumentSyncKind Change { get; } = LanguageServerConfig.SyncKind;
 
         public TextDocumentSyncTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)

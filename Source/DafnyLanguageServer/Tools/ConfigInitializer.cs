@@ -35,10 +35,9 @@ namespace DafnyLanguageServer.Tools
         {
             LaunchArguments = launchArguments;
             JSONConfigFile = jsonConfigFile;
-            SetUp();
         }
 
-        private void SetUp()
+        public void SetUp()
         {
             SetDefaults();
             ReadJSONConfig();
@@ -49,9 +48,7 @@ namespace DafnyLanguageServer.Tools
 
         private void SetDefaults()
         {
-            Config.RedirectedStreamFile = Path.Combine(AssemblyPath, defaultStreamPath);
-            Config.LogFile = Path.Combine(AssemblyPath, defaultLogPath);
-            Config.Loglevel = LogLevel.Error;
+            LanguageServerConfig.ResetDefaults();
         }
 
         private void ReadJSONConfig()
@@ -60,7 +57,7 @@ namespace DafnyLanguageServer.Tools
             {
                 if (!File.Exists(JSONConfigFile))
                 {
-                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + JSONConfigFile); // todo lang file #102
+                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + JSONConfigFile);
                 }
 
                 JObject cfg = JObject.Parse(File.ReadAllText(JSONConfigFile));
@@ -68,6 +65,7 @@ namespace DafnyLanguageServer.Tools
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
                 var cfgLevel = cfg["logging"]["loglevel"];
+                var syncKind = cfg["syncKind"];
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
                 {
@@ -177,5 +175,7 @@ namespace DafnyLanguageServer.Tools
             Config.Error = true;
             Config.ErrorMessages.AppendLine(msg);
         }
+
+       
     }
 }

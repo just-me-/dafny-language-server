@@ -15,13 +15,10 @@ namespace DafnyLanguageServer.Handler.LspStandard
     public class RenameTaskHandler : LspBasicHandler<RenameCapability>, IRenameHandler
     {
 
-        private readonly MessageSenderService _mss;
         public RenameTaskHandler(ILanguageServer router, Workspace workspaceManager,
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
-            _mss = new MessageSenderService(_router);
-
         }
 
         public RenameRegistrationOptions GetRegistrationOptions()

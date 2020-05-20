@@ -25,7 +25,7 @@ namespace DafnyLanguageServer.Resources
 
         //Config Files
         public static readonly string reservedWordList = Combine(configFolder, "ReservedDafnyWords.json");
-        public static readonly string languageServerLaunchSettings = Combine(configFolder, "LanguageServerLaunchSettings.json");
+        public static readonly string languageServerJSONConfigFile = Combine(configFolder, "LanguageServerConfig.json");
 
         //Logs and Stream Redirection
         public static readonly string defaultStreamFile = Combine(logFolder, "LanguageServerStreamRedirection.txt");

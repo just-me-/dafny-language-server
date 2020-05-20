@@ -5,6 +5,7 @@ using OmniSharp.Extensions.LanguageServer.Server;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
@@ -26,16 +27,13 @@ namespace DafnyLanguageServer
     class DafnyLanguageServer
     {
         private ILogger log;
-        private LanguageServerConfig config;
         private MessageSenderService msgSender;
 
         public DafnyLanguageServer(string[] args)
         {
-            config = new ConfigInitializer(args).Config;
-            //For quick manual debugging of the console reader / macht aber konsolenout kaputt - nicht nutzen xD
-            //TOdo: Vor abgabe weg machen xD Ticket # 59
-            //Console.WriteLine(config);
-            SetupLogger();
+            var configInitializer = new ConfigInitializer(args);
+            configInitializer.SetUp();
+            SetupLogger(); //das komisch... sollte oben iwie rein wenn möglich.
         }
 
         public async Task StartServer()
@@ -77,7 +75,7 @@ namespace DafnyLanguageServer
             // code should no longer make prints but lets keep it for additional safety.
             try
             {
-                using (StreamWriter writer = new StreamWriter(new FileStream(config.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
+                using (StreamWriter writer = new StreamWriter(new FileStream(LanguageServerConfig.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
                 {
                     Console.SetOut(writer);
                     await server.WaitForExit;
@@ -105,21 +103,21 @@ namespace DafnyLanguageServer
             log.Debug(Resources.LoggingMessages.server_running);
         }
 
-        private void CheckForConfigReader()
-        {
-            if (config.Error)
-            {
-                var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {config.ErrorMsg}";
-                msgSender.SendWarning(msg);
-                log.Warning(msg);
-            }
-        }
+        //private void CheckForConfigReader()
+        //{
+        //    if (config.Error) //todo bruachen wir das?
+        //    {
+        //        var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {config.ErrorMsg}";
+        //        msgSender.SendWarning(msg);
+        //        log.Warning(msg);
+        //    }
+        //}
 
         private void SetupLogger()
         {
             var loggerconfig = new LoggerConfiguration();
 
-            switch (config.Loglevel)
+            switch (LanguageServerConfig.LogLevel)
             {
                 case LogLevel.Trace:
                     loggerconfig.MinimumLevel.Verbose();
@@ -144,7 +142,7 @@ namespace DafnyLanguageServer
 
             log = loggerconfig
                 .Enrich.FromLogContext()
-                .WriteTo.File(config.LogFile, fileSizeLimitBytes: 1024 * 1024)
+                .WriteTo.File(LanguageServerConfig.LogFile, fileSizeLimitBytes: 1024 * 1024)
                 .CreateLogger();
         }
 
