@@ -183,9 +183,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CodeLensProvider.cs" />
+    <Compile Include="Core\RenameProvider.cs" />
     <Compile Include="Core\DefinitionsProvider.cs" />
     <Compile Include="Core\HoverProvider.cs" />
     <Compile Include="Core\DiagnosticsProvider.cs" />
+    <Compile Include="Core\Interfaces\IRenameProvider.cs" />
     <Compile Include="Core\Interfaces\IHoverProvider.cs" />
     <Compile Include="Core\Interfaces\ICodeLensProvider.cs" />
     <Compile Include="Core\Interfaces\IDefinitionsProvider.cs" />
