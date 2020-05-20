@@ -35,6 +35,7 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
+            _log.LogInformation("Handling Hover...");
             try
             {
                 var manager = _workspaceManager.SymbolTableManager;
@@ -46,8 +47,8 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Error Handling Hover Execution: " + e.Message);
-                _mss.SendError("Error Handling Hover Request.");
+                HandleError("Error while processing Hover request", e); //todo lang
+
                 return null;
             }
         }

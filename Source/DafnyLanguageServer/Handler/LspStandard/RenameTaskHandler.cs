@@ -35,8 +35,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
         public async Task<WorkspaceEdit> Handle(RenameParams request, CancellationToken cancellationToken)
         {
-
-
+            _log.LogInformation("Handling Rename...");
             try
             {
                 var manager = _workspaceManager.SymbolTableManager;
@@ -51,8 +50,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
             catch (Exception e)
             {
-                _log.LogError("Error Handling Rename Execution: " + e.Message);
-                _mss.SendError("Error Handling Rename Request.");
+                HandleError("Error while processing rename request", e); //todo lang
                 return null;
             }
         }

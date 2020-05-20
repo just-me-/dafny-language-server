@@ -48,12 +48,9 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-                _mss.SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
+                HandleError("Error while processing completion request", e); //todo lang
                 return null;
             }
-
         }
-
     }
 }

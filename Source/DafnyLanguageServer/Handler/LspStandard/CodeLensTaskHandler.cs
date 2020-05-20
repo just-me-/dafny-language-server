@@ -51,11 +51,9 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                _mss.SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                HandleError("Error while processing code lens request", e); //todo lang
                 return null;
             }
-
         }
     }
 }

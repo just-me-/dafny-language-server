@@ -59,8 +59,7 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Counter Example: " + e.Message); // todo lang file #102
-                _mss.SendError("Internal server error handling Counter Example");
+                HandleError("Error while processing counter examper request", e); //todo lang
                 return new CounterExampleResults();
             }
         }

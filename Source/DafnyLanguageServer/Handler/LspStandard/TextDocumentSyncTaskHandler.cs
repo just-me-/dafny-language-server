@@ -60,9 +60,8 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                var msg = $"Internal server error handling Document Update: {e.Message}"; // todo lang file #102
-                _log.LogError(msg);
-                _mss.SendError(msg);
+                var msg = "Internal server error handling document update. Please restart the server."; // todo lang file #102
+                HandleError(msg, e);
             }
         }
 

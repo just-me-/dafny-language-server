@@ -49,8 +49,7 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling compilation: " + e.Message);// todo lang file #102
-                _mss.SendError("Internal server error handling compilation");
+                HandleError("Error while processing compile request", e); //todo lang
                 return null;
             }
         }

@@ -3,6 +3,7 @@ using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using System;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -40,6 +41,12 @@ namespace DafnyLanguageServer.Handler
         public void SetCapability(T capability)
         {
             _capability = capability;
+        }
+
+        protected void HandleError(string msg, Exception e)
+        {
+            _log.LogError(msg + "\nException: " + e.Message + "\nStackTrace: " + e.StackTrace);
+            _mss.SendError(msg);
         }
     }
 }
