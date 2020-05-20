@@ -7,6 +7,7 @@ using System.Linq;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.Resources;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Bpl = Microsoft.Boogie;
 using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
@@ -130,7 +131,7 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             DafnyOptions.Install(new DafnyOptions(_reporter));
             DafnyOptions.Clo.ApplyDefaultOptions();
-            DafnyOptions.O.ModelViewFile = CounterExampleDefaultModelFile.FilePath;
+            DafnyOptions.O.ModelViewFile = FileAndFolderLocations.modelBVD;
 
         }
 
@@ -201,28 +202,44 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool BoogieOnce(string moduleName, Bpl.Program boogieProgram)
         {
-            CounterExampleDefaultModelFile.ClearDefaultModelFile();
+            ClearModelFile();
 
-            if (boogieProgram.Resolve() == 0 && boogieProgram.Typecheck() == 0)
+            if (boogieProgram.Resolve() != 0 || boogieProgram.Typecheck() != 0)
             {
-                ExecutionEngine.EliminateDeadVariables(boogieProgram);
-                ExecutionEngine.CollectModSets(boogieProgram);
-                ExecutionEngine.CoalesceBlocks(boogieProgram);
-                ExecutionEngine.Inline(boogieProgram);
-
-                var ps = new PipelineStatistics();
-                var stringteil = "ServerProgram_" + moduleName;
-                var time = DateTime.UtcNow.Ticks.ToString();
-                var a = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddBoogieErrorToList, time);
-                switch (a)
-                {
-                    case PipelineOutcome.Done:
-                    case PipelineOutcome.VerificationCompleted:
-                        _status = TranslationStatus.Boogied;
-                        return true;
-                }
+                return false;
             }
-            return false;
+
+            ExecutionEngine.EliminateDeadVariables(boogieProgram);
+            ExecutionEngine.CollectModSets(boogieProgram);
+            ExecutionEngine.CoalesceBlocks(boogieProgram);
+            ExecutionEngine.Inline(boogieProgram);
+
+            var ps = new PipelineStatistics();
+            var stringteil = "ServerProgram_" + moduleName;
+            var time = DateTime.UtcNow.Ticks.ToString();
+            var boogieOutcome = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddBoogieErrorToList, time);
+            
+            if (boogieOutcome == PipelineOutcome.Done || boogieOutcome == PipelineOutcome.VerificationCompleted)
+            {
+                _status = TranslationStatus.Boogied;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        /// <summary>
+        /// Clears the model file. This is necassary, since no model means no counter examples.
+        /// If the file exists from a previous run, it needs to be deleted.
+        /// </summary>
+        private void ClearModelFile()
+        {
+            if (File.Exists(FileAndFolderLocations.modelBVD))
+            {
+                File.Delete(FileAndFolderLocations.modelBVD);
+            }
         }
     }
 }

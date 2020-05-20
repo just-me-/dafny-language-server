@@ -31,7 +31,7 @@ namespace DafnyLanguageServer.Tools
 
         public HashSet<string> GetReservedWords()
         {
-            string jsonFile = FileAndFolderLocator.reservedWordList;
+            string jsonFile = FileAndFolderLocations.reservedWordList;
 
             if (!File.Exists(jsonFile))
             {

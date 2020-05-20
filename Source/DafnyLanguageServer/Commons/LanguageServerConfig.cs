@@ -26,8 +26,8 @@ namespace DafnyLanguageServer.Commons
 
         public static void ResetDefaults()
         {
-            RedirectedStreamFile = FileAndFolderLocator.defaultStreamFile;
-            LogFile = FileAndFolderLocator.defaultLogFile;
+            RedirectedStreamFile = FileAndFolderLocations.defaultStreamFile;
+            LogFile = FileAndFolderLocations.defaultLogFile;
             LogLevel = LogLevel.Error;
             SyncKind = TextDocumentSyncKind.Incremental;
         }

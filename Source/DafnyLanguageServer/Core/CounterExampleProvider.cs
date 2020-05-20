@@ -5,25 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
 
 namespace DafnyLanguageServer.Core
 {
-    public static class CounterExampleDefaultModelFile //todo weg.. aufwärts ref von iwo unten iuwas, dafny access da holt sich das hier ab -> nach ressource da iwo tun wenn ich das mit dem assembly zeugs habe.
-    {
-        private static readonly string assemblyPath = Path.GetDirectoryName(typeof(CounterExampleDefaultModelFile).Assembly.Location);
-        public static string FilePath => Path.GetFullPath(Path.Combine(assemblyPath, Resources.ConfigurationStrings.model_path));
-
-        public static void ClearDefaultModelFile()
-        {
-            if (File.Exists(FilePath))
-            {
-                File.Delete(FilePath);
-            }
-        }
-    }
 
     /// <summary>
     /// This class provides counter examples.
@@ -36,10 +24,15 @@ namespace DafnyLanguageServer.Core
         public string ModelBvd { get; }
         private PhysicalFile PhysicalFile { get; }
 
-        public CounterExampleProvider(PhysicalFile file) : this(file, CounterExampleDefaultModelFile.FilePath)
+        public CounterExampleProvider(PhysicalFile file) : this(file, FileAndFolderLocations.modelBVD)
         {
         }
 
+
+        /// <summary>
+        /// Use this ctor to inject a custom model-file for testing.
+        /// </summary>
+        /// <param name="pathToModelBvd">Injected model file</param>
         public CounterExampleProvider(PhysicalFile file, string pathToModelBvd)
         {
             PhysicalFile = file;

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.Resources
 {
-    public class FileAndFolderLocator
+    public class FileAndFolderLocations
     {
 
         //Base Path
-        private static readonly string thisAssemblyPath = Path.GetDirectoryName(typeof(FileAndFolderLocator).Assembly.Location);
+        private static readonly string thisAssemblyPath = Path.GetDirectoryName(typeof(FileAndFolderLocations).Assembly.Location);
 
         //Folders
         public static readonly string rootFolder = Combine(thisAssemblyPath, "../");
@@ -30,6 +30,9 @@ namespace DafnyLanguageServer.Resources
         //Logs and Stream Redirection
         public static readonly string defaultStreamFile = Combine(logFolder, "LanguageServerStreamRedirection.txt");
         public static readonly string defaultLogFile = Combine(logFolder, "LanguageServerLog.txt");
+
+        //model.bvd for Counter Example
+        public static readonly string modelBVD = Combine(rootFolder, "model.bvd");
 
 
         private static string Combine(string a, string b) => Path.GetFullPath(Path.Combine(a, b));

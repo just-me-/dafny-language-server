@@ -206,7 +206,7 @@
     <Compile Include="Handler\LspStandard\RenameTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\ShutdownHandler.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
-    <Compile Include="Resources\FileAndFolderLocator.cs" />
+    <Compile Include="Resources\FileAndFolderLocations.cs" />
     <Compile Include="Resources\SymbolTableStrings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

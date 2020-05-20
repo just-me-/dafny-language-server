@@ -27,7 +27,7 @@ namespace DafnyLanguageServer.Tools
         /// This constructor uses the default config files.
         /// If you want to inject a custom config.json, use the overloaded constructor.
         /// </summary>
-        public ConfigInitializer(string[] launchArguments) : this(launchArguments, FileAndFolderLocator.languageServerJSONConfigFile)
+        public ConfigInitializer(string[] launchArguments) : this(launchArguments, FileAndFolderLocations.languageServerJSONConfigFile)
         {
         }
 
@@ -85,12 +85,12 @@ namespace DafnyLanguageServer.Tools
 
                 if (cfgLog != null)
                 {
-                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocator.rootFolder, (string)cfgLog);
+                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocations.rootFolder, (string)cfgLog);
                 }
 
                 if (cfgStream != null)
                 {
-                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocator.rootFolder, (string)cfgStream);
+                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocations.rootFolder, (string)cfgStream);
                 }
 
                 if (cfgLevel != null)
@@ -148,10 +148,10 @@ namespace DafnyLanguageServer.Tools
             switch (key.ToLower())
             {
                 case "/stream":
-                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocator.rootFolder, value);
+                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocations.rootFolder, value);
                     break;
                 case "/log":
-                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocator.rootFolder, value);
+                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocations.rootFolder, value);
                     break;
                 case "/loglevel":
                     LanguageServerConfig.LogLevel = (LogLevel)int.Parse(value);
