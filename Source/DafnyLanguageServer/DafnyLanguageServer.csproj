@@ -183,8 +183,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CodeLensProvider.cs" />
+    <Compile Include="Core\DefinitionsProvider.cs" />
     <Compile Include="Core\DiagnosticsProvider.cs" />
     <Compile Include="Core\ICodeLensProvider.cs" />
+    <Compile Include="Core\IDefinitionsProvider.cs" />
     <Compile Include="Core\IDiagnosticsProvider.cs" />
     <Compile Include="Core\ICounterExampleProvider.cs" />
     <Compile Include="Core\ICompletionProvider.cs" />

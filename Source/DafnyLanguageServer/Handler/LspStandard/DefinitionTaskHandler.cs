@@ -6,6 +6,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
@@ -40,32 +41,25 @@ namespace DafnyLanguageServer.Handler
             {
                 return await Task.Run(() =>
                 {
+                    var uri = request.TextDocument.Uri;
                     var line = (int)request.Position.Line + 1;
                     var col = (int)request.Position.Character + 1;
-                    var manager = _workspaceManager.SymbolTableManager;
-                    var selectedSymbol = manager.GetSymbolByPosition(request.TextDocument.Uri, line, col);
 
-                    List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-                    if (selectedSymbol == null)
+                    var manager = _workspaceManager.SymbolTableManager;
+
+                    var provider = new DefinitionsProvider(manager);
+                    var result =  provider.GetDefinitionLocation(uri, line, col);
+
+                    if (provider.Outcome == DefinitionsOutcome.NotFound)
                     {
                         _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
-
-                        return new LocationOrLocationLinks(links);
+                        msgService.SendInformation("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
                     }
-
-                    var originSymbol = manager.GetOriginFromSymbol(selectedSymbol);
-                    if (selectedSymbol.Equals(originSymbol))
+                    if (provider.Outcome == DefinitionsOutcome.WasAlreadyDefintion)
                     {
                         msgService.SendInformation("This is already the definition."); // todo lang file #102
                     }
-
-                    Position position = new Position((long)originSymbol.Line - 1, (long)originSymbol.ColumnStart - 1);
-                    Range range = new Range { Start = position, End = position };
-                    var location = new Location { Uri = originSymbol.File, Range = range };
-
-                    links.Add(new LocationOrLocationLink(location));
-
-                    return new LocationOrLocationLinks(links);
+                    return result;
                 });
             }
 
