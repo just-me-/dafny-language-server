@@ -36,26 +36,28 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Completions..."); // todo lang file #102
-            try
+            _log.LogInformation("Handling Completions"); // todo lang file #102
+
+            var line = (int)request.Position.Line + 1;
+            var col = (int)request.Position.Character + 1;
+            return await Task.Run(() =>
             {
-                var line = (int)request.Position.Line + 1;
-                var col = (int)request.Position.Character + 1;
-                var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1);
-                return await Task.Run(() =>
+                try
                 {
+                    var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1); //todo das eig schon logik für den provider aber ich glaub ist ja nicht schlimm.
                     var provider = new CompletionProvider(_workspaceManager.SymbolTableManager);
                     return provider.FindCompletionItems(request.TextDocument.Uri, line, col, codeLine);
-                });
+                }
+                catch (Exception e)
+                {
+                    _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
+                    _mss.SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
+                    return new CompletionList();
+                }
+            });
 
-            }
-            catch (Exception e)
-            {
-                _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-                new MessageSenderService(_router).SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-                return null;//todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
-            }
+
         }
-        
+
     }
 }

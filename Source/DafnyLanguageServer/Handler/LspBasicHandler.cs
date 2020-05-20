@@ -1,4 +1,5 @@
-﻿using DafnyLanguageServer.WorkspaceManager;
+﻿using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -17,6 +18,7 @@ namespace DafnyLanguageServer.Handler
         protected readonly DocumentSelector _documentSelector;
         protected readonly ILoggerFactory _loggingFactory;
         protected readonly ILogger _log;
+        protected readonly MessageSenderService _mss;
 
         protected T _capability; // needed by OmniSharp
         protected T Capability => _capability;
@@ -32,6 +34,7 @@ namespace DafnyLanguageServer.Handler
                 });
             _loggingFactory = loggingFactory;
             _log = _loggingFactory?.CreateLogger("");
+            _mss = new MessageSenderService(_router);
         }
 
         public void SetCapability(T capability)

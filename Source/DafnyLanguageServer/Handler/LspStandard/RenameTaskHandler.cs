@@ -37,13 +37,13 @@ namespace DafnyLanguageServer.Handler.LspStandard
         {
             return Task.Run(() =>
             {
+                var manager = _workspaceManager.SymbolTableManager;
+                var line = (int)request.Position.Line + 1;
+                var col = (int)request.Position.Character + 1;
+                var uri = request.TextDocument.Uri;
+
                 try
                 {
-                    var manager = _workspaceManager.SymbolTableManager;
-                    var line = (int)request.Position.Line + 1;
-                    var col = (int)request.Position.Character + 1;
-                    var uri = request.TextDocument.Uri;
-
                     var provider = new RenameProvider(manager);
                     var result = provider.GetRenameChanges(request.NewName, uri, line, col);
 

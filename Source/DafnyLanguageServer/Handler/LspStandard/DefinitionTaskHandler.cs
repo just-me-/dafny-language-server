@@ -35,40 +35,41 @@ namespace DafnyLanguageServer.Handler
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
             _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
-            var msgService = new MessageSenderService(_router);
 
-            try
+
+            return await Task.Run(() =>
             {
-                return await Task.Run(() =>
+
+                var uri = request.TextDocument.Uri;
+                var line = (int)request.Position.Line + 1;
+                var col = (int)request.Position.Character + 1;
+
+                var manager = _workspaceManager.SymbolTableManager;
+                try
                 {
-                    var uri = request.TextDocument.Uri;
-                    var line = (int)request.Position.Line + 1;
-                    var col = (int)request.Position.Character + 1;
-
-                    var manager = _workspaceManager.SymbolTableManager;
-
                     var provider = new DefinitionsProvider(manager);
-                    var result =  provider.GetDefinitionLocation(uri, line, col);
+                    var result = provider.GetDefinitionLocation(uri, line, col);
 
                     if (provider.Outcome == DefinitionsOutcome.NotFound)
                     {
                         _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
-                        msgService.SendInformation("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
+                        _mss.SendInformation("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
                     }
                     if (provider.Outcome == DefinitionsOutcome.WasAlreadyDefintion)
                     {
-                        msgService.SendInformation("This is already the definition."); // todo lang file #102
+                        _mss.SendInformation("This is already the definition."); // todo lang file #102
                     }
                     return result;
-                });
-            }
+                }
 
-            catch (Exception e)
-            {
-                _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
-                msgService.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
-                return new List<LocationOrLocationLink>();
-            }
+                catch (Exception e)
+                {
+                    _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
+                    _mss.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
+                    return new List<LocationOrLocationLink>();
+                }
+            });
+
         }
     }
 }

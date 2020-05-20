@@ -41,21 +41,25 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Code Lens"); // todo lang file #102
-            try
+
+            return await Task.Run(() =>
             {
-                return await Task.Run(() =>
+                _log.LogInformation("Handling Code Lens"); // todo lang file #102
+                var manager = _workspaceManager.SymbolTableManager;
+                var uri = request.TextDocument.Uri;
+                try
                 {
-                    ICodeLensProvider provider = new CodeLensProvider(_workspaceManager.SymbolTableManager, request.TextDocument.Uri);
+                    ICodeLensProvider provider = new CodeLensProvider(manager, uri);
                     return provider.GetCodeLensContainer();
-                });
-            }
-            catch (Exception e)
-            {
-                _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                new MessageSenderService(_router).SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
-            }
+                }
+                catch (Exception e)
+                {
+                    _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                    _mss.SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                    return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+                }
+            });
+
         }
     }
 }

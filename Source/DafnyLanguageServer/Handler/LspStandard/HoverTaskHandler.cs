@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ namespace DafnyLanguageServer.Handler
         {
             return Task.Run(() =>
             {
+                try { 
                 var manager = _workspaceManager.SymbolTableManager;
                 var uri = request.TextDocument.Uri;
                 var line = (int) request.Position.Line + 1;
@@ -43,6 +45,13 @@ namespace DafnyLanguageServer.Handler
 
                 var provider = new HoverProvider(manager);
                 return provider.GetHoverInformation(uri, line, col);
+                }
+                catch (Exception e)
+                {
+                    _log.LogError("Error Handling Rename Execution: " + e.Message);
+                    new MessageSenderService(_router).SendError("Error Handling Rename Request.");
+                    return new Hover();
+                }
             });
         }
 

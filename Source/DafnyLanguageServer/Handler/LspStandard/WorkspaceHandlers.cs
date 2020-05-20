@@ -19,7 +19,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     internal class DidChangeWatchedFilesHandler : IDidChangeWatchedFilesHandler
     {
-        private DidChangeWatchedFilesCapability _capability;       //Omnisharp field, lets leave it in.
+        private DidChangeWatchedFilesCapability _capability;
 
         public object GetRegistrationOptions()                     //Omnisharp "not yet implemented": https://github.com/OmniSharp/csharp-language-server-protocol/issues/197 #4234 should work now
         {
@@ -28,7 +28,6 @@ namespace DafnyLanguageServer.Handler
                 Watchers = new FileSystemWatcher[]
                 {
                         new FileSystemWatcher{
-
                             GlobPattern = Resources.ConfigurationStrings.file_watch_pattern,
                             Kind = 7
                         }

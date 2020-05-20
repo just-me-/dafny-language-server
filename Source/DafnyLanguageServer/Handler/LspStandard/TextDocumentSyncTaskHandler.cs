@@ -62,7 +62,7 @@ namespace DafnyLanguageServer.Handler
             {
                 var msg = $"Internal server error handling Document Update: {e.Message}"; // todo lang file #102
                 _log.LogError(msg);
-                new MessageSenderService(_router).SendError(msg);
+                _mss.SendError(msg);
             }
         }
 

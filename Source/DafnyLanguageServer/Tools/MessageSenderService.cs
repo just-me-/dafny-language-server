@@ -6,7 +6,7 @@ namespace DafnyLanguageServer.Tools
     /// This service provides for each client supported message an own function for an easy usage.
     /// This class can be used like a factory for multiple components. 
     /// </summary>
-    class MessageSenderService
+    public class MessageSenderService
     {
         private readonly ILanguageServer _router; 
 
