@@ -4,9 +4,12 @@ using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OmniSharp.Extensions.LanguageServer.Server;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -41,11 +44,13 @@ namespace DafnyLanguageServer.Handler
     {
         private readonly Workspace _workspaceManager;
         private readonly ILogger _log;
+        private readonly MessageSenderService _mss;
 
-        public CounterExampleHandler(Workspace b, ILoggerFactory loggerFactory)
+        public CounterExampleHandler(ILanguageServer router, Workspace b, ILoggerFactory loggerFactory)
         {
             _workspaceManager = b;
             _log = loggerFactory.CreateLogger("");
+            _mss = new MessageSenderService(router);
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
@@ -60,8 +65,8 @@ namespace DafnyLanguageServer.Handler
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling Counter Example: " + e.Message); // todo lang file #102
-
-                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+                _mss.SendError("Internal server error handling Counter Example");
+                return new CounterExampleResults();
             }
         }
 

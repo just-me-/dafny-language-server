@@ -52,7 +52,7 @@ namespace DafnyLanguageServer.Handler
                 {
                     _log.LogError("Internal server error handling Completions: " + e.Message); // todo lang file #102
                     _mss.SendError("Internal server error handling Completions: " + e.Message); // todo lang file #102
-                    return new CompletionList();
+                    return null;
                 }
             });
 

@@ -2,9 +2,11 @@
 using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -33,11 +35,14 @@ namespace DafnyLanguageServer.Handler
     {
         private readonly Workspace _workspaceManager;
         private readonly ILogger _log;
+        private readonly MessageSenderService _mss;
 
-        public CompileHandler(Workspace b, ILoggerFactory lf)
+        public CompileHandler(ILanguageServer router, Workspace b, ILoggerFactory lf)
         {
             _workspaceManager = b;
             _log = lf.CreateLogger("");
+            _mss = new MessageSenderService(router);
+
         }
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
@@ -52,7 +57,8 @@ namespace DafnyLanguageServer.Handler
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling compilation: " + e.Message);// todo lang file #102
-                return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
+                _mss.SendError("Internal server error handling compilation");
+                return null;
             }
         }
     }
