@@ -41,24 +41,20 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
-
-            return await Task.Run(() =>
+            _log.LogInformation("Handling Code Lens"); // todo lang file #102
+            try
             {
-                _log.LogInformation("Handling Code Lens"); // todo lang file #102
                 var manager = _workspaceManager.SymbolTableManager;
                 var uri = request.TextDocument.Uri;
-                try
-                {
-                    ICodeLensProvider provider = new CodeLensProvider(manager, uri);
-                    return provider.GetCodeLensContainer();
-                }
-                catch (Exception e)
-                {
-                    _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                    _mss.SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
-                    return null;
-                }
-            });
+                ICodeLensProvider provider = new CodeLensProvider(manager, uri);
+                return await Task.Run(() => provider.GetCodeLensContainer(), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                _mss.SendError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
+                return null;
+            }
 
         }
     }

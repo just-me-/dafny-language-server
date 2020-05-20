@@ -33,36 +33,42 @@ namespace DafnyLanguageServer.Handler.LspStandard
             };
         }
 
-        public Task<WorkspaceEdit> Handle(RenameParams request, CancellationToken cancellationToken)
+        public async Task<WorkspaceEdit> Handle(RenameParams request, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+
+
+            try
             {
                 var manager = _workspaceManager.SymbolTableManager;
-                var line = (int)request.Position.Line + 1;
-                var col = (int)request.Position.Character + 1;
+                var line = (int) request.Position.Line + 1;
+                var col = (int) request.Position.Character + 1;
                 var uri = request.TextDocument.Uri;
+                var newName = request.NewName;
 
-                try
-                {
-                    var provider = new RenameProvider(manager);
-                    var result = provider.GetRenameChanges(request.NewName, uri, line, col);
+                var provider = new RenameProvider(manager);
 
-                    if (provider.Outcome.Error)
-                    {
-                        _mss.SendWarning(provider.Outcome.Msg);
-                    }
+                return await Task.Run(() => RunAndEvaulate(provider, newName, uri, line, col), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Error Handling Rename Execution: " + e.Message);
+                _mss.SendError("Error Handling Rename Request.");
+                return null;
+            }
+        }
 
-                    return result;
-                }
-                catch (Exception e)
-                {
-                    _log.LogError("Error Handling Rename Execution: " + e.Message);
-                    _mss.SendError("Error Handling Rename Request.");
-                    return null;
-                }
-            });
+        private WorkspaceEdit RunAndEvaulate(RenameProvider provider, string newName, Uri uri, int line, int col) {
+        
+            var result = provider.GetRenameChanges(newName, uri, line, col );
+
+            if (provider.Outcome.Error)
+            {
+                _mss.SendWarning(provider.Outcome.Msg);
+            }
+            return result;
         }
     }
+    
 }
 
 

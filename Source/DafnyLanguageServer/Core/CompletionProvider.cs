@@ -26,6 +26,7 @@ namespace DafnyLanguageServer.Core
 
         public List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
+            throw new Exception("TEST");
             var desire = GetSupposedDesire(codeLine, col);
             var entryPoint = GetWrappingEntrypointSymbol(file, line, col);
 

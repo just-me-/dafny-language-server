@@ -37,39 +37,39 @@ namespace DafnyLanguageServer.Handler
             _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
 
 
-            return await Task.Run(() =>
+            try
             {
-
                 var uri = request.TextDocument.Uri;
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
-
                 var manager = _workspaceManager.SymbolTableManager;
-                try
-                {
-                    var provider = new DefinitionsProvider(manager);
-                    var result = provider.GetDefinitionLocation(uri, line, col);
+                var provider = new DefinitionsProvider(manager);
+                return await Task.Run(() => RunAndEvaluate(provider, uri, line, col), cancellationToken);
+            }
 
-                    if (provider.Outcome == DefinitionsOutcome.NotFound)
-                    {
-                        _log.LogWarning("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
-                        _mss.SendInformation("No Defintion found for " + request.TextDocument.Uri + $" at L{line}:C{col}"); // todo lang file #102
-                    }
-                    if (provider.Outcome == DefinitionsOutcome.WasAlreadyDefintion)
-                    {
-                        _mss.SendInformation("This is already the definition."); // todo lang file #102
-                    }
-                    return result;
-                }
+            catch (Exception e)
+            {
+                _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
+                _mss.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
+                return null;
+            }
 
-                catch (Exception e)
-                {
-                    _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
-                    _mss.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
-                    return null;
-                }
-            });
+        }
 
+        private LocationOrLocationLinks RunAndEvaluate(DefinitionsProvider provider, Uri uri, int line, int col)
+        {
+            var result = provider.GetDefinitionLocation(uri, line, col);
+
+            if (provider.Outcome == DefinitionsOutcome.NotFound)
+            {
+                _log.LogWarning("No Defintion found for " + uri + $" at L{line}:C{col}"); // todo lang file #102
+                _mss.SendInformation("No Defintion found for " + uri + $" at L{line}:C{col}"); // todo lang file #102
+            }
+            if (provider.Outcome == DefinitionsOutcome.WasAlreadyDefintion)
+            {
+                _mss.SendInformation("This is already the definition."); // todo lang file #102
+            }
+            return result;
         }
     }
 }

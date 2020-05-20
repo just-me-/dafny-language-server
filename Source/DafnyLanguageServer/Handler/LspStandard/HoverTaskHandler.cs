@@ -33,26 +33,23 @@ namespace DafnyLanguageServer.Handler
         }
 
 
-        public Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
+        public async Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
+            try
             {
-                try { 
                 var manager = _workspaceManager.SymbolTableManager;
                 var uri = request.TextDocument.Uri;
-                var line = (int) request.Position.Line + 1;
-                var col = (int) request.Position.Character + 1;
-
+                var line = (int)request.Position.Line + 1;
+                var col = (int)request.Position.Character + 1;
                 var provider = new HoverProvider(manager);
-                return provider.GetHoverInformation(uri, line, col);
-                }
-                catch (Exception e)
-                {
-                    _log.LogError("Error Handling Rename Execution: " + e.Message);
-                    new MessageSenderService(_router).SendError("Error Handling Rename Request.");
-                    return null;
-                }
-            });
+                return await Task.Run(() => provider.GetHoverInformation(uri, line, col), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Error Handling Hover Execution: " + e.Message);
+                _mss.SendError("Error Handling Hover Request.");
+                return null;
+            }
         }
 
 
