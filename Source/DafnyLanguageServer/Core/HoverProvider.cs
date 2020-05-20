@@ -41,13 +41,14 @@ namespace DafnyLanguageServer.Core
             }
 
             MarkedString m1 = new MarkedString("Symbol: " + symbol.ToNiceString());
-            MarkedString m2 = new MarkedString("Kind: " + symbol.Kind + "; " + "Type: " + type);
-            MarkedString m3 = new MarkedString("Scope: " + symbol.Parent.Name);
-            MarkedString m4 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? "This symbol is a declaration." : symbol.DeclarationOrigin.ToNiceString()));
+            MarkedString m2 = new MarkedString("Kind: " + symbol.Kind);
+            MarkedString m3 = new MarkedString("Type: " + type);
+            MarkedString m4 = new MarkedString("Scope: " + symbol.Parent.Name);
+            MarkedString m5 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? "This symbol is a declaration." : symbol.DeclarationOrigin.ToNiceString()));
 
             Hover result = new Hover()
             {
-                Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4),
+                Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4, m5),
                 Range = new Range()
                 {
                     Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
