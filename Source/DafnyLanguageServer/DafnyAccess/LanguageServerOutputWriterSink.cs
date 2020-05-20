@@ -24,6 +24,8 @@ namespace DafnyLanguageServer.DafnyAccess
 
             public void AdvisoryWriteLine(string format, params object[] args)
             {
+                //Since it is a sink, nothing needs to be done.
+                //The method needs to be provided though, because its abstract variant is inherited.
             }
 
             public void Inform(string s, TextWriter tw)
@@ -35,10 +37,11 @@ namespace DafnyLanguageServer.DafnyAccess
 
             public void WriteTrailer(PipelineStatistics stats)
             {
-                
-            }
+            //Since it is a sink, nothing needs to be done.
+            //The method needs to be provided though, because its abstract variant is inherited.
+        }
 
-            public void WriteErrorInformation(
+        public void WriteErrorInformation(
               ErrorInformation errorInfo,
               TextWriter tw,
               bool skipExecutionTrace = true)

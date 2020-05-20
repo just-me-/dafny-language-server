@@ -22,22 +22,22 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// </summary>
         /// <typeparam name="T">string or Container with TextDocumentContentChangeEvent</typeparam>
         /// <param name="documentPath">URI to the document</param>
-        /// <param name="sourceCodeOfFileOrChangeEvents">Update Information, either just the new complete sourcecode or TextDocumentChangeEvent-Container</param>
+        /// <param name="changes">Update Information, either just the new complete sourcecode or TextDocumentChangeEvent-Container</param>
         /// <returns></returns>
-        public FileRepository UpdateFile<T>(Uri documentPath, T sourceCodeOfFileOrChangeEvents)
+        public FileRepository UpdateFile<T>(Uri documentPath, T changes)
         {
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
             //todo remove this just a test
-            if (typeof(T) == typeof(string)) //full
+            if (typeof(T) == typeof(string)) //Sync Kind Full
             {
-                var text = sourceCodeOfFileOrChangeEvents as string;
+                var text = changes as string;
                 fileRepository.UpdateFile(text);
             }
-            else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>)) //incremental; line(s)
+            else if (typeof(T) == typeof(Container<TextDocumentContentChangeEvent>)) //Sync Kind Incremental
             {
-                var changes = sourceCodeOfFileOrChangeEvents as Container<TextDocumentContentChangeEvent>;
-                fileRepository.UpdateFile(changes);
+                var changes1 = changes as Container<TextDocumentContentChangeEvent>;
+                fileRepository.UpdateFile(changes1);
             }
             else
             {

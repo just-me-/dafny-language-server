@@ -4,6 +4,8 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.WorkspaceManager;
+using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -13,20 +15,23 @@ namespace DafnyLanguageServer.Handler
     /// We do actually not handle those requests separately.
     /// This watcher has been implemented to support the defined LSP and do not throw an "not implemented error" in case a Dafny file has been modified from another editor or program. 
     /// </summary>
-    internal class DidChangeWatchedFilesHandler : IDidChangeWatchedFilesHandler
+    internal class DidChangeWatchedFilesHandler : LspBasicHandler<DidChangeWatchedFilesCapability>, IDidChangeWatchedFilesHandler
     {
-        private DidChangeWatchedFilesCapability _capability;
+        public DidChangeWatchedFilesHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory = null)
+            : base(router, workspaceManager, loggingFactory)
+        {
+        }
 
-        public object GetRegistrationOptions()                     //Omnisharp "not yet implemented": https://github.com/OmniSharp/csharp-language-server-protocol/issues/197 #4234 should work now
+        public object GetRegistrationOptions()
         {
             return new DidChangeWatchedFilesRegistrationOptions
             {
                 Watchers = new[]
                 {
-                        new FileSystemWatcher{
-                            GlobPattern = Resources.ConfigurationStrings.file_watch_pattern,
-                            Kind = 7
-                        }
+                    new FileSystemWatcher{
+                        GlobPattern = Resources.ConfigurationStrings.file_watch_pattern,
+                        Kind = 7
+                    }
                 }
             };
         }
@@ -34,11 +39,6 @@ namespace DafnyLanguageServer.Handler
         public Task<Unit> Handle(DidChangeWatchedFilesParams request, CancellationToken cancellationToken)
         {
             return Unit.Task;
-        }
-
-        public void SetCapability(DidChangeWatchedFilesCapability capability)
-        {
-            _capability = capability;
         }
     }
 

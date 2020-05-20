@@ -155,7 +155,6 @@ namespace DafnyLanguageServer.Core
 
         private IEnumerable<ISymbol> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
         {
-            var completionItems = new List<CompletionItem>();
             foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
             {
                 yield return suggestionElement;

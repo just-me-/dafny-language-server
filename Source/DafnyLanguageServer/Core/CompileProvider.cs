@@ -75,10 +75,10 @@ namespace DafnyLanguageServer.Core
         {
             if (System.IO.Path.GetExtension(Path) != Resources.CompilationResults.file_ending)
             {
-                {
-                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.only_dfy);
-                    return false;
-                }
+
+                compilerResults = CreateErrorneousResults(Resources.CompilationResults.only_dfy);
+                return false;
+
             }
 
             if (!File.Exists(FileRepo.PhysicalFile.Filepath))
@@ -96,26 +96,21 @@ namespace DafnyLanguageServer.Core
                 var line = firstError.Tok.line;
                 var col = firstError.Tok.col;
 
-                {
-                    compilerResults = CreateErrorneousResults($"[L{line}:C{col}] {msg}");
-                    return false;
-                }
+                compilerResults = CreateErrorneousResults($"[L{line}:C{col}] {msg}");
+                return false;
+
             }
 
             if (!DafnyOptions.O.Compile)
             {
-                {
-                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.compile_CLO_is_zero);
-                    return false;
-                }
+                compilerResults = CreateErrorneousResults(Resources.CompilationResults.compile_CLO_is_zero);
+                return false;
             }
 
             if (exitval == DafnyDriver.ExitValue.PREPROCESSING_ERROR)
             {
-                {
-                    compilerResults = CreateErrorneousResults(Resources.CompilationResults.not_supported_custom_args);
-                    return false;
-                }
+                compilerResults = CreateErrorneousResults(Resources.CompilationResults.not_supported_custom_args);
+                return false;
             }
 
             compilerResults = null;

@@ -20,7 +20,6 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         public DafnyTranslationUnit(PhysicalFile file)
         {
-            ExecutionEngine.printer = new LanguageServerOutputWriterSink();
             _file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null."); //todo lang
         }
 
@@ -84,7 +83,7 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             if (_dirtyInstance)
             {
-                throw new Exception("You can use this instance only once!");
+                throw new InvalidOperationException("You can use this instance only once!"); //todo lang
             }
             _dirtyInstance = true;
         }
@@ -98,6 +97,8 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         public TranslationResult Verify()
         {
+            ExecutionEngine.printer = new LanguageServerOutputWriterSink();
+
             CheckInstance();
             SetUpDafnyOptions();
 

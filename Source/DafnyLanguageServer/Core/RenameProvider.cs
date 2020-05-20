@@ -27,6 +27,7 @@ namespace DafnyLanguageServer.Core
             if (symbolAtCursor == null)
             {
                 SetError($"There is no renameable symbol at L{line}:C{col}");
+                return null;
             }
 
             VerifyNewName(newName);
@@ -38,8 +39,6 @@ namespace DafnyLanguageServer.Core
             
             Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
 
-            // ReSharper disable once PossibleNullReferenceException
-            // is checked above.
             foreach (var symbol in symbolAtCursor.GetAllOccurrences())
             {
                 var textEdit = new TextEdit

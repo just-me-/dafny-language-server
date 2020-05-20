@@ -2,8 +2,9 @@
 
 namespace DafnyLanguageServer.Resources
 {
-    public class FileAndFolderLocations
+    public static class FileAndFolderLocations
     {
+        //Dafny-Testfiles are referenced in the "TestCommons/TestCommons/TestFilePaths.cs File to keep this one concise.
 
         //Base Path
         private static readonly string thisAssemblyPath = Path.GetDirectoryName(typeof(FileAndFolderLocations).Assembly.Location);
@@ -27,7 +28,7 @@ namespace DafnyLanguageServer.Resources
         public static readonly string defaultLogFile = Combine(logFolder, "LanguageServerLog.txt");
 
         //model.bvd for Counter Example
-        public static readonly string modelBVD = Combine(rootFolder, "model.bvd");
+        public static readonly string modelBVD = CombineWithRoot("model.bvd");
 
 
         private static string Combine(string a, string b) => Path.GetFullPath(Path.Combine(a, b));
