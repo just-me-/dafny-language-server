@@ -102,52 +102,6 @@ namespace DafnyLanguageServer.Core
             return CompletionType.AllInScope;
         }
 
-        //todo remove?
-        private CompletionType OLDGetSupposedDesire(int colPos, string line, out string symbolName)
-        {
-            var characters = line.ToCharArray();
-            int position = colPos - 2;
-            if (position > characters.Length || position < 0)
-            {
-                throw new ArgumentException("Cursor position is exceeding line width"); // todo resx auslagern
-            }
-            if (characters[position] == '.')
-            {
-                position--;
-                var symbolString = "";
-                while (position >= 0)
-                {
-                    if (char.IsLetter(characters[position])
-                        || char.IsNumber(characters[position])
-                        || characters[position] == '_'
-                        || characters[position] == '-'
-                    )
-                    {
-                        symbolString += characters[position];
-                        position--;
-                    }
-                    else // das else iwie streichen mit != 
-                    {
-                        break;
-                    }
-                }
-                char[] symbolCharArray = symbolString.ToCharArray();
-                Array.Reverse(symbolCharArray);
-                symbolName = new string(symbolCharArray);
-                return CompletionType.AfterDot;
-            }
-            symbolName = "";
-            if (characters.Length >= 3 && position >= 3
-                                       && characters[position] == ' '
-                                       && characters[position - 1] == 'w'
-                                       && characters[position - 2] == 'e'
-                                       && characters[position - 3] == 'n')
-            {
-                return CompletionType.AfterNew;
-            }
-            return CompletionType.AllInScope;
-        }
-
         /// <summary>
         /// Returns the wrapping symbol for the given scope.
         /// Can be used as entry point to call <c>GetSymbols</c>.
