@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Configuration;
 using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -42,13 +39,13 @@ namespace DafnyLanguageServer.SymbolTable
 
         private ISymbol CreateRootNode()
         {
-            return new SymbolInformation()
+            return new SymbolInformation
             {
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Descendants = new List<ISymbol>(),
                 Kind = Kind.RootNode,
                 Name = SymbolTableStrings.root_node,
-                Position = new TokenPosition()
+                Position = new TokenPosition
                 {
                     Token = new Token(0, 0),
                     BodyStartToken = new Token(0, 0),
@@ -147,7 +144,7 @@ namespace DafnyLanguageServer.SymbolTable
                     return symbol;
                 }
             }
-            return symbol;
+            return null;
         }
 
         private ISymbol GetClassSymbolByPath(string classPath)
@@ -193,7 +190,7 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
         {
             INavigator navigator = new SymbolTableNavigator();
-            Predicate<ISymbol> filter = x => x.IsDeclaration && x.Name == symbolName;
+            bool filter(ISymbol x) => x.IsDeclaration && x.Name == symbolName;
             return navigator.BottomUpFirst(entryPoint, filter);
         }
 
@@ -208,7 +205,7 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> preFilter)
         {
             INavigator navigator = new SymbolTableNavigator();
-            Predicate<ISymbol> filter = x => x.IsDeclaration && x.Kind != Kind.Constructor && preFilter.Invoke(x);
+            bool filter(ISymbol x) => x.IsDeclaration && x.Kind != Kind.Constructor && preFilter.Invoke(x);
             return navigator.BottomUpAll(symbol, filter);
         }
 
@@ -240,15 +237,12 @@ namespace DafnyLanguageServer.SymbolTable
         {
             List<ISymbol> symbols = new List<ISymbol>();
             INavigator navigator = new SymbolTableNavigator();
-            Predicate<ISymbol> filter = symbol => (
-                symbol.IsDeclaration && (
-                symbol.Kind == Kind.Class ||
-                symbol.Kind == Kind.Function ||
-                (symbol.Kind == Kind.Method && symbol.Name != SymbolTableStrings.dafnys_entry_point)) &&
+
+            bool filter(ISymbol symbol) =>
+                symbol.IsDeclaration && (symbol.Kind == Kind.Class || symbol.Kind == Kind.Function || symbol.Kind == Kind.Method && symbol.Name != SymbolTableStrings.dafnys_entry_point) &&
                 // no constructors and make sure no out-of-range root _defaults
-                symbol.Kind != Kind.Constructor &&
-                symbol?.Line != null && symbol.Line > 0
-            );
+                symbol.Kind != Kind.Constructor && symbol.Line != null && symbol.Line > 0;
+
             foreach (var module in SymbolTables)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
                 symbols.AddRange(navigator.TopDownAll(module.Value, filter));

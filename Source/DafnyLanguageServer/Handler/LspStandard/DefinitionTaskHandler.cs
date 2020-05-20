@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +16,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class DefinitionTaskHandler : LspBasicHandler<DefinitionCapability>, IDefinitionHandler
     {
-        public DefinitionTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
+        public DefinitionTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
         : base(router, workspaceManager, loggingFactory)
         {
         }
@@ -60,15 +57,18 @@ namespace DafnyLanguageServer.Handler
         {
             var result = provider.GetDefinitionLocation(uri, line, col);
 
-            if (provider.Outcome == DefinitionsOutcome.NotFound)
+            switch (provider.Outcome)
             {
-                _log.LogWarning("No Defintion found for " + uri + $" at L{line}:C{col}"); // todo lang file #102
-                _mss.SendInformation("No Defintion found for " + uri + $" at L{line}:C{col}"); // todo lang file #102
+                case DefinitionsOutcome.NotFound:
+                    string msg = "No Defintion found for " + uri + $" at L{line}:C{col}";
+                    _log.LogWarning(msg); // todo lang file #102
+                    _mss.SendInformation(msg); // todo lang file #102
+                    break;
+                case DefinitionsOutcome.WasAlreadyDefintion:
+                    _mss.SendInformation("This is already the definition."); // todo lang file #102
+                    break;
             }
-            if (provider.Outcome == DefinitionsOutcome.WasAlreadyDefintion)
-            {
-                _mss.SendInformation("This is already the definition."); // todo lang file #102
-            }
+
             return result;
         }
     }

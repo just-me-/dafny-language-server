@@ -38,12 +38,14 @@ namespace DafnyLanguageServer.Core
             
             Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
 
+            // ReSharper disable once PossibleNullReferenceException
+            // is checked above.
             foreach (var symbol in symbolAtCursor.GetAllOccurrences())
             {
                 var textEdit = new TextEdit
                 {
                     NewText = newName,
-                    Range = new Range()
+                    Range = new Range
                     {
                         Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
                         End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
@@ -95,11 +97,12 @@ namespace DafnyLanguageServer.Core
 
         private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
         {
-            if (!Changes.TryGetValue(symbol.File, out var textEditsPerFile))
+            if (Changes.TryGetValue(symbol.File, out var textEditsPerFile))
             {
-                textEditsPerFile = new List<TextEdit>();
-                Changes.Add(symbol.File, textEditsPerFile);
+                return textEditsPerFile;
             }
+            textEditsPerFile = new List<TextEdit>();
+            Changes.Add(symbol.File, textEditsPerFile);
 
             return textEditsPerFile;
         }

@@ -2,12 +2,9 @@
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.SymbolTable;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +16,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionTaskHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
-        public CompletionTaskHandler(ILanguageServer router, Workspace workspaceManager,
+        public CompletionTaskHandler(ILanguageServer router, IWorkspace workspaceManager,
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {

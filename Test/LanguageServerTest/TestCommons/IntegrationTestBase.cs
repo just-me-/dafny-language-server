@@ -46,7 +46,7 @@ namespace TestCommons
 
             LoggerFactory = new SerilogLoggerFactory(MyLog);
 
-            Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(FileAndFolderLocator.langServExe)
+            Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(FileAndFolderLocations.langServExe)
             {
                 Arguments = $"/log ../Logs/Test_{Name}.txt /loglevel 0"
             });
@@ -55,7 +55,7 @@ namespace TestCommons
 
             Client = new LanguageClient(LoggerFactory, Server);
             Client.Initialize(
-                workspaceRoot: FileAndFolderLocator.testFilesFolder,
+                workspaceRoot: FileAndFolderLocations.testFilesFolder,
                 initializationOptions: new { },
                 cancellationToken: CancellationSource.Token
             ).Wait();

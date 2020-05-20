@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
@@ -16,8 +11,6 @@ namespace DafnyLanguageServer.DafnyAccess
     /// </summary>
     public class LanguageServerOutputWriterSink : OutputPrinter
         {
-
-
             public void ErrorWriteLine(TextWriter tw, string s)
             {
                 tw.WriteLine(s);
@@ -50,11 +43,11 @@ namespace DafnyLanguageServer.DafnyAccess
               TextWriter tw,
               bool skipExecutionTrace = true)
             {
-                this.ReportBplError(errorInfo.Tok, errorInfo.FullMsg, true, tw, (string)null);
+                this.ReportBplError(errorInfo.Tok, errorInfo.FullMsg, true, tw);
                 foreach (ErrorInformation.AuxErrorInfo auxErrorInfo in errorInfo.Aux)
                 {
                     if (!skipExecutionTrace || auxErrorInfo.Category == null || !auxErrorInfo.Category.Contains("Execution trace"))
-                        this.ReportBplError(auxErrorInfo.Tok, auxErrorInfo.FullMsg, false, tw, (string)null);
+                        this.ReportBplError(auxErrorInfo.Tok, auxErrorInfo.FullMsg, false, tw);
                 }
                 tw.Write(errorInfo.Out.ToString());
                 tw.Write(errorInfo.Model.ToString());
@@ -69,10 +62,10 @@ namespace DafnyLanguageServer.DafnyAccess
               string category = null)
             {
                 if (category != null)
-                    message = string.Format("{0}: {1}", (object)category, (object)message);
+                    message = $"{category}: {message}";
                 string s;
                 if (tok != null)
-                    s = string.Format("{0}({1},{2}): {3}", (object)tok.filename, (object)tok.line, (object)tok.col, (object)message);
+                    s = $"{tok.filename}({tok.line},{tok.col}): {message}";
                 else
                     s = message;
                 if (error)

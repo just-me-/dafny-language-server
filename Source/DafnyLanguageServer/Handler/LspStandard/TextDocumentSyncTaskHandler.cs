@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
@@ -26,14 +25,14 @@ namespace DafnyLanguageServer.Handler
     {
         public TextDocumentSyncKind Change { get; } = LanguageServerConfig.SyncKind;
 
-        public TextDocumentSyncTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
+        public TextDocumentSyncTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
         }
 
         public TextDocumentChangeRegistrationOptions GetRegistrationOptions()
         {
-            return new TextDocumentChangeRegistrationOptions()
+            return new TextDocumentChangeRegistrationOptions
             {
                 DocumentSelector = _documentSelector,
                 SyncKind = Change
@@ -61,21 +60,23 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                var msg = "Internal server error handling document update. Please restart the server."; // todo lang file #102
+                const string msg = "Internal server error handling document update. Please restart the server."; // todo lang file #102
                 HandleError(msg, e);
             }
         }
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
-            if (Change == TextDocumentSyncKind.Full)
+            switch (Change)
             {
-                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.LastOrDefault()?.Text);
+                case TextDocumentSyncKind.Full:
+                    UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.LastOrDefault()?.Text);
+                    break;
+                case TextDocumentSyncKind.Incremental:
+                    UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges);
+                    break;
             }
-            else if (Change == TextDocumentSyncKind.Incremental)
-            {
-                UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges);
-            }
+
             return Unit.Task;
         }
 
@@ -98,15 +99,15 @@ namespace DafnyLanguageServer.Handler
 
         TextDocumentRegistrationOptions IRegistration<TextDocumentRegistrationOptions>.GetRegistrationOptions()
         {
-            return new TextDocumentRegistrationOptions()
+            return new TextDocumentRegistrationOptions
             {
-                DocumentSelector = _documentSelector,
+                DocumentSelector = _documentSelector
             };
         }
 
         TextDocumentSaveRegistrationOptions IRegistration<TextDocumentSaveRegistrationOptions>.GetRegistrationOptions()
         {
-            return new TextDocumentSaveRegistrationOptions()
+            return new TextDocumentSaveRegistrationOptions
             {
                 DocumentSelector = _documentSelector,
                 IncludeText = true

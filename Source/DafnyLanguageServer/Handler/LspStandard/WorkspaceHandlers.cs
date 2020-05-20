@@ -1,11 +1,7 @@
 ﻿using MediatR;
-using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,13 +21,13 @@ namespace DafnyLanguageServer.Handler
         {
             return new DidChangeWatchedFilesRegistrationOptions
             {
-                Watchers = new FileSystemWatcher[]
+                Watchers = new[]
                 {
                         new FileSystemWatcher{
                             GlobPattern = Resources.ConfigurationStrings.file_watch_pattern,
                             Kind = 7
                         }
-                },
+                }
             };
         }
 

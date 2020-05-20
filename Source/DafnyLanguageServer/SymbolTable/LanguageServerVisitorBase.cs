@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
@@ -41,11 +40,8 @@ namespace DafnyLanguageServer.SymbolTable
         protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
         {
             INavigator navigator = new SymbolTableNavigator();
-            Predicate<ISymbol> filter = s =>
-                s.Name == target &&
-                s.IsDeclaration &&
-                (type == null || s.Kind == type);
-            return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation()
+            bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (type == null || s.Kind == type);
+            return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
                 Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
                 ChildrenHash = new Dictionary<string, ISymbol>(),
@@ -73,7 +69,6 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="addUsageAtDeclaration">Default: false</param>
         /// <param name="canHaveChildren">Default: true</param>
         /// <param name="canBeUsed">Default: true</param>
-        /// <param name="addToSymbolTable">Default: true</param>
         /// <returns>Returns a SymbolInformation about the specific token.</returns>
         protected ISymbol CreateSymbol(
             string name,
@@ -125,7 +120,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             result.UserTypeDefinition = typeDefinition;
 
-            result.Position = new TokenPosition()
+            result.Position = new TokenPosition
             {
                 Token = positionAsToken,
                 BodyStartToken = bodyStartPosAsToken ?? positionAsToken,
@@ -161,12 +156,12 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                //null? self?
+                //null? self? //todo
             }
 
             if (addUsageAtDeclaration)
             {
-                declarationSymbol.Usages.Add(result);
+                declarationSymbol?.Usages.Add(result);
             }
 
             if (canHaveChildren)
@@ -175,14 +170,12 @@ namespace DafnyLanguageServer.SymbolTable
                 result.Descendants = new List<ISymbol>();
             }
 
-            if (isDeclaration && SurroundingScope != null) //add child unless we are on toplevel scope.
+            if (isDeclaration) //add child unless we are on toplevel scope.
             {
-                SurroundingScope.ChildrenHash.Add(result.Name, result);
+                SurroundingScope?.ChildrenHash.Add(result.Name, result);
             }
-            if (SurroundingScope != null) //add child unless we are on toplevel scope.
-            {
-                SurroundingScope.Descendants.Add(result);
-            }
+
+            SurroundingScope?.Descendants.Add(result);
 
             result.Module = Module;
 

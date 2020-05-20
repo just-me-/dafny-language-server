@@ -96,7 +96,7 @@ namespace DafnyLanguageServer.Core
                 default:
                     severity = DiagnosticSeverity.Error;
                     break;
-            };
+            }
 
             Diagnostic d = new Diagnostic
             {
@@ -108,7 +108,7 @@ namespace DafnyLanguageServer.Core
             return d;
         }
 
-        private List<Diagnostic> ExtractRelatedInformationOfAnError(PhysicalFile file, DiagnosticElement e)
+        private IEnumerable<Diagnostic> ExtractRelatedInformationOfAnError(PhysicalFile file, DiagnosticElement e)
         {
             List<Diagnostic> relatedInformations = new List<Diagnostic>();
             foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
@@ -124,7 +124,7 @@ namespace DafnyLanguageServer.Core
                 Range auxrange = CreateRange(auxline, auxcol, auxlength);
 
                 string src = file.FileName;
-                Diagnostic relatedDiagnostic = new Diagnostic()
+                Diagnostic relatedDiagnostic = new Diagnostic
                 {
                     Message = auxmessage,
                     Range = auxrange,

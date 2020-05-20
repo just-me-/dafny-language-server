@@ -3,14 +3,9 @@ using Microsoft.Dafny;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Core;
-using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Resources;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using Bpl = Microsoft.Boogie;
-using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -26,11 +21,11 @@ namespace DafnyLanguageServer.DafnyAccess
         public DafnyTranslationUnit(PhysicalFile file)
         {
             ExecutionEngine.printer = new LanguageServerOutputWriterSink();
-            _file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null.");
+            _file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null."); //todo lang
         }
 
         private TranslationStatus _status = TranslationStatus.Virgin;
-        private bool _dirtyInstance = false; // can only verify once per dafnyProgram
+        private bool _dirtyInstance; // can only verify once per dafnyProgram
         private readonly PhysicalFile _file;
         private Microsoft.Dafny.Program _dafnyProgram;
         private IEnumerable<Tuple<string, Bpl.Program>> _boogiePrograms;
@@ -143,8 +138,8 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             ModuleDecl module = new LiteralModuleDecl(new Microsoft.Dafny.DefaultModuleDecl(), null);
             BuiltIns builtIns = new BuiltIns();
-            var success = (Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(_reporter)) == 0 &&
-                           Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(_reporter)) == null);
+            var success = Microsoft.Dafny.Parser.Parse(_file.Sourcecode, _file.Filepath, _file.Filepath, null, module, builtIns, new Microsoft.Dafny.Errors(_reporter)) == 0 &&
+                           Microsoft.Dafny.Main.ParseIncludes(module, builtIns, new List<string>(), new Microsoft.Dafny.Errors(_reporter)) == null;
             if (success)
             {
                 _dafnyProgram = new Microsoft.Dafny.Program(_file.Filepath, module, builtIns, _reporter);
@@ -162,7 +157,7 @@ namespace DafnyLanguageServer.DafnyAccess
             var resolver = new Microsoft.Dafny.Resolver(_dafnyProgram);
             resolver.ResolveProgram(_dafnyProgram);
 
-            bool success = (_reporter.Count(ErrorLevel.Error) == 0);
+            bool success = _reporter.Count(ErrorLevel.Error) == 0;
             if (success)
             {
                 _status = TranslationStatus.Resolved;
@@ -176,7 +171,7 @@ namespace DafnyLanguageServer.DafnyAccess
         private bool Translate()
         {
             _boogiePrograms = Translator.Translate(_dafnyProgram, _reporter,
-                new Translator.TranslatorFlags() { InsertChecksums = true, UniqueIdPrefix = _file.Filepath });
+                new Translator.TranslatorFlags { InsertChecksums = true, UniqueIdPrefix = _file.Filepath });
             _status = TranslationStatus.Translated;
             return true;
         }
@@ -186,9 +181,9 @@ namespace DafnyLanguageServer.DafnyAccess
         /// </summary>
         private bool Boogie()
         {
-            foreach (var boogieProgram in _boogiePrograms)
+            foreach (var (moduleName, boogieProgram) in _boogiePrograms)
             {
-                if (!BoogieOnce(boogieProgram.Item1, boogieProgram.Item2))
+                if (!BoogieOnce(moduleName, boogieProgram))
                 {
                     return false;
                 }
@@ -218,16 +213,15 @@ namespace DafnyLanguageServer.DafnyAccess
             var stringteil = "ServerProgram_" + moduleName;
             var time = DateTime.UtcNow.Ticks.ToString();
             var boogieOutcome = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddBoogieErrorToList, time);
-            
-            if (boogieOutcome == PipelineOutcome.Done || boogieOutcome == PipelineOutcome.VerificationCompleted)
+
+            bool success = boogieOutcome == PipelineOutcome.Done ||
+                           boogieOutcome == PipelineOutcome.VerificationCompleted;
+
+            if (success)
             {
                 _status = TranslationStatus.Boogied;
-                return true;
             }
-            else
-            {
-                return false;
-            }
+            return success;
 
         }
         /// <summary>

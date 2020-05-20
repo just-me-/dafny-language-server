@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
-using Microsoft.Boogie.VCExprAST;
-using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -87,7 +83,7 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            if (line == wrappingSymbol?.Line && character <= wrappingSymbol?.ColumnEnd)
+            if (line == wrappingSymbol?.Line && character <= wrappingSymbol.ColumnEnd)
             {
                 return wrappingSymbol;
             }
@@ -117,7 +113,7 @@ namespace DafnyLanguageServer.SymbolTable
                 return symbolList;
             }
 
-            foreach (var child in symbol?.Descendants)
+            foreach (var child in symbol.Descendants)
             {
                 symbolList.AddRange(TopDownAll(child, filter));
             }
@@ -165,7 +161,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             filter = DefaultPredicateFilter(filter);
 
-            ISymbol child = symbol?.Children?.Where(filter.Invoke).FirstOrDefault();
+            ISymbol child = symbol.Children?.Where(filter.Invoke).FirstOrDefault();
             if (child == null)
             {
                 // inherited?
@@ -215,7 +211,7 @@ namespace DafnyLanguageServer.SymbolTable
             return list;
         }
 
-        private List<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)
+        private IEnumerable<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
             filter = DefaultPredicateFilter(filter);
 

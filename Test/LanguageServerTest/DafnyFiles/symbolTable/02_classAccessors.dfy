@@ -7,7 +7,7 @@ class MyClass {
 
     var field: int; 
 
-    method  addOne(i: int) returns (r:int) {
+    method addOne(i: int) returns (r:int) {
        r := i + 1;
     }
     constructor () { }
@@ -26,7 +26,7 @@ class OtherClass {
        r := i + 1;
     }
 	
-    method hotStuff() modifies this { 
+    method dsyfydsfg() modifies this { 
         var mc := new MyClass();
         field := mc.field;
         field := mc.addOne(2);

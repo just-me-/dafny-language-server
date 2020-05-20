@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.SymbolTable;
-using DafnyLanguageServer.Tools;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
 namespace DafnyLanguageServer.Core
 {
@@ -46,10 +37,10 @@ namespace DafnyLanguageServer.Core
             MarkedString m4 = new MarkedString("Scope: " + symbol.Parent.Name);
             MarkedString m5 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? "This symbol is a declaration." : symbol.DeclarationOrigin.ToNiceString()));
 
-            Hover result = new Hover()
+            Hover result = new Hover
             {
                 Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4, m5),
-                Range = new Range()
+                Range = new Range
                 {
                     Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
                     End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)

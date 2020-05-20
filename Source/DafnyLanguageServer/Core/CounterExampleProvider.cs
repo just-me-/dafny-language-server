@@ -32,6 +32,7 @@ namespace DafnyLanguageServer.Core
         /// <summary>
         /// Use this ctor to inject a custom model-file for testing.
         /// </summary>
+        /// <param name="file">The Physical File that is to be evaluated</param>
         /// <param name="pathToModelBvd">Injected model file</param>
         public CounterExampleProvider(PhysicalFile file, string pathToModelBvd)
         {
@@ -80,7 +81,7 @@ namespace DafnyLanguageServer.Core
                 var specificModels = new List<ILanguageSpecificModel>();
                 foreach (var model in modellist)
                 {
-                    var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions() { DebugMode = true, ViewLevel = 3 });
+                    var specifiedModel = Provider.Instance.GetLanguageSpecificModel(model, new ViewOptions { DebugMode = true, ViewLevel = 3 });
                     specificModels.Add(specifiedModel);
                 }
                 return specificModels;

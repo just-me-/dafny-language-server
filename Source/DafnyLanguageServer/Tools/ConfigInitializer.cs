@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DafnyLanguageServer.Commons;
@@ -68,7 +69,7 @@ namespace DafnyLanguageServer.Tools
             {
                 if (!File.Exists(JSONConfigFile))
                 {
-                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + JSONConfigFile);
+                    throw new FileNotFoundException(ExceptionMessages.config_file_not_found + " " + JSONConfigFile);
                 }
 
                 JObject cfg = JObject.Parse(File.ReadAllText(JSONConfigFile));
@@ -80,7 +81,7 @@ namespace DafnyLanguageServer.Tools
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
                 {
-                    throw new ArgumentException(Resources.ExceptionMessages.stream_and_log_are_same);
+                    throw new ArgumentException(ExceptionMessages.stream_and_log_are_same);
                 }
 
                 if (cfgLog != null)
@@ -106,7 +107,7 @@ namespace DafnyLanguageServer.Tools
             }
             catch (NullReferenceException)
             {
-                AddError(Resources.ExceptionMessages.config_could_not_be_parsed);
+                AddError(ExceptionMessages.config_could_not_be_parsed);
             }
             catch (Exception e)
             {
@@ -123,7 +124,7 @@ namespace DafnyLanguageServer.Tools
                     string[] splitted = arg.Split(':');
                     if (splitted.Length != 2)
                     {
-                        throw new ArgumentException(Resources.ExceptionMessages.not_supported_launch_args);
+                        throw new ArgumentException(ExceptionMessages.not_supported_launch_args);
                     }
                     HandleArgumentPair(splitted);
                 }
@@ -134,7 +135,7 @@ namespace DafnyLanguageServer.Tools
             }
         }
 
-        private void HandleArgumentPair(string[] splitted)
+        private void HandleArgumentPair(IReadOnlyList<string> splitted)
         {
             string key = splitted[0];
             string value = splitted[1];
@@ -166,7 +167,7 @@ namespace DafnyLanguageServer.Tools
 
         private void Validate()
         {
-            if ((int)LanguageServerConfig.LogLevel < 0 || (int)LanguageServerConfig.LogLevel > 5)
+            if (LanguageServerConfig.LogLevel < 0 || (int)LanguageServerConfig.LogLevel > 5)
             {
                 AddError("LogLevel exceeds limits. Must be between 0 and 6. Setting to default LogLevel 4 = Error"); // todo lang file #102
                 LanguageServerConfig.LogLevel = LogLevel.Error;

@@ -29,7 +29,7 @@ namespace DafnyLanguageServer.Handler
             _router = router;
             _workspaceManager = workspaceManager;
             _documentSelector = new DocumentSelector(
-                new DocumentFilter()
+                new DocumentFilter
                 {
                     Pattern = Resources.ConfigurationStrings.file_watch_pattern
                 });

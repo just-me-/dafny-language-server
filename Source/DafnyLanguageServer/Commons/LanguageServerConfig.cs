@@ -1,5 +1,4 @@
-﻿using System.Security.RightsManagement;
-using System.Text;
+﻿using System.Text;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;

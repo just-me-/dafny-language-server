@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
@@ -55,7 +53,7 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
         public List<ISymbol> Descendants { get; set; }                     //Descendants: alles was drunter liegt
-        public bool IsDeclaration => DeclarationOrigin == this;
+        public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
 
         public ISymbol Module { get; set; }
         public ISymbol AssociatedDefaultClass => Module?[SymbolTableStrings.default_class];
@@ -84,15 +82,15 @@ namespace DafnyLanguageServer.SymbolTable
             set => ChildrenHash.Add(index, value);
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is SymbolInformation)
             {
                 var symbol = (SymbolInformation)obj;
-                return (symbol.Name == Name
+                return symbol.Name == Name
                         && symbol.Line == Line
                         && symbol.ColumnStart == ColumnStart
-                        && symbol.ColumnEnd == ColumnEnd);
+                        && symbol.ColumnEnd == ColumnEnd;
             }
             return false;
         }
@@ -100,16 +98,16 @@ namespace DafnyLanguageServer.SymbolTable
         public override int GetHashCode()
         {
             int hash = 13;
-            hash = (hash * 7) + Name.GetHashCode();
-            hash = (hash * 7) + Line.GetHashCode();
-            return (hash * 7) + ColumnStart.GetHashCode();
+            hash = hash * 7 + File.GetHashCode();
+            hash = hash * 7 + Line.GetHashCode();
+            return hash * 7 + ColumnStart.GetHashCode();
         }
 
         public bool Wraps(ISymbol child)
         {
             if (child is SymbolInformation childSymbol)
             {
-                return childSymbol != null && this.Wraps(child.File, (int)childSymbol.Line, (int)childSymbol.Column);
+                return this.Wraps(child.File, (int)childSymbol.Line, (int)childSymbol.Column);
             }
             return false;
         }
@@ -129,33 +127,34 @@ namespace DafnyLanguageServer.SymbolTable
 
         private bool HasLine()
         {
-            return (Line != null && LineEnd != null);
+            return Line != null && LineEnd != null;
         }
 
         private bool WrapsLine(int line, int character)
         {
-            return ((Line < line && LineEnd > line)
-                   || (Line == line && ColumnStart <= character)
-                   || (LineEnd == line && Position?.BodyEndToken?.col >= character)
+            return (
+                       (Line < line && LineEnd > line)
+                    || (Line == line && ColumnStart <= character)
+                    || (LineEnd == line && Position?.BodyEndToken?.col >= character)
                    )
                    && Line != LineEnd;
         }
 
         private bool WrapsCharOnSameLine(int line, int character)
         {
-            return (LineStart == LineEnd
+            return LineStart == LineEnd
                     && LineStart == line
                     && ColumnStart <= character
-                    && ColumnEnd >= character);
+                    && ColumnEnd >= character;
         }
 
         private bool WrapsAsClassField(int line, int character)
         {
             // Class fields do not have LineStart/LineEnd. This fields are a special case.
-            return (Kind == Kind.Field && LineEnd == 0
+            return Kind == Kind.Field && LineEnd == 0
                     && Line == line
                     && ColumnStart <= character
-                    && ColumnEnd >= character);
+                    && ColumnEnd >= character;
         }
 
 
@@ -186,7 +185,7 @@ namespace DafnyLanguageServer.SymbolTable
         Field,
         Variable, //besser: Local Variable?
         Undefined,
-        BlockScope,
+        BlockScope
     }
 
     public class TokenPosition

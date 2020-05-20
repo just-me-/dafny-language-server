@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Boogie;
 using Microsoft.Dafny;
 using System.Collections.Generic;
 using Type = Microsoft.Dafny.Type;
@@ -44,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         ISymbol this[string index] { get; set; }
 
-        bool Equals(Object obj); // todo is this used? 
+        bool Equals(object obj); // todo is this used?
         int GetHashCode();
     }
 }

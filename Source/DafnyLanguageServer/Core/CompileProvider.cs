@@ -50,7 +50,7 @@ namespace DafnyLanguageServer.Core
 
             bool hasMain = new Microsoft.Dafny.CsharpCompiler(Dp.reporter).HasMain(Dp, out _);
 
-            return new CompilerResults()
+            return new CompilerResults
             {
                 Error = false,
                 Executable = hasMain,

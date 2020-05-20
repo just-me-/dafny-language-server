@@ -123,11 +123,11 @@
   </data>
   <data name="default_class" xml:space="preserve">
     <value>_default</value>
-    <comment>Dafnys naming for the default class namsepcae</comment>
+    <comment>Dafny's naming for the default class namespace</comment>
   </data>
   <data name="default_module" xml:space="preserve">
     <value>_module</value>
-    <comment>Dafnys naming for the default module namsepcae</comment>
+    <comment>Dafny's naming for the default module namespace</comment>
   </data>
   <data name="root_node" xml:space="preserve">
     <value>_programRootNode</value>

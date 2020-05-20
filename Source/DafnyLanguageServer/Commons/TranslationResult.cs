@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DafnyLanguageServer.DafnyAccess;
 using MSBoodie = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.Commons

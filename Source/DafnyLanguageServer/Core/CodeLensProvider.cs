@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.SymbolTable;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,8 +10,8 @@ namespace DafnyLanguageServer.Core
 {
     public class CodeLensProvider : ICodeLensProvider
     {
-        private IManager _manager;
-        private Uri _uri;
+        private readonly IManager _manager;
+        private readonly Uri _uri;
 
         public CodeLensProvider(IManager manager, Uri uri)
         {
@@ -35,6 +33,7 @@ namespace DafnyLanguageServer.Core
 
         private CodeLens CreateCodeLensItem(ISymbol symbolInformation)
         {
+            
             Position position = new Position((long)symbolInformation.Line - 1, 0);
             Range range = new Range { Start = position, End = position };
 

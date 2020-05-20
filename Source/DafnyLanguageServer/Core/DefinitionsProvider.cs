@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.SymbolTable;
-using DafnyLanguageServer.Tools;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+// ReSharper disable PossibleInvalidOperationException
+// Nullchecks are done elsewhere.
 
 namespace DafnyLanguageServer.Core
 {

@@ -2,7 +2,6 @@
 using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -33,7 +32,7 @@ namespace DafnyLanguageServer.Handler
 
     public class CompileHandler : LspBasicHandler<object>, ICompile
     {
-        public CompileHandler(ILanguageServer router, Workspace b, ILoggerFactory lf)
+        public CompileHandler(ILanguageServer router, IWorkspace b, ILoggerFactory lf)
             : base(router, b, lf)
         {
         }

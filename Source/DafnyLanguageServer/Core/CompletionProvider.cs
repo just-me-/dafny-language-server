@@ -32,12 +32,12 @@ namespace DafnyLanguageServer.Core
             var completionItems = new List<CompletionItem>();
             foreach (var symbol in GetSymbols(desire, entryPoint))
             {
-                completionItems.Add(CreateCompletionItem(symbol, desire, line, col));
+                completionItems.Add(CreateCompletionItem(symbol, desire));
             }
             return completionItems;
         }
 
-        private CompletionItem CreateCompletionItem(ISymbol symbol, CompletionType desire, int line, int col)
+        private CompletionItem CreateCompletionItem(ISymbol symbol, CompletionType desire)
         {
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
@@ -147,7 +147,7 @@ namespace DafnyLanguageServer.Core
         private IEnumerable<ISymbol> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(x => (x.Kind == Kind.Class) && IsNoDefaultNamespace(x))))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
             {
                 yield return suggestionElement;
             }
@@ -156,7 +156,7 @@ namespace DafnyLanguageServer.Core
         private IEnumerable<ISymbol> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, new Predicate<ISymbol>(IsNoDefaultNamespace)))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
             {
                 yield return suggestionElement;
             }
@@ -164,9 +164,9 @@ namespace DafnyLanguageServer.Core
 
         private bool IsNoDefaultNamespace(ISymbol element)
         {
-            return (element.Name != SymbolTableStrings.default_class &&
-                    element.Name != SymbolTableStrings.default_module &&
-                    element.Kind != Kind.Constructor);
+            return element.Name != SymbolTableStrings.default_class &&
+                   element.Name != SymbolTableStrings.default_module &&
+                   element.Kind != Kind.Constructor;
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using System;
-using DafnyLanguageServer.DafnyAccess;
 using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -43,7 +40,7 @@ namespace DafnyLanguageServer.Handler
     public class CounterExampleHandler : LspBasicHandler<object>, ICounterExample
     {
 
-        public CounterExampleHandler(ILanguageServer router, Workspace b, ILoggerFactory loggerFactory)
+        public CounterExampleHandler(ILanguageServer router, IWorkspace b, ILoggerFactory loggerFactory)
         : base(router, b, loggerFactory)
         {
         }
@@ -55,7 +52,7 @@ namespace DafnyLanguageServer.Handler
             try
             {
                 var file = _workspaceManager.GetFileRepository(request.DafnyFile);
-                return await Task.Run(() => file.CounterExample());
+                return await Task.Run(() => file.CounterExample(), cancellationToken);
             }
             catch (Exception e)
             {

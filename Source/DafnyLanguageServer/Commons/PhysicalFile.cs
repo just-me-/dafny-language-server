@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.Commons
             //we need to correct this here.
             get
             {
-                var windowsCorrectionPattern = @"/\w:[/\\].*";  //finds /C:/xyz  and /C:\xyz
+                const string windowsCorrectionPattern = @"/\w:[/\\].*"; //finds /C:/xyz  and /C:\xyz
                 var match = Regex.Match(_filepath, windowsCorrectionPattern);
                 if (match.Success)
                 {
@@ -81,7 +81,7 @@ namespace DafnyLanguageServer.Commons
             return result;
         }
 
-        private bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
+        private static bool ReachedTargetPosition(int currentLine, int targetLine, int currentCol, int targetCol)
         {
             return currentLine == targetLine && currentCol == targetCol;
         }
@@ -90,7 +90,7 @@ namespace DafnyLanguageServer.Commons
         public string GetSourceLine(int line)
         {
             var codeLines = Regex.Split(this.Sourcecode, "\r\n|\r|\n");
-            return (codeLines.Length >= line) ? codeLines[line] : "";
+            return codeLines.Length >= line ? codeLines[line] : "";
         }
 
         /// <summary>

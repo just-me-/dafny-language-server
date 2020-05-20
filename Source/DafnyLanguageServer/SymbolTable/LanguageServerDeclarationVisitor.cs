@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Serilog.Sinks.File;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
-using Type = Microsoft.Dafny.Type;
-using Visitor = Microsoft.Dafny.Visitor;
+// ReSharper disable RedundantArgumentDefaultValue
+// Parameters explicitly stated for clarity.
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -88,9 +81,9 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(Field o)
         {
             UserDefinedType userType = null;
-            if (o.Type != null && o.Type is UserDefinedType)
+            if (o.Type is UserDefinedType type)
             {
-                userType = o.Type as UserDefinedType;
+                userType = type;
             }
 
             var symbol = CreateSymbol(

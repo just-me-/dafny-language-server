@@ -16,12 +16,12 @@ namespace ProgramTest
     public class ConfigInitializerTest
     {
 
-        private static readonly string defaultLogFolder = FileAndFolderLocator.logFolder;
+        private static readonly string defaultLogFolder = FileAndFolderLocations.logFolder;
         private static string CombinePath(string path, string file) => Path.GetFullPath(Path.Combine(path, file));
         private static string CombineWithDefaultLogFolder(string file) => CombinePath(defaultLogFolder, file);
 
-        private static string defaultLog = FileAndFolderLocator.defaultLogFile;
-        private static string defaultStream = FileAndFolderLocator.defaultStreamFile;
+        private static string defaultLog = FileAndFolderLocations.defaultLogFile;
+        private static string defaultStream = FileAndFolderLocations.defaultStreamFile;
 
 
         #region WithCfgFiles

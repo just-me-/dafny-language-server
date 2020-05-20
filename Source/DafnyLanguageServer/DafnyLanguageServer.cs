@@ -9,7 +9,6 @@ using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using Serilog;
 using DidChangeWatchedFilesHandler = DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler;
 using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
@@ -24,11 +23,11 @@ namespace DafnyLanguageServer
     /// It does also use owr <c>ConfigInitializer</c> to provide customized settings for the server.
     /// It also redirects the output stream. 
     /// </summary>
-    class DafnyLanguageServer
+    public class DafnyLanguageServer
     {
         private ILogger log;
         private MessageSenderService msgSender;
-        private ConfigInitializationErrors configInitErrors;
+        private readonly ConfigInitializationErrors configInitErrors;
 
         public DafnyLanguageServer(string[] args)
         {
@@ -150,7 +149,7 @@ namespace DafnyLanguageServer
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<Workspace>();
+            services.AddSingleton<IWorkspace, Workspace>();
             services.AddLogging();
         }
     }

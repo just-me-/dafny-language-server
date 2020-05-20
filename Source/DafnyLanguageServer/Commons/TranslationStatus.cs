@@ -1,6 +1,6 @@
 ﻿namespace DafnyLanguageServer.Commons
 {
-    public enum  TranslationStatus
+    public enum TranslationStatus
     {
         Virgin, 
         Parsed, 

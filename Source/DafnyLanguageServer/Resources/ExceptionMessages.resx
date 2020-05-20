@@ -132,7 +132,7 @@
     <value>Config file not found at:</value>
   </data>
 	<data name="could_not_collect_models" xml:space="preserve">
-    <value>Error while collectiong (counter example) models.</value>
+    <value>Error while collecting (counter example) models.</value>
   </data>
 	<data name="could_not_execute_compilation" xml:space="preserve">
     <value>Error while executing compilation.</value>
@@ -163,7 +163,7 @@
   </data>
 	<data name="unexpected_file_type" xml:space="preserve">
     <value>Expected string or TextDocumentChangeEvent-Container at text-document-change event request.</value>
-    <comment>Used in the WokrspaceManager, UpdateFile(). </comment>
+    <comment>Used in the WorkspaceManager, UpdateFile(). </comment>
   </data>
 	<data name="visit_only_declarations" xml:space="preserve">
     <value>This visitor must only visit declarations.</value>

@@ -2,20 +2,11 @@
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.SymbolTable;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Dafny;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -25,7 +16,7 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CodeLensTaskHandler : LspBasicHandler<CodeLensCapability>, ICodeLensHandler
     {
-        public CodeLensTaskHandler(ILanguageServer router, Workspace workspaceManager, ILoggerFactory loggingFactory)
+        public CodeLensTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
         }

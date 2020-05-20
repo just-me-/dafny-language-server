@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Boogie;
 using Microsoft.Dafny;
-using Serilog.Sinks.File;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
-using Visitor = Microsoft.Dafny.Visitor;
+// ReSharper disable RedundantArgumentDefaultValue
+// explicitly stated for clarity.
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -81,14 +77,14 @@ namespace DafnyLanguageServer.SymbolTable
                 foreach (var baseClassType in o.TraitsTyp)
                 {
                     var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
-                    ISymbol baseSymbol = FindDeclaration(baseClassIdentifier.Name, SurroundingScope);
+                    ISymbol baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);
                     preDeclaredSymbol.BaseClasses.Add(baseSymbol);
                     //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
                     var t = CreateSymbol(
-                      name: baseClassIdentifier.Name,
-                      positionAsToken: baseClassIdentifier.tok,
-                      bodyStartPosAsToken: baseClassIdentifier.tok,
-                      bodyEndPosAsToken: baseClassIdentifier.tok,
+                      name: baseClassIdentifier?.Name,
+                      positionAsToken: baseClassIdentifier?.tok,
+                      bodyStartPosAsToken: baseClassIdentifier?.tok,
+                      bodyEndPosAsToken: baseClassIdentifier?.tok,
                       kind: Kind.Class,
                       type: baseClassType,
                       typeDefinition: baseClassIdentifier,
@@ -338,7 +334,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
+            var declaration = nav.GetSymbolByPosition(RootNode, t?.ResolvedClass.tok);
 
             var symbol = CreateSymbol(
                 name: t.Name,
@@ -461,7 +457,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
             var nav = new SymbolTableNavigator();
-            var definingItem = nav.TopDown(RootNode, mse.Member.tok);
+            var definingItem = nav.TopDown(RootNode, mse?.Member.tok);
 
 
             //string definingClassName = e.Lhs.Type.ToString(); //hier müsste eh .name und so aber geht net weil type zu allg blabla
