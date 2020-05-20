@@ -213,6 +213,7 @@
       <DependentUpon>SymbolTableStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\ConfigInitializer.cs" />
+    <Compile Include="Tools\LoggerCreator.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />
     <Compile Include="Commons\DiagnosticElement.cs" />
     <Compile Include="Handler\LspStandard\CodeLensTaskHandler.cs" />

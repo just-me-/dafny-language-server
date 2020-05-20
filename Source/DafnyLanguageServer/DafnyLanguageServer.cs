@@ -34,7 +34,7 @@ namespace DafnyLanguageServer
             var configInitializer = new ConfigInitializer(args);
             configInitializer.SetUp();
             configInitErrors = configInitializer.InitializationErrors;
-            SetupLogger();
+            log = LoggerCreator.GetLogger();
         }
 
         public async Task StartServer()
@@ -70,7 +70,7 @@ namespace DafnyLanguageServer
 
             CreateMsgSender(server);
             SendServerStartedInformation();
-            CheckForConfigReader();
+            CheckForConfigErrors();
 
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
             // code should no longer make prints but lets keep it for additional safety.
@@ -104,48 +104,15 @@ namespace DafnyLanguageServer
             log.Debug(Resources.LoggingMessages.server_running);
         }
 
-        private void CheckForConfigReader()
+        private void CheckForConfigErrors()
         {
-            if (configInitErrors.HasErrors)
+            if (!configInitErrors.HasErrors)
             {
-                var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {configInitErrors.ErrorMessages}";
-                msgSender.SendWarning(msg);
-                log.Warning(msg);
+                return;
             }
-        }
-
-        private void SetupLogger()
-        {
-            var loggerconfig = new LoggerConfiguration();
-
-            switch (LanguageServerConfig.LogLevel)
-            {
-                case LogLevel.Trace:
-                    loggerconfig.MinimumLevel.Verbose();
-                    break;
-                case LogLevel.Debug:
-                    loggerconfig.MinimumLevel.Debug();
-                    break;
-                case LogLevel.Information:
-                    loggerconfig.MinimumLevel.Information();
-                    break;
-                case LogLevel.Warning:
-                    loggerconfig.MinimumLevel.Warning();
-                    break;
-                case LogLevel.Critical:
-                    loggerconfig.MinimumLevel.Fatal();
-                    break;
-
-                default:
-                    loggerconfig.MinimumLevel.Error();
-                    break;
-
-            }
-
-            log = loggerconfig
-                .Enrich.FromLogContext()
-                .WriteTo.File(LanguageServerConfig.LogFile, fileSizeLimitBytes: 1024 * 1024)
-                .CreateLogger();
+            var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {configInitErrors.ErrorMessages}";
+            msgSender.SendWarning(msg);
+            log.Warning(msg);
         }
 
         private void ConfigureServices(IServiceCollection services)
