@@ -67,12 +67,7 @@ namespace RenameTest
         {
             string text = "♥";
             Run(f, 16, 17, text);
-            List<string> expected = new List<string>()
-            {
-                text + " at L15:C16 - L15:C19",
-                text + " at L16:C18 - L16:C21"
-            };
-            VerifyForSingleFile(expected);
+            Assert.IsNull(result);
         }
 
         [Test]
@@ -80,12 +75,7 @@ namespace RenameTest
         {
             string text = "{}[]]@##@#";
             Run(f, 16, 17, text);
-            List<string> expected = new List<string>()
-            {
-                text + " at L15:C16 - L15:C19",
-                text + " at L16:C18 - L16:C21"
-            };
-            VerifyForSingleFile(expected);
+            Assert.IsNull(result);
         }
 
 
