@@ -217,7 +217,7 @@
     <Compile Include="Commons\DiagnosticElement.cs" />
     <Compile Include="Handler\LspStandard\CodeLensTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\WorkspaceHandlers.cs" />
-    <Compile Include="Tools\LanguageServerConfig.cs" />
+    <Compile Include="Commons\LanguageServerConfig.cs" />
     <Compile Include="Tools\MessageSenderService.cs" />
     <Compile Include="Handler\LspStandard\CompletionTaskHandler.cs" />
     <Compile Include="Handler\LspExtension\CounterExampleHandler.cs" />

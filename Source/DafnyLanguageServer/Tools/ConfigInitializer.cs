@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
@@ -10,32 +12,29 @@ namespace DafnyLanguageServer.Tools
     /// </summary>
     public class ConfigInitializer
     {
-        private const string defaultCfgFile = "./LanguageServerConfig.json"; // todo das evt auch konfigurierbar? ... #105
-        private const string defaultStreamPath = "../Logs/StreamRedirection.txt";
-        private const string defaultLogPath = "../Logs/Log.txt";
-
-        public LanguageServerConfig Config { get; set; } = new LanguageServerConfig();
 
         private string[] LaunchArguments { get; }
-        private string AssemblyPath { get; set; }
-        private string PathToJSONConfigFile { get; }
+        private string JSONConfigFile { get; }
 
         //Log Levels (starting from 0)
         //Trace - Debug - Info - Warning - Error - Critical - None
 
-        public ConfigInitializer(string[] launchArguments)
+        /// <summary>
+        /// This constructor uses the default config files.
+        /// If you want to inject a custom config.json, use the overloaded constructor.
+        /// </summary>
+        public ConfigInitializer(string[] launchArguments) : this(launchArguments, FileAndFolderLocator.languageServerJSONConfigFile)
         {
-            LaunchArguments = launchArguments;
-            AssemblyPath = Path.GetDirectoryName(typeof(ConfigInitializer).Assembly.Location);
-            PathToJSONConfigFile = Path.Combine(AssemblyPath, defaultCfgFile);
-            SetUp();
         }
 
-        public ConfigInitializer(string[] launchArguments, string pathToJsonConfigFile)
+        /// <summary>
+        /// This constructor allows injection of a custom json config file for testing.
+        /// </summary>
+        /// <param name="jsonConfigFile">Inject a custom json here for testing</param>
+        public ConfigInitializer(string[] launchArguments, string jsonConfigFile)
         {
             LaunchArguments = launchArguments;
-            AssemblyPath = Path.GetDirectoryName(typeof(ConfigInitializer).Assembly.Location);
-            PathToJSONConfigFile = pathToJsonConfigFile;
+            JSONConfigFile = jsonConfigFile;
             SetUp();
         }
 
@@ -59,12 +58,12 @@ namespace DafnyLanguageServer.Tools
         {
             try
             {
-                if (!File.Exists(PathToJSONConfigFile))
+                if (!File.Exists(JSONConfigFile))
                 {
-                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + PathToJSONConfigFile); // todo lang file #102
+                    throw new FileNotFoundException(Resources.ExceptionMessages.config_file_not_found + " " + JSONConfigFile); // todo lang file #102
                 }
 
-                JObject cfg = JObject.Parse(File.ReadAllText(PathToJSONConfigFile));
+                JObject cfg = JObject.Parse(File.ReadAllText(JSONConfigFile));
 
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
