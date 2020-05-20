@@ -3,6 +3,8 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer;
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
@@ -14,12 +16,12 @@ namespace ProgramTest
     {
 
         private static readonly string assemblyPath = Path.GetDirectoryName(typeof(ConfigInitializerTest).Assembly.Location);
-        private static readonly string defaultLogPath = CombinePath(assemblyPath, "../Logs");
+        private static readonly string defaultLogPath = FileAndFolderLocator.defaultLogFile;
         private static string CombinePath(string path, string file) => Path.GetFullPath(Path.Combine(path, file));
         private static string CombineWithDefaultLogFolder(string file) => CombinePath(defaultLogPath, file);
 
-        private static string defaultLog = CombineWithDefaultLogFolder("Log.txt");
-        private static string defaultStream = CombineWithDefaultLogFolder("StreamRedirection.txt");
+        private static string defaultLog = FileAndFolderLocator.defaultLogFile;
+        private static string defaultStream = FileAndFolderLocator.defaultStreamFile;
 
 
         #region WithCfgFiles
@@ -33,12 +35,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -47,17 +49,17 @@ namespace ProgramTest
             string configFile = Files.cr_fine;
             var ci = new ConfigInitializer(new string[] { }, configFile);
 
-            string expectedLogFile = CombineWithDefaultLogFolder("../Binaries/b.txt");
-            string expectedStreamFile = CombineWithDefaultLogFolder("../Binaries/a.txt");
+            string expectedLogFile = CombineWithDefaultLogFolder("./Binaries/b.txt");
+            string expectedStreamFile = CombineWithDefaultLogFolder("./Binaries/a.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -70,14 +72,14 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("same files"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("same files"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -90,12 +92,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
 
@@ -108,12 +110,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
 
@@ -126,12 +128,12 @@ namespace ProgramTest
             string expectedStreamFile = CombineWithDefaultLogFolder("Log.log");
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
 
@@ -144,12 +146,12 @@ namespace ProgramTest
             string expectedStreamFile = CombineWithDefaultLogFolder("Log");
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
 
         }
 
@@ -164,13 +166,13 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("escape sequence"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("escape sequence"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -183,13 +185,13 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("parsing"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -202,13 +204,13 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("parsing"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -221,13 +223,13 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("exceeds"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("exceeds"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -240,12 +242,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -255,15 +257,15 @@ namespace ProgramTest
             var ci = new ConfigInitializer(new string[] { }, configFile);
 
             string expectedLogFile = defaultLog;
-            string expectedStreamFile = CombineWithDefaultLogFolder("../Binaries/1"); //int as path will just use this as file name
+            string expectedStreamFile = CombineWithDefaultLogFolder("./Binaries/1"); //int as path will just use this as file name
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
 
@@ -273,16 +275,16 @@ namespace ProgramTest
             string configFile = Files.cr_wrongLogPathType;
             var ci = new ConfigInitializer(new string[] { }, configFile);
 
-            string expectedLogFile = CombineWithDefaultLogFolder("../Binaries/2");
+            string expectedLogFile = CombineWithDefaultLogFolder("./Binaries/2");
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error);
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         #endregion
@@ -298,13 +300,13 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("file not found"));
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("file not found"));
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         #endregion
@@ -317,18 +319,18 @@ namespace ProgramTest
         {
             string configFile = CombinePath("/", "abasdfasfdsa.json");
 
-            var ci = new ConfigInitializer(new string[] { "/log:../Logs/a.txt", "/stream:../Logs/b.txt", "/loglevel:0" }, configFile);
+            var ci = new ConfigInitializer(new string[] { "/log:./Logs/a.txt", "/stream:./Logs/b.txt", "/loglevel:0" }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
 
@@ -337,18 +339,18 @@ namespace ProgramTest
         {
             string configFile = Files.cr_default;
 
-            var ci = new ConfigInitializer(new string[] { "/log:../Logs/a.txt", "/stream:../Logs/b.txt", "/loglevel:0" }, configFile);
+            var ci = new ConfigInitializer(new string[] { "/log:./Logs/a.txt", "/stream:./Logs/b.txt", "/loglevel:0" }, configFile);
 
             string expectedLogFile = CombineWithDefaultLogFolder("a.txt");
             string expectedStreamFile = CombineWithDefaultLogFolder("b.txt");
             LogLevel expectedLogLevel = LogLevel.Trace;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.Config.Error, "Error Mismatch");
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -362,14 +364,14 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("Unknown switch"));
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("Unknown switch"));
 
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -383,14 +385,14 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("parsing"));
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
 
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -404,15 +406,15 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.IsTrue(ci.Config.ErrorMsg.Contains("No Argument provided"));
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("No Argument provided"));
 
 
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -426,12 +428,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         [Test]
@@ -445,12 +447,12 @@ namespace ProgramTest
             string expectedStreamFile = defaultStream;
             LogLevel expectedLogLevel = LogLevel.Error;
 
-            Console.WriteLine(ci.Config);
+            Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.Config.Error, "Error Mismatch");
-            Assert.AreEqual(expectedLogFile, ci.Config.LogFile);
-            Assert.AreEqual(expectedStreamFile, ci.Config.RedirectedStreamFile);
-            Assert.AreEqual(expectedLogLevel, ci.Config.Loglevel);
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
+            Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
+            Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
         #endregion

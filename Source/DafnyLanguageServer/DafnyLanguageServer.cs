@@ -28,12 +28,14 @@ namespace DafnyLanguageServer
     {
         private ILogger log;
         private MessageSenderService msgSender;
+        private ConfigInitializationErrors configInitErrors;
 
         public DafnyLanguageServer(string[] args)
         {
             var configInitializer = new ConfigInitializer(args);
             configInitializer.SetUp();
-            SetupLogger(); //das komisch... sollte oben iwie rein wenn möglich.
+            configInitErrors = configInitializer.InitializationErrors;
+            SetupLogger();
         }
 
         public async Task StartServer()
@@ -103,15 +105,15 @@ namespace DafnyLanguageServer
             log.Debug(Resources.LoggingMessages.server_running);
         }
 
-        //private void CheckForConfigReader()
-        //{
-        //    if (config.Error) //todo bruachen wir das?
-        //    {
-        //        var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {config.ErrorMsg}";
-        //        msgSender.SendWarning(msg);
-        //        log.Warning(msg);
-        //    }
-        //}
+        private void CheckForConfigReader()
+        {
+            if (configInitErrors.HasErrors)
+            {
+                var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {configInitErrors.ErrorMessages}";
+                msgSender.SendWarning(msg);
+                log.Warning(msg);
+            }
+        }
 
         private void SetupLogger()
         {

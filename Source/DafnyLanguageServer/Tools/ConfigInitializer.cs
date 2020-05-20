@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 
 namespace DafnyLanguageServer.Tools
 {
@@ -12,6 +14,8 @@ namespace DafnyLanguageServer.Tools
     /// </summary>
     public class ConfigInitializer
     {
+        public ConfigInitializationErrors InitializationErrors { get; } = new ConfigInitializationErrors();
+
 
         private string[] LaunchArguments { get; }
         private string JSONConfigFile { get; }
@@ -39,11 +43,18 @@ namespace DafnyLanguageServer.Tools
 
         public void SetUp()
         {
-            SetDefaults();
-            ReadJSONConfig();
-            ReadArgs();
-            Validate();
-            ImprovePathLayout();
+            try
+            {
+                SetDefaults();
+                ReadJSONConfig();
+                ReadArgs();
+                Validate();
+                ImprovePathLayout();
+            }
+            catch (Exception e)
+            {
+                AddExceptionToError(e);
+            }
         }
 
         private void SetDefaults()
@@ -64,7 +75,7 @@ namespace DafnyLanguageServer.Tools
 
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
-                var cfgLevel = cfg["logging"]["loglevel"];
+                var cfgLevel = cfg["logging"]["LogLevel"];
                 var syncKind = cfg["syncKind"];
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
@@ -74,17 +85,22 @@ namespace DafnyLanguageServer.Tools
 
                 if (cfgLog != null)
                 {
-                    Config.LogFile = Path.Combine(AssemblyPath, (string)cfgLog);
+                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocator.rootFolder, (string)cfgLog);
                 }
 
                 if (cfgStream != null)
                 {
-                    Config.RedirectedStreamFile = Path.Combine(AssemblyPath, (string)cfgStream);
+                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocator.rootFolder, (string)cfgStream);
                 }
 
                 if (cfgLevel != null)
                 {
-                    Config.Loglevel = (LogLevel)(int)cfgLevel;
+                    LanguageServerConfig.LogLevel = (LogLevel)(int)cfgLevel;
+                }
+
+                if (syncKind != null)
+                {
+                    LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), (string)syncKind, true);
                 }
 
             }
@@ -125,20 +141,23 @@ namespace DafnyLanguageServer.Tools
 
             if (value.Length < 1)
             {
-                throw new ArgumentException("No Argument provided for switch '" + key); // todo lang file #102
+                throw new ArgumentException("No Argument provided for switch " + key); // todo lang file #102
 
             }
 
             switch (key.ToLower())
             {
                 case "/stream":
-                    Config.RedirectedStreamFile = Path.Combine(AssemblyPath, value);
+                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocator.rootFolder, value);
                     break;
                 case "/log":
-                    Config.LogFile = Path.Combine(AssemblyPath, value);
+                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocator.rootFolder, value);
                     break;
                 case "/loglevel":
-                    Config.Loglevel = (LogLevel)int.Parse(value);
+                    LanguageServerConfig.LogLevel = (LogLevel)int.Parse(value);
+                    break;
+                case "/synckind":
+                    LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), value, true);
                     break;
                 default:
                     throw new ArgumentException("Unknown switch: '" + key + "'. Please refer to readme.md"); // todo lang file #102
@@ -147,17 +166,17 @@ namespace DafnyLanguageServer.Tools
 
         private void Validate()
         {
-            if ((int)Config.Loglevel < 0 || (int)Config.Loglevel > 7)
+            if ((int)LanguageServerConfig.LogLevel < 0 || (int)LanguageServerConfig.LogLevel > 5)
             {
-                AddError("Loglevel exceeds limits. Must be between 0 and 7. Setting to default Loglevel 4 = Error"); // todo lang file #102
-                Config.Loglevel = LogLevel.Error;
+                AddError("LogLevel exceeds limits. Must be between 0 and 6. Setting to default LogLevel 4 = Error"); // todo lang file #102
+                LanguageServerConfig.LogLevel = LogLevel.Error;
             }
         }
 
         private void ImprovePathLayout()
         {
-            Config.RedirectedStreamFile = Path.GetFullPath(Config.RedirectedStreamFile);
-            Config.LogFile = Path.GetFullPath(Config.LogFile);
+            LanguageServerConfig.RedirectedStreamFile = Path.GetFullPath(LanguageServerConfig.RedirectedStreamFile);
+            LanguageServerConfig.LogFile = Path.GetFullPath(LanguageServerConfig.LogFile);
         }
 
 
@@ -172,10 +191,19 @@ namespace DafnyLanguageServer.Tools
 
         private void AddError(string msg)
         {
-            Config.Error = true;
-            Config.ErrorMessages.AppendLine(msg);
+            InitializationErrors.HasErrors = true;
+            InitializationErrors.MessageCollector.AppendLine(msg);
         }
 
-       
+
+    }
+
+    public class ConfigInitializationErrors
+    {
+        public bool HasErrors { get; set; }
+        public StringBuilder MessageCollector { get; } = new StringBuilder();
+        public string ErrorMessages => MessageCollector.ToString();
+
+
     }
 }
