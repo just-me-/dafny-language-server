@@ -184,13 +184,15 @@
   <ItemGroup>
     <Compile Include="Core\CodeLensProvider.cs" />
     <Compile Include="Core\DefinitionsProvider.cs" />
+    <Compile Include="Core\HoverProvider.cs" />
     <Compile Include="Core\DiagnosticsProvider.cs" />
-    <Compile Include="Core\ICodeLensProvider.cs" />
-    <Compile Include="Core\IDefinitionsProvider.cs" />
-    <Compile Include="Core\IDiagnosticsProvider.cs" />
-    <Compile Include="Core\ICounterExampleProvider.cs" />
-    <Compile Include="Core\ICompletionProvider.cs" />
-    <Compile Include="Core\ICompileProvider.cs" />
+    <Compile Include="Core\Interfaces\IHoverProvider.cs" />
+    <Compile Include="Core\Interfaces\ICodeLensProvider.cs" />
+    <Compile Include="Core\Interfaces\IDefinitionsProvider.cs" />
+    <Compile Include="Core\Interfaces\IDiagnosticsProvider.cs" />
+    <Compile Include="Core\Interfaces\ICounterExampleProvider.cs" />
+    <Compile Include="Core\Interfaces\ICompletionProvider.cs" />
+    <Compile Include="Core\Interfaces\ICompileProvider.cs" />
     <Compile Include="DafnyAccess\LanguageServerOutputWriterSink.cs" />
     <Compile Include="Commons\PhysicalFile.cs" />
     <Compile Include="Commons\TranslationResult.cs" />
