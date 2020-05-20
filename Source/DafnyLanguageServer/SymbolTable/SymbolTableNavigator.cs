@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Boogie.VCExprAST;
 using Microsoft.Extensions.Logging;
@@ -46,7 +47,8 @@ namespace DafnyLanguageServer.SymbolTable
                 }
                 // in case no better match was found,
                 // check default scope too
-                if ((bestMatch == null || bestMatch.Equals(rootEntry)) && (child.Name == "_default" || child.Name == "_module")) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
+                if ((bestMatch == null || bestMatch.Equals(rootEntry))
+                    && (child.Name == SymbolTableStrings.default_class || child.Name == SymbolTableStrings.default_module)) //in case merge conflict: das module musste ich hier adden weil ich nun auch (neu dazu gekommen) module durchsuchen muss, und halt auch das defualt module wenne ss onst nix gefunden hat. auf ziele 67 ist noch sowas ähnliches, müsste das da cuh hin?
                 {
                     if (child.Children.Any())
                     {
@@ -196,6 +198,13 @@ namespace DafnyLanguageServer.SymbolTable
                 return list;
             }
             list.AddRange(GetAllChildren(symbol, filter));
+            // in case it is the default scope; add functions and methods in the default scope too (and not only classes) 
+            if (symbol.Parent.Name == SymbolTableStrings.root_node
+                && symbol.Name == SymbolTableStrings.default_module
+                && symbol.ChildrenHash.ContainsKey(SymbolTableStrings.default_class))
+            {
+                list.AddRange(GetAllChildren(symbol.ChildrenHash[SymbolTableStrings.default_class], filter));
+            }
 
             var parent = symbol;
             while (parent.Parent != null)

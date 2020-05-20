@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
@@ -57,7 +58,7 @@ namespace DafnyLanguageServer.SymbolTable
         public bool IsDeclaration => DeclarationOrigin == this;
 
         public ISymbol Module { get; set; }
-        public ISymbol AssociatedDefaultClass => Module?["_default"];
+        public ISymbol AssociatedDefaultClass => Module?[SymbolTableStrings.default_class];
         public string ToNiceString()
         {
             return $"{Name} at Line {Line} in {FileName}";
@@ -118,7 +119,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public bool Wraps(Uri file, int line, int character)
         {
-            return IsSameFile(file) && HasLine() && (WrapsLine(line) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+            return IsSameFile(file) && HasLine() && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
         }
 
         private bool IsSameFile(Uri file)
@@ -131,11 +132,13 @@ namespace DafnyLanguageServer.SymbolTable
             return (Line != null && LineEnd != null);
         }
 
-        private bool WrapsLine(int line)
+        private bool WrapsLine(int line, int character)
         {
-            return (Line <= line
-                    && LineEnd >= line
-                    && Line != LineEnd);
+            return ((Line < line && LineEnd > line)
+                   || (Line == line && ColumnStart <= character)
+                   || (LineEnd == line && Position?.BodyEndToken?.col >= character)
+                   )
+                   && Line != LineEnd;
         }
 
         private bool WrapsCharOnSameLine(int line, int character)

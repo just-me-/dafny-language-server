@@ -54,17 +54,14 @@ namespace DafnyLanguageServer.Handler
 
         private List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
         {
-            var service = new CompletionProvider(_workspaceManager.SymbolTableManager);
-            var desire = service.GetSupposedDesire(codeLine, col);
-            var entryPoint = service.GetWrappingEntrypointSymbol(file, line, col);
+            ICompletionProvider provider = new CompletionProvider(_workspaceManager.SymbolTableManager);
+            var desire = provider.GetSupposedDesire(codeLine, col);
+            var entryPoint = provider.GetWrappingEntrypointSymbol(file, line, col);
 
             var completionItems = new List<CompletionItem>();
-            foreach (var symbol in service.GetSymbols(desire, entryPoint))
+            foreach (var symbol in provider.GetSymbols(desire, entryPoint))
             {
-                if (!symbol.Name.StartsWith("_"))
-                {
-                    completionItems.Add(CreateCompletionItem(symbol, desire, line, col));
-                }
+                completionItems.Add(CreateCompletionItem(symbol, desire, line, col));
             }
             return completionItems;
         }
@@ -74,17 +71,6 @@ namespace DafnyLanguageServer.Handler
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
                 : CompletionItemKind.Reference;
-
-            //Range range = new Range
-            //{
-            //    Start = new Position(line-1, col-3),
-            //    End = new Position(line-1, col-1)
-            //};
-            //TextEdit textEdit = new TextEdit
-            //{
-            //    NewText = symbol.Name,
-            //    Range = range
-            //};
 
             var insertCode = GetCompletionCodeFragment(symbol, desire);
 

@@ -46,11 +46,10 @@ namespace DafnyLanguageServer.Handler
             {
                 return await Task.Run(() =>
                 {
-                    var provider = new CodeLensProvider(_workspaceManager.SymbolTableManager, request.TextDocument.Uri);
+                    ICodeLensProvider provider = new CodeLensProvider(_workspaceManager.SymbolTableManager, request.TextDocument.Uri);
                     return provider.GetCodeLensContainer();
                 });
             }
-
             catch (Exception e)
             {
                 _log.LogError("Internal server error handling CodeLens: " + e.Message); // todo lang file #102
@@ -58,7 +57,5 @@ namespace DafnyLanguageServer.Handler
                 return null; //todo warum return null... ght dat ned eleganter? sendError oder so via new throw ? #107
             }
         }
-
-        
     }
 }

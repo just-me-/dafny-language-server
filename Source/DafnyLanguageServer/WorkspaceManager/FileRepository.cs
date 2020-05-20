@@ -71,7 +71,8 @@ namespace DafnyLanguageServer.WorkspaceManager
             {
                 if (Result.TranslationStatus >= TranslationStatus.Translated)
                 {
-                    return new CounterExampleProvider(PhysicalFile).LoadCounterModel();
+                    ICounterExampleProvider provider = new CounterExampleProvider(PhysicalFile);
+                    return provider.LoadCounterModel();
                 }
             }
             catch (Exception e)
