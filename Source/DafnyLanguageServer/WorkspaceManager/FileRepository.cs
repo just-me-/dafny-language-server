@@ -15,6 +15,7 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// Attributes like Uri, Dafny source code and not buffered informations are stored in the <c>PhysicalFile</c>.
     ///
     /// A <c>FileRepository</c> has also its own <c>TranslationResult</c> with all information provided by the verifier.
+    /// The <c>SymbolTableManager</c> contains a buffered symbol table and allows navigation over it.
     /// </summary>
     public class FileRepository
     {
@@ -32,9 +33,10 @@ namespace DafnyLanguageServer.WorkspaceManager
             Result = results;
         }
 
+       
         public PhysicalFile PhysicalFile { get; }
         public TranslationResult Result { get; private set; }
-        public ISymbolTableManager SymbolTableManager { get; private set; }
+        public ISymbolTableManager SymbolTableManager { get; private set; } = new SymbolTableManager(SymbolTableGenerator.GetEmptySymbolTable());
 
         /// <summary>
         /// Updates the physical file with the provided sourcecode.
@@ -79,6 +81,10 @@ namespace DafnyLanguageServer.WorkspaceManager
             Result = translationUnit.Verify();
         }
 
+
+        /// <summary>
+        /// Sets the SymbolTableManager Property.
+        /// </summary>
         private void AddSymbolTable()
         {
 
@@ -86,11 +92,6 @@ namespace DafnyLanguageServer.WorkspaceManager
             {
                 SymbolTableGenerator s = new SymbolTableGenerator(Result.DafnyProgram);
                 ISymbol rootnode = s.GenerateSymbolTable();
-                SymbolTableManager = new SymbolTableManager(rootnode);
-            }
-            else
-            {
-                ISymbol rootnode = SymbolTableGenerator.GetEmptySymbolTable();
                 SymbolTableManager = new SymbolTableManager(rootnode);
             }
         }

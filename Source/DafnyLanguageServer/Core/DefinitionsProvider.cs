@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-// ReSharper disable PossibleInvalidOperationException
-// Nullchecks are done elsewhere.
 
 namespace DafnyLanguageServer.Core
 {
 
+    /// <summary>
+    /// This service is used by the related handler and contains the core logic.
+    /// </summary>
     public class DefinitionsProvider : IDefinitionsProvider
     {
         private readonly ISymbolTableManager _manager;

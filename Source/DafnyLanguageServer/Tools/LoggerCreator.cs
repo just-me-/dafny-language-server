@@ -5,6 +5,11 @@ using Serilog.Core;
 
 namespace DafnyLanguageServer.Tools
 {
+    /// <summary>
+    /// A static class that provides a logger.
+    /// The log output is a file and defined by the environmental language server config <c>LanguageServerConfig</c>.
+    /// The minimum log level is as well defined by the config.
+    /// </summary>
     public static class LoggerCreator
     {
 

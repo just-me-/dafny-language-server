@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
     /// This Visitor is used to generate the Symbol Table for Dafny code.
-    /// It is an extension of the Microsoft Dafny Visitor Class.
+    /// It will generate symbols for any usages, but not for definitions.
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {

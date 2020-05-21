@@ -61,9 +61,11 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         /// <summary>
-        /// Searches the tree down. Returns the found symbol or null.
-        /// Pay attention to all symbols, not just definitions.
-        /// If you would like only definitions, use <c>TopDown</c>
+        /// Searches the tree downwards to match a specific location.
+        /// Only symbols that wrap the location are searched.
+        /// <returns> Returns the match oder null.</returns>
+        /// This will find all symbols, not only definitions.
+        /// If you would like to search for definitions only, use <c>TopDown</c>
         /// </summary>
         public ISymbol GetSymbolByPosition(ISymbol rootEntry, Uri file, int line, int character)
         {
@@ -95,7 +97,8 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Searches all symbols (not just definitions). An optional filter for the conditions can be specified.
+        /// Searches all symbols (not just definitions) from top to bottom.
+        /// An optional filter for the conditions can be specified.
         /// </summary>
         public List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
@@ -120,7 +123,8 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Starts a search from the inside out. Returns the first symbol found.
+        /// Starts a search from the inside out.
+        /// Aborts the search when the first symbol fulfilling the filter is found.
         /// An optional filter for the conditions can be specified.
         /// </summary>
         public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter = null)
@@ -152,6 +156,9 @@ namespace DafnyLanguageServer.SymbolTable
             return null;
         }
 
+        /// <summary>
+        /// ?? kannst du was schreiben hier marcel todo.
+        /// </summary>
         private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
             if (symbol == null)
@@ -178,7 +185,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Starts a search from the inside out. Returns all symbols found.
+        /// Starts a search from the inside out. Returns all symbols that match a filter.
         /// An optional filter for the conditions can be specified.
         /// </summary>
         public List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter = null)

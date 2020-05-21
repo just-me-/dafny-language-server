@@ -29,6 +29,10 @@ namespace DafnyLanguageServer.Tools
             "var", "where", "while", "yield", "yields"
         };
 
+        /// <summary>
+        /// Reads a maybe more recent list from the json-configurable file.
+        /// </summary>
+        /// <returns>HashSet of reserved words</returns>
         public HashSet<string> GetReservedWords()
         {
             string jsonFile = FileAndFolderLocations.reservedWordList;

@@ -10,8 +10,8 @@ using LocalVariable = Microsoft.Dafny.LocalVariable;
 namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
-    /// This Visitor creates a symbol table visiting only declarations.
-    /// This includes methods, fields classes and modules. 
+    /// This Visitor is used to generate the Symbol Table for Dafny code.
+    /// It will generate symbols for all declarations, but will not take actions for code bodies.
     /// </summary>
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {

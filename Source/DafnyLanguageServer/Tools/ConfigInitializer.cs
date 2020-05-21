@@ -10,16 +10,20 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 
 namespace DafnyLanguageServer.Tools
 {
-    /// <summary>
-    /// This is a reader service for the server configuration file. It is used once by the server start up. 
-    /// </summary>
+
 
 
     //todo das ganze teil hier ist noch urkomisch... evtl einfach sobald iwas schief läuft die efaults nutzen statt so halb halb? ist aber mega viel aufwand und interessiert eh keinen....
     // ich fänds eig nice wenn man so "try to set loglevel -> funzt oder nicht" -> dann das nächste --> dann das nächste und nich tso "oh, loglevel ging nicht, dann exception udn ich mach gar nix weiter".
 
+    /// <summary>
+    /// This is a service to set up the language server config.
+    /// It is used once at the server start up. 
+    /// </summary>
     public class ConfigInitializer
     {
+
+
         public ConfigInitializationErrors InitializationErrors { get; } = new ConfigInitializationErrors();
 
 
@@ -48,6 +52,16 @@ namespace DafnyLanguageServer.Tools
             JSONConfigFile = jsonConfigFile;
         }
 
+        /// <summary>
+        /// This methods sets up the config.
+        /// First, defaults are set.
+        /// Then, they are overwritten by the JSON, if provided.
+        /// Then, they are overwritten by launch arguments, if provided.
+        /// <remarks>
+        /// The method will run to completion and provide defaults in case of errors. 
+        /// In case of errors, they are available in the <c>InitializationErrors</c> property.
+        /// </remarks>
+        /// </summary>
         public void SetUp()
         {
             try
@@ -61,6 +75,7 @@ namespace DafnyLanguageServer.Tools
             catch (Exception e)
             {
                 AddExceptionToError(e);
+                SetDefaults();
             }
         }
 

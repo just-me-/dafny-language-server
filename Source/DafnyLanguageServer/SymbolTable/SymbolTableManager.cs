@@ -10,18 +10,12 @@ namespace DafnyLanguageServer.SymbolTable
 
         public SymbolTableManager(ISymbol root) => DafnyProgramRootSymbol = root;
 
-        // ab hier das meiste auslagern(?)
-        // man kann das erst auslagern, wenn module als base symbol implementiert wurde.
-        // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
-
         public ISymbol GetSymbolByPosition(Uri file, int line, int character)
         {
             INavigator navigator = new SymbolTableNavigator();
             var symbol = navigator.GetSymbolByPosition(DafnyProgramRootSymbol, file, line, character);
             return symbol;
         }
-
-
 
         /// <summary>
         /// In case the user is typing and there can not be an entry point via a Symbol
@@ -57,22 +51,19 @@ namespace DafnyLanguageServer.SymbolTable
         /// This returns all symbol declaration that are in scope for the given symbol.
         /// This recursive and can be used for functions like auto completion.
         /// </summary>
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol)
+        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
-            return GetAllDeclarationForSymbolInScope(symbol, x => true);
-        }
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter)
-        {
+            filter = filter ?? (x => true);
             INavigator navigator = new SymbolTableNavigator();
             bool extendedFilter(ISymbol x) => x.IsDeclaration && x.Kind != Kind.Constructor && filter.Invoke(x);
             return navigator.BottomUpAll(symbol, extendedFilter);
         }
 
         /// <summary>
-        /// Return itself if it is already a declaration.
+        /// Return the declaration of a symbol or itself.
         /// Used for Go2Definition.
         /// </summary>
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)
+        public ISymbol GetOriginFromSymbol(ISymbol symbol)  //todo  direkt symbol.Origin nutzen
         {
             return symbol.DeclarationOrigin;
         }
@@ -102,7 +93,8 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Gets all Symbols for features like CodeLens.
+        /// Gets all Symbol declarations.
+        /// this can for example be used to know where to show CodeLens information.
         /// </summary>
         public List<ISymbol> GetAllSymbolDeclarations()
         {
@@ -119,7 +111,10 @@ namespace DafnyLanguageServer.SymbolTable
             return symbols;
         }
 
-
+        /// <summary>
+        /// Creates a string representation of the symbol tree.
+        /// </summary>
+        /// <returns>Returns a string representation of the symbol table attached to this manager.</returns>
         public string CreateDebugReadOut()
         {
             StringBuilder b = new StringBuilder();

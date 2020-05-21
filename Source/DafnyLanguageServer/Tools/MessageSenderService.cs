@@ -3,8 +3,8 @@
 namespace DafnyLanguageServer.Tools
 {
     /// <summary>
-    /// This service provides for each client supported message an own function for an easy usage.
-    /// This class can be used like a factory for multiple components. 
+    /// This service provides methods to send messages to the client.
+    /// Each severity level supported by the client is represented with an own method for easy usage.
     /// </summary>
     public class MessageSenderService
     {

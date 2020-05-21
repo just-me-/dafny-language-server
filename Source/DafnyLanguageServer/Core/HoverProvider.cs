@@ -5,7 +5,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 namespace DafnyLanguageServer.Core
 {
     /// <summary>
-    /// This service is used by the <c>TextDocumentSyncTaskHandler</c> to provide verification for Dafny files with <c>SendDiagnostics</c>. 
+    /// This service is used by the related handler and contains the core logic.
     /// </summary>
     public class HoverProvider : IHoverProvider
     {

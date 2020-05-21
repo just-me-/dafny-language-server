@@ -15,7 +15,7 @@ namespace DafnyLanguageServer.SymbolTable
         
 
         /// <summary>
-        /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
+        /// A virtual Root Symbol. It covers all range, can not have a parent, and has all top level modules as descendants.
         /// </summary>
         private ISymbol DafnyProgramRootSymbol { get; }
         private Microsoft.Dafny.Program DafnyProgram { get; }
@@ -27,7 +27,10 @@ namespace DafnyLanguageServer.SymbolTable
             DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
         }
 
-
+        /// <summary>
+        /// Generates the symbolt able for the provdied Dafny Program.
+        /// </summary>
+        /// <returns>A single symbol acting as the root entrypoint (aka global namespace) for that dafny program.</returns>
         public ISymbol GenerateSymbolTable()
         {
             var modules = DafnyProgram.Modules().ToList();
@@ -67,6 +70,9 @@ namespace DafnyLanguageServer.SymbolTable
             };
         }
 
+        /// <summary>
+        /// Returns an empty symbol tree, that is, just a root node without any descendants.
+        /// </summary>
         public static ISymbol GetEmptySymbolTable()
         {
             return CreateRootNode();

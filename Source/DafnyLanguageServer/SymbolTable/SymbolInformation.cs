@@ -46,13 +46,16 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol Parent { get; set; }
         public ISymbol DeclarationOrigin { get; set; }
+        public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
+
+
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
         public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
+        public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
+
 
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
-        public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
-        public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
 
         public ISymbol Module { get; set; }
         public ISymbol AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
