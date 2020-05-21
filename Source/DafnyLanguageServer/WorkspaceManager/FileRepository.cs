@@ -3,7 +3,9 @@ using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Handler;
+using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+
 using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
 
 namespace DafnyLanguageServer.WorkspaceManager
@@ -28,11 +30,11 @@ namespace DafnyLanguageServer.WorkspaceManager
         {
             PhysicalFile = physFile;
             Result = results;
-
         }
 
         public PhysicalFile PhysicalFile { get; }
         public TranslationResult Result { get; private set; }
+        public ISymbol SymbolTree { get; private set; }
 
         /// <summary>
         /// Updates the physical file with the provided sourcecode.
@@ -74,6 +76,15 @@ namespace DafnyLanguageServer.WorkspaceManager
             DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
             Result = translationUnit.Verify();
         }
+
+        private void AddSymbolTable()
+        {
+            if (Result.TranslationStatus >= TranslationStatus.Resolved)
+            {
+                SymbolTable.SymbolTree s = new SymbolTable.SymbolTree(Result.DafnyProgram);
+
+                SymbolTree = new SymbolTable.SymbolTree(Result.DafnyProgram);
+            }
 
 
 

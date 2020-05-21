@@ -9,16 +9,16 @@ namespace DafnyLanguageServer.Core
     /// </summary>
     public class HoverProvider : IHoverProvider
     {
-        private readonly ISymbolTable _symbolTable;
+        private readonly ISymbolTree _symbolTree;
 
-        public HoverProvider(ISymbolTable symbolTable)
+        public HoverProvider(ISymbolTree symbolTree)
         {
-            _symbolTable = symbolTable;
+            _symbolTree = symbolTree;
         }
 
         public Hover GetHoverInformation(Uri uri, int line, int col)
         {
-            var symbol = _symbolTable.GetSymbolByPosition(uri, line, col);
+            var symbol = _symbolTree.GetSymbolByPosition(uri, line, col);
 
             if (symbol == null)
             {

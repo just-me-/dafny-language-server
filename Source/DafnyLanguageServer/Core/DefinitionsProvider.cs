@@ -10,18 +10,18 @@ namespace DafnyLanguageServer.Core
 
     public class DefinitionsProvider : IDefinitionsProvider
     {
-        private readonly ISymbolTable _symbolTable;
+        private readonly ISymbolTree _symbolTree;
         public DefinitionsOutcome Outcome { get; set; }
 
-        public DefinitionsProvider(ISymbolTable symbolTable)
+        public DefinitionsProvider(ISymbolTree symbolTree)
         {
-            _symbolTable = symbolTable;
+            _symbolTree = symbolTree;
         }
 
         public LocationOrLocationLinks GetDefinitionLocation(Uri uri, int line, int col)
         {
             List<LocationOrLocationLink> links = new List<LocationOrLocationLink>();
-            var symbol = _symbolTable.GetSymbolByPosition(uri, line, col);
+            var symbol = _symbolTree.GetSymbolByPosition(uri, line, col);
 
             if (symbol == null)
             {

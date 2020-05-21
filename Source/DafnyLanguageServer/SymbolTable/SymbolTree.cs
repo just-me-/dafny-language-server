@@ -12,7 +12,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// Mostly there is only one module - the default module (and class) for a single Dafny file.
     /// This class also works as a facade for <c>SymbolNavigator</c>.
     /// </summary>
-    public class SymbolTable : ISymbolTable
+    public class SymbolTree : ISymbolTree
     {
         private readonly Microsoft.Dafny.Program _dafnyProgram;
 
@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol DafnyProgramRootSymbol { get; }
 
-        public SymbolTable(Microsoft.Dafny.Program dafnyProgram)
+        public SymbolTree(Microsoft.Dafny.Program dafnyProgram)
         {
             _dafnyProgram = dafnyProgram;
             DafnyProgramRootSymbol = CreateRootNode();

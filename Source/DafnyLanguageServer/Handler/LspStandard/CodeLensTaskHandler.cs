@@ -37,7 +37,7 @@ namespace DafnyLanguageServer.Handler
 
             try
             {
-                var manager = _workspaceManager.SymbolTableSymbolTable;
+                var manager = _workspaceManager.SymbolTreeSymbolTree;
                 var uri = request.TextDocument.Uri;
                 ICodeLensProvider provider = new CodeLensProvider(manager, uri);
                 return await Task.Run(() => provider.GetCodeLensContainer(), cancellationToken);
