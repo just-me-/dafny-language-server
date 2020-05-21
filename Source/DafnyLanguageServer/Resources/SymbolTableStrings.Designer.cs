@@ -70,6 +70,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to *ERROR - DECLARATION SYMBOL NOT FOUND*.
+        /// </summary>
+        internal static string declaration_not_found {
+            get {
+                return ResourceManager.GetString("declaration_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _default.
         /// </summary>
         internal static string default_class {
@@ -88,11 +97,38 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning: This symbol was created using general Visit(Expression o). A specific overload should be implemented..
+        /// </summary>
+        internal static string general_expression_visit_used {
+            get {
+                return ResourceManager.GetString("general_expression_visit_used", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _programRootNode.
         /// </summary>
         internal static string root_node {
             get {
                 return ResourceManager.GetString("root_node", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SymbolCreationError: Symbol is not stated as declaration, but neither was a declarationOrigin given..
+        /// </summary>
+        internal static string symbol_creation_declaration_error {
+            get {
+                return ResourceManager.GetString("symbol_creation_declaration_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TypeRhs shoudl ahve a UserDefinedType.
+        /// </summary>
+        internal static string typeRHS_vs_UserDefinedType {
+            get {
+                return ResourceManager.GetString("typeRHS_vs_UserDefinedType", resourceCulture);
             }
         }
     }

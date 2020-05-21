@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 
@@ -38,7 +37,7 @@ namespace DafnyLanguageServer.SymbolTable
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Descendants = new List<ISymbol>(),
                 Kind = Kind.RootNode,
-                Name = SymbolTableStrings.root_node,
+                Name = Resources.SymbolTableStrings.root_node,
                 Position = new TokenPosition
                 {
                     Token = new Token(0, 0),
@@ -136,9 +135,9 @@ namespace DafnyLanguageServer.SymbolTable
             INavigator navigator = new SymbolTableNavigator();
             closestWrappingSymbol = navigator.TopDown(DafnyProgramRootSymbol, file, line, character);
 
-            if (closestWrappingSymbol == null && DafnyProgramRootSymbol[SymbolTableStrings.default_module] != null)
+            if (closestWrappingSymbol == null && DafnyProgramRootSymbol[Resources.SymbolTableStrings.default_module] != null)
             {
-                return DafnyProgramRootSymbol[SymbolTableStrings.default_module];
+                return DafnyProgramRootSymbol[Resources.SymbolTableStrings.default_module];
             }
             return closestWrappingSymbol;
         }
@@ -211,7 +210,7 @@ namespace DafnyLanguageServer.SymbolTable
             INavigator navigator = new SymbolTableNavigator();
 
             bool filter(ISymbol symbol) =>
-                symbol.IsDeclaration && (symbol.Kind == Kind.Class || symbol.Kind == Kind.Function || symbol.Kind == Kind.Method && symbol.Name != SymbolTableStrings.dafnys_entry_point) &&
+                symbol.IsDeclaration && (symbol.Kind == Kind.Class || symbol.Kind == Kind.Function || symbol.Kind == Kind.Method && symbol.Name != Resources.SymbolTableStrings.dafnys_entry_point) &&
                 // no constructors and make sure no out-of-range root _defaults
                 symbol.Kind != Kind.Constructor && symbol.Line != null && symbol.Line > 0;
 

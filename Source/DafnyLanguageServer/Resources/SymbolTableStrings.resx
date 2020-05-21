@@ -121,6 +121,9 @@
     <value>Main</value>
     <comment>Entry Method ("Main" function) - gets not listed for features like CodeLens</comment>
   </data>
+  <data name="declaration_not_found" xml:space="preserve">
+    <value>*ERROR - DECLARATION SYMBOL NOT FOUND*</value>
+  </data>
   <data name="default_class" xml:space="preserve">
     <value>_default</value>
     <comment>Dafny's naming for the default class namespace</comment>
@@ -129,8 +132,17 @@
     <value>_module</value>
     <comment>Dafny's naming for the default module namespace</comment>
   </data>
+  <data name="general_expression_visit_used" xml:space="preserve">
+    <value>Warning: This symbol was created using general Visit(Expression o). A specific overload should be implemented.</value>
+  </data>
   <data name="root_node" xml:space="preserve">
     <value>_programRootNode</value>
     <comment>Name for our created root node that contains all modules. </comment>
+  </data>
+  <data name="symbol_creation_declaration_error" xml:space="preserve">
+    <value>SymbolCreationError: Symbol is not stated as declaration, but neither was a declarationOrigin given.</value>
+  </data>
+  <data name="typeRHS_vs_UserDefinedType" xml:space="preserve">
+    <value>TypeRhs shoudl ahve a UserDefinedType</value>
   </data>
 </root>

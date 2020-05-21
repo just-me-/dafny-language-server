@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
@@ -56,7 +55,7 @@ namespace DafnyLanguageServer.SymbolTable
         public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
 
         public ISymbol Module { get; set; }
-        public ISymbol AssociatedDefaultClass => Module?[SymbolTableStrings.default_class];
+        public ISymbol AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
         public string ToNiceString()
         {
             return $"{Name} at Line {Line} in {FileName}";

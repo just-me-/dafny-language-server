@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
@@ -163,8 +162,8 @@ namespace DafnyLanguageServer.Core
 
         private bool IsNoDefaultNamespace(ISymbol element)
         {
-            return element.Name != SymbolTableStrings.default_class &&
-                   element.Name != SymbolTableStrings.default_module &&
+            return element.Name != Resources.SymbolTableStrings.default_class &&
+                   element.Name != Resources.SymbolTableStrings.default_module &&
                    element.Kind != Kind.Constructor;
         }
     }

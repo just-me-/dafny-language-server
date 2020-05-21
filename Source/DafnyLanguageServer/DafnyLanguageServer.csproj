@@ -211,8 +211,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Resources\SymbolTable.Designer.cs">
-      <DependentUpon>SymbolTable.resx</DependentUpon>
+    <Compile Include="Resources\SymbolTableStrings.Designer.cs">
+      <DependentUpon>SymbolTableStrings.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -222,11 +222,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\FileAndFolderLocations.cs" />
-    <Compile Include="Resources\SymbolTableStrings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SymbolTableStrings.resx</DependentUpon>
-    </Compile>
     <Compile Include="Tools\ConfigInitializer.cs" />
     <Compile Include="Tools\LoggerCreator.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />
@@ -299,9 +294,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CodeLensMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SymbolTable.resx">
+    <EmbeddedResource Include="Resources\SymbolTableStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SymbolTable.Designer.cs</LastGenOutput>
+      <LastGenOutput>SymbolTableStrings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Requests.resx">
@@ -326,10 +321,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LoggingMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\SymbolTableStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SymbolTableStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

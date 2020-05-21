@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 
 namespace DafnyLanguageServer.SymbolTable
@@ -45,7 +44,7 @@ namespace DafnyLanguageServer.SymbolTable
                 // check default scope too
                 if (
                     (bestMatch == null || bestMatch.Equals(rootEntry))
-                    && (child.Name == SymbolTableStrings.default_class || child.Name == SymbolTableStrings.default_module)
+                    && (child.Name == Resources.SymbolTableStrings.default_class || child.Name == Resources.SymbolTableStrings.default_module)
                     && (child.Children?.Any() ?? false)
                 )
                 {
@@ -193,11 +192,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
             list.AddRange(GetAllChildren(symbol, filter));
             // in case it is the default scope; add functions and methods in the default scope too (and not only classes) 
-            if (symbol.Parent.Name == SymbolTableStrings.root_node
-                && symbol.Name == SymbolTableStrings.default_module
-                && symbol.ChildrenHash.ContainsKey(SymbolTableStrings.default_class))
+            if (symbol.Parent.Name == Resources.SymbolTableStrings.root_node
+                && symbol.Name == Resources.SymbolTableStrings.default_module
+                && symbol.ChildrenHash.ContainsKey(Resources.SymbolTableStrings.default_class))
             {
-                list.AddRange(GetAllChildren(symbol.ChildrenHash[SymbolTableStrings.default_class], filter));
+                list.AddRange(GetAllChildren(symbol.ChildrenHash[Resources.SymbolTableStrings.default_class], filter));
             }
 
             var parent = symbol;
