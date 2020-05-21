@@ -44,9 +44,9 @@ namespace PerformanceTest
                 Client.SendNotification("textDocument/didChange", contentChanges);
             }
 
+            var foo = Client.TextDocument.Hover(Files.pf_large, 6600, 100);
             Client.IsReady.Wait();
-            var foo = Client.TextDocument.Hover(Files.pf_large, 6600, 100).Result;
-            
+
             stopwatch.Stop();
             var elapsed_time = stopwatch.ElapsedMilliseconds;
             Assert.Less(elapsed_time, 10e3, "Runtime takes too long!");
