@@ -33,20 +33,20 @@ If you would like to know which features are supported by the Visual Studio Code
 
 ## Server Launch Arguments
 
-* **/log**:[relativePath] Relative Path to Language Server Logfile.
-* **/stream**:[relativePath]  Relative Path to Language Server Stream Output.
-* **/loglevel**:[int]   The minimum loglevel you desire. Options are:
+* **/log:[relativePath]** Relative path to the logfile. The default is `Logs/LanguageServerLog.txt`
+* **/stream:[relativePath]**  Relative path to the stream output. The default is `Logs/LanguageServerStreamRedirection.txt`
+* **/loglevel:[int]**   The minimum loglevel you desire. Options are:
   * 0: trace
   * 1: debug
   * 2: information
   * 3: warning
-  * 4: error
+  * 4: error (default)
   * 5: fatal
   * 6: none
 * **/synckind**:[incremental|full] How the client is requested to send textdocument changes. Incremental will only send changes, while full will always send the full document. Full reuqires less CPU, but more bandwidth. Try switching this options, if your language server is slow. The options are:
-  * incremental
+  * incremental (default)
   * full
 
 
 ## Server Config
-You can edit the file Binaries/LanguageServerConfig.json with the same Information as above.
+You can edit the file Config/LanguageServerConfig.json with the same Information as above. The launch arguments have priority over the json config file.

@@ -16,6 +16,8 @@ namespace DafnyLanguageServer.Tools
 
 
     //todo das ganze teil hier ist noch urkomisch... evtl einfach sobald iwas schief läuft die efaults nutzen statt so halb halb? ist aber mega viel aufwand und interessiert eh keinen....
+    // ich fänds eig nice wenn man so "try to set loglevel -> funzt oder nicht" -> dann das nächste --> dann das nächste und nich tso "oh, loglevel ging nicht, dann exception udn ich mach gar nix weiter".
+
     public class ConfigInitializer
     {
         public ConfigInitializationErrors InitializationErrors { get; } = new ConfigInitializationErrors();
