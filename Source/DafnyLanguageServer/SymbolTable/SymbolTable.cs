@@ -81,11 +81,6 @@ namespace DafnyLanguageServer.SymbolTable
                 ISymbol rootForVisitor = GetEntryPoint(module);
                 var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
-
-                //if (Depth(module) == 0)
-                //{
-                //    SymbolTables.Add(module.Name, deepVisitor.Module);
-                //}
             }
         }
 
@@ -97,15 +92,15 @@ namespace DafnyLanguageServer.SymbolTable
             INavigator nav = new SymbolTableNavigator();
             var rootSymbol = DafnyProgramRootSymbol;
 
-                var allSymbs = nav.TopDownAll(rootSymbol);
+            var allSymbs = nav.TopDownAll(rootSymbol);
 
-                foreach (var symbol in allSymbs)
-                {
-                    b.AppendLine(symbol.ToString());
-                }
+            foreach (var symbol in allSymbs)
+            {
+                b.AppendLine(symbol.ToString());
+            }
 
-                b.AppendLine();
-            
+            b.AppendLine();
+
             return b.ToString();
         }
 
@@ -123,29 +118,11 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol GetSymbolByPosition(Uri file, int line, int character)
         {
             INavigator navigator = new SymbolTableNavigator();
-            ISymbol symbol = null;
-            foreach (var modul in DafnyProgramRootSymbol.Descendants)
-            {
-                symbol = navigator.GetSymbolByPosition(modul, file, line, character);
-                if (symbol != null)
-                {
-                    return symbol;
-                }
-            }
-            return null;
+            var symbol = navigator.GetSymbolByPosition(DafnyProgramRootSymbol, file, line, character);
+            return symbol;
         }
 
-        private ISymbol GetClassSymbolByPath(string classPath)
-        {
-            // todo better do a split? is there rly every time "just one module and one class"? #212 | das kann auf jedenfall net richtig sien. Wa sbie Modul1.Modul2.Modul3.Class?
-            // ev siehe zteile +/- 70
-            string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
-            if (originPath.Length != 2)
-            {
-                throw new ArgumentException(Resources.ExceptionMessages.tmp_invalid_class_path);
-            }
-            return DafnyProgramRootSymbol[originPath[0]][originPath[1]];
-        }
+
 
         /// <summary>
         /// In case the user is typing and there can not be an entry point via a Symbol
@@ -157,13 +134,9 @@ namespace DafnyLanguageServer.SymbolTable
         {
             ISymbol closestWrappingSymbol = null;
             INavigator navigator = new SymbolTableNavigator();
-            foreach (var modul in DafnyProgramRootSymbol.Descendants)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
-            {
-                closestWrappingSymbol = navigator.TopDown(modul, file, line, character);
-            }
+            closestWrappingSymbol = navigator.TopDown(DafnyProgramRootSymbol, file, line, character);
 
-            if (closestWrappingSymbol == null
-                && DafnyProgramRootSymbol[SymbolTableStrings.default_module] != null)
+            if (closestWrappingSymbol == null && DafnyProgramRootSymbol[SymbolTableStrings.default_module] != null)
             {
                 return DafnyProgramRootSymbol[SymbolTableStrings.default_module];
             }
@@ -212,9 +185,21 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
         {
-            // todo mergen213 ClassMergen
+            // todo anders machen... GetClassSymbolByPath is ansich nicht richtig. 
             var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
             return GetClassSymbolByPath(classPath);
+        }
+
+        private ISymbol GetClassSymbolByPath(string classPath)
+        {
+            // todo better do a split? is there rly every time "just one module and one class"? #212 | das kann auf jedenfall net richtig sien. Wa sbie Modul1.Modul2.Modul3.Class?
+            // ev siehe zteile +/- 70
+            string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
+            if (originPath.Length != 2)
+            {
+                throw new ArgumentException(Resources.ExceptionMessages.tmp_invalid_class_path);
+            }
+            return DafnyProgramRootSymbol[originPath[0]][originPath[1]];
         }
 
         /// <summary>
@@ -230,10 +215,8 @@ namespace DafnyLanguageServer.SymbolTable
                 // no constructors and make sure no out-of-range root _defaults
                 symbol.Kind != Kind.Constructor && symbol.Line != null && symbol.Line > 0;
 
-            foreach (var module in DafnyProgramRootSymbol.Descendants)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
-            {
-                symbols.AddRange(navigator.TopDownAll(module, filter));
-            }
+            symbols.AddRange(navigator.TopDownAll(DafnyProgramRootSymbol, filter));
+
             return symbols;
         }
     }
