@@ -9,7 +9,7 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// </summary>
     public interface IWorkspace
     {
-        IManager SymbolTableManager { get; set; }
+        ISymbolTable SymbolTableSymbolTable { get; set; }
         FileRepository UpdateFile<T>(Uri documentPath, T changes);
         FileRepository GetFileRepository(Uri documentPath);
         FileRepository GetFileRepository(string documentPath);

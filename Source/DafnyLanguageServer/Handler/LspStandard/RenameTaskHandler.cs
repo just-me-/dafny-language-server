@@ -36,7 +36,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
             try
             {
-                var manager = _workspaceManager.SymbolTableManager;
+                var manager = _workspaceManager.SymbolTableSymbolTable;
                 var line = (int) request.Position.Line + 1;
                 var col = (int) request.Position.Character + 1;
                 var uri = request.TextDocument.Uri;

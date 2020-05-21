@@ -17,11 +17,11 @@ namespace DafnyLanguageServer.Core
     public class CompletionProvider : ICompletionProvider
     {
         public string ExtractedSymbol { get; private set; }
-        public IManager Manager { get; }
+        public ISymbolTable SymbolTable { get; }
 
-        public CompletionProvider(IManager manager)
+        public CompletionProvider(ISymbolTable symbolTable)
         {
-            Manager = manager;
+            SymbolTable = symbolTable;
         }
 
         public List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
@@ -108,7 +108,7 @@ namespace DafnyLanguageServer.Core
         /// </summary>
         public ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
         {
-            return Manager.GetSymbolWrapperForCurrentScope(file, line, col);
+            return SymbolTable.GetSymbolWrapperForCurrentScope(file, line, col);
         }
 
         /// <summary>
@@ -120,21 +120,21 @@ namespace DafnyLanguageServer.Core
             switch (desire)
             {
                 case CompletionType.AfterDot:
-                    var selectedSymbol = Manager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
-                    return GetSymbolsProperties(Manager, selectedSymbol);
+                    var selectedSymbol = SymbolTable.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
+                    return GetSymbolsProperties(SymbolTable, selectedSymbol);
                 case CompletionType.AfterNew:
-                    return GetClassSymbolsInScope(Manager, wrappingEntrypointSymbol);
+                    return GetClassSymbolsInScope(SymbolTable, wrappingEntrypointSymbol);
                 case CompletionType.AllInScope:
-                    return GetAllSymbolsInScope(Manager, wrappingEntrypointSymbol);
+                    return GetAllSymbolsInScope(SymbolTable, wrappingEntrypointSymbol);
                 default:
                     throw new ArgumentException(Resources.ExceptionMessages.completion_not_yet_supported);
             }
         }
 
-        private IEnumerable<ISymbol> GetSymbolsProperties(IManager manager, ISymbol selectedSymbol)
+        private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTable symbolTable, ISymbol selectedSymbol)
         {
             // if selectedSymbol is null... error iwas... not found mässig... todo
-            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
+            var classSymbol = symbolTable.GetClassOriginFromSymbol(selectedSymbol);
             foreach (var suggestionElement in classSymbol.Children)
             {
                 if (IsNoDefaultNamespace(suggestionElement))
@@ -144,18 +144,18 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbol> GetClassSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbol> GetClassSymbolsInScope(ISymbolTable symbolTable, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
+            foreach (var suggestionElement in symbolTable.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
             {
                 yield return suggestionElement;
             }
         }
 
-        private IEnumerable<ISymbol> GetAllSymbolsInScope(IManager manager, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbol> GetAllSymbolsInScope(ISymbolTable symbolTable, ISymbol wrappingEntrypointSymbol)
         {
-            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
+            foreach (var suggestionElement in symbolTable.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
             {
                 yield return suggestionElement;
             }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    public interface IManager
+    public interface ISymbolTable
     {
         ISymbol DafnyProgramRootSymbol { get; }
         ISymbol GetSymbolByPosition(Uri file, int line, int character);

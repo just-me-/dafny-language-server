@@ -268,11 +268,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LoggingMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="SymbolTable\IManager.cs" />
+    <Compile Include="SymbolTable\ISymbolTable.cs" />
     <Compile Include="SymbolTable\INavigator.cs" />
     <Compile Include="SymbolTable\ISymbol.cs" />
     <Compile Include="SymbolTable\SymbolInformation.cs" />
-    <Compile Include="SymbolTable\SymbolTableManager.cs" />
+    <Compile Include="SymbolTable\SymbolTable.cs" />
     <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
     <Compile Include="SymbolTable\LanguageServerDeclarationVisitor.cs" />
     <Compile Include="SymbolTable\LanguageServerDeepVisitor.cs" />

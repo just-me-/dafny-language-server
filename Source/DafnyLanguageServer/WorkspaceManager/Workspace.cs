@@ -15,7 +15,7 @@ namespace DafnyLanguageServer.WorkspaceManager
     public class Workspace : IWorkspace
     {
         private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
-        public IManager SymbolTableManager { get; set; }
+        public ISymbolTable SymbolTableSymbolTable { get; set; }
 
         /// <summary>
         /// Requests the fileRepository to apply updates and store it in the buffer.
@@ -57,7 +57,7 @@ namespace DafnyLanguageServer.WorkspaceManager
             // aka dann etwas für die nächsten hust hstu xd.
             if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
             {
-                SymbolTableManager = new SymbolTableManager(fileRepository.Result.DafnyProgram);
+                SymbolTableSymbolTable = new SymbolTable.SymbolTable(fileRepository.Result.DafnyProgram);
                 // if not null... update changes 
                 // not create all symbols every time... todo 
                 // get wrapping symbol of cursor position... update "this childs in symbols". 

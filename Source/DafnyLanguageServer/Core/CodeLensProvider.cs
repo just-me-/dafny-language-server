@@ -10,12 +10,12 @@ namespace DafnyLanguageServer.Core
 {
     public class CodeLensProvider : ICodeLensProvider
     {
-        private readonly IManager _manager;
+        private readonly ISymbolTable _symbolTable;
         private readonly Uri _uri;
 
-        public CodeLensProvider(IManager manager, Uri uri)
+        public CodeLensProvider(ISymbolTable symbolTable, Uri uri)
         {
-            this._manager = manager;
+            this._symbolTable = symbolTable;
             this._uri = uri;
         }
 
@@ -23,7 +23,7 @@ namespace DafnyLanguageServer.Core
         {
             List<CodeLens> items = new List<CodeLens>();
 
-            foreach (var symbolInformation in _manager.GetAllSymbolDeclarations())
+            foreach (var symbolInformation in _symbolTable.GetAllSymbolDeclarations())
             {
                 items.Add(CreateCodeLensItem(symbolInformation));
             }

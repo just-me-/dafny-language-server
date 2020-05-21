@@ -203,7 +203,7 @@ namespace SymbolTableTest
 
             var dtu = new DafnyTranslationUnit(physFile);
             var dafnyProg = dtu.Verify().DafnyProgram;
-            IManager sm = new SymbolTableManager(dafnyProg);
+            ISymbolTable sm = new SymbolTable(dafnyProg);
             INavigator navigator = new SymbolTableNavigator();
             List<ISymbol> symbols = new List<ISymbol>();
 
@@ -216,7 +216,7 @@ namespace SymbolTableTest
             var actual = symbols.Select(x => x.ToDebugString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);
-            Console.Write(((SymbolTableManager)sm).CreateDebugReadOut());
+            Console.Write(((SymbolTable)sm).CreateDebugReadOut());
 
             return actual;
         }

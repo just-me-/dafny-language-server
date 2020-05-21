@@ -10,10 +10,10 @@ namespace DafnyLanguageServer.Core
 
     public class DefinitionsProvider : IDefinitionsProvider
     {
-        private readonly IManager _symbolTable;
+        private readonly ISymbolTable _symbolTable;
         public DefinitionsOutcome Outcome { get; set; }
 
-        public DefinitionsProvider(IManager symbolTable)
+        public DefinitionsProvider(ISymbolTable symbolTable)
         {
             _symbolTable = symbolTable;
         }
