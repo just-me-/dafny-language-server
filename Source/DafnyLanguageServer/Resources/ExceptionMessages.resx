@@ -197,4 +197,7 @@
     <value>Unknown switch: '{0}'. Please refer to readme.md</value>
     <comment>For Config Init</comment>
   </data>
+  <data name="tmp_invalid_class_path" xml:space="preserve">
+    <value>Invalid class path... expected Module.Class pattern.</value>
+  </data>
 </root>

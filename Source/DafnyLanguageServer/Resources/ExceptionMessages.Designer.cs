@@ -250,6 +250,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid class path... expected Module.Class pattern..
+        /// </summary>
+        internal static string tmp_invalid_class_path {
+            get {
+                return ResourceManager.GetString("tmp_invalid_class_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected string or TextDocumentChangeEvent-Container at text-document-change event request..
         /// </summary>
         internal static string unexpected_file_type {

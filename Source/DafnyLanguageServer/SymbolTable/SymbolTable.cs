@@ -18,15 +18,9 @@ namespace DafnyLanguageServer.SymbolTable
         private readonly Microsoft.Dafny.Program _dafnyProgram;
 
         /// <summary>
-        /// <c>SymbolTables</c> is a key-value-hash. Key is the module name (string) and value is a set of <c>SymbolInformation.</c>
-        /// A SymbolTable (List of <c>SymbolInformation</c> for each module) is sorted.
-        /// </summary>
-        public Dictionary<string, ISymbol> SymbolTables { get; set; } = new Dictionary<string, ISymbol>();
-
-        /// <summary>
         /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
         /// </summary>
-        public ISymbol DafnyProgramRootSymbol { get; } // todo SymbolTable ersetzen durch diesen einstiegspunkt?
+        public ISymbol DafnyProgramRootSymbol { get; }
 
         public SymbolTable(Microsoft.Dafny.Program dafnyProgram)
         {
@@ -88,10 +82,10 @@ namespace DafnyLanguageServer.SymbolTable
                 var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
 
-                if (Depth(module) == 0)
-                {
-                    SymbolTables.Add(module.Name, deepVisitor.Module);
-                }
+                //if (Depth(module) == 0)
+                //{
+                //    SymbolTables.Add(module.Name, deepVisitor.Module);
+                //}
             }
         }
 
@@ -101,10 +95,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             StringBuilder b = new StringBuilder();
             INavigator nav = new SymbolTableNavigator();
-            foreach (var kvp in SymbolTables)
-            {
-                b.AppendLine("Module: " + kvp.Key);
-                var rootSymbol = kvp.Value;
+            var rootSymbol = DafnyProgramRootSymbol;
 
                 var allSymbs = nav.TopDownAll(rootSymbol);
 
@@ -114,7 +105,7 @@ namespace DafnyLanguageServer.SymbolTable
                 }
 
                 b.AppendLine();
-            }
+            
             return b.ToString();
         }
 
@@ -133,9 +124,9 @@ namespace DafnyLanguageServer.SymbolTable
         {
             INavigator navigator = new SymbolTableNavigator();
             ISymbol symbol = null;
-            foreach (var modul in SymbolTables) //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
+            foreach (var modul in DafnyProgramRootSymbol.Descendants)
             {
-                symbol = navigator.GetSymbolByPosition(modul.Value, file, line, character);
+                symbol = navigator.GetSymbolByPosition(modul, file, line, character);
                 if (symbol != null)
                 {
                     return symbol;
@@ -146,14 +137,14 @@ namespace DafnyLanguageServer.SymbolTable
 
         private ISymbol GetClassSymbolByPath(string classPath)
         {
-            // todo better do a split? is there rly every time "just one module and one class"? #212
-            //siehe zteile +/- 70
+            // todo better do a split? is there rly every time "just one module and one class"? #212 | das kann auf jedenfall net richtig sien. Wa sbie Modul1.Modul2.Modul3.Class?
+            // ev siehe zteile +/- 70
             string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
             if (originPath.Length != 2)
             {
-                throw new ArgumentException("Invalid class path... expected Module.Class pattern."); //tmp
+                throw new ArgumentException(Resources.ExceptionMessages.tmp_invalid_class_path);
             }
-            return SymbolTables[originPath[0]][originPath[1]];  //todo: neu wäre das rootNode[ 0path ding] [1pathding]  (bei merge concflcict: nicht dieses nehmen)
+            return DafnyProgramRootSymbol[originPath[0]][originPath[1]];
         }
 
         /// <summary>
@@ -166,16 +157,15 @@ namespace DafnyLanguageServer.SymbolTable
         {
             ISymbol closestWrappingSymbol = null;
             INavigator navigator = new SymbolTableNavigator();
-            foreach (var modul in SymbolTables)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
+            foreach (var modul in DafnyProgramRootSymbol.Descendants)   //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen) nur kommentar
             {
-                closestWrappingSymbol = navigator.TopDown(modul.Value, file, line, character);
+                closestWrappingSymbol = navigator.TopDown(modul, file, line, character);
             }
 
             if (closestWrappingSymbol == null
-                && SymbolTables.ContainsKey(SymbolTableStrings.default_module)
-                && SymbolTables[SymbolTableStrings.default_module] != null)
+                && DafnyProgramRootSymbol[SymbolTableStrings.default_module] != null)
             {
-                return SymbolTables[SymbolTableStrings.default_module];
+                return DafnyProgramRootSymbol[SymbolTableStrings.default_module];
             }
             return closestWrappingSymbol;
         }
@@ -240,9 +230,9 @@ namespace DafnyLanguageServer.SymbolTable
                 // no constructors and make sure no out-of-range root _defaults
                 symbol.Kind != Kind.Constructor && symbol.Line != null && symbol.Line > 0;
 
-            foreach (var module in SymbolTables)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
+            foreach (var module in DafnyProgramRootSymbol.Descendants)  //todo: neu wäre das foreach (var modul in rootNode.Descendants)  (bei merge concflcict: nicht dieses nehmen)
             {
-                symbols.AddRange(navigator.TopDownAll(module.Value, filter));
+                symbols.AddRange(navigator.TopDownAll(module, filter));
             }
             return symbols;
         }
