@@ -220,7 +220,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
-                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException(Resources.ExceptionMessages.invalid_filter_operation);   
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException(Resources.ExceptionMessages.invalid_filter_operation));   
                 }
             }
             return list;
