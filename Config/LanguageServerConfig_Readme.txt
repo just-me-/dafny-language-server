@@ -15,6 +15,6 @@ The minimum loglevel you desire. Options are:
 6: none
 
 syncKind
-How the client is requested to send textdocument changes. Incremental will only send changes, while full will always send the full document. Full reuqires less CPU, but more bandwith. Try switching this options, if your language server is slow. The options are:
+How the client is requested to send textdocument changes. Incremental will only send changes, while full will always send the full document. Full reuqires less CPU, but more bandwidth. Try switching this options, if your language server is slow. The options are:
 incremental
 full
