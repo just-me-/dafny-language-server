@@ -83,7 +83,7 @@ namespace DafnyLanguageServer.Tools
                 var cfgLog = cfg["logging"]["log"];
                 var cfgStream = cfg["logging"]["stream"];
                 var cfgLevel = cfg["logging"]["loglevel"];
-                var syncKind = cfg["syncKind"];
+                var cfgSyncKind = cfg["synckind"];
 
                 if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
                 {
@@ -105,9 +105,9 @@ namespace DafnyLanguageServer.Tools
                     LanguageServerConfig.LogLevel = (LogLevel)(int)cfgLevel;
                 }
 
-                if (syncKind != null)
+                if (cfgSyncKind != null)
                 {
-                    LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), (string)syncKind, true);
+                    LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), (string)cfgSyncKind, true);
                 }
 
             }
