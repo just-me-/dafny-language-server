@@ -150,7 +150,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            CollectionAssert.AreEquivalent(excpected, actual);
+            CollectionAssert.AreEquivalent(excpected, actual); //todo there is still metho that is not found.
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            CollectionAssert.AreEquivalent(excpected, actual); //todo
+            CollectionAssert.AreEquivalent(excpected, actual);
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            CollectionAssert.AreEquivalent(excpected, actual); //todo
+            CollectionAssert.AreEquivalent(excpected, actual);
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            //CollectionAssert.AreEquivalent(excpected, actual); //todo
+            CollectionAssert.AreEquivalent(excpected, actual); //todo
         }
 
 
@@ -216,6 +216,7 @@ namespace SymbolTableTest
             {
                 symbols.AddRange(navigator.TopDownAll(modul)); 
             }
+
             var actual = symbols.Select(x => x.ToDebugString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);

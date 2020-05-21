@@ -37,7 +37,7 @@ namespace DafnyLanguageServer.Core
 
             Position position = new Position((long)originSymbol.Line - 1, (long)originSymbol.ColumnStart - 1);
             Range range = new Range { Start = position, End = position };
-            var location = new Location { Uri = originSymbol.File, Range = range };
+            var location = new Location { Uri = originSymbol.FileUri, Range = range };
 
             links.Add(new LocationOrLocationLink(location));
 

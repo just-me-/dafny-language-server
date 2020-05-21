@@ -44,15 +44,15 @@ namespace DafnyLanguageServer.SymbolTable
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
                 Name = Resources.SymbolTableStrings.declaration_not_found,
+                Position = new TokenPosition()
+                {
+                    Token = new Token(0,0)
+                },
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Usages = new List<ISymbol>()
             };
         }
 
-        protected ISymbol FindDeclaration(ISymbol target, ISymbol scope)  //evtl bei leave iwie
-        {
-            return FindDeclaration(target.Name, scope);
-        }
 
         /// <summary>
         ///  This is a Factory Method. Default values are set.
@@ -76,7 +76,6 @@ namespace DafnyLanguageServer.SymbolTable
 
             Kind? kind = Kind.Undefined,
             Type type = null,
-            UserDefinedType typeDefinition = null,
 
             IToken bodyStartPosAsToken = null,
             IToken bodyEndPosAsToken = null,
@@ -113,12 +112,11 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 result.Type = declarationSymbol.Type;
             }
-            else
-            {
-                result.Type = null; // todo diese null checks sind nicht nötig wegen defaults? #120
-            }
 
-            result.UserTypeDefinition = typeDefinition;
+            if (positionAsToken == null)
+            {
+                throw new ArgumentException(Resources.ExceptionMessages.token_requires);
+            }
 
             result.Position = new TokenPosition
             {

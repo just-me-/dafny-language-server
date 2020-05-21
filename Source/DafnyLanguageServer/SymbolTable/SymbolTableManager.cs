@@ -114,7 +114,7 @@ namespace DafnyLanguageServer.SymbolTable
             bool filter(ISymbol symbol) =>
                 symbol.IsDeclaration && (symbol.Kind == Kind.Class || symbol.Kind == Kind.Function || symbol.Kind == Kind.Method && symbol.Name != Resources.SymbolTableStrings.dafnys_entry_point) &&
                 // no constructors and make sure no out-of-range root _defaults
-                symbol.Kind != Kind.Constructor && symbol.Line != null && symbol.Line > 0;
+                symbol.Kind != Kind.Constructor && symbol.Line > 0;
 
             symbols.AddRange(navigator.TopDownAll(DafnyProgramRootSymbol, filter));
 

@@ -203,4 +203,7 @@
   <data name="file_repo_must_have_physical" xml:space="preserve">
     <value>A Filerepository must habe a Physical File but it wasn't the case.</value>
   </data>
+  <data name="token_requires" xml:space="preserve">
+    <value>Every Symbol must have a token.</value>
+  </data>
 </root>

@@ -18,34 +18,34 @@ namespace DafnyLanguageServer.SymbolTable
     public class SymbolInformation : ISymbol
     {
         public TokenPosition Position { get; set; }
-        public Uri File => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l"); //todo nach FileUri renamen damit klarer is. Sonar will den string da weg aber ich hatte grosse probleme ohne was anzugeben. sehr schnell sehr viele null exception, und das root symbol hat in gottes namen keine uri.
-        public string FileName => Path.GetFileName(File.LocalPath);
-        public virtual int? Line => Position?.Token.line;                      //todo, êig hat doch jedes symbol eine line, oder? warum das int? war das im eifer des gefeachts' rehsarper hat nun hitnedran oft gemeckert, dass so (int)Line casts unsave sind.
+        public Uri FileUri => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
+        public string FileName => Path.GetFileName(FileUri.LocalPath);
+        public virtual int Line => Position.Token.line;                     
         public virtual int? LineStart => Position?.BodyStartToken?.line;
         public virtual int? LineEnd => Position?.BodyEndToken?.line;
-        public virtual int? Column => ColumnStart;
-        public virtual int? ColumnStart => Position?.Token.col;
-        public virtual int? ColumnEnd => ColumnStart + Name.Length;
+        public int Column => ColumnStart;
+        public virtual int ColumnStart => Position?.Token.col ?? 0;
+        public virtual int ColumnEnd => ColumnStart + Name.Length;
         public string Name { get; set; }
 
         public Kind Kind { get; set; }
         public Type Type { get; set; }
 
-        public UserDefinedType UserTypeDefinition { get; set; }
-        //todo das müsste gehen... ich würde hier: so machen: dann müsste man den gar nie setzen, oder das snippet auch net auslagern in ne methode.
-        /*
-         * get
-          {
-            if (Type != null && Type is UserDefinedType) {  //todo hier dann aber das null ding da mit dem is mergen so wie resharper/sonar vorschlagen.
-              _userType = Type as UserDefinedType;
+        public UserDefinedType UserTypeDefinition
+        {
+            get
+            {
+                if (Type is UserDefinedType type)
+                {
+                    return type;
+                }
+                return null;
             }
-      }
-         */
+        }
+        
 
         public ISymbol Parent { get; set; }
         public ISymbol DeclarationOrigin { get; set; }
-        //public List<SymbolInformation> Children { get; set; } // key value hash machen 
-        // hash als adapter machen, user soll nix geändert haben 
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
         public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
 
@@ -96,7 +96,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override int GetHashCode()
         {
             int hash = 13;
-            hash = hash * 7 + File.GetHashCode();
+            hash = hash * 7 + FileUri.GetHashCode();
             hash = hash * 7 + Line.GetHashCode();
             return hash * 7 + ColumnStart.GetHashCode();
         }
@@ -105,7 +105,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             if (child is SymbolInformation childSymbol)
             {
-                return this.Wraps(child.File, (int)childSymbol.Line, (int)childSymbol.Column);
+                return this.Wraps(child.FileUri, (int)childSymbol.Line, (int)childSymbol.Column);
             }
             return false;
         }
@@ -115,17 +115,17 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public bool Wraps(Uri file, int line, int character)
         {
-            return IsSameFile(file) && HasLine() && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+            return IsSameFile(file) && HasBody() && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
         }
 
         private bool IsSameFile(Uri file)
         {
-            return this.Kind == Kind.RootNode || this.File == file;
+            return this.Kind == Kind.RootNode || this.FileUri == file;
         }
 
-        private bool HasLine()
+        private bool HasBody()
         {
-            return Line != null && LineEnd != null;
+            return LineStart != null && LineEnd != null;
         }
 
         private bool WrapsLine(int line, int character)

@@ -88,7 +88,6 @@ namespace DafnyLanguageServer.SymbolTable
                       bodyEndPosAsToken: baseClassIdentifier?.tok,
                       kind: Kind.Class,
                       type: baseClassType,
-                      typeDefinition: baseClassIdentifier,
                       isDeclaration: false,
                       declarationSymbol: baseSymbol,
                       addUsageAtDeclaration: true,
@@ -172,17 +171,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public override void Visit(NonglobalVariable o)
         {
-            UserDefinedType userType = null;
-            if (o.Type != null && o.Type is UserDefinedType)       //TODO: das sind auch sonar und resharpesr issues und der code ist immer gelich -> auslagern!! ich hab aber angst das alles kaputt geht drum später machen ;) iwo in nem getter hab ich das schonmal vorbereitet gehabt.
-            {
-                userType = o.Type as UserDefinedType;
-            }
 
             CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
                 type: o.Type,
-                typeDefinition: userType,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,
@@ -204,17 +197,11 @@ namespace DafnyLanguageServer.SymbolTable
         //local variable are just locally defined vars: var bla:=2
         public override void Visit(LocalVariable o)
         {
-            UserDefinedType userType = null;
-            if (o.Type != null && o.Type is UserDefinedType)
-            {
-                userType = o.Type as UserDefinedType;
-            }
 
             CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
                 type: o.Type,
-                typeDefinition: userType,
 
                 positionAsToken: o.Tok,
                 bodyStartPosAsToken: null,
@@ -325,9 +312,9 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
-            if (e.Type != null && e.Type is UserDefinedType)
+            if (e.Type is UserDefinedType type)
             {
-                t = e.Type as UserDefinedType;
+                t = type;
             }
 
             if (t == null)
@@ -337,13 +324,12 @@ namespace DafnyLanguageServer.SymbolTable
 
 
             var nav = new SymbolTableNavigator();
-            var declaration = nav.GetSymbolByPosition(RootNode, t?.ResolvedClass.tok);
+            var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
 
             CreateSymbol(
                 name: t.Name,
                 kind: Kind.Class,
                 type: e.Type,
-                typeDefinition: t,
 
                 positionAsToken: t.tok,
                 bodyStartPosAsToken: e.Tok,  //"new"
@@ -384,19 +370,10 @@ namespace DafnyLanguageServer.SymbolTable
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
 
-
-            //var declaration = FindDeclaration(e.SuffixName, definingItem);
-
-            UserDefinedType userType = null;
-            if (e.Type != null && e.Type is UserDefinedType)
-            {
-                userType = e.Type as UserDefinedType;
-            }
             var symbol = CreateSymbol(
                 name: e.Name,
                 kind: null,
                 type: e.Type,
-                typeDefinition: userType,
 
                 positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
@@ -428,16 +405,10 @@ namespace DafnyLanguageServer.SymbolTable
 
             var declaration = FindDeclaration(e.SuffixName, definingItem);
 
-            UserDefinedType userType = null;
-            if (e.Type != null && e.Type is UserDefinedType)
-            {
-                userType = e.Type as UserDefinedType;
-            }
             CreateSymbol(
                 name: e.SuffixName,
                 kind: null,
                 type: e.Type,
-                typeDefinition: userType,
 
                 positionAsToken: e.tok,
                 bodyStartPosAsToken: null,
@@ -490,16 +461,10 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var declaration = FindDeclaration(o.tok.val, SurroundingScope);
 
-            UserDefinedType userType = null;
-            if (o.Type != null && o.Type is UserDefinedType)
-            {
-                userType = o.Type as UserDefinedType;
-            }
             CreateSymbol(
                 name: o.tok.val + Resources.SymbolTableStrings.general_expression_visit_used,
                 kind: null,
                 type: o.Type,
-                typeDefinition: userType,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: null,

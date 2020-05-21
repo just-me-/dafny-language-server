@@ -46,8 +46,8 @@ namespace DafnyLanguageServer.Core
                     NewText = newName,
                     Range = new Range
                     {
-                        Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
-                        End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
+                        Start = new Position(symbol.Line - 1, symbol.Column - 1),
+                        End = new Position(symbol.Line - 1, symbol.ColumnEnd - 1)
                     }
                 };
                 var editsForAffectedFile = GetOrCreate(changes, symbol);
@@ -96,12 +96,12 @@ namespace DafnyLanguageServer.Core
 
         private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
         {
-            if (Changes.TryGetValue(symbol.File, out var textEditsPerFile))
+            if (Changes.TryGetValue(symbol.FileUri, out var textEditsPerFile))
             {
                 return textEditsPerFile;
             }
             textEditsPerFile = new List<TextEdit>();
-            Changes.Add(symbol.File, textEditsPerFile);
+            Changes.Add(symbol.FileUri, textEditsPerFile);
 
             return textEditsPerFile;
         }

@@ -7,17 +7,18 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public interface ISymbol
     {
+
         TokenPosition Position { get; set; }
-        Uri File { get; }
+        Uri FileUri { get; }
         string FileName { get; }
-        int? Line { get; }
-        int? Column { get; }
-        int? ColumnStart { get; }
-        int? ColumnEnd { get; }
+        int Line { get; }
+        int Column { get; }
+        int ColumnStart { get; }
+        int ColumnEnd { get; }
         string Name { get; set; }
         Kind Kind { get; set; }
         Type Type { get; set; }
-        UserDefinedType UserTypeDefinition { get; set; }
+        UserDefinedType UserTypeDefinition { get; }
 
         ISymbol Parent { get; set; }
         ISymbol DeclarationOrigin { get; set; }

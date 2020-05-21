@@ -45,7 +45,7 @@
 [L49:C12] "Method" | P : [L47]test3 | D : [L17]Method | C :  | U : 
 [L50:C15] "m2" | P : [L47]test3 | D : [L48]m2 | C :  | U : 
 [L50:C18] "field" | P : [L47]test3 | D : [L15]field | C :  | U : 
-[L51:C9] "MethodIn_default" | P : [L47]test3 | D : [L]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L51:C9] "MethodIn_default" | P : [L47]test3 | D : [L0]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
 [L46:C19] "M2" | P : [L45]ImportOpened | D : self | C :  | U : 0
 [L55:C8] "ImportMultiple" | P : [L0]_programRootNode | D : self | C : 3 | U : 0
 [L0:C0] "_default" | P : [L55]ImportMultiple | D : self | C : 1 | U : 0

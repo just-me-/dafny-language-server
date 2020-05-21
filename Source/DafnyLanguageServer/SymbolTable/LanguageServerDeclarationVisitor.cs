@@ -80,17 +80,10 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Field o)
         {
-            UserDefinedType userType = null;
-            if (o.Type is UserDefinedType type)
-            {
-                userType = type;
-            }
-
             CreateSymbol(
                 name: o.Name,
                 kind: Kind.Field,
                 type: o.Type,
-                typeDefinition: userType,
 
                 positionAsToken: o.tok,
                 bodyStartPosAsToken: o.BodyStartTok,

@@ -268,6 +268,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Every Symbol must have a token..
+        /// </summary>
+        internal static string token_requires {
+            get {
+                return ResourceManager.GetString("token_requires", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected string or TextDocumentChangeEvent-Container at text-document-change event request..
         /// </summary>
         internal static string unexpected_file_type {

@@ -42,8 +42,8 @@ namespace DafnyLanguageServer.Core
                 Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4, m5),
                 Range = new Range
                 {
-                    Start = new Position(symbol.Line - 1 ?? 0, symbol.Column - 1 ?? 0),
-                    End = new Position(symbol.Line - 1 ?? 0, symbol.ColumnEnd - 1 ?? 0)
+                    Start = new Position(symbol.Line - 1, symbol.Column - 1),
+                    End = new Position(symbol.Line - 1, symbol.ColumnEnd - 1)
                 }
             };
 

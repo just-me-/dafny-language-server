@@ -10,13 +10,13 @@ using Type = Microsoft.Dafny.Type;
 
 namespace SymbolTableTest
 {
-    class SymbolInformationFake : SymbolInformation, ISymbol
+    class SymbolInformationFake : SymbolInformation //todo eig sollte man vom interface erben aber ich seh den punkt.
     {
-        public override int? Line => _lineStart;
+        public override int Line => _lineStart;
         public override int? LineStart => _lineStart;
         public override int? LineEnd => _lineEnd;
-        public override int? ColumnStart => _columnStart;
-        public override int? ColumnEnd => _columnEnd;
+        public override int ColumnStart => _columnStart;
+        public override int ColumnEnd => _columnEnd;
 
         private int _lineStart;
         private int _lineEnd;

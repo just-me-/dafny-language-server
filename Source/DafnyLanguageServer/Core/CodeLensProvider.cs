@@ -55,7 +55,7 @@ namespace DafnyLanguageServer.Core
                     };
                     locations.Add(new Location
                     {
-                        Uri = usage.File,
+                        Uri = usage.FileUri,
                         Range = new Range(startPos, endPos)
                     });
                 }
