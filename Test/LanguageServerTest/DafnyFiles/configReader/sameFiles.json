@@ -4,5 +4,5 @@
 		"log": "Logs/a.txt",
 		"loglevel": 4
 	},
-	"syncKind" : "incremental"
+	"synckind" : "incremental"
 }

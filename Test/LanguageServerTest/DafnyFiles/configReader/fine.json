@@ -4,5 +4,5 @@
 		"log": "Logs/b.txt",
 		"loglevel": 0
 	},
-	"syncKind" : "full"
+	"synckind" : "full"
 }

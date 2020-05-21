@@ -4,5 +4,5 @@
 		"log": 2,
 		"loglevel": 4
 	},
-	"syncKind" : "incremental"
+	"synckind" : "incremental"
 }

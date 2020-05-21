@@ -6,5 +6,5 @@
 		"loglevel": 4,
 		"stuffuf": "bla"
 	},
-	"syncKind" : "incremental"
+	"synckind" : "incremental"
 }
