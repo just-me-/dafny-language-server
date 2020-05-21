@@ -187,162 +187,162 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Leave(AliasModuleDecl o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(AliasModuleDecl o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(ExprDotName e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(ExprDotName e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(ThisExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(ThisExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(NameSegment e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(NonglobalVariable o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(NonglobalVariable o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(LocalVariable o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(LocalVariable o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(BlockStmt o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(BlockStmt o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(WhileStmt s)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(WhileStmt e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(IfStmt e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(IfStmt e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(AssignmentRhs o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(AssignmentRhs o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(TypeRhs e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(TypeRhs e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(Expression o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(Expression o)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(AutoGhostIdentifierExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(AutoGhostIdentifierExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(LiteralExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(LiteralExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(ApplySuffix e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(ApplySuffix e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(NameSegment e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Leave(IdentifierExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
         public override void Visit(IdentifierExpr e)
         {
-            throw new NotImplementedException(Resources.ExceptionMessages.visit_only_declarations);
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
     }
 }

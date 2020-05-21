@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Linq;
+using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -20,6 +21,8 @@ namespace DafnyLanguageServer.Handler
         public DidChangeWatchedFilesHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.watchedFileChanged;
+
         }
 
         public object GetRegistrationOptions()
@@ -38,6 +41,7 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidChangeWatchedFilesParams request, CancellationToken cancellationToken)
         {
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
             return Unit.Task;
         }
     }

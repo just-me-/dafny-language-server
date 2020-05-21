@@ -35,7 +35,7 @@ namespace DafnyLanguageServer.Core
             MarkedString m2 = new MarkedString("Kind: " + symbol.Kind);
             MarkedString m3 = new MarkedString("Type: " + type);
             MarkedString m4 = new MarkedString("Scope: " + symbol.Parent.Name);
-            MarkedString m5 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? "This symbol is a declaration." : symbol.DeclarationOrigin.ToNiceString()));
+            MarkedString m5 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? Resources.LoggingMessages.hover_isDeclaration : symbol.DeclarationOrigin.ToNiceString()));
 
             Hover result = new Hover
             {

@@ -70,7 +70,7 @@ namespace DafnyLanguageServer.Core
             }
 
             string msg;
-            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null) // todo lang file #102
+            if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null)
             {
                 msg = e.Msg;
             }
@@ -113,7 +113,7 @@ namespace DafnyLanguageServer.Core
             List<Diagnostic> relatedInformations = new List<Diagnostic>();
             foreach (ErrorInformation.AuxErrorInfo aux in e.Aux)
             {
-                if (aux.Category == "Execution trace") // todo lang file #102
+                if (aux.Category == "Execution trace")
                 {
                     continue;
                 }

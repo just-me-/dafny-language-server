@@ -19,6 +19,8 @@ namespace DafnyLanguageServer.Handler
         public DefinitionTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
         : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.definitions;
+
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()
@@ -31,7 +33,8 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
 
             try
             {
@@ -45,8 +48,7 @@ namespace DafnyLanguageServer.Handler
 
             catch (Exception e)
             {
-                var msg = "Internal server error handling Definition"; //todo lang
-                HandleError(msg, e);
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
                 return null;
             }
 
@@ -59,12 +61,12 @@ namespace DafnyLanguageServer.Handler
             switch (provider.Outcome)
             {
                 case DefinitionsOutcome.NotFound:
-                    string msg = "No Defintion found for " + uri + $" at L{line}:C{col}";
-                    _log.LogWarning(msg); // todo lang file #102
-                    _mss.SendInformation(msg); // todo lang file #102
+                    string msg = string.Format(Resources.LoggingMessages.goto_notfound, uri, line, col);
+                    _log.LogWarning(msg);
+                    _mss.SendInformation(msg);
                     break;
                 case DefinitionsOutcome.WasAlreadyDefintion:
-                    _mss.SendInformation("This is already the definition."); // todo lang file #102
+                    _mss.SendInformation(Resources.LoggingMessages.goto_alreadyIsDef);
                     break;
             }
 

@@ -61,7 +61,7 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not redirect output stream..
+        ///   Looks up a localized string similar to Could not redirect output stream. .
         /// </summary>
         internal static string could_not_redirect_outputstream {
             get {
@@ -79,11 +79,146 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logical Error: .
+        /// </summary>
+        internal static string diagnostic_logical_error {
+            get {
+                return ResourceManager.GetString("diagnostic_logical_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syntax Error: .
+        /// </summary>
+        internal static string diagnostic_syntax_error {
+            get {
+                return ResourceManager.GetString("diagnostic_syntax_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error Message:.
         /// </summary>
         internal static string error_msg {
             get {
                 return ResourceManager.GetString("error_msg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is already the definition..
+        /// </summary>
+        internal static string goto_alreadyIsDef {
+            get {
+                return ResourceManager.GetString("goto_alreadyIsDef", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Defintion found for {0} at L{1}:C{2}.
+        /// </summary>
+        internal static string goto_notfound {
+            get {
+                return ResourceManager.GetString("goto_notfound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This symbol is a declaration..
+        /// </summary>
+        internal static string hover_isDeclaration {
+            get {
+                return ResourceManager.GetString("hover_isDeclaration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inner Error: .
+        /// </summary>
+        internal static string inner_error {
+            get {
+                return ResourceManager.GetString("inner_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no renameable symbol at.
+        /// </summary>
+        internal static string rename_no_symbol {
+            get {
+                return ResourceManager.GetString("rename_no_symbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  is not valid. Use only letters, digits and underscores..
+        /// </summary>
+        internal static string rename_only_digits {
+            get {
+                return ResourceManager.GetString("rename_only_digits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  is a reserved word..
+        /// </summary>
+        internal static string rename_reserved_word {
+            get {
+                return ResourceManager.GetString("rename_reserved_word", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IDentifier names must not start with an underscore..
+        /// </summary>
+        internal static string rename_start_with_underscore {
+            get {
+                return ResourceManager.GetString("rename_start_with_underscore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: Internal server error while handling {0}.
+        /// </summary>
+        internal static string request_error {
+            get {
+                return ResourceManager.GetString("request_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handling {0}....
+        /// </summary>
+        internal static string request_handle {
+            get {
+                return ResourceManager.GetString("request_handle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} successfully handled.
+        /// </summary>
+        internal static string request_success {
+            get {
+                return ResourceManager.GetString("request_success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating File: .
+        /// </summary>
+        internal static string request_update {
+            get {
+                return ResourceManager.GetString("request_update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculating Diagnostics....
+        /// </summary>
+        internal static string request_update_diagnostics {
+            get {
+                return ResourceManager.GetString("request_update_diagnostics", resourceCulture);
             }
         }
         

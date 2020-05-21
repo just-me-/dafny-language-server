@@ -19,6 +19,7 @@ namespace DafnyLanguageServer.Handler
         public CodeLensTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.codelens;
         }
 
         public CodeLensRegistrationOptions GetRegistrationOptions()
@@ -32,7 +33,8 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CodeLensContainer> Handle(CodeLensParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Code Lens"); // todo lang file #102
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
             try
             {
                 var manager = _workspaceManager.SymbolTableManager;
@@ -42,7 +44,9 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                HandleError("Error while processing code lens request", e); //todo lang
+
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+
                 return null;
             }
         }

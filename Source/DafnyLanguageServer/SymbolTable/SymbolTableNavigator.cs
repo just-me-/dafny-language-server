@@ -220,8 +220,7 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
-                    // todo translation file
-                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException("Invalid Filter Operation"));   
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException(Resources.ExceptionMessages.invalid_filter_operation);   
                 }
             }
             return list;

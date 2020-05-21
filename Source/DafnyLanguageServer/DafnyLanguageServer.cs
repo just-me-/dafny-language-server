@@ -84,7 +84,7 @@ namespace DafnyLanguageServer
             }
             catch (Exception e)
             {
-                string msg = Resources.LoggingMessages.could_not_redirect_outputstream + " " + e.Message;
+                string msg = Resources.LoggingMessages.could_not_redirect_outputstream + e.Message;
                 msgSender.SendError(msg);
                 log.Error(msg);
             }

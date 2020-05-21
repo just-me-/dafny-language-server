@@ -20,6 +20,8 @@ namespace DafnyLanguageServer.Handler
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.completion;
+
         }
 
         public CompletionRegistrationOptions GetRegistrationOptions()
@@ -33,7 +35,8 @@ namespace DafnyLanguageServer.Handler
 
         public async Task<CompletionList> Handle(CompletionParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Completions"); // todo lang file #102
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
 
             try
             {
@@ -45,7 +48,8 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                HandleError("Error while processing completion request", e); //todo lang
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+
                 return null;
             }
         }

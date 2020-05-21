@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
             bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (type == null || s.Kind == type);
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
-                Name = "*ERROR - DECLARATION SYMBOL NOT FOUND*", // todo lang file #102
+                Name = Resources.SymbolTable.declaration_not_found,
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Usages = new List<ISymbol>()
             };
@@ -142,7 +142,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                throw new InvalidOperationException("SymbolCreationError: Symbol is not stated as declaration, but neither was a declarationOrigin given.");
+                throw new InvalidOperationException(Resources.SymbolTable.symbol_creation_declaration_error);
             }
 
             if (addUsageAtDeclaration)

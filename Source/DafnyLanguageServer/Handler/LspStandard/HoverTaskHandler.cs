@@ -20,12 +20,15 @@ namespace DafnyLanguageServer.Handler
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.hover;
+
         }
 
 
         public async Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Hover...");
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
             try
             {
                 var manager = _workspaceManager.SymbolTableManager;
@@ -37,7 +40,8 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                HandleError("Error while processing Hover request", e); //todo lang
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+
                 return null;
             }
         }

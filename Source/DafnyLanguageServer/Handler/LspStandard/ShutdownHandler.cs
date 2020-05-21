@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.Handler
     /// bei System.Activator.CreateInstance(Type type, Boolean nonPublic)
     /// bei System.Activator.CreateInstance(Type type)
     /// </summary>
-    public class ShutdownHandler : IShutdownHandler, IExitHandler
+    public class ShutdownHandler :  IShutdownHandler, IExitHandler
     {
         public Task<Unit> Handle(EmptyRequest request, CancellationToken cancellationToken)
         {

@@ -3,7 +3,7 @@ method  addOne(i: int) returns (r:int) {
     r := i + 1;
 }
 
-class MyClass {
+class My Class {
 
     var field: int;
 

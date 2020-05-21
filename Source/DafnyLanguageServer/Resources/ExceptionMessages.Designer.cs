@@ -79,6 +79,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This auto completion desire is not yet supported..
+        /// </summary>
+        internal static string completion_not_yet_supported {
+            get {
+                return ResourceManager.GetString("completion_not_yet_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while parsing json config..
         /// </summary>
         internal static string config_could_not_be_parsed {
@@ -115,6 +124,42 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specific model does not contain a [ :initial state ]..
+        /// </summary>
+        internal static string counter_example_no_init_state {
+            get {
+                return ResourceManager.GetString("counter_example_no_init_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Error constructing DTU: PhysicalFile must not be null..
+        /// </summary>
+        internal static string DTU_no_physical_file_given {
+            get {
+                return ResourceManager.GetString("DTU_no_physical_file_given", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A DafnyTranslationUnit can only be used once. Create a new one!.
+        /// </summary>
+        internal static string DTU_only_use_once {
+            get {
+                return ResourceManager.GetString("DTU_only_use_once", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cursor position is exceeding line width..
+        /// </summary>
+        internal static string file_cursor_exceed_line_width {
+            get {
+                return ResourceManager.GetString("file_cursor_exceed_line_width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global Class Scope was not registered..
         /// </summary>
         internal static string global_class_not_registered {
@@ -124,11 +169,29 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Filter Operation - no results were found but at least one was expected..
+        /// </summary>
+        internal static string invalid_filter_operation {
+            get {
+                return ResourceManager.GetString("invalid_filter_operation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Module given to deep visitor as entry point..
         /// </summary>
         internal static string invalid_module_handed_to_deep_visitor {
             get {
                 return ResourceManager.GetString("invalid_module_handed_to_deep_visitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LogLevel exceeds limits. Must be between 0 and 6. Setting to default LogLevel 4 = Error..
+        /// </summary>
+        internal static string loglevel_illegal {
+            get {
+                return ResourceManager.GetString("loglevel_illegal", resourceCulture);
             }
         }
         
@@ -147,6 +210,15 @@ namespace DafnyLanguageServer.Resources {
         internal static string negativ_line {
             get {
                 return ResourceManager.GetString("negativ_line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Argument provided for switch .
+        /// </summary>
+        internal static string no_arg_for_switch {
+            get {
+                return ResourceManager.GetString("no_arg_for_switch", resourceCulture);
             }
         }
         
@@ -183,6 +255,15 @@ namespace DafnyLanguageServer.Resources {
         internal static string unexpected_file_type {
             get {
                 return ResourceManager.GetString("unexpected_file_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown switch: &apos;{0}&apos;. Please refer to readme.md.
+        /// </summary>
+        internal static string unknown_switch {
+            get {
+                return ResourceManager.GetString("unknown_switch", resourceCulture);
             }
         }
         

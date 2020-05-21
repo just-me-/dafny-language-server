@@ -17,6 +17,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.rename;
+
         }
 
         public RenameRegistrationOptions GetRegistrationOptions()
@@ -30,7 +32,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
 
         public async Task<WorkspaceEdit> Handle(RenameParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Rename...");
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
             try
             {
                 var manager = _workspaceManager.SymbolTableManager;
@@ -45,7 +48,8 @@ namespace DafnyLanguageServer.Handler.LspStandard
             }
             catch (Exception e)
             {
-                HandleError("Error while processing rename request", e); //todo lang
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+
                 return null;
             }
         }

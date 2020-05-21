@@ -122,13 +122,13 @@ namespace DafnyLanguageServer.Core
                     {
                         continue;
                     }
-                    if (state.Name.Contains(":initial state")) // todo lang file #102
+                    if (state.Name.Contains(":initial state"))
                     {
                         return state;
                     }
                 }
 
-                throw new InvalidOperationException("Specific model does not contain a :initial state"); // todo lang file #102
+                throw new InvalidOperationException(Resources.ExceptionMessages.counter_example_no_init_state);
             }
 
             private CounterExample ExtractCounterExampleFromState(StateNode state)

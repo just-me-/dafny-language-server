@@ -206,6 +206,21 @@
     <Compile Include="Handler\LspStandard\RenameTaskHandler.cs" />
     <Compile Include="Handler\LspStandard\ShutdownHandler.cs" />
     <Compile Include="Handler\LspBasicHandler.cs" />
+    <Compile Include="Resources\CodeLensMessages.Designer.cs">
+      <DependentUpon>CodeLensMessages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\SymbolTable.Designer.cs">
+      <DependentUpon>SymbolTable.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Requests.Designer.cs">
+      <DependentUpon>Requests.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Resources\FileAndFolderLocations.cs" />
     <Compile Include="Resources\SymbolTableStrings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -280,6 +295,19 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Resources\CodeLensMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CodeLensMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SymbolTable.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SymbolTable.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Requests.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Requests.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\ConfigurationStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConfigurationStrings.Designer.cs</LastGenOutput>
@@ -287,6 +315,7 @@
     <EmbeddedResource Include="Resources\CompilationResults.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CompilationResults.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -296,6 +325,7 @@
     <EmbeddedResource Include="Resources\LoggingMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LoggingMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SymbolTableStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

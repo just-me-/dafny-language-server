@@ -117,69 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="could_not_redirect_outputstream" xml:space="preserve">
-    <value>Could not redirect output stream. </value>
+  <data name="codelens" xml:space="preserve">
+    <value>Code Lens</value>
   </data>
-  <data name="could_not_setup_config" xml:space="preserve">
-    <value>Error while setting up config. Some Defaults may be in use.</value>
+  <data name="compile" xml:space="preserve">
+    <value>Compilation</value>
   </data>
-  <data name="diagnostic_logical_error" xml:space="preserve">
-    <value>Logical Error: </value>
+  <data name="completion" xml:space="preserve">
+    <value>Auto Completion</value>
   </data>
-  <data name="diagnostic_syntax_error" xml:space="preserve">
-    <value>Syntax Error: </value>
+  <data name="counterExample" xml:space="preserve">
+    <value>Counter Example</value>
   </data>
-  <data name="error_msg" xml:space="preserve">
-    <value>Error Message:</value>
+  <data name="definitions" xml:space="preserve">
+    <value>Goto Definition</value>
   </data>
-  <data name="goto_alreadyIsDef" xml:space="preserve">
-    <value>This is already the definition.</value>
+  <data name="hover" xml:space="preserve">
+    <value>Hover Information</value>
   </data>
-  <data name="goto_notfound" xml:space="preserve">
-    <value>No Defintion found for {0} at L{1}:C{2}</value>
-    <comment>Params: uri, line, col</comment>
+  <data name="rename" xml:space="preserve">
+    <value>Rename</value>
   </data>
-  <data name="hover_isDeclaration" xml:space="preserve">
-    <value>This symbol is a declaration.</value>
+  <data name="shutdown" xml:space="preserve">
+    <value>Shutdown</value>
   </data>
-  <data name="inner_error" xml:space="preserve">
-    <value>Inner Error: </value>
+  <data name="update" xml:space="preserve">
+    <value>Document Update</value>
   </data>
-  <data name="rename_no_symbol" xml:space="preserve">
-    <value>There is no renameable symbol at</value>
-  </data>
-  <data name="rename_only_digits" xml:space="preserve">
-    <value> is not valid. Use only letters, digits and underscores.</value>
-  </data>
-  <data name="rename_reserved_word" xml:space="preserve">
-    <value> is a reserved word.</value>
-  </data>
-  <data name="rename_start_with_underscore" xml:space="preserve">
-    <value>IDentifier names must not start with an underscore.</value>
-  </data>
-  <data name="request_error" xml:space="preserve">
-    <value>Error: Internal server error while handling {0}</value>
-  </data>
-  <data name="request_handle" xml:space="preserve">
-    <value>Handling {0}...</value>
-    <comment>0: What request type? e.g. "Code Lens"</comment>
-  </data>
-  <data name="request_success" xml:space="preserve">
-    <value>{0} successfully handled</value>
-  </data>
-  <data name="request_update" xml:space="preserve">
-    <value>Updating File: </value>
-  </data>
-  <data name="request_update_diagnostics" xml:space="preserve">
-    <value>Calculating Diagnostics...</value>
-  </data>
-  <data name="server_closed" xml:space="preserve">
-    <value>Server closed.</value>
-  </data>
-  <data name="server_running" xml:space="preserve">
-    <value>Server is running.</value>
-  </data>
-  <data name="server_starting" xml:space="preserve">
-    <value>Server is starting...</value>
+  <data name="watchedFileChanged" xml:space="preserve">
+    <value>Watched File Change</value>
   </data>
 </root>

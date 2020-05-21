@@ -122,7 +122,7 @@ namespace DafnyLanguageServer.Core
             return new CompilerResults
             {
                 Error = true,
-                Message = $"{Resources.CompilationResults.compilation_failed}{msg}",
+                Message = Resources.CompilationResults.compilation_failed + msg,
                 Executable = false
             };
         }

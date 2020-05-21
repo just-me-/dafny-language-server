@@ -20,7 +20,7 @@ namespace DafnyLanguageServer.DafnyAccess
     {
         public DafnyTranslationUnit(PhysicalFile file)
         {
-            _file = file ?? throw new ArgumentNullException(nameof(file), "Internal Error constructing DTU: PhysicalFile must be non-null."); //todo lang
+            _file = file ?? throw new ArgumentNullException(nameof(file), ExceptionMessages.DTU_no_physical_file_given);
         }
 
         private TranslationStatus _status = TranslationStatus.Virgin;
@@ -83,7 +83,7 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             if (_dirtyInstance)
             {
-                throw new InvalidOperationException("You can use this instance only once!"); //todo lang
+                throw new InvalidOperationException(Resources.ExceptionMessages.DTU_only_use_once);
             }
             _dirtyInstance = true;
         }
@@ -211,9 +211,9 @@ namespace DafnyLanguageServer.DafnyAccess
             ExecutionEngine.Inline(boogieProgram);
 
             var ps = new PipelineStatistics();
-            var stringteil = "ServerProgram_" + moduleName;
+            var programId = "BoogieProgram_" + moduleName;
             var time = DateTime.UtcNow.Ticks.ToString();
-            var boogieOutcome = ExecutionEngine.InferAndVerify(boogieProgram, ps, stringteil, AddBoogieErrorToList, time);
+            var boogieOutcome = ExecutionEngine.InferAndVerify(boogieProgram, ps, programId, AddBoogieErrorToList, time);
 
             bool success = boogieOutcome == PipelineOutcome.Done ||
                            boogieOutcome == PipelineOutcome.VerificationCompleted;

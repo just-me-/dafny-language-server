@@ -22,14 +22,14 @@ namespace DafnyLanguageServer.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ConfigurationStrings {
+    internal class SymbolTable {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ConfigurationStrings() {
+        internal SymbolTable() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DafnyLanguageServer.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DafnyLanguageServer.Resources.ConfigurationStrings", typeof(ConfigurationStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DafnyLanguageServer.Resources.SymbolTable", typeof(SymbolTable).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,38 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **/*.dfy.
+        ///   Looks up a localized string similar to *ERROR - DECLARATION SYMBOL NOT FOUND*.
         /// </summary>
-        internal static string file_watch_pattern {
+        internal static string declaration_not_found {
             get {
-                return ResourceManager.GetString("file_watch_pattern", resourceCulture);
+                return ResourceManager.GetString("declaration_not_found", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ../model.bvd.
+        ///   Looks up a localized string similar to Warning: This symbol was created using general Visit(Expression o). A specific overload should be implemented..
         /// </summary>
-        internal static string model_path {
+        internal static string general_expression_visit_used {
             get {
-                return ResourceManager.GetString("model_path", resourceCulture);
+                return ResourceManager.GetString("general_expression_visit_used", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SymbolCreationError: Symbol is not stated as declaration, but neither was a declarationOrigin given..
+        /// </summary>
+        internal static string symbol_creation_declaration_error {
+            get {
+                return ResourceManager.GetString("symbol_creation_declaration_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TypeRhs shoudl ahve a UserDefinedType.
+        /// </summary>
+        internal static string typeRHS_vs_UserDefinedType {
+            get {
+                return ResourceManager.GetString("typeRHS_vs_UserDefinedType", resourceCulture);
             }
         }
     }

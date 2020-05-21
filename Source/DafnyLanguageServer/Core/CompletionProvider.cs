@@ -81,7 +81,7 @@ namespace DafnyLanguageServer.Core
 
             if (line.Length < col || col < 0)
             {
-                throw new ArgumentException("Cursor position is exceeding line width"); // todo resx auslagern
+                throw new ArgumentException(Resources.ExceptionMessages.file_cursor_exceed_line_width);
             }
 
             line = line.Substring(0, col);
@@ -127,7 +127,7 @@ namespace DafnyLanguageServer.Core
                 case CompletionType.AllInScope:
                     return GetAllSymbolsInScope(Manager, wrappingEntrypointSymbol);
                 default:
-                    throw new ArgumentException("Users desire is not supported yet."); // todo lang file
+                    throw new ArgumentException(Resources.ExceptionMessages.completion_not_yet_supported);
             }
         }
 

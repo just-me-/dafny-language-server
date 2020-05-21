@@ -26,7 +26,7 @@ namespace DafnyLanguageServer.Core
 
             if (symbolAtCursor == null)
             {
-                SetError($"There is no renameable symbol at L{line}:C{col}");
+                SetError(Resources.LoggingMessages.rename_no_symbol + $" L{line}:C{col}");
                 return null;
             }
 
@@ -67,18 +67,18 @@ namespace DafnyLanguageServer.Core
         {
             if (_reservedWords.Contains(newName))
             {
-                SetError($"{newName} is a reserved word.");
+                SetError(newName + Resources.LoggingMessages.rename_reserved_word);
             }
 
             if (!newName.All(c => char.IsLetterOrDigit(c) || c == '_'))
             {
-                SetError($"{newName} is not valid. Use only letters, digits and underscores.");
+                SetError(newName + Resources.LoggingMessages.rename_only_digits);
 
             }
 
             if (newName.StartsWith("_"))
             {
-                SetError("Identifier names must not start with an underscore.");
+                SetError(Resources.LoggingMessages.rename_start_with_underscore);
             }
 
         }

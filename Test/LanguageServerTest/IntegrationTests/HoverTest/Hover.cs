@@ -16,7 +16,7 @@ namespace HoverTest
         }
 
         [Test]
-        public void Test1()
+        public void LocalVariableUsage()
         {
             Client.TextDocument.DidOpen(Files.hv_hover, "dfy");
             var result = Client.TextDocument.Hover(Files.hv_hover, 6, 14).Result;
@@ -34,7 +34,7 @@ namespace HoverTest
         }
 
         [Test]
-        public void Test2()
+        public void ClassDeclaration()
         {
             Client.TextDocument.DidOpen(Files.hv_hover, "dfy");
             var result = Client.TextDocument.Hover(Files.hv_hover, 0, 6).Result;

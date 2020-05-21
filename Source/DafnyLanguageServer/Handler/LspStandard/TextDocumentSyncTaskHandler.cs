@@ -28,6 +28,8 @@ namespace DafnyLanguageServer.Handler
         public TextDocumentSyncTaskHandler(ILanguageServer router, IWorkspace workspaceManager, ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
         {
+            _method = Resources.Requests.update;
+
         }
 
         public TextDocumentChangeRegistrationOptions GetRegistrationOptions()
@@ -51,17 +53,17 @@ namespace DafnyLanguageServer.Handler
         {
             try
             {
-                _log.LogInformation("Updating File " + uri); // todo lang file #102
+                _log.LogInformation(Resources.LoggingMessages.request_update + uri);
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
-                _log.LogInformation("Calculating Diagnostics"); // todo lang file #102
+                _log.LogInformation(Resources.LoggingMessages.request_update_diagnostics);
                 IDiagnosticsProvider provider = new DiagnosticsProvider(_router);
                 provider.SendDiagnostics(fileRepository);
-                _log.LogInformation("Update Request successfully handled."); // todo lang file #102
+                _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
             }
             catch (Exception e)
             {
-                const string msg = "Internal server error handling document update. Please restart the server."; // todo lang file #102
-                HandleError(msg, e);
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+
             }
         }
 

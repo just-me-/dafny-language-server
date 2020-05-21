@@ -22,24 +22,24 @@ namespace DafnyLanguageServer.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ConfigurationStrings {
+    public class CodeLensMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ConfigurationStrings() {
+        internal CodeLensMessages() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DafnyLanguageServer.Resources.ConfigurationStrings", typeof(ConfigurationStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DafnyLanguageServer.Resources.CodeLensMessages", typeof(CodeLensMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace DafnyLanguageServer.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,20 +61,29 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **/*.dfy.
+        ///   Looks up a localized string similar to  references to .
         /// </summary>
-        internal static string file_watch_pattern {
+        public static string multi_refs {
             get {
-                return ResourceManager.GetString("file_watch_pattern", resourceCulture);
+                return ResourceManager.GetString("multi_refs", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ../model.bvd.
+        ///   Looks up a localized string similar to Never used yet. Can you remove .
         /// </summary>
-        internal static string model_path {
+        public static string not_used {
             get {
-                return ResourceManager.GetString("model_path", resourceCulture);
+                return ResourceManager.GetString("not_used", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 reference to .
+        /// </summary>
+        public static string one_ref {
+            get {
+                return ResourceManager.GetString("one_ref", resourceCulture);
             }
         }
     }

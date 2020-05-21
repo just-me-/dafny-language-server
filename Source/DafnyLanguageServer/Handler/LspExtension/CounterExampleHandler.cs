@@ -43,11 +43,14 @@ namespace DafnyLanguageServer.Handler
         public CounterExampleHandler(ILanguageServer router, IWorkspace b, ILoggerFactory loggerFactory)
         : base(router, b, loggerFactory)
         {
+            _method = Resources.Requests.counterExample;
+
         }
 
         public async Task<CounterExampleResults> Handle(CounterExampleParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Counter Example"); // todo lang file #102
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
+
 
             try
             {
@@ -56,7 +59,7 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                HandleError("Error while processing counter examper request", e); //todo lang
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
                 return new CounterExampleResults();
             }
         }

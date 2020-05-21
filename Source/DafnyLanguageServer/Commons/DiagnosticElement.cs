@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Commons
         {
             if (severity == ErrorLevel.Error)
             {
-                return new DiagnosticElement(eMsg.token, "Syntax Error: " + eMsg.message, severity);
+                return new DiagnosticElement(eMsg.token, Resources.LoggingMessages.diagnostic_syntax_error + eMsg.message, severity);
             }
             return new DiagnosticElement(eMsg.token, eMsg.message, severity);
 
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Commons
         public static DiagnosticElement ConvertToErrorInformation(this ErrorInformation eInfo)
         {
             if (eInfo is null) return null;
-            return new DiagnosticElement(eInfo.Tok, "Logical Error: " + eInfo.Msg, ErrorLevel.Error)
+            return new DiagnosticElement(eInfo.Tok, Resources.LoggingMessages.diagnostic_logical_error + eInfo.Msg, ErrorLevel.Error)
             {
                 Aux = eInfo.Aux
             };

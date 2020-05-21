@@ -147,7 +147,7 @@ namespace DafnyLanguageServer.Tools
 
             if (value.Length < 1)
             {
-                throw new ArgumentException("No Argument provided for switch " + key); // todo lang file #102
+                throw new ArgumentException(ExceptionMessages.no_arg_for_switch + key);
 
             }
 
@@ -166,7 +166,7 @@ namespace DafnyLanguageServer.Tools
                     LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), value, true);
                     break;
                 default:
-                    throw new ArgumentException("Unknown switch: '" + key + "'. Please refer to readme.md"); // todo lang file #102
+                    throw new ArgumentException(string.Format(ExceptionMessages.unknown_switch, key));
             }
         }
 
@@ -174,7 +174,7 @@ namespace DafnyLanguageServer.Tools
         {
             if (LanguageServerConfig.LogLevel < 0 || (int)LanguageServerConfig.LogLevel > 5)
             {
-                AddError("LogLevel exceeds limits. Must be between 0 and 6. Setting to default LogLevel 4 = Error"); // todo lang file #102
+                AddError(ExceptionMessages.loglevel_illegal);
                 LanguageServerConfig.LogLevel = LogLevel.Error;
             }
         }
@@ -191,7 +191,7 @@ namespace DafnyLanguageServer.Tools
             AddError(e.Message);
             if (e.InnerException != null)
             {
-                AddError("Inner error: " + e.InnerException.Message); // todo lang file #102
+                AddError(Resources.LoggingMessages.inner_error + e.InnerException.Message);
             }
         }
 

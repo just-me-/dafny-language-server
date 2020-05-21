@@ -35,11 +35,12 @@ namespace DafnyLanguageServer.Handler
         public CompileHandler(ILanguageServer router, IWorkspace b, ILoggerFactory lf)
             : base(router, b, lf)
         {
+            _method = Resources.Requests.compile;
         }
 
         public async Task<CompilerResults> Handle(CompilerParams request, CancellationToken cancellationToken)
         {
-            _log.LogInformation("Handling Compilation...");// todo lang file #102
+            _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
 
             try
             {
@@ -48,7 +49,7 @@ namespace DafnyLanguageServer.Handler
             }
             catch (Exception e)
             {
-                HandleError("Error while processing compile request", e); //todo lang
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
                 return null;
             }
         }

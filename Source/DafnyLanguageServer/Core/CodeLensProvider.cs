@@ -60,23 +60,22 @@ namespace DafnyLanguageServer.Core
                 }
             }
 
-            // todo lang file #102
             // =?: operator
             string msgTitle;
             if (symbolInformation.Usages.Any())
             {
                 if (symbolInformation.Usages.Count == 1)
                 {
-                    msgTitle = $"1 reference to {symbolInformation.Name}";
+                    msgTitle = Resources.CodeLensMessages.one_ref + symbolInformation.Name;
                 }
                 else
                 {
-                    msgTitle = $"{symbolInformation.Usages.Count} references to {symbolInformation.Name}";
+                    msgTitle = symbolInformation.Usages.Count + Resources.CodeLensMessages.multi_refs + symbolInformation.Name;
                 }
             }
             else
             {
-                msgTitle = $"Never used yet. Can you remove {symbolInformation.Name}?";
+                msgTitle = Resources.CodeLensMessages.not_used + symbolInformation.Name + "?";
             }
 
             var args = new
