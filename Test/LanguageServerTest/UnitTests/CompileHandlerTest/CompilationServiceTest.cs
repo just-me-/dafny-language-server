@@ -171,11 +171,7 @@ namespace CompilationServiceTest
 
             var results = new DafnyTranslationUnit(physFile).Verify();
 
-            var repo = new FileRepository()
-            {
-                PhysicalFile = physFile,
-                Result = results
-            };
+            var repo = new FileRepository(physFile, results);
 
             compilerResults = new CompileProvider(repo, args).Compile();
         }

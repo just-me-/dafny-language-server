@@ -332,7 +332,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (t == null)
             {
-                throw new InvalidOperationException(Resources.SymbolTable.typeRHS_vs_UserDefinedType); //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
+                throw new InvalidOperationException(Resources.SymbolTableStrings.typeRHS_vs_UserDefinedType); //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
             }
 
 
@@ -496,7 +496,7 @@ namespace DafnyLanguageServer.SymbolTable
                 userType = o.Type as UserDefinedType;
             }
             CreateSymbol(
-                name: o.tok.val + Resources.SymbolTable.general_expression_visit_used,
+                name: o.tok.val + Resources.SymbolTableStrings.general_expression_visit_used,
                 kind: null,
                 type: o.Type,
                 typeDefinition: userType,

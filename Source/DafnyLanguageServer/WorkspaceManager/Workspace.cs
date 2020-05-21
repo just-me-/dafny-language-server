@@ -45,25 +45,6 @@ namespace DafnyLanguageServer.WorkspaceManager
 
             _files.AddOrUpdate(documentPath, fileRepository, (k, v) => fileRepository);
 
-            //Generate new fancy Symbol Table for Testing:
-            //kommt dann glaub eher in das filerepo rein
-            // dokuuu "table ist auf workspace (vscode) basis, ned auf file basis oder so
-            // wir müssen das noch diskutierne. das wäre natürlich die 'geile' lösung
-            // aber das kreige wir ja niemals hin :O.
-            // ich glaube, es wäre robuster,w enn wir wirklich pro file ein table machen.
-            // das 'dafnyProgram' und der ganze bums ist ja auch einfach 'einmal pro file'^in den tranlsation results drin.
-            // dies obwohl das dafnyProgram ja eignetlich alle includes und so enthält....
-            // das wäre denk ich was aka "es wäre gut, aber wir haben es jetzt so gemacht, weil blabla".
-            // aka dann etwas für die nächsten hust hstu xd.
-            if (fileRepository.Result.TranslationStatus >= TranslationStatus.Resolved)
-            {
-                SymbolTableSymbolTable = new SymbolTable.SymbolTable(fileRepository.Result.DafnyProgram);
-                // if not null... update changes 
-                // not create all symbols every time... todo 
-                // get wrapping symbol of cursor position... update "this childs in symbols". 
-                // commpile "just this file again" 
-            }
-
             return fileRepository;
         }
 
@@ -76,14 +57,12 @@ namespace DafnyLanguageServer.WorkspaceManager
         {
             return _files.TryGetValue(documentPath, out var bufferedFile)
                 ? bufferedFile
-                : new FileRepository
-                {
-                    PhysicalFile = new PhysicalFile
+                : new FileRepository(new PhysicalFile
                     {
                         Uri = documentPath,
                         Filepath = documentPath.LocalPath
-                    }
-                };
+                    });
+        
         }
 
         public FileRepository GetFileRepository(Uri documentPath)

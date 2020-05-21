@@ -43,7 +43,7 @@ namespace DafnyLanguageServer.SymbolTable
             bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (type == null || s.Kind == type);
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
-                Name = Resources.SymbolTable.declaration_not_found,
+                Name = Resources.SymbolTableStrings.declaration_not_found,
                 ChildrenHash = new Dictionary<string, ISymbol>(),
                 Usages = new List<ISymbol>()
             };
@@ -142,7 +142,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             else
             {
-                throw new InvalidOperationException(Resources.SymbolTable.symbol_creation_declaration_error);
+                throw new InvalidOperationException(Resources.SymbolTableStrings.symbol_creation_declaration_error);
             }
 
             if (addUsageAtDeclaration)

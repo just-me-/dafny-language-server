@@ -55,9 +55,11 @@ namespace DafnyLanguageServer.Handler
             {
                 _log.LogInformation(Resources.LoggingMessages.request_update + uri);
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
+
                 _log.LogInformation(Resources.LoggingMessages.request_update_diagnostics);
                 IDiagnosticsProvider provider = new DiagnosticsProvider(_router);
                 provider.SendDiagnostics(fileRepository);
+
                 _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
             }
             catch (Exception e)

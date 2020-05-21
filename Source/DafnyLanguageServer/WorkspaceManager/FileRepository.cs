@@ -16,8 +16,23 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// </summary>
     public class FileRepository
     {
-        public PhysicalFile PhysicalFile { get; set; }
-        public TranslationResult Result { get; set; }
+        public FileRepository(PhysicalFile physicalFile)
+        {
+            PhysicalFile = physicalFile;
+        }
+
+        /// <summary>
+        /// This CTOR is for testing only.
+        /// </summary>
+        public FileRepository(PhysicalFile physFile, TranslationResult results)
+        {
+            PhysicalFile = physFile;
+            Result = results;
+
+        }
+
+        public PhysicalFile PhysicalFile { get; }
+        public TranslationResult Result { get; private set; }
 
         /// <summary>
         /// Updates the physical file with the provided sourcecode.
@@ -51,12 +66,15 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// </summary>
         private void GenerateTranslationResult()
         {
-            if (PhysicalFile != null)
+            if (PhysicalFile == null)
             {
-                DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
-                Result = translationUnit.Verify();
+                throw new InvalidOperationException(Resources.ExceptionMessages.file_repo_must_have_physical);
             }
+
+            DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
+            Result = translationUnit.Verify();
         }
+
 
 
 

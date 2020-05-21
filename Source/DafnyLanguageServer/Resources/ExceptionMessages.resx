@@ -200,4 +200,7 @@
   <data name="tmp_invalid_class_path" xml:space="preserve">
     <value>Invalid class path... expected Module.Class pattern.</value>
   </data>
+  <data name="file_repo_must_have_physical" xml:space="preserve">
+    <value>A Filerepository must habe a Physical File but it wasn't the case.</value>
+  </data>
 </root>

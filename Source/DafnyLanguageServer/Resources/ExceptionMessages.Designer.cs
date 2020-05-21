@@ -160,6 +160,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Filerepository must habe a Physical File but it wasn&apos;t the case..
+        /// </summary>
+        internal static string file_repo_must_have_physical {
+            get {
+                return ResourceManager.GetString("file_repo_must_have_physical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global Class Scope was not registered..
         /// </summary>
         internal static string global_class_not_registered {
