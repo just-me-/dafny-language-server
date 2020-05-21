@@ -33,7 +33,6 @@ namespace DafnyLanguageServer.Handler
         {
             _log.LogInformation("Handling Goto Definition..."); // todo lang file #102
 
-
             try
             {
                 var uri = request.TextDocument.Uri;
@@ -46,8 +45,8 @@ namespace DafnyLanguageServer.Handler
 
             catch (Exception e)
             {
-                _log.LogError("Internal server error handling Definition: " + e.Message); // todo lang file #102
-                _mss.SendError("Internal server error handling Definition: " + e.Message);// todo lang file #102
+                var msg = "Internal server error handling Definition"; //todo lang
+                HandleError(msg, e);
                 return null;
             }
 

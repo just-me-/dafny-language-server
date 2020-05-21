@@ -38,7 +38,6 @@ namespace DafnyLanguageServer.Handler
             catch (Exception e)
             {
                 HandleError("Error while processing Hover request", e); //todo lang
-
                 return null;
             }
         }
