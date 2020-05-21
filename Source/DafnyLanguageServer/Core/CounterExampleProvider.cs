@@ -76,7 +76,7 @@ namespace DafnyLanguageServer.Core
                 return Model.ParseModels(new StringReader(modelString));
             }
 
-            private List<ILanguageSpecificModel> BuildModels(List<Model> modellist)
+            private List<ILanguageSpecificModel> BuildModels(IEnumerable<Model> modellist)
             {
                 var specificModels = new List<ILanguageSpecificModel>();
                 foreach (var model in modellist)

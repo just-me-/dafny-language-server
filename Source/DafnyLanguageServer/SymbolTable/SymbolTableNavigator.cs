@@ -210,12 +210,16 @@ namespace DafnyLanguageServer.SymbolTable
 
         private IEnumerable<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
+            if (symbol == null)
+            {
+                throw new ArgumentNullException(nameof(symbol), Resources.ExceptionMessages.symbol_entrypoint_must_be_set);
+            }
             filter = DefaultPredicateFilter(filter);
 
-            var list = symbol?.Children?.Where(filter.Invoke).ToList();  //list todo könnte null sein... was tun?
-            
+            var list = symbol.Children?.Where(filter.Invoke).ToList() ?? new List<ISymbol>();
+
             // The following branch checks if the symbol is inherited by a base class
-            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))           //symbol todo könnte null sein... was tun?
+            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {

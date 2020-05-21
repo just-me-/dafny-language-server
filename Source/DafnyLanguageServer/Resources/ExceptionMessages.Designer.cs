@@ -259,6 +259,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Symbol Entrypoint must be set for navigator methods. It must not be null..
+        /// </summary>
+        internal static string symbol_entrypoint_must_be_set {
+            get {
+                return ResourceManager.GetString("symbol_entrypoint_must_be_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid class path... expected Module.Class pattern..
         /// </summary>
         internal static string tmp_invalid_class_path {

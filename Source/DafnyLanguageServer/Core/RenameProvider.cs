@@ -94,7 +94,7 @@ namespace DafnyLanguageServer.Core
             return output;
         }
 
-        private List<TextEdit> GetOrCreate(Dictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
+        private List<TextEdit> GetOrCreate(IDictionary<Uri, List<TextEdit>> Changes, ISymbol symbol)
         {
             if (Changes.TryGetValue(symbol.FileUri, out var textEditsPerFile))
             {

@@ -60,7 +60,6 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="name"></param>
         /// <param name="kind">Variable, Method, Module, ...</param>
         /// <param name="type">int, bool, Person, Vehicle, ...</param>
-        /// <param name="typeDefinition">UserDefinedType; entry point for ResolvedClass for class instances.</param>
         /// <param name="positionAsToken"></param>
         /// <param name="bodyStartPosAsToken"></param>
         /// <param name="bodyEndPosAsToken"></param>

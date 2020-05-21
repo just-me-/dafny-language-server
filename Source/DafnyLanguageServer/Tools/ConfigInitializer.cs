@@ -40,6 +40,7 @@ namespace DafnyLanguageServer.Tools
         /// <summary>
         /// This constructor allows injection of a custom json config file for testing.
         /// </summary>
+        /// <param name="launchArguments">Launch Arguments</param>
         /// <param name="jsonConfigFile">Inject a custom json here for testing</param>
         public ConfigInitializer(string[] launchArguments, string jsonConfigFile)
         {

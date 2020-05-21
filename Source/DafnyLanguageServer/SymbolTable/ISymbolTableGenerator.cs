@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DafnyLanguageServer.SymbolTable
+﻿namespace DafnyLanguageServer.SymbolTable
 {
     public interface ISymbolTableGenerator
     {

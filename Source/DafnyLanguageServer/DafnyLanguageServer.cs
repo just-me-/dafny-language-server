@@ -1,6 +1,5 @@
 ﻿using DafnyLanguageServer.Handler;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Server;
 using System;
 using System.IO;
@@ -25,7 +24,7 @@ namespace DafnyLanguageServer
     /// </summary>
     public class DafnyLanguageServer
     {
-        private ILogger log;
+        private readonly ILogger log;
         private MessageSenderService msgSender;
         private readonly ConfigInitializationErrors configInitErrors;
 

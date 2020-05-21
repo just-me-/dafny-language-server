@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -132,7 +130,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             foreach (var symbol in allSymbs)
             {
-                b.AppendLine(symbol.ToString());
+                b.AppendLine(symbol.ToDebugString());
             }
 
             b.AppendLine();

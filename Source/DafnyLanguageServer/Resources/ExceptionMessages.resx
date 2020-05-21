@@ -206,4 +206,7 @@
   <data name="token_requires" xml:space="preserve">
     <value>Every Symbol must have a token.</value>
   </data>
+  <data name="symbol_entrypoint_must_be_set" xml:space="preserve">
+    <value>A Symbol Entrypoint must be set for navigator methods. It must not be null.</value>
+  </data>
 </root>

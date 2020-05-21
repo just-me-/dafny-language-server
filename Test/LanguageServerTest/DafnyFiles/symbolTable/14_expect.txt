@@ -1,0 +1,40 @@
+[L1:C8] "M" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
+[L6:C11] "Counter" | P : [L1]M | D : self | C : 6 | U : 1
+[L7:C13] "count" | P : [L6]Counter | D : self | C :  | U : 4
+[L9:C9] "_ctor" | P : [L6]Counter | D : self | C : 0 | U : 0
+[L13:C16] "reset" | P : [L6]Counter | D : self | C : 0 | U : 1
+[L14:C18] "this" | P : [L13]reset | D : [L6]Counter | C :  | U : 
+[L16:C13] "count" | P : [L13]reset | D : [L7]count | C :  | U : 
+[L18:C16] "increase" | P : [L6]Counter | D : self | C : 0 | U : 2
+[L19:C18] "this" | P : [L18]increase | D : [L6]Counter | C :  | U : 
+[L21:C13] "count" | P : [L18]increase | D : [L7]count | C :  | U : 
+[L21:C22] "addOne" | P : [L18]increase | D : [L2]addOne | C :  | U : 
+[L21:C29] "count" | P : [L18]increase | D : [L7]count | C :  | U : 
+[L24:C16] "get" | P : [L6]Counter | D : self | C : 1 | U : 1
+[L24:C31] "r" | P : [L24]get | D : self | C :  | U : 0
+[L25:C20] "count" | P : [L24]get | D : [L7]count | C :  | U : 
+[L28:C16] "write" | P : [L6]Counter | D : self | C : 1 | U : 3
+[L29:C17] "c" | P : [L28]write | D : self | C :  | U : 1
+[L29:C22] "get" | P : [L28]write | D : [L24]get | C :  | U : 
+[L30:C19] "c" | P : [L28]write | D : [L29]c | C :  | U : 
+[L0:C0] "_default" | P : [L1]M | D : self | C : 1 | U : 0
+[L2:C21] "addOne" | P : [L0]_default | D : self | C : 1 | U : 1
+[L2:C28] "i" | P : [L2]addOne | D : self | C :  | U : 1
+[L3:C9] "i" | P : [L2]addOne | D : [L2]i | C :  | U : 
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L4:C8] "Main" | P : [L0]_default | D : self | C : 1 | U : 0
+[L5:C9] "myCounter" | P : [L4]Main | D : self | C :  | U : 6
+[L5:C28] "Counter" | P : [L4]Main | D : [L6]Counter | C :  | U : 
+[L6:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L6:C15] "write" | P : [L4]Main | D : [L28]write | C :  | U : 
+[L7:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L7:C15] "increase" | P : [L4]Main | D : [L18]increase | C :  | U : 
+[L8:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L8:C15] "increase" | P : [L4]Main | D : [L18]increase | C :  | U : 
+[L9:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L9:C15] "write" | P : [L4]Main | D : [L28]write | C :  | U : 
+[L10:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L10:C15] "reset" | P : [L4]Main | D : [L13]reset | C :  | U : 
+[L11:C5] "myCounter" | P : [L4]Main | D : [L5]myCounter | C :  | U : 
+[L11:C15] "write" | P : [L4]Main | D : [L28]write | C :  | U : 

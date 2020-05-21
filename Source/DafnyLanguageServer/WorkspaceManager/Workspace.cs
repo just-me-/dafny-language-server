@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.WorkspaceManager

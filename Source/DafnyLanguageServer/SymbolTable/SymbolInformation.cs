@@ -105,7 +105,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             if (child is SymbolInformation childSymbol)
             {
-                return this.Wraps(child.FileUri, (int)childSymbol.Line, (int)childSymbol.Column);
+                return this.Wraps(child.FileUri, childSymbol.Line, childSymbol.Column);
             }
             return false;
         }
