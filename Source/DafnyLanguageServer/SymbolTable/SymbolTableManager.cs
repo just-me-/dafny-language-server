@@ -2,118 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
+using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.SymbolTable
 {
-    /// <summary>
-    /// Provides all needed SymbolTableInformation for all Modules. Needs a Dafny Program to work.
-    /// Mostly there is only one module - the default module (and class) for a single Dafny file.
-    /// This class also works as a facade for <c>SymbolNavigator</c>.
-    /// </summary>
-    public class SymbolTree : ISymbolTree
+    public class SymbolTableManager : ISymbolTableManager
     {
-        private readonly Microsoft.Dafny.Program _dafnyProgram;
-
-        /// <summary>
-        /// A virtual Root Symbol. It Covers all range, can not have a parent, and has all Top Level Modules as Descendants.
-        /// </summary>
         public ISymbol DafnyProgramRootSymbol { get; }
 
-        public SymbolTree(Microsoft.Dafny.Program dafnyProgram)
-        {
-            _dafnyProgram = dafnyProgram;
-            DafnyProgramRootSymbol = CreateRootNode();
-            DafnyProgramRootSymbol.DeclarationOrigin = DafnyProgramRootSymbol;
-
-            GenerateSymbolTable();
-        }
-
-        private ISymbol CreateRootNode()
-        {
-            return new SymbolInformation
-            {
-                ChildrenHash = new Dictionary<string, ISymbol>(),
-                Descendants = new List<ISymbol>(),
-                Kind = Kind.RootNode,
-                Name = Resources.SymbolTableStrings.root_node,
-                Position = new TokenPosition
-                {
-                    Token = new Token(0, 0),
-                    BodyStartToken = new Token(0, 0),
-                    BodyEndToken = new Token(int.MaxValue, int.MaxValue)
-                }
-            };
-        }
-
-        private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
-
-        private ISymbol GetEntryPoint(ModuleDefinition m)
-        {
-            var hierarchy = m.FullName.Split('.').ToList();
-            var rootForVisitor = DafnyProgramRootSymbol;
-
-            while (hierarchy.Count > 1)
-            {
-                rootForVisitor = rootForVisitor[hierarchy.First()];
-                hierarchy.RemoveAt(0);
-            }
-
-            return rootForVisitor;
-        }
-
-        private void GenerateSymbolTable()
-        {
-            var modules = _dafnyProgram.Modules().ToList();
-            modules.Sort((m1, m2) => Depth(m1) - Depth(m2));
-
-            foreach (var module in modules)
-            {
-                ISymbol rootForVisitor = GetEntryPoint(module);
-                var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
-                module.Accept(declarationVisitor);
-            }
-
-            foreach (var module in modules)
-            {
-                ISymbol rootForVisitor = GetEntryPoint(module);
-                var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
-                module.Accept(deepVisitor);
-            }
-        }
-
-
-
-        public string CreateDebugReadOut()
-        {
-            StringBuilder b = new StringBuilder();
-            INavigator nav = new SymbolTableNavigator();
-            var rootSymbol = DafnyProgramRootSymbol;
-
-            var allSymbs = nav.TopDownAll(rootSymbol);
-
-            foreach (var symbol in allSymbs)
-            {
-                b.AppendLine(symbol.ToString());
-            }
-
-            b.AppendLine();
-
-            return b.ToString();
-        }
-
-
+        public SymbolTableManager(ISymbol root) => DafnyProgramRootSymbol = root;
 
         // ab hier das meiste auslagern(?)
         // man kann das erst auslagern, wenn module als base symbol implementiert wurde.
         // bis dann brauchen wir auf diesem level einen base iterator durch alle module todo
 
-        public ISymbol GetSymbolByPosition(Uri file, long line, long character)
-        {
-            return GetSymbolByPosition(file, (int)line, (int)character); //cast should be safe in real world examples.
-        }
-        // weg
         public ISymbol GetSymbolByPosition(Uri file, int line, int character)
         {
             INavigator navigator = new SymbolTableNavigator();
@@ -217,6 +119,25 @@ namespace DafnyLanguageServer.SymbolTable
             symbols.AddRange(navigator.TopDownAll(DafnyProgramRootSymbol, filter));
 
             return symbols;
+        }
+
+
+        public string CreateDebugReadOut()
+        {
+            StringBuilder b = new StringBuilder();
+            INavigator nav = new SymbolTableNavigator();
+            var rootSymbol = DafnyProgramRootSymbol;
+
+            var allSymbs = nav.TopDownAll(rootSymbol);
+
+            foreach (var symbol in allSymbs)
+            {
+                b.AppendLine(symbol.ToString());
+            }
+
+            b.AppendLine();
+
+            return b.ToString();
         }
     }
 }

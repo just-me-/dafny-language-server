@@ -42,8 +42,10 @@ namespace DafnyLanguageServer.Handler
             {
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
-                var codeLine = _workspaceManager.GetFileRepository(request.TextDocument.Uri).PhysicalFile.GetSourceLine(line - 1); //todo das eig schon logik für den provider aber ich glaub ist ja nicht schlimm.
-                var provider = new CompletionProvider(_workspaceManager.SymbolTreeSymbolTree);
+                var filerepo = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
+                var codeLine = filerepo.PhysicalFile.GetSourceLine(line - 1);
+                var symbolmanager = filerepo.SymbolTableManager;
+                var provider = new CompletionProvider(symbolmanager);
                 return await Task.Run(() => provider.FindCompletionItems(request.TextDocument.Uri, line, col, codeLine), cancellationToken);
             }
             catch (Exception e)

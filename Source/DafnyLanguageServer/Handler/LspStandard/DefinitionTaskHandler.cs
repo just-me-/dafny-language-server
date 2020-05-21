@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Handler
                 var uri = request.TextDocument.Uri;
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
-                var manager = _workspaceManager.SymbolTreeSymbolTree;
+                var manager = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymbolTableManager;
                 var provider = new DefinitionsProvider(manager);
                 return await Task.Run(() => RunAndEvaluate(provider, uri, line, col), cancellationToken);
             }

@@ -222,6 +222,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\FileAndFolderLocations.cs" />
+    <Compile Include="SymbolTable\ISymbolTableManager.cs" />
+    <Compile Include="SymbolTable\SymbolTableManager.cs" />
     <Compile Include="Tools\ConfigInitializer.cs" />
     <Compile Include="Tools\LoggerCreator.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />
@@ -263,11 +265,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LoggingMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="SymbolTable\ISymbolTree.cs" />
+    <Compile Include="SymbolTable\ISymbolTableGenerator.cs" />
     <Compile Include="SymbolTable\INavigator.cs" />
     <Compile Include="SymbolTable\ISymbol.cs" />
     <Compile Include="SymbolTable\SymbolInformation.cs" />
-    <Compile Include="SymbolTable\SymbolTree.cs" />
+    <Compile Include="SymbolTable\SymbolTableGenerator.cs" />
     <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
     <Compile Include="SymbolTable\LanguageServerDeclarationVisitor.cs" />
     <Compile Include="SymbolTable\LanguageServerDeepVisitor.cs" />

@@ -203,11 +203,14 @@ namespace SymbolTableTest
 
             var dtu = new DafnyTranslationUnit(physFile);
             var dafnyProg = dtu.Verify().DafnyProgram;
-            ISymbolTree sm = new SymbolTree(dafnyProg);
+            ISymbolTableGenerator st = new SymbolTableGenerator(dafnyProg);
+            ISymbol root = st.GenerateSymbolTable();
+            ISymbolTableManager sm = new SymbolTableManager(root);
+            
+
             INavigator navigator = new SymbolTableNavigator();
             List<ISymbol> symbols = new List<ISymbol>();
 
-            var root = sm.DafnyProgramRootSymbol;
 
             foreach (var modul in root.Children)
             {
@@ -216,7 +219,7 @@ namespace SymbolTableTest
             var actual = symbols.Select(x => x.ToDebugString()).ToList();
 
             Console.WriteLine("SymboleTable for " + f);
-            Console.Write(((SymbolTree)sm).CreateDebugReadOut());
+            Console.Write(((SymbolTableManager)sm).CreateDebugReadOut());
 
             return actual;
         }

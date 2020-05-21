@@ -16,11 +16,11 @@ namespace DafnyLanguageServer.Core
     public class CompletionProvider : ICompletionProvider
     {
         public string ExtractedSymbol { get; private set; }
-        public ISymbolTree SymbolTree { get; }
+        public ISymbolTableManager SymbolTableManager { get; }
 
-        public CompletionProvider(ISymbolTree symbolTree)
+        public CompletionProvider(ISymbolTableManager symbolTableManager)
         {
-            SymbolTree = symbolTree;
+            SymbolTableManager = symbolTableManager;
         }
 
         public List<CompletionItem> FindCompletionItems(Uri file, int line, int col, string codeLine)
@@ -107,7 +107,7 @@ namespace DafnyLanguageServer.Core
         /// </summary>
         public ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
         {
-            return SymbolTree.GetSymbolWrapperForCurrentScope(file, line, col);
+            return SymbolTableManager.GetSymbolWrapperForCurrentScope(file, line, col);
         }
 
         /// <summary>
@@ -119,21 +119,21 @@ namespace DafnyLanguageServer.Core
             switch (desire)
             {
                 case CompletionType.AfterDot:
-                    var selectedSymbol = SymbolTree.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
-                    return GetSymbolsProperties(SymbolTree, selectedSymbol);
+                    var selectedSymbol = SymbolTableManager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
+                    return GetSymbolsProperties(SymbolTableManager, selectedSymbol);
                 case CompletionType.AfterNew:
-                    return GetClassSymbolsInScope(SymbolTree, wrappingEntrypointSymbol);
+                    return GetClassSymbolsInScope(SymbolTableManager, wrappingEntrypointSymbol);
                 case CompletionType.AllInScope:
-                    return GetAllSymbolsInScope(SymbolTree, wrappingEntrypointSymbol);
+                    return GetAllSymbolsInScope(SymbolTableManager, wrappingEntrypointSymbol);
                 default:
                     throw new ArgumentException(Resources.ExceptionMessages.completion_not_yet_supported);
             }
         }
 
-        private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTree symbolTree, ISymbol selectedSymbol)
+        private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTableManager manager, ISymbol selectedSymbol)
         {
             // if selectedSymbol is null... error iwas... not found mässig... todo
-            var classSymbol = symbolTree.GetClassOriginFromSymbol(selectedSymbol);
+            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
             foreach (var suggestionElement in classSymbol.Children)
             {
                 if (IsNoDefaultNamespace(suggestionElement))
@@ -143,18 +143,18 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbol> GetClassSymbolsInScope(ISymbolTree symbolTree, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbol> GetClassSymbolsInScope(ISymbolTableManager manager, ISymbol wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
-            foreach (var suggestionElement in symbolTree.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
             {
                 yield return suggestionElement;
             }
         }
 
-        private IEnumerable<ISymbol> GetAllSymbolsInScope(ISymbolTree symbolTree, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbol> GetAllSymbolsInScope(ISymbolTableManager manager, ISymbol wrappingEntrypointSymbol)
         {
-            foreach (var suggestionElement in symbolTree.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
+            foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
             {
                 yield return suggestionElement;
             }

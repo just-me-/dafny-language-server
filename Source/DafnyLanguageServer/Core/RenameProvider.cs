@@ -12,17 +12,17 @@ namespace DafnyLanguageServer.Core
     {
         public RenameOutcome Outcome { get;  set; } = new RenameOutcome();
 
-        private readonly ISymbolTree _symbolTree;
+        private readonly ISymbolTableManager _manager;
         private static readonly HashSet<string> _reservedWords = new ReservedWordsProvider().GetReservedWords();
 
 
-        public RenameProvider(ISymbolTree symbolTree)
+        public RenameProvider(ISymbolTableManager manager)
         {
-            _symbolTree = symbolTree;
+            _manager = manager;
         }
         public WorkspaceEdit GetRenameChanges(string newName, Uri uri, int line, int col)
         {
-            var symbolAtCursor = _symbolTree.GetSymbolByPosition(uri, line, col);
+            var symbolAtCursor = _manager.GetSymbolByPosition(uri, line, col);
 
             if (symbolAtCursor == null)
             {

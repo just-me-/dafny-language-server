@@ -34,7 +34,7 @@ namespace DafnyLanguageServer.WorkspaceManager
 
         public PhysicalFile PhysicalFile { get; }
         public TranslationResult Result { get; private set; }
-        public ISymbol SymbolTree { get; private set; }
+        public ISymbolTableManager SymbolTableManager { get; private set; }
 
         /// <summary>
         /// Updates the physical file with the provided sourcecode.
@@ -44,6 +44,7 @@ namespace DafnyLanguageServer.WorkspaceManager
         {
             PhysicalFile.Sourcecode = sourceCodeOfFile;
             GenerateTranslationResult();
+            AddSymbolTable();
         }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace DafnyLanguageServer.WorkspaceManager
             }
 
             GenerateTranslationResult();
+            AddSymbolTable();
         }
 
 
@@ -79,12 +81,19 @@ namespace DafnyLanguageServer.WorkspaceManager
 
         private void AddSymbolTable()
         {
+
             if (Result.TranslationStatus >= TranslationStatus.Resolved)
             {
-                SymbolTable.SymbolTree s = new SymbolTable.SymbolTree(Result.DafnyProgram);
-
-                SymbolTree = new SymbolTable.SymbolTree(Result.DafnyProgram);
+                SymbolTableGenerator s = new SymbolTableGenerator(Result.DafnyProgram);
+                ISymbol rootnode = s.GenerateSymbolTable();
+                SymbolTableManager = new SymbolTableManager(rootnode);
             }
+            else
+            {
+                ISymbol rootnode = SymbolTableGenerator.GetEmptySymbolTable();
+                SymbolTableManager = new SymbolTableManager(rootnode);
+            }
+        }
 
 
 

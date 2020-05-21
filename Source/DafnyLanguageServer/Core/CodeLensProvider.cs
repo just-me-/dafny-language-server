@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.WorkspaceManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -10,20 +11,20 @@ namespace DafnyLanguageServer.Core
 {
     public class CodeLensProvider : ICodeLensProvider
     {
-        private readonly ISymbolTree _symbolTree;
+        private readonly ISymbolTableManager _manager;
         private readonly Uri _uri;
 
-        public CodeLensProvider(ISymbolTree symbolTree, Uri uri)
+        public CodeLensProvider(FileRepository filerepo)
         {
-            this._symbolTree = symbolTree;
-            this._uri = uri;
+            _manager = filerepo.SymbolTableManager;
+            _uri = filerepo.PhysicalFile.Uri;
         }
 
         public CodeLensContainer GetCodeLensContainer()
         {
             List<CodeLens> items = new List<CodeLens>();
 
-            foreach (var symbolInformation in _symbolTree.GetAllSymbolDeclarations())
+            foreach (var symbolInformation in _manager.GetAllSymbolDeclarations())
             {
                 items.Add(CreateCodeLensItem(symbolInformation));
             }
