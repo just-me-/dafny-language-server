@@ -36,7 +36,7 @@ namespace TestCommons
             }
 
             CancellationSource = new CancellationTokenSource();
-            CancellationSource.CancelAfter(TimeSpan.FromSeconds(10));
+            CancellationSource.CancelAfter(TimeSpan.FromSeconds(30));
 
             MyLog = new LoggerConfiguration()
                 .MinimumLevel.Information()
