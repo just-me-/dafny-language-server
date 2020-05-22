@@ -28,6 +28,8 @@ namespace DafnyLanguageServer
         private MessageSenderService msgSender;
         private readonly ConfigInitializationErrors configInitErrors;
 
+        private ILanguageServer server;
+
         public DafnyLanguageServer(string[] args)
         {
             var configInitializer = new ConfigInitializer(args);
@@ -40,21 +42,18 @@ namespace DafnyLanguageServer
         {
             log.Debug(Resources.LoggingMessages.server_starting);
 
-            var server = await LanguageServer.From(options =>
+            server = await LanguageServer.From(options =>
                 options
 
-                    //Log and Console
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
                     .ConfigureLogging(x => x
                         .AddSerilog(log)
                         .AddLanguageServer()
-                    )
+                        )
 
-                    // Service group 
                     .WithServices(ConfigureServices)
 
-                    // Handler group 
                     .WithHandler<TextDocumentSyncTaskHandler>()
                     .WithHandler<DidChangeWatchedFilesHandler>()
                     .WithHandler<CompletionTaskHandler>()
@@ -67,15 +66,27 @@ namespace DafnyLanguageServer
                     .WithHandler<ShutdownHandler>()
             );
 
-            CreateMsgSender(server);
-            SendServerStartedInformation();
-            CheckForConfigErrors();
+            ExecutePostLaunchTasks();
 
+            await RedirectStreamUntilServerExits();
+
+            log.Debug(Resources.LoggingMessages.server_closed);
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IWorkspace, Workspace>();
+            services.AddLogging();
+        }
+
+        private async Task RedirectStreamUntilServerExits()
+        {
             // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
             // code should no longer make prints but lets keep it for additional safety.
             try
             {
-                using (StreamWriter writer = new StreamWriter(new FileStream(LanguageServerConfig.RedirectedStreamFile, FileMode.OpenOrCreate, FileAccess.Write)))
+                using (StreamWriter writer = new StreamWriter(new FileStream(LanguageServerConfig.RedirectedStreamFile,
+                    FileMode.OpenOrCreate, FileAccess.Write)))
                 {
                     Console.SetOut(writer);
                     await server.WaitForExit;
@@ -87,13 +98,18 @@ namespace DafnyLanguageServer
                 msgSender.SendError(msg);
                 log.Error(msg);
             }
-
-            log.Debug(Resources.LoggingMessages.server_closed);
         }
 
-        private void CreateMsgSender(ILanguageServer server)
+        private void ExecutePostLaunchTasks()
         {
-            this.msgSender = new MessageSenderService(server);
+            CreateMsgSender();
+            SendServerStartedInformation();
+            CheckForConfigErrors();
+        }
+
+        private void CreateMsgSender()
+        {
+            msgSender = new MessageSenderService(server);
         }
 
         private void SendServerStartedInformation()
@@ -112,12 +128,6 @@ namespace DafnyLanguageServer
             var msg = $"{Resources.LoggingMessages.could_not_setup_config} {Resources.LoggingMessages.error_msg} {configInitErrors.ErrorMessages}";
             msgSender.SendWarning(msg);
             log.Warning(msg);
-        }
-
-        private void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<IWorkspace, Workspace>();
-            services.AddLogging();
         }
     }
 }
