@@ -21,14 +21,12 @@ namespace PerformanceTest
             stopwatch.Start();
             Client.TextDocument.DidOpen(Files.pf_large, "dfy");
 
-
             CompilerParams p = new CompilerParams
             {
                 CompilationArguments = new string[] { },
                 FileToCompile = Files.pf_large
             };
             Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
-
 
             stopwatch.Stop();
             var elapsed_time = stopwatch.ElapsedMilliseconds;
