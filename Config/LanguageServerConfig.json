@@ -4,5 +4,5 @@
 		"log": "Logs/LanguageServerLog.txt",
 		"loglevel": 2
 	},
-	"syncKind" : "incremental"
+	"synckind" : "incremental"
 }
