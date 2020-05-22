@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
+    // actually todo use the interface
 namespace DafnyLanguageServer.WorkspaceManager
 {
-    public interface IFileRepository
+    public interface IFileRepository  
     {
         PhysicalFile PhysicalFile { get; }
         TranslationResult Result { get; }
