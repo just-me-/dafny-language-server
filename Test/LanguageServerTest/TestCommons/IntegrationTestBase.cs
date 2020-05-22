@@ -48,7 +48,7 @@ namespace TestCommons
 
             Server = new StdioServerProcess(LoggerFactory, new ProcessStartInfo(FileAndFolderLocations.langServExe)
             {
-                Arguments = $"/log ../Logs/Test_{Name}.txt /loglevel 0"
+                Arguments = $"/log:Logs/Test_{Name}.txt /loglevel:0"
             });
 
             //Note: Client will log to console, but server always logs to file.
