@@ -161,6 +161,7 @@
     <Compile Include="SymbolTable\SymbolTableManager.cs" />
     <Compile Include="Tools\ConfigInitializer.cs" />
     <Compile Include="Tools\LoggerCreator.cs" />
+    <Compile Include="WorkspaceManager\IFileRepository.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />
     <Compile Include="Commons\DiagnosticElement.cs" />
     <Compile Include="Handler\LspStandard\CodeLensTaskHandler.cs" />

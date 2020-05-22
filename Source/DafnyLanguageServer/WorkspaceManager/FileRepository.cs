@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// A <c>FileRepository</c> has also its own <c>TranslationResult</c> with all information provided by the verifier.
     /// The <c>SymbolTableManager</c> contains a buffered symbol table and allows navigation over it.
     /// </summary>
-    public class FileRepository
+    public class FileRepository : IFileRepository
     {
         public FileRepository(PhysicalFile physicalFile)
         {
