@@ -214,10 +214,6 @@
     <Compile Include="SymbolTable\SymbolTableNavigator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="Demo.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DafnyDriver\DafnyDriver.csproj">
       <Project>{63400D1F-05B2-453E-9592-1EAB74B2C9CC}</Project>
       <Name>DafnyDriver</Name>

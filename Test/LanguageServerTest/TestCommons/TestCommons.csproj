@@ -39,9 +39,6 @@
     <Compile Include="IntegrationTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Source\DafnyLanguageServer\DafnyLanguageServer.csproj">
       <Project>{6D4E722B-FC78-4989-A239-13887C8751F2}</Project>
       <Name>DafnyLanguageServer</Name>
