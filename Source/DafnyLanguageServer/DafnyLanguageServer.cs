@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler.LspStandard;
+using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Serilog;
@@ -114,8 +115,7 @@ namespace DafnyLanguageServer
 
         private void SendServerStartedInformation()
         {
-            var dafnyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
-            msgSender.SendServerStarted(dafnyVersion);
+            msgSender.SendServerStarted(VersionInformation.version, $" ({VersionInformation.release_date})");
             log.Debug(Resources.LoggingMessages.server_running);
         }
 

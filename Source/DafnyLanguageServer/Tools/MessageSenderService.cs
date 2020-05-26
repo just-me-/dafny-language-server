@@ -8,7 +8,7 @@ namespace DafnyLanguageServer.Tools
     /// </summary>
     public class MessageSenderService
     {
-        private readonly ILanguageServer _router; 
+        private readonly ILanguageServer _router;
 
         public MessageSenderService(ILanguageServer router)
         {
@@ -20,10 +20,10 @@ namespace DafnyLanguageServer.Tools
             _router.Window.SendNotification(type, msg);
         }
 
-        /* Pop-up messages */ 
+        /* Pop-up messages */
         public void SendError(string msg)
         {
-            SendMessage("ERROR", msg); 
+            SendMessage("ERROR", msg);
         }
 
         public void SendWarning(string msg)
@@ -37,9 +37,11 @@ namespace DafnyLanguageServer.Tools
         }
 
         /* Status bar information */
-        public void SendServerStarted(string dafnyVersion)
+        public void SendServerStarted(string dafnyVersion, string additionalStatusbarInformation = "")
         {
-            SendMessage("serverStarted", dafnyVersion);
+            SendMessage("serverStarted", dafnyVersion + additionalStatusbarInformation);
+            /* Server version for updating */
+            SendMessage("dafnyLanguageServerVersionReceived", dafnyVersion);
         }
 
         public void SendCountedErrors(int countedErrors)
