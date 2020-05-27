@@ -9,11 +9,11 @@ namespace DafnyLanguageServer.SymbolTable
     {
 
         TokenPosition Position { get; set; }
-        Uri FileUri { get; }
+        Uri FileUri { get; } //optionales todo: kann man das vereinfachen? Die Uri ist ja im Token.
         string FileName { get; }
         int Line { get; }
         int Column { get; }
-        int ColumnStart { get; }
+        int ColumnStart { get; } //optionales todo: Warum ist col-Start im Interface, aber Line-start nicht?
         int ColumnEnd { get; }
         string Name { get; set; }
         Kind Kind { get; set; }

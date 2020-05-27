@@ -37,10 +37,10 @@ namespace DafnyLanguageServer.SymbolTable
 
         public ISymbol DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
 
-        protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? type = null, bool goRecursive = true)
+        protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? kind = null)
         {
             INavigator navigator = new SymbolTableNavigator();
-            bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (type == null || s.Kind == type);
+            bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (kind == null || s.Kind == kind);
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
                 Name = Resources.SymbolTableStrings.declaration_not_found,

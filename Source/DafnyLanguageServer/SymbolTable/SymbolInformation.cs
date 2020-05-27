@@ -20,7 +20,7 @@ namespace DafnyLanguageServer.SymbolTable
         public TokenPosition Position { get; set; }
         public Uri FileUri => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
         public string FileName => Path.GetFileName(FileUri.LocalPath);
-        public virtual int Line => Position.Token.line;                     
+        public virtual int Line => Position.Token.line;
         public virtual int? LineStart => Position?.BodyStartToken?.line;
         public virtual int? LineEnd => Position?.BodyEndToken?.line;
         public int Column => ColumnStart;
@@ -42,7 +42,7 @@ namespace DafnyLanguageServer.SymbolTable
                 return null;
             }
         }
-        
+
 
         public ISymbol Parent { get; set; }
         public ISymbol DeclarationOrigin { get; set; }
@@ -114,11 +114,12 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Checks if the given position (line, character) is included in the symbols range. 
+        /// Checks if the given position (line, character) is included in the symbols range.
         /// </summary>
         public bool Wraps(Uri file, int line, int character)
         {
             return IsSameFile(file) && HasBody() && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+                                                        //optionales todo: Kann man das nicht vereinfachen? Iwie allgemien halten möglichst ohne special cases, ka so mit rekursion oder iwas, damit es weniger fehleranfällig ist?
         }
 
         private bool IsSameFile(Uri file)

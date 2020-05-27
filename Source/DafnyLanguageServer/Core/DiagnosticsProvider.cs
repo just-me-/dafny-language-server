@@ -22,7 +22,7 @@ namespace DafnyLanguageServer.Core
 
         public DiagnosticsProvider(ILanguageServer router)
         {
-            _router = router;
+            _router = router; //optionales todo wenn zeit:  router und message sender möglichst oben bei den handlern lassen. Wenn zeit evtl hochgeben sonst egal.
             _msgSenderService = new MessageSenderService(router);
         }
 
