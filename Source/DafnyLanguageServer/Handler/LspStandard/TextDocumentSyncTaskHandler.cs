@@ -56,7 +56,7 @@ namespace DafnyLanguageServer.Handler
                 FileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
 
                 _log.LogInformation(Resources.LoggingMessages.request_update_diagnostics);
-                IDiagnosticsProvider provider = new DiagnosticsProvider(_router);
+                IDiagnosticsProvider provider = new DiagnosticsProvider(_router, _workspaceManager.GetFileRepository(uri).SymbolTableManager);
                 provider.SendDiagnostics(fileRepository);
 
                 _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));

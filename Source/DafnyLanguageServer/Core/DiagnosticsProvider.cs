@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
@@ -18,11 +19,13 @@ namespace DafnyLanguageServer.Core
     public class DiagnosticsProvider : IDiagnosticsProvider
     {
         private readonly ILanguageServer _router;
+        private readonly ISymbolTableManager _symbolTableManager;
         private readonly MessageSenderService _msgSenderService;
 
-        public DiagnosticsProvider(ILanguageServer router)
+        public DiagnosticsProvider(ILanguageServer router, ISymbolTableManager symbolTableManager)
         {
             _router = router;
+            _symbolTableManager = symbolTableManager;
             _msgSenderService = new MessageSenderService(router);
         }
 
@@ -65,6 +68,8 @@ namespace DafnyLanguageServer.Core
             int col = e.Tok.col - 1;
             int length = file.GetLengthOfLine(line) - col;
 
+            var range = this.CreateRange(line, col, length);
+
             if (e.Msg.EndsWith("."))
             {
                 e.Msg = e.Msg.Substring(0, e.Msg.Length - 1);
@@ -74,6 +79,12 @@ namespace DafnyLanguageServer.Core
             if (e.Tok.val == "anything so that it is nonnull" || e.Tok.val == null)
             {
                 msg = e.Msg;
+            }
+            else if (e.Tok.val.Equals("{") && _symbolTableManager != null)
+            {
+                ISymbol wrappingSymbol = _symbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
+                range = CreateRange(wrappingSymbol.Position.BodyStartToken, wrappingSymbol.Position.BodyEndToken);
+                msg = e.Msg + $" at [ {wrappingSymbol.Name} ]";
             }
             else
             {
@@ -102,7 +113,7 @@ namespace DafnyLanguageServer.Core
             Diagnostic d = new Diagnostic
             {
                 Message = msg,
-                Range = this.CreateRange(line, col, length),
+                Range = range,
                 Severity = severity,
                 Source = src
             };
@@ -147,6 +158,13 @@ namespace DafnyLanguageServer.Core
             }
             Position start = new Position(line, chr);
             Position end = new Position(line, chr + length);
+            return new Range(start, end);
+        }
+
+        private Range CreateRange(IToken startToken, IToken endToken)
+        {
+            Position start = new Position(startToken.line - 1, startToken.col - 1);
+            Position end = new Position(endToken.line - 1, endToken.col);
             return new Range(start, end);
         }
     }
