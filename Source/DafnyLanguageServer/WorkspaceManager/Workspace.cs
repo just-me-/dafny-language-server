@@ -24,6 +24,7 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// <returns></returns>
         public FileRepository UpdateFile<T>(Uri documentPath, T changes)
         {
+            // todo should be IFileRepository
             FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
             if (typeof(T) == typeof(string)) //Sync Kind Full
@@ -56,11 +57,11 @@ namespace DafnyLanguageServer.WorkspaceManager
             return _files.TryGetValue(documentPath, out var bufferedFile)
                 ? bufferedFile
                 : new FileRepository(new PhysicalFile
-                    {
-                        Uri = documentPath,
-                        Filepath = documentPath.LocalPath
-                    });
-        
+                {
+                    Uri = documentPath,
+                    Filepath = documentPath.LocalPath
+                });
+
         }
 
         public FileRepository GetFileRepository(Uri documentPath)

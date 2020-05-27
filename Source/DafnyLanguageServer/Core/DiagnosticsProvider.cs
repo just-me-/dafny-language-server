@@ -39,6 +39,7 @@ namespace DafnyLanguageServer.Core
             };
             _router.Document.PublishDiagnostics(p);
             _msgSenderService.SendCountedErrors(diagnostics.Count);
+            fileRepository.PhysicalFile.IsValid = !(diagnostics.Count > 0);
         }
 
         public Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)

@@ -135,7 +135,13 @@
   <data name="goto_alreadyIsDef" xml:space="preserve">
     <value>This is already the definition.</value>
   </data>
+  <data name="goto_fileNotValid" xml:space="preserve">
+    <value>Current Dafny file is not valid. This affects functionality.</value>
+  </data>
   <data name="goto_notfound" xml:space="preserve">
+    <value>No Defintion found.</value>
+  </data>
+  <data name="goto_notfound_at" xml:space="preserve">
     <value>No Defintion found for {0} at L{1}:C{2}</value>
     <comment>Params: uri, line, col</comment>
   </data>

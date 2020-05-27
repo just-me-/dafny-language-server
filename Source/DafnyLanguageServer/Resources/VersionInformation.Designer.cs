@@ -70,7 +70,7 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 1.0.1 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1.2.1 ähnelt.
         /// </summary>
         internal static string version {
             get {

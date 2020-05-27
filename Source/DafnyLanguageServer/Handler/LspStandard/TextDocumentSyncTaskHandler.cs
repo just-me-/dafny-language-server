@@ -29,7 +29,6 @@ namespace DafnyLanguageServer.Handler
             : base(router, workspaceManager, loggingFactory)
         {
             _method = Resources.Requests.update;
-
         }
 
         public TextDocumentChangeRegistrationOptions GetRegistrationOptions()

@@ -35,7 +35,6 @@ namespace DafnyLanguageServer.Handler
         {
             _log.LogInformation(string.Format(Resources.LoggingMessages.request_handle, _method));
 
-
             try
             {
                 var uri = request.TextDocument.Uri;
@@ -45,7 +44,6 @@ namespace DafnyLanguageServer.Handler
                 var provider = new DefinitionsProvider(manager);
                 return await Task.Run(() => RunAndEvaluate(provider, uri, line, col), cancellationToken);
             }
-
             catch (Exception e)
             {
                 HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
@@ -61,15 +59,17 @@ namespace DafnyLanguageServer.Handler
             switch (provider.Outcome)
             {
                 case DefinitionsOutcome.NotFound:
-                    string msg = string.Format(Resources.LoggingMessages.goto_notfound, uri, line, col);
-                    _log.LogWarning(msg);
-                    _mss.SendInformation(msg);
+                    _log.LogWarning(string.Format(Resources.LoggingMessages.goto_notfound_at, uri, line, col));
+                    _mss.SendInformation(Resources.LoggingMessages.goto_notfound);
+                    if (!_workspaceManager.GetFileRepository(uri).PhysicalFile.IsValid)
+                    {
+                        _mss.SendWarning(Resources.LoggingMessages.goto_fileNotValid);
+                    }
                     break;
                 case DefinitionsOutcome.WasAlreadyDefintion:
                     _mss.SendInformation(Resources.LoggingMessages.goto_alreadyIsDef);
                     break;
             }
-
             return result;
         }
     }

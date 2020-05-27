@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.Core
         private readonly ISymbolTableManager _manager;
         private readonly Uri _uri;
 
-        public CodeLensProvider(FileRepository filerepo)
+        public CodeLensProvider(FileRepository filerepo) // todo use IFileRepository, interface 
         {
             _manager = filerepo.SymbolTableManager;
             _uri = filerepo.PhysicalFile.Uri;
@@ -37,7 +37,7 @@ namespace DafnyLanguageServer.Core
 
         private CodeLens CreateCodeLensItem(ISymbol symbolInformation)
         {
-            
+
             Position position = new Position((long)symbolInformation.Line - 1, 0);
             Range range = new Range { Start = position, End = position };
 
