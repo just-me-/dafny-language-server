@@ -162,7 +162,8 @@ namespace TestCommons
         public static readonly string rn_includee = CreateTestfilePath("rename/include_includee.dfy");
 
         //Performance
-        public static readonly string pf_large = CreateTestfilePath("performance/pf_large.dfy");
+        public static readonly string pf_large1 = CreateTestfilePath("performance/pf_large1.dfy");
+        public static readonly string pf_large2 = CreateTestfilePath("performance/pf_large2.dfy");
 
         //Performance
         public static readonly string hv_hover = CreateTestfilePath("hover/hover.dfy");
