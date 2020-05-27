@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
@@ -7,8 +8,21 @@ namespace DafnyLanguageServer.Commons
 {
     public static class LanguageServerConfig
     {
-        public static string RedirectedStreamFile { get; set; }
-        public static string LogFile { get; set; }
+        private static string redirectedStreamFile;
+        private static string logFile;
+
+        public static string RedirectedStreamFile
+        {
+            get => redirectedStreamFile;
+            set => redirectedStreamFile = Path.GetFullPath(value);
+        }
+
+        public static string LogFile
+        {
+            get => logFile;
+            set => logFile = Path.GetFullPath(value);
+        }
+
         public static LogLevel LogLevel { get; set; }
         public static TextDocumentSyncKind SyncKind { get; set; }
 

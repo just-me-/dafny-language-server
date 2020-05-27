@@ -107,7 +107,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.InitializationErrors.HasErrors, "has error mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -215,8 +215,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
+            Assert.IsFalse(ci.InitializationErrors.HasErrors, "Error expectation mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -259,8 +258,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("exceeds"));
+            Assert.IsTrue(ci.InitializationErrors.HasErrors, "error expectation mismatch");
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("Loglevel must be between"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -349,7 +348,7 @@ namespace ProgramTest
             Console.WriteLine(LanguageServerConfig.ToString());
 
             Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("file not found"));
+            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("not be located"), "Errormsg not contained");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);

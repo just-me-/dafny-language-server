@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
@@ -12,9 +13,6 @@ namespace DafnyLanguageServer.Tools
 {
 
 
-
-    //todo das ganze teil hier ist noch urkomisch... evtl einfach sobald iwas schief läuft die efaults nutzen statt so halb halb? ist aber mega viel aufwand und interessiert eh keinen....
-    // ich fänds eig nice wenn man so "try to set loglevel -> funzt oder nicht" -> dann das nächste --> dann das nächste und nich tso "oh, loglevel ging nicht, dann exception udn ich mach gar nix weiter".
 
     /// <summary>
     /// This is a service to set up the language server config.
@@ -66,93 +64,118 @@ namespace DafnyLanguageServer.Tools
         {
             try
             {
-                SetDefaults();
-                ReadJSONConfig();
-                ReadArgs();
+                ApplyDefaults();
+                ApplyJSON();
+                ApplyArgs();
                 Validate();
-                ImprovePathLayout();
             }
             catch (Exception e)
             {
-                AddExceptionToError(e);
-                SetDefaults();
+                AddError(e);
+                ApplyDefaults();
             }
         }
 
-        private void SetDefaults()
+        private void Validate()
+        {
+            if (LanguageServerConfig.LogFile == LanguageServerConfig.RedirectedStreamFile)
+            {
+                throw new ArgumentException(ExceptionMessages.stream_and_log_are_same);
+            }
+
+            if ((int)LanguageServerConfig.LogLevel > 6 || (int)LanguageServerConfig.LogLevel < 0)
+            {
+                throw new ArgumentException(ExceptionMessages.level_out_of_bounds);
+
+            }
+        }
+
+        private void ApplyDefaults()
         {
             LanguageServerConfig.ResetDefaults();
         }
 
-        private void ReadJSONConfig()
+        private void ApplyJSON()
+        {
+
+            if (!File.Exists(JSONConfigFile))
+            {
+                AddError(ExceptionMessages.config_file_not_existing);
+                return;
+            }
+
+            JObject cfg = JObject.Parse(File.ReadAllText(JSONConfigFile));
+
+            
+
+            SafelyPerform(() =>
+            {
+                var token = cfg["logging"]["log"];
+                LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocations.rootFolder, (string)token);
+            });
+
+            SafelyPerform(() =>
+            {
+                var token = cfg["logging"]["stream"];
+                LanguageServerConfig.RedirectedStreamFile =
+                        Path.Combine(FileAndFolderLocations.rootFolder, (string)token);
+            });
+
+            SafelyPerform(() =>
+            {
+                var token = cfg["logging"]["loglevel"];
+                LanguageServerConfig.LogLevel = (LogLevel) (int)token;
+            });
+
+            SafelyPerform(() =>
+            {
+                var token = cfg["synckind"];
+                LanguageServerConfig.SyncKind =
+                        (TextDocumentSyncKind) Enum.Parse(typeof(TextDocumentSyncKind), (string)token, true);
+            });
+
+        }
+
+        private void SafelyPerform(Action a)
         {
             try
             {
-                if (!File.Exists(JSONConfigFile))
-                {
-                    throw new FileNotFoundException(ExceptionMessages.config_file_not_found + " " + JSONConfigFile);
-                }
-
-                JObject cfg = JObject.Parse(File.ReadAllText(JSONConfigFile));
-
-                var cfgLog = cfg["logging"]["log"];
-                var cfgStream = cfg["logging"]["stream"];
-                var cfgLevel = cfg["logging"]["loglevel"];
-                var cfgSyncKind = cfg["synckind"];
-
-                if (cfgLog != null && cfgStream != null && (string)cfgStream == (string)cfgLog)
-                {
-                    throw new ArgumentException(ExceptionMessages.stream_and_log_are_same);
-                }
-
-                if (cfgLog != null)
-                {
-                    LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocations.rootFolder, (string)cfgLog);
-                }
-
-                if (cfgStream != null)
-                {
-                    LanguageServerConfig.RedirectedStreamFile = Path.Combine(FileAndFolderLocations.rootFolder, (string)cfgStream);
-                }
-
-                if (cfgLevel != null)
-                {
-                    LanguageServerConfig.LogLevel = (LogLevel)(int)cfgLevel;
-                }
-
-                if (cfgSyncKind != null)
-                {
-                    LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), (string)cfgSyncKind, true);
-                }
-
+                a.Invoke();
+                
             }
             catch (NullReferenceException)
             {
-                AddError(ExceptionMessages.config_could_not_be_parsed);
+                //Skip if entry was null
+            }
+            catch (ArgumentNullException)
+            {
+                //Skip if entry was null
             }
             catch (Exception e)
             {
-                AddExceptionToError(e);
+                AddError(e);
             }
         }
 
-        private void ReadArgs()
+        private void ApplyArgs()
         {
-            try
+
+            foreach (var arg in LaunchArguments)
             {
-                foreach (var arg in LaunchArguments)
+                try
                 {
                     string[] splitted = arg.Split(':');
                     if (splitted.Length != 2)
                     {
-                        throw new ArgumentException(ExceptionMessages.not_supported_launch_args);
+                        AddError(ExceptionMessages.not_supported_launch_args);
                     }
+
                     HandleArgumentPair(splitted);
                 }
-            }
-            catch (Exception e)
-            {
-                AddExceptionToError(e);
+                catch (Exception e)
+                {
+                    AddError(e);
+                }
             }
         }
 
@@ -163,7 +186,8 @@ namespace DafnyLanguageServer.Tools
 
             if (value.Length < 1)
             {
-                throw new ArgumentException(ExceptionMessages.no_arg_for_switch + key);
+                AddError(ExceptionMessages.no_arg_for_switch + key);
+                return;
 
             }
 
@@ -182,27 +206,14 @@ namespace DafnyLanguageServer.Tools
                     LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), value, true);
                     break;
                 default:
-                    throw new ArgumentException(string.Format(ExceptionMessages.unknown_switch, key));
+                    AddError(string.Format(ExceptionMessages.unknown_switch, key));
+                    break;
             }
         }
 
-        private void Validate()
-        {
-            if (LanguageServerConfig.LogLevel < 0 || (int)LanguageServerConfig.LogLevel > 5)
-            {
-                AddError(ExceptionMessages.loglevel_illegal);
-                LanguageServerConfig.LogLevel = LogLevel.Error;
-            }
-        }
-
-        private void ImprovePathLayout()
-        {
-            LanguageServerConfig.RedirectedStreamFile = Path.GetFullPath(LanguageServerConfig.RedirectedStreamFile);
-            LanguageServerConfig.LogFile = Path.GetFullPath(LanguageServerConfig.LogFile);
-        }
 
 
-        private void AddExceptionToError(Exception e)
+        private void AddError(Exception e)
         {
             AddError(e.Message);
             if (e.InnerException != null)
@@ -225,7 +236,5 @@ namespace DafnyLanguageServer.Tools
         public bool HasErrors { get; set; }
         public StringBuilder MessageCollector { get; } = new StringBuilder();
         public string ErrorMessages => MessageCollector.ToString();
-
-
     }
 }

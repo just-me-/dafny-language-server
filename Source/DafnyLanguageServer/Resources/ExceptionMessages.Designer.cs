@@ -97,6 +97,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file Config/LanguageServerConfig.json file could not be located..
+        /// </summary>
+        internal static string config_file_not_existing {
+            get {
+                return ResourceManager.GetString("config_file_not_existing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Config file not found at:.
         /// </summary>
         internal static string config_file_not_found {
@@ -192,6 +201,15 @@ namespace DafnyLanguageServer.Resources {
         internal static string invalid_module_handed_to_deep_visitor {
             get {
                 return ResourceManager.GetString("invalid_module_handed_to_deep_visitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loglevel must be between 0 and 6..
+        /// </summary>
+        internal static string level_out_of_bounds {
+            get {
+                return ResourceManager.GetString("level_out_of_bounds", resourceCulture);
             }
         }
         
