@@ -180,6 +180,7 @@
   <ItemGroup>
     <None Include="AllStatementTypes.cd" />
     <None Include="ast.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Dafny.atg" />
   </ItemGroup>
   <ItemGroup>
