@@ -29,7 +29,10 @@ namespace DafnyLanguageServer.Core
 
             foreach (var symbolInformation in _manager.GetAllSymbolDeclarations())
             {
-                items.Add(CreateCodeLensItem(symbolInformation));
+                if (_uri.Equals(symbolInformation.FileUri))
+                {
+                    items.Add(CreateCodeLensItem(symbolInformation));
+                }
             }
 
             return new CodeLensContainer(items);
