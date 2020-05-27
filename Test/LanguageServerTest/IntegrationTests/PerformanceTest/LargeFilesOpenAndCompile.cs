@@ -41,7 +41,7 @@ namespace PerformanceTest
             stopwatch.Stop();
 
             var elapsed_time = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine($"Performancetest took {elapsed_time}ms");
+            Console.WriteLine($"Performancetest 1 took {elapsed_time}ms");
             Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
         }
 
@@ -74,7 +74,7 @@ namespace PerformanceTest
             stopwatch.Stop();
 
             var elapsed_time = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine($"Performancetest took {elapsed_time}ms");
+            Console.WriteLine($"Performancetest 2 took {elapsed_time}ms");
             Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
         }
     }
