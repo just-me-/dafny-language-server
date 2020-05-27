@@ -12,7 +12,6 @@ namespace DafnyLanguageServer.Tools
     /// </summary>
     public static class LoggerCreator
     {
-
         public static Logger GetLogger()
         {
             var loggerconfig = new LoggerConfiguration();

@@ -159,7 +159,11 @@
     <Compile Include="Resources\FileAndFolderLocations.cs" />
     <Compile Include="SymbolTable\ISymbolTableManager.cs" />
     <Compile Include="SymbolTable\SymbolTableManager.cs" />
-    <Compile Include="Tools\ConfigInitializer.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigArgumentsParser.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrorReporter.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrors.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigInitializer.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigJSONParser.cs" />
     <Compile Include="Tools\LoggerCreator.cs" />
     <Compile Include="WorkspaceManager\IFileRepository.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />
@@ -268,5 +272,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,6 +6,7 @@ using DafnyLanguageServer;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.Tools.ConfigInitialization;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
@@ -39,7 +40,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
@@ -62,7 +63,7 @@ namespace ProgramTest
             Console.WriteLine(LanguageServerConfig.ToString());
 
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
@@ -85,8 +86,8 @@ namespace ProgramTest
             Console.WriteLine(LanguageServerConfig.ToString());
 
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("same files"));
+            Assert.IsTrue(ci.Errors.HasErrors);
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("same files"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -107,7 +108,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors, "has error mismatch");
+            Assert.IsFalse(ci.Errors.HasErrors, "has error mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -128,7 +129,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
@@ -149,7 +150,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -170,7 +171,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -193,8 +194,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("escape sequence"));
+            Assert.IsTrue(ci.Errors.HasErrors);
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("escape sequence"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -215,7 +216,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors, "Error expectation mismatch");
+            Assert.IsFalse(ci.Errors.HasErrors, "Error expectation mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -236,8 +237,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
+            Assert.IsTrue(ci.Errors.HasErrors);
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("parsing"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -258,8 +259,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "error expectation mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("Loglevel must be between"));
+            Assert.IsTrue(ci.Errors.HasErrors, "error expectation mismatch");
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("Loglevel must be between"));
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -280,7 +281,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors);
+            Assert.IsTrue(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -301,7 +302,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -323,7 +324,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors);
+            Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -347,8 +348,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("not be located"), "Errormsg not contained");
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("not be located"), "Errormsg not contained");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -375,7 +376,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -398,7 +399,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsFalse(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsFalse(ci.Errors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -420,8 +421,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("Unknown switch"));
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("Unknown switch"));
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
@@ -444,8 +445,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("parsing"));
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("parsing"));
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
@@ -468,8 +469,8 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
-            Assert.IsTrue(ci.InitializationErrors.ErrorMessages.Contains("No Argument provided"));
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.ErrorMessages.Contains("No Argument provided"));
 
 
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
@@ -493,7 +494,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -515,7 +516,7 @@ namespace ProgramTest
 
             Console.WriteLine(LanguageServerConfig.ToString());
 
-            Assert.IsTrue(ci.InitializationErrors.HasErrors, "Error Mismatch");
+            Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
