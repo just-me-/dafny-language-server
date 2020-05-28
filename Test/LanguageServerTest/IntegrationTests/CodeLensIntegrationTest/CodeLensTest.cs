@@ -100,25 +100,7 @@ namespace CodeLensIntegrationTest
         public void MainFile()
         {
             RunCodeLens(Files.cl_include_main);
-            List<ExpectedCodeLensEntry> exp = new List<ExpectedCodeLensEntry>()
-            {
-                new ExpectedCodeLensEntry
-                {
-                    Name = "1 reference to C",
-                    References = new List<ExpectedReference>
-                    {
-                        new ExpectedReference{Col = 14, Line = 2}
-                    }
-                },
-                new ExpectedCodeLensEntry
-                {
-                    Name = "1 reference to increase",
-                    References = new List<ExpectedReference>
-                    {
-                        new ExpectedReference{Col = 14, Line = 3}
-                    }
-                }
-            };
+            List<ExpectedCodeLensEntry> exp = new List<ExpectedCodeLensEntry>() { };
             VerifyResults(exp);
         }
 
