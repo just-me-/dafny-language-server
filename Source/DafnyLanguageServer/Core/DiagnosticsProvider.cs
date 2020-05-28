@@ -24,7 +24,7 @@ namespace DafnyLanguageServer.Core
 
         public DiagnosticsProvider(ILanguageServer router, ISymbolTableManager symbolTableManager)
         {
-            _router = router;
+            _router = router;  //optionales todo wenn zeit:  router und message sender möglichst oben bei den handlern lassen. Wenn zeit evtl hochgeben sonst egal.
             _symbolTableManager = symbolTableManager;
             _msgSenderService = new MessageSenderService(router);
         }

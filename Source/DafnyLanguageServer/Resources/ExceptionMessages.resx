@@ -209,4 +209,10 @@
   <data name="symbol_entrypoint_must_be_set" xml:space="preserve">
     <value>A Symbol Entrypoint must be set for navigator methods. It must not be null.</value>
   </data>
+  <data name="config_file_not_existing" xml:space="preserve">
+    <value>The file Config/LanguageServerConfig.json file could not be located.</value>
+  </data>
+  <data name="level_out_of_bounds" xml:space="preserve">
+    <value>Loglevel must be between 0 and 6.</value>
+  </data>
 </root>

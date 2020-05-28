@@ -8,6 +8,7 @@ using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
+using DafnyLanguageServer.Tools.ConfigInitialization;
 using DafnyLanguageServer.WorkspaceManager;
 using Serilog;
 using DidChangeWatchedFilesHandler = DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler;
@@ -35,7 +36,7 @@ namespace DafnyLanguageServer
         {
             var configInitializer = new ConfigInitializer(args);
             configInitializer.SetUp();
-            configInitErrors = configInitializer.InitializationErrors;
+            configInitErrors = configInitializer.Errors;
             log = LoggerCreator.GetLogger();
         }
 
