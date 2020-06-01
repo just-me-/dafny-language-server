@@ -187,6 +187,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An identifier must not start with a number..
+        /// </summary>
+        public static string rename_start_with_number {
+            get {
+                return ResourceManager.GetString("rename_start_with_number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IDentifier names must not start with an underscore..
         /// </summary>
         public static string rename_start_with_underscore {

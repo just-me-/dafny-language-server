@@ -22,32 +22,32 @@ namespace CoreProviderTest
 
         public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
 
         public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
 
         public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
 
         public ISymbol GetOriginFromSymbol(ISymbol symbol)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
 
         public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
 
         public List<ISymbol> GetAllSymbolDeclarations()
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Rename provider should not use this method.");
         }
     }
 
@@ -70,7 +70,7 @@ namespace CoreProviderTest
             var changes = result.Changes.Values.First();
             var aslist = changes.ToList();
             aslist.Sort(
-                (te1, te2) => (int) te1.Range.Start.Line - (int) te2.Range.Start.Line
+                (te1, te2) => (int)te1.Range.Start.Line - (int)te2.Range.Start.Line
             );
             foreach (var c in aslist)
             {
@@ -107,8 +107,18 @@ namespace CoreProviderTest
             var result = provider.GetRenameChanges("{{}}}", new Uri("file:///N:/u/l.l"), 2, 22);
 
             Assert.IsTrue(provider.Outcome.Error, "error expected in rename-outcome");
-            Assert.AreEqual(provider.Outcome.Msg,
-                "{{}}}" + DafnyLanguageServer.Resources.LoggingMessages.rename_only_digits);
+            Assert.AreEqual("{{}}}" + DafnyLanguageServer.Resources.LoggingMessages.rename_only_digits, provider.Outcome.Msg);
+        }
+
+        [Test]
+        public void StartWithNumber()
+        {
+            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            var provider = new RenameProvider(manager);
+            var result = provider.GetRenameChanges("1abc", new Uri("file:///N:/u/l.l"), 2, 22);
+
+            Assert.IsTrue(provider.Outcome.Error, "error expected in rename-outcome");
+            Assert.AreEqual(DafnyLanguageServer.Resources.LoggingMessages.rename_start_with_number, provider.Outcome.Msg);
         }
 
 
@@ -120,8 +130,7 @@ namespace CoreProviderTest
             var result = provider.GetRenameChanges("_abc", new Uri("file:///N:/u/l.l"), 2, 22);
 
             Assert.IsTrue(provider.Outcome.Error, "error expected in rename-outcome");
-            Assert.AreEqual(provider.Outcome.Msg,
-                DafnyLanguageServer.Resources.LoggingMessages.rename_start_with_underscore);
+            Assert.AreEqual(DafnyLanguageServer.Resources.LoggingMessages.rename_start_with_underscore, provider.Outcome.Msg);
         }
 
         [Test]
@@ -132,8 +141,7 @@ namespace CoreProviderTest
             var result = provider.GetRenameChanges("method", new Uri("file:///N:/u/l.l"), 2, 22);
 
             Assert.IsTrue(provider.Outcome.Error, "error expected in rename-outcome");
-            Assert.AreEqual(provider.Outcome.Msg,
-                "method" + DafnyLanguageServer.Resources.LoggingMessages.rename_reserved_word);
+            Assert.AreEqual("method" + DafnyLanguageServer.Resources.LoggingMessages.rename_reserved_word, provider.Outcome.Msg);
         }
     }
 }

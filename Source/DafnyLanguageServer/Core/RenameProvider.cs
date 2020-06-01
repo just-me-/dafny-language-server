@@ -83,6 +83,11 @@ namespace DafnyLanguageServer.Core
                 SetError(Resources.LoggingMessages.rename_start_with_underscore);
             }
 
+            if (char.IsDigit(newName.First()))
+            {
+                SetError(Resources.LoggingMessages.rename_start_with_number);
+            }
+
         }
 
         private Dictionary<Uri, IEnumerable<TextEdit>> ConvertDict(Dictionary<Uri, List<TextEdit>> input)

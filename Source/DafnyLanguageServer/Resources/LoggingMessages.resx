@@ -160,6 +160,9 @@
   <data name="rename_reserved_word" xml:space="preserve">
     <value> is a reserved word.</value>
   </data>
+  <data name="rename_start_with_number" xml:space="preserve">
+    <value>An identifier must not start with a number.</value>
+  </data>
   <data name="rename_start_with_underscore" xml:space="preserve">
     <value>IDentifier names must not start with an underscore.</value>
   </data>
