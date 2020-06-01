@@ -1,18 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-	<OutputPath>../../../../Binaries/</OutputPath>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>../../../../Binaries/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	<IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="CompileHandlerTestFiles\**" />
-    <EmbeddedResource Remove="CompileHandlerTestFiles\**" />
-    <None Remove="CompileHandlerTestFiles\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.11.0" />
@@ -28,6 +22,9 @@
   <ItemGroup>
     <Reference Include="BoogieExecutionEngine">
       <HintPath>..\..\..\..\..\boogie\Binaries\BoogieExecutionEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="BoogieParserHelper">
+      <HintPath>..\..\..\..\..\boogie\Binaries\BoogieParserHelper.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using DafnyLanguageServer.Core;
 using NUnit.Framework;
 
-namespace CompletionServiceTest
+namespace CoreProviderTest
 {
     [TestFixture]
     [Category("Unit")]
-    public class CompletionServiceTest
+    public class CompletionProviderTest
     {
         private readonly CompletionProvider _provider = new CompletionProvider(null);
 

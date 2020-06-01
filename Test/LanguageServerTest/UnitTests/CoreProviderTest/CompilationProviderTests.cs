@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.Commons;
@@ -10,11 +10,11 @@ using Microsoft.Boogie;
 using NUnit.Framework;
 using Files = TestCommons.Paths;
 
-namespace CompilationServiceTest
+namespace CoreProviderTest
 {
     [TestFixture]
     [Category("Unit")]
-    public class CompilationServiceTest
+    public class CompilationProviderTest
     {
         private CompilerResults compilerResults;
         private readonly string failurePrefix = DafnyLanguageServer.Resources.CompilationResults.compilation_failed;

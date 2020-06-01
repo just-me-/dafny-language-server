@@ -1,14 +1,13 @@
-using DafnyLanguageServer.DafnyAccess;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.Handler;
+using NUnit.Framework;
 using TestCommons;
 using Files = TestCommons.Paths;
 
-namespace CounterExampleProviderUnitTest
+namespace CoreProviderTest
 {
     public class BVDChecks
     {
@@ -161,7 +160,7 @@ namespace CounterExampleProviderUnitTest
             var file = Files.ce_2mc;
 
             var physFile = CreatePhysFile(file);
- 
+
             var provider = new CounterExampleProvider(physFile, model);
 
             CounterExampleResults result = provider.LoadCounterModel();
@@ -169,7 +168,7 @@ namespace CounterExampleProviderUnitTest
 
             List<string> expectation = new List<string>()
             {
-                "L3 C19: in1 = 2446; ", 
+                "L3 C19: in1 = 2446; ",
                 "L9 C19: in2 = 891; "
             };
             CollectionAssert.AreEquivalent(expectation, resultAsString);
@@ -182,7 +181,7 @@ namespace CounterExampleProviderUnitTest
             {
                 Sourcecode = src
             };
-            
+
         }
     }
 }
