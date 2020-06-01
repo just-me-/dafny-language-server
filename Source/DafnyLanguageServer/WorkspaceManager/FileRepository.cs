@@ -84,57 +84,17 @@ namespace DafnyLanguageServer.WorkspaceManager
 
         /// <summary>
         /// Sets the SymbolTableManager Property.
+        /// Makes use of the dafnyProgram inside the Result property.
         /// </summary>
         private void AddSymbolTable()
         {
 
-            if (Result.TranslationStatus >= TranslationStatus.Resolved)
+            if (Result.TranslationStatus >= TranslationStatus.Resolved &&
+                Result.DafnyProgram != null)
             {
                 SymbolTableGenerator s = new SymbolTableGenerator(Result.DafnyProgram);
                 ISymbol rootnode = s.GenerateSymbolTable();
                 SymbolTableManager = new SymbolTableManager(rootnode);
-            }
-        }
-
-
-
-
-        //todo das wäre besser aufgehoben wieter oben, aka new Provider(FileRepo) wenn mand en dependency graph ankuckt.
-        /// <summary>
-        /// Invokes the CounterExampleProvider to extract counter examples.
-        /// </summary>
-        /// <returns>CounterExample result wrapper to be handled by the client. If none were found, the result wrapper will just be empty.</returns>
-        public CounterExampleResults CounterExample()
-        {
-            try
-            {
-                if (Result.TranslationStatus >= TranslationStatus.Translated)
-                {
-                    ICounterExampleProvider provider = new CounterExampleProvider(PhysicalFile);
-                    return provider.LoadCounterModel();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException(Resources.ExceptionMessages.could_not_collect_models + " " + e.Message);
-            }
-            return new CounterExampleResults();
-        }
-
-        /// <summary>
-        /// Invokes <c>CompilationService</c> to create an executable.
-        /// </summary>
-        /// <param name="requestCompilationArguments">Custom Arguments for compilation as far as applicable.</param>
-        /// <returns>CompilationResults Wrapper to be sent to the LSP client.</returns>
-        public CompilerResults Compile(string[] requestCompilationArguments)
-        {
-            try
-            {
-                return new CompileProvider(this, requestCompilationArguments).Compile();
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException(Resources.ExceptionMessages.could_not_execute_compilation + " " + e.Message);
             }
         }
     }

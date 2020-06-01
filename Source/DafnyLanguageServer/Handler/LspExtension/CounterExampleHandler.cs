@@ -3,6 +3,7 @@ using OmniSharp.Extensions.JsonRpc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,8 @@ namespace DafnyLanguageServer.Handler
             try
             {
                 var file = _workspaceManager.GetFileRepository(request.DafnyFile);
-                return await Task.Run(() => file.CounterExample(), cancellationToken);
+                ICounterExampleProvider provider = new CounterExampleProvider(file.PhysicalFile);
+                return await Task.Run(() => provider.LoadCounterModel(), cancellationToken);
             }
             catch (Exception e)
             {

@@ -2,6 +2,7 @@
 using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Core;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -45,7 +46,9 @@ namespace DafnyLanguageServer.Handler
             try
             {
                 FileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
-                return await Task.Run(() => f.Compile(request.CompilationArguments), cancellationToken);
+                string[] args = request.CompilationArguments;
+                ICompileProvider provider = new CompileProvider(f, args);
+                return await Task.Run(() => provider.Compile(), cancellationToken);
             }
             catch (Exception e)
             {

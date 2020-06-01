@@ -131,7 +131,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             filter = DefaultPredicateFilter(filter);
 
-            var matchingSymbol = GetMatchingChild(entryPoint, filter);
+            var matchingSymbol = GetMatchingChild(entryPoint, filter); //todo man kann das runternehmen in den loop und den code vereinfachen.
             if (matchingSymbol != null)
             {
                 return matchingSymbol;
@@ -141,7 +141,7 @@ namespace DafnyLanguageServer.SymbolTable
             while (parent.Parent != null)
             {
                 parent = parent.Parent;
-                matchingSymbol = GetMatchingChild(parent, filter);
+                matchingSymbol = GetMatchingChild(parent, filter); //todo get matching child würd ich eher search all children nennen
                 if (matchingSymbol != null)
                 {
                     return matchingSymbol;
