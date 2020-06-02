@@ -21,7 +21,7 @@ namespace DafnyLanguageServer.Handler
     {
         public Task<Unit> Handle(EmptyRequest request, CancellationToken cancellationToken)
         {
-            return null;
+            return Unit.Task;
         }
     }
 }

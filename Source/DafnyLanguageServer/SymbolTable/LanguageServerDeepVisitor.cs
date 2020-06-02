@@ -220,12 +220,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-
-        //todo: if, while, blockstatement:
-        //damit die als children beim parent gelten, und somit von TopDown durchsucht werden, muss man aktuell "isDeclartion: true" setzen.
-        //Evtl schöner: "addAsChild" boolean... möchte jetzt aber das rename machen.
-        //Weiteres Problem war: Hash Name muss ja unique sein, drum hab ich noch das + o.GetHashCode geadded.
-        //Tests 3, 7, 10schlagen entsprechend fehl, da ein zusätzliches Child nun drin ist und der Name auch den Hashcode beinhatlet.
         public override void Visit(BlockStmt o)
         {
             var name = "block-stmt-ghost-" + o.Tok.line;
@@ -319,7 +313,8 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (t == null)
             {
-                throw new InvalidOperationException(Resources.SymbolTableStrings.typeRHS_vs_UserDefinedType); //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
+                throw new InvalidOperationException(Resources.SymbolTableStrings.typeRHS_vs_UserDefinedType);
+                //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
             }
 
 
@@ -397,7 +392,7 @@ namespace DafnyLanguageServer.SymbolTable
             MemberSelectExpr mse = null;
             if (e.ResolvedExpression is MemberSelectExpr)
             {
-                mse = e.ResolvedExpression as MemberSelectExpr; //todo mit visitor machen. //geht net weil ich brauch ja auch e ansich.
+                mse = e.ResolvedExpression as MemberSelectExpr;
             }
 
             var nav = new SymbolTableNavigator();

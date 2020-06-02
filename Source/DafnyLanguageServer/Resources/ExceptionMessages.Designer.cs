@@ -250,6 +250,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No class origin was found for symbol: .
+        /// </summary>
+        internal static string no_class_origin_found {
+            get {
+                return ResourceManager.GetString("no_class_origin_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are not enough lines in the given source..
         /// </summary>
         internal static string not_enough_lines {

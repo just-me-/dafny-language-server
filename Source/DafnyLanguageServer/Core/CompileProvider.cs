@@ -15,11 +15,11 @@ namespace DafnyLanguageServer.Core
     {
         private string[] CompilationArgs { get; }
 
-        private FileRepository FileRepo { get; }
+        private IFileRepository FileRepo { get; }
         private string Path => FileRepo.PhysicalFile.Filepath;
         private Microsoft.Dafny.Program Dp => FileRepo.Result.DafnyProgram;
 
-        public CompileProvider(FileRepository fileRepo, string[] args)
+        public CompileProvider(IFileRepository fileRepo, string[] args)
         {
             FileRepo = fileRepo;
 

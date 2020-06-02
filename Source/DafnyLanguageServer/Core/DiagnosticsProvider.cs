@@ -29,7 +29,7 @@ namespace DafnyLanguageServer.Core
             _msgSenderService = new MessageSenderService(router);
         }
 
-        public void SendDiagnostics(FileRepository fileRepository)
+        public void SendDiagnostics(IFileRepository fileRepository)
         {
             _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
 

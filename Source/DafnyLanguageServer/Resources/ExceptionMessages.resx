@@ -215,4 +215,8 @@
   <data name="level_out_of_bounds" xml:space="preserve">
     <value>Loglevel must be between 0 and 6.</value>
   </data>
+  <data name="no_class_origin_found" xml:space="preserve">
+    <value>No class origin was found for symbol: </value>
+    <comment>Used within auto completions</comment>
+  </data>
 </root>

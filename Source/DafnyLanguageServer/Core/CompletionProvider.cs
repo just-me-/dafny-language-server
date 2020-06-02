@@ -132,8 +132,11 @@ namespace DafnyLanguageServer.Core
 
         private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTableManager manager, ISymbol selectedSymbol)
         {
-            // if selectedSymbol is null... error iwas... not found mässig... todo
             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
+            if (classSymbol == null)
+            {
+                throw new InvalidOperationException(Resources.ExceptionMessages.no_class_origin_found + selectedSymbol);
+            }
             foreach (var suggestionElement in classSymbol.Children)
             {
                 if (IsNoDefaultNamespace(suggestionElement))

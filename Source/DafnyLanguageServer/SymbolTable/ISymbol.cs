@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Dafny;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable

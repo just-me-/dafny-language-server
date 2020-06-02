@@ -127,11 +127,7 @@ namespace DafnyLanguageServer.SymbolTable
         #region Methods
         public bool Wraps(ISymbol child)
         {
-            if (child is SymbolInformation childSymbol)
-            {
-                return this.Wraps(child.FileUri, childSymbol.Line, childSymbol.Column);
-            }
-            return false;
+            return Wraps(child.FileUri, child.Line, child.Column);
         }
 
         /// <summary>

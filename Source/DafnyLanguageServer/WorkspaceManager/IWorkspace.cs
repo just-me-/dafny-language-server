@@ -8,9 +8,9 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// </summary>
     public interface IWorkspace
     {
-        FileRepository UpdateFile<T>(Uri documentPath, T changes);
-        FileRepository GetFileRepository(Uri documentPath);
-        FileRepository GetFileRepository(string documentPath);
-        ConcurrentDictionary<Uri, FileRepository> GetAllFiles();
+        IFileRepository UpdateFile<T>(Uri documentPath, T changes);
+        IFileRepository GetFileRepository(Uri documentPath);
+        IFileRepository GetFileRepository(string documentPath);
+        ConcurrentDictionary<Uri, IFileRepository> GetAllFiles();
     }
 }

@@ -77,8 +77,6 @@ namespace SymbolTableTest
         }
 
 
-        //Note on test:
-        //assert, ensures, requires not yet supported, excluded from expecatation temporarily //todo ticket für symboltable weiss nummer grad nich.
         [Test]
         public void Test06_ClassesMethodsMultiReturns_VariousBasicCodeFeatures()
         {
@@ -186,14 +184,10 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            CollectionAssert.AreEquivalent(excpected, actual); //todo
+            CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-
-
-
-
-        private List<string> GetSymbolsAsList(string f)
+        private IEnumerable<string> GetSymbolsAsList(string f)
         {
             var physFile = new PhysicalFile
             {

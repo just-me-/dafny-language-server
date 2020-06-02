@@ -305,7 +305,7 @@ namespace GotoIntegrationTest
         public void LeftMost_UninitializedVariableMore()
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 16);
-            VerifyResult(file, 26, 8);   //todo, das failed, uninitialized variable
+            VerifyResult(file, 26, 8);
         }
 
         [Test]
@@ -363,7 +363,7 @@ namespace GotoIntegrationTest
         {
             string file = Files.gt_goto;
             SetGoToDefinitionWithoutZeroIndexing(file, 33, 15);
-            VerifyResult(file, 31, 8);  //TODO beim := nicht gut wenn uninitinailsiert. Ticket 71
+            VerifyResult(file, 31, 8);
         }
 
         [Test]

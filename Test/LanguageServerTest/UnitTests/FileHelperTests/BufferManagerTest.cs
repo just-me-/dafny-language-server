@@ -47,7 +47,7 @@ namespace ContentManagerTests
         [Test]
         public void GetFileRegular()
         {
-            FileRepository f = b.GetFileRepository(uri1);
+            IFileRepository f = b.GetFileRepository(uri1);
             Assert.AreEqual(uri1, f.PhysicalFile.Uri);
             Assert.AreEqual(source1, f.PhysicalFile.Sourcecode);
         }
@@ -55,15 +55,15 @@ namespace ContentManagerTests
         [Test]
         public void GetFileInexistant()
         {
-            FileRepository f = b.GetFileRepository(unregisteredUri);
+            IFileRepository f = b.GetFileRepository(unregisteredUri);
             Assert.AreEqual(unregisteredUri, f.PhysicalFile.Uri);
-            Assert.IsTrue(f.PhysicalFile.Sourcecode is null); //todo: sinnvoll?
+            Assert.AreEqual(string.Empty, f.PhysicalFile.Sourcecode);
         }
 
         [Test]
         public void GetFileByString()
         {
-            FileRepository f = b.GetFileRepository(uri1.ToString());
+            IFileRepository f = b.GetFileRepository(uri1.ToString());
             Assert.AreEqual(uri1, f.PhysicalFile.Uri);
             Assert.AreEqual(source1, f.PhysicalFile.Sourcecode);
         }
@@ -71,7 +71,7 @@ namespace ContentManagerTests
         [Test]
         public void FilePathConversion()
         {
-            FileRepository f = b.GetFileRepository(uri1);
+            IFileRepository f = b.GetFileRepository(uri1);
             Assert.AreEqual("C:\\file1.txt", f.PhysicalFile.Filepath);
         }
 
@@ -87,7 +87,7 @@ namespace ContentManagerTests
         public void GetSourceCodeUnknownUri()
         {
             string s = b.GetFileRepository(unregisteredUri).PhysicalFile.Sourcecode;
-            Assert.AreEqual(null, s);
+            Assert.AreEqual(string.Empty, s);
         }
     }
 }

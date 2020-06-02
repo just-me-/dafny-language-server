@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.Core
         private readonly ISymbolTableManager _manager;
         private readonly Uri _uri;
 
-        public CodeLensProvider(FileRepository filerepo) // todo use IFileRepository, interface 
+        public CodeLensProvider(IFileRepository filerepo)
         {
             _manager = filerepo.SymbolTableManager;
             _uri = filerepo.PhysicalFile.Uri;
@@ -67,7 +67,6 @@ namespace DafnyLanguageServer.Core
                 }
             }
 
-            // =?: operator
             string msgTitle;
             if (symbolInformation.Usages.Any())
             {

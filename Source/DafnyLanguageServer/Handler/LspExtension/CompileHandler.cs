@@ -45,7 +45,7 @@ namespace DafnyLanguageServer.Handler
 
             try
             {
-                FileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
+                IFileRepository f = _workspaceManager.GetFileRepository(request.FileToCompile);
                 string[] args = request.CompilationArguments;
                 ICompileProvider provider = new CompileProvider(f, args);
                 return await Task.Run(() => provider.Compile(), cancellationToken);

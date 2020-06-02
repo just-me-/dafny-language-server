@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.WorkspaceManager
     /// </summary>
     public class Workspace : IWorkspace
     {
-        private readonly ConcurrentDictionary<Uri, FileRepository> _files = new ConcurrentDictionary<Uri, FileRepository>();
+        private readonly ConcurrentDictionary<Uri, IFileRepository> _files = new ConcurrentDictionary<Uri, IFileRepository>();
 
         /// <summary>
         /// Requests the fileRepository to apply updates and store it in the buffer.
@@ -22,10 +22,9 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// <param name="documentPath">URI to the document</param>
         /// <param name="changes">Update Information, either just the new complete sourcecode or TextDocumentChangeEvent-Container</param>
         /// <returns></returns>
-        public FileRepository UpdateFile<T>(Uri documentPath, T changes)
+        public IFileRepository UpdateFile<T>(Uri documentPath, T changes)
         {
-            // todo should be IFileRepository
-            FileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
+            IFileRepository fileRepository = GetOrCreateFileRepositoryInWorkspace(documentPath);
 
             if (typeof(T) == typeof(string)) //Sync Kind Full
             {
@@ -52,29 +51,30 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// </summary>
         /// <param name="documentPath">URI to the file.</param>
         /// <returns>FileRepository</returns>
-        private FileRepository GetOrCreateFileRepositoryInWorkspace(Uri documentPath)
+        private IFileRepository GetOrCreateFileRepositoryInWorkspace(Uri documentPath)
         {
             return _files.TryGetValue(documentPath, out var bufferedFile)
                 ? bufferedFile
                 : new FileRepository(new PhysicalFile
                 {
                     Uri = documentPath,
-                    Filepath = documentPath.LocalPath
+                    Filepath = documentPath.LocalPath,
+                    Sourcecode = string.Empty
                 });
 
         }
 
-        public FileRepository GetFileRepository(Uri documentPath)
+        public IFileRepository GetFileRepository(Uri documentPath)
         {
             return GetOrCreateFileRepositoryInWorkspace(documentPath);
         }
 
-        public FileRepository GetFileRepository(string documentPath)
+        public IFileRepository GetFileRepository(string documentPath)
         {
             return GetFileRepository(new Uri(documentPath));
         }
 
-        public ConcurrentDictionary<Uri, FileRepository> GetAllFiles()
+        public ConcurrentDictionary<Uri, IFileRepository> GetAllFiles()
         {
             return _files;
         }
