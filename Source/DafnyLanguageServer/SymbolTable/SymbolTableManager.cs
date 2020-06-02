@@ -25,9 +25,8 @@ namespace DafnyLanguageServer.SymbolTable
         //  weg
         public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
-            ISymbol closestWrappingSymbol = null;
             INavigator navigator = new SymbolTableNavigator();
-            closestWrappingSymbol = navigator.TopDown(DafnyProgramRootSymbol, file, line, character);
+            var closestWrappingSymbol = navigator.TopDown(DafnyProgramRootSymbol, file, line, character);
 
             if (closestWrappingSymbol == null && DafnyProgramRootSymbol[Resources.SymbolTableStrings.default_module] != null)
             {
@@ -59,14 +58,6 @@ namespace DafnyLanguageServer.SymbolTable
             return navigator.BottomUpAll(symbol, extendedFilter);
         }
 
-        /// <summary>
-        /// Return the declaration of a symbol or itself.
-        /// Used for Go2Definition.
-        /// </summary>
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)  //todo  direkt symbol.Origin nutzen
-        {
-            return symbol.DeclarationOrigin;
-        }
 
         /// <summary>
         /// For instances of classes - returns the origins "class type" as Smybol.
@@ -75,21 +66,18 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
         {
-            // todo anders machen... GetClassSymbolByPath is ansich nicht richtig. 
-            var classPath = GetOriginFromSymbol(symbol).UserTypeDefinition.ResolvedClass.FullName;
-            return GetClassSymbolByPath(classPath);
-        }
+            var classPath = symbol.DeclarationOrigin.UserTypeDefinition.ResolvedClass.FullName;
+            string[] originPath = classPath.Split('.');
+            LinkedList<string> chain = new LinkedList<string>(originPath);
 
-        private ISymbol GetClassSymbolByPath(string classPath)
-        {
-            // todo better do a split? is there rly every time "just one module and one class"? #212 | das kann auf jedenfall net richtig sien. Wa sbie Modul1.Modul2.Modul3.Class?
-            // ev siehe zteile +/- 70
-            string[] originPath = classPath.Split('.'); // 0 = module, 1 = class
-            if (originPath.Length != 2)
+            var result = DafnyProgramRootSymbol;
+            while (chain.Count != 0)
             {
-                throw new ArgumentException(Resources.ExceptionMessages.tmp_invalid_class_path);
+                result = result[chain.First.Value];
+                chain.RemoveFirst();
             }
-            return DafnyProgramRootSymbol[originPath[0]][originPath[1]];
+
+            return result;
         }
 
         /// <summary>
