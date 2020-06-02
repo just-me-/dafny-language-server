@@ -98,7 +98,7 @@ namespace PerformanceTest
             FileToCompile = f
           };
 
-          CancellationSource.CancelAfter(TimeSpan.FromMinutes(5));
+          CancellationSource.CancelAfter(TimeSpan.FromMinutes(1));
 
           Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
 
@@ -129,7 +129,7 @@ namespace PerformanceTest
             FileToCompile = f
           };
 
-          CancellationSource.CancelAfter(TimeSpan.FromMinutes(5));
+          CancellationSource.CancelAfter(TimeSpan.FromMinutes(1));
 
           Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
 
@@ -145,7 +145,7 @@ namespace PerformanceTest
         public void TestUltraLarge()
         {
           var f = Files.pf_large5;
-          var l = new LargeFileGenerator(100_000, 1986);
+          var l = new LargeFileGenerator(50_000, 1986);
           l.Generate();
           l.Store(f);
 
@@ -167,7 +167,7 @@ namespace PerformanceTest
           stopwatch.Stop();
 
           var elapsed_time = stopwatch.ElapsedMilliseconds;
-          Console.WriteLine($"Performancetest 2 with 100k LOC took {elapsed_time}ms");
+          Console.WriteLine($"Performancetest 2 with 50k LOC took {elapsed_time}ms");
           Assert.Less(elapsed_time, 600e3, "Runtime takes too long! Was: " + elapsed_time);
         }
 
