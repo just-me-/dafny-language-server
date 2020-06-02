@@ -71,7 +71,7 @@ namespace DafnyLanguageServer.Core
             return CreateErrorneousResults($"[L{line}:C{col}] {msg}");
         }
 
-        private bool PerformPreliminaryChecks(DafnyDriver.ExitValue exitval, out CompilerResults compilerResults)
+        private bool PerformPreliminaryChecks(DafnyDriver.CommandLineArgumentsResult exitval, out CompilerResults compilerResults)
         {
             if (System.IO.Path.GetExtension(Path) != Resources.CompilationResults.file_ending)
             {
@@ -107,7 +107,7 @@ namespace DafnyLanguageServer.Core
                 return false;
             }
 
-            if (exitval == DafnyDriver.ExitValue.PREPROCESSING_ERROR)
+            if (exitval == DafnyDriver.CommandLineArgumentsResult.PREPROCESSING_ERROR)
             {
                 compilerResults = CreateErrorneousResults(Resources.CompilationResults.not_supported_custom_args);
                 return false;

@@ -71,11 +71,10 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ClassDecl o)
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Class);
-
-            if (o.TraitsTyp.Any())
+            if (o.ParentTraits.Any())
             {
                 preDeclaredSymbol.BaseClasses = new List<ISymbol>();
-                foreach (var baseClassType in o.TraitsTyp)
+                foreach (var baseClassType in o.ParentTraits)
                 {
                     var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
                     ISymbol baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);

@@ -7,3 +7,4 @@
 *.AssemblyInfo.cs
 *.cache
 *.FileListAbsolute.txt
+*.CopyComplete
