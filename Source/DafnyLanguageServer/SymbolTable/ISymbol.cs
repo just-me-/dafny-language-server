@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Dafny;
 using System.Collections.Generic;
+using System.Windows.Forms.VisualStyles;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
@@ -9,11 +10,13 @@ namespace DafnyLanguageServer.SymbolTable
     {
 
         TokenPosition Position { get; set; }
-        Uri FileUri { get; } //optionales todo: kann man das vereinfachen? Die Uri ist ja im Token.
+        Uri FileUri { get; }
         string FileName { get; }
         int Line { get; }
+        int? BodyLineStart { get; }
+        int? BodyLineEnd { get; }
+        bool HasBody { get; }
         int Column { get; }
-        int ColumnStart { get; } //optionales todo: Warum ist col-Start im Interface, aber Line-start nicht?
         int ColumnEnd { get; }
         string Name { get; set; }
         Kind Kind { get; set; }

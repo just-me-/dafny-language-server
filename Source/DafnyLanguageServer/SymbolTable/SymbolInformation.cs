@@ -13,24 +13,29 @@ namespace DafnyLanguageServer.SymbolTable
     /// Eg in <c>function myMethod {...}</c> the Symbol (and its position data) is myMethod.
     /// To get the position of { use BodyStartToken and for } use BodyEndToken. Those positions are only available for
     /// types like methods, functions, class, ... not for fields or variables. Just like you would expect.
-    /// There are default Tokens set though. (?) todo #102
     /// </summary>
     public class SymbolInformation : ISymbol
     {
+        #region Position-Name-Token-Uri
         public TokenPosition Position { get; set; }
+        public virtual int Line => Position.Token.line;
+        public virtual int? BodyLineStart => Position.BodyStartToken?.line;
+        public virtual int? BodyLineEnd => Position.BodyEndToken?.line;
+        public bool HasBody => BodyLineStart != null && BodyLineEnd != null;
+        public virtual int Column => Position.Token.col;
+        public virtual int ColumnEnd => Column + Name.Length;
+        #endregion
+
+        #region Filename
+        public string Name { get; set; }
         public Uri FileUri => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
         public string FileName => Path.GetFileName(FileUri.LocalPath);
-        public virtual int Line => Position.Token.line;
-        public virtual int? LineStart => Position?.BodyStartToken?.line;
-        public virtual int? LineEnd => Position?.BodyEndToken?.line;
-        public int Column => ColumnStart;
-        public virtual int ColumnStart => Position?.Token.col ?? 0;
-        public virtual int ColumnEnd => ColumnStart + Name.Length;
-        public string Name { get; set; }
+        #endregion
 
+
+        #region Type-Kind
         public Kind Kind { get; set; }
         public Type Type { get; set; }
-
         public UserDefinedType UserTypeDefinition
         {
             get
@@ -42,23 +47,30 @@ namespace DafnyLanguageServer.SymbolTable
                 return null;
             }
         }
+        #endregion
 
 
-        public ISymbol Parent { get; set; }
+        #region Declaration
         public ISymbol DeclarationOrigin { get; set; }
         public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
+        #endregion
 
-
+        #region Parent-Children-Usages
+        public ISymbol Parent { get; set; }
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
         public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
         public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
-
-
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
+        #endregion
 
+        #region ContainingModule-And-DefaultClass
         public ISymbol Module { get; set; }
         public ISymbol AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
+        #endregion
+
+
+        #region ToString
         public string ToNiceString()
         {
             return $"{Name} at Line {Line} in {FileName}";
@@ -73,7 +85,9 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return ToNiceString();
         }
+        #endregion
 
+        #region Indexer
         public ISymbol this[string index]
         {
             get
@@ -83,14 +97,16 @@ namespace DafnyLanguageServer.SymbolTable
             }
             set => ChildrenHash.Add(index, value);
         }
+        #endregion
 
+        #region EqualsHash
         public override bool Equals(object obj)
         {
             if (obj is SymbolInformation symbol)
             {
                 return symbol.Name == Name
                        && symbol.Line == Line
-                       && symbol.ColumnStart == ColumnStart
+                       && symbol.Column == Column
                        && symbol.ColumnEnd == ColumnEnd;
             }
             return false;
@@ -101,9 +117,12 @@ namespace DafnyLanguageServer.SymbolTable
             int hash = 13;
             hash = hash * 7 + FileUri.GetHashCode();
             hash = hash * 7 + Line.GetHashCode();
-            return hash * 7 + ColumnStart.GetHashCode();
+            return hash * 7 + Column.GetHashCode();
         }
+        #endregion
 
+
+        #region Methods
         public bool Wraps(ISymbol child)
         {
             if (child is SymbolInformation childSymbol)
@@ -118,7 +137,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public bool Wraps(Uri file, int line, int character)
         {
-            return IsSameFile(file) && HasBody() && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character) || WrapsAsClassField(line, character));
+            return IsSameFile(file) && HasBody && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character));
                                                         //optionales todo: Kann man das nicht vereinfachen? Iwie allgemien halten möglichst ohne special cases, ka so mit rekursion oder iwas, damit es weniger fehleranfällig ist?
         }
 
@@ -127,35 +146,31 @@ namespace DafnyLanguageServer.SymbolTable
             return this.Kind == Kind.RootNode || this.FileUri == file;
         }
 
-        private bool HasBody()
-        {
-            return LineStart != null && LineEnd != null;
-        }
 
         private bool WrapsLine(int line, int character)
         {
             return (
-                       (Line < line && LineEnd > line)
-                    || (Line == line && ColumnStart <= character)
-                    || (LineEnd == line && Position?.BodyEndToken?.col >= character)
+                       (Line < line && BodyLineEnd > line)
+                    || (Line == line && Column <= character)
+                    || (BodyLineEnd == line && Position?.BodyEndToken?.col >= character)
                    )
-                   && Line != LineEnd;
+                   && Line != BodyLineEnd;
         }
 
         private bool WrapsCharOnSameLine(int line, int character)
         {
-            return LineStart == LineEnd
-                    && LineStart == line
-                    && ColumnStart <= character
+            return BodyLineStart == BodyLineEnd
+                    && BodyLineStart == line
+                    && Column <= character
                     && ColumnEnd >= character;
         }
 
         private bool WrapsAsClassField(int line, int character)
         {
-            // Class fields do not have LineStart/LineEnd. This fields are a special case.
-            return Kind == Kind.Field && LineEnd == 0
+            // Class fields do not have BodyLineStart/BodyLineEnd. This fields are a special case.
+            return Kind == Kind.Field && BodyLineEnd == 0
                     && Line == line
-                    && ColumnStart <= character
+                    && Column <= character
                     && ColumnEnd >= character;
         }
 
@@ -174,6 +189,7 @@ namespace DafnyLanguageServer.SymbolTable
                 yield return usage;
             }
         }
+        #endregion
     }
 
     public enum Kind

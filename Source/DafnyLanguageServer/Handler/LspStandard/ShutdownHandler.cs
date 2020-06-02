@@ -19,7 +19,6 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class ShutdownHandler :  IShutdownHandler, IExitHandler
     {
-
         public Task<Unit> Handle(EmptyRequest request, CancellationToken cancellationToken)
         {
             return null;
