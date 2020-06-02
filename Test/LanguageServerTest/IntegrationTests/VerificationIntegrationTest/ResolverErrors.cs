@@ -42,8 +42,8 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C16 - L3 C22] - Error - Syntax Error: Undeclared top-level type or type parameter: XXX (did you forget to qualify a name or declare a module import 'opened?') at [ XXX ]",
-                "R[L3 C9 - L3 C22] - Error - Syntax Error: new can be applied only to reference types (got XXX) at [ := ]"
+              "R[L3 C16 - L3 C22] - Error - Syntax Error: Undeclared top-level type or type parameter: XXX (did you forget to qualify a name or declare a module import 'opened'?) at [ XXX ]",
+              "R[L3 C9 - L3 C22] - Error - Syntax Error: new can be applied only to class types (got XXX) at [ := ]"
             };
 
             VerifyResults(expct);

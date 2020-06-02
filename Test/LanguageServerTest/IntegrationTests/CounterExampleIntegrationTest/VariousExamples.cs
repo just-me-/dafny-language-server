@@ -16,7 +16,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_li);
             List<string> expecation = new List<string>()
             {
-                "L12 C24: b = 0; n = 5881; "
+                "L12 C24: b = 0; n = 1178; "
             };
             VerifyResults(expecation);
         }
@@ -27,7 +27,7 @@ namespace CounterExampleIntegrationTest
             GetCounterExamples(Files.ce_lp);
             List<string> expecation = new List<string>()
             {
-                "L11 C16: x = 37084; y = 1; "
+                "L11 C16: x = 23876; y = 1; "
             };
             VerifyResults(expecation);
         }
