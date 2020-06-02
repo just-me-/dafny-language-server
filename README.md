@@ -1,52 +1,81 @@
-# Dafny Server Redesign
-This porject is a redesign of the [original Dafny language server and VSCode plugin that brings support for Dafny for Visual Studio Code](https://github.com/DafnyVSCode/Dafny-VSCode). 
+[![Build and Test](https://github.com/dafny-lang/dafny/workflows/Build%20and%20Test/badge.svg)](https://github.com/dafny-lang/dafny/actions?query=workflow%3A%22Build+and+Test%22) [![Gitter](https://badges.gitter.im/dafny-lang/community.svg)](https://gitter.im/dafny-lang/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-## Overview
-The project has two main parts. 
-On the one hand, there is the Visual Studio Code Plugin. You can find [it in this seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin). 
-It just contains a very basic level of logic and is mainly responsible for displaying information to the user. 
-On the other hand, is the Visual Studio Solution “Dafny Server”. The server is placed in this git repository. 
-It delivers the needed information to the Visual Studio Code Plugin over the Language Server Protocol (LSP). 
-The Dafny Server itself does not directly evaluate Dafny code. It uses the Dafny-Lang project.
-It uses this project directly and not over an JSON pared request like the bachelor theses before thought.
-Therefore it can offer more features in the future since there are now no limitation trough a parsing process. 
+![Dafny](dafny-banner.png)
 
-### VS Code Plugin
-Open the folder `VSCodePlugin` in your VS Code. Find and open the file `src/extension.ts` and press `F5`. 
-Now VS Code loads the plugin in a virtual test environment. 
-It can be used now like it would be installed and you can set breakpoints and debug the code as well. Make sure that you setup your Dafny Language Server before running your Plugin. 
+Dafny is a programming language with a program verifier. As you type in your program, the verifier constantly looks over your shoulders and flags any errors. This github site contains these materials:
 
-### Dafny Language Server
-First you have to open the Dafny Solution in your Visual Studio and build all subsolution. 
-Then you can build the main Dafny solution with depends on the subsolutions. Now you are good to go.
+* sources
+* [binary downloads](https://github.com/dafny-lang/dafny/releases) for Windows, Mac, GNU/Linux, and FreeBSD
+* the [issue tracker](https://github.com/dafny-lang/dafny/issues)
+* the wiki, including [frequently asked questions](https://github.com/dafny-lang/dafny/wiki/FAQ)
 
-## PDF Developer Documentation
-You will finde more information how to setup this project on your local development environment in the developer documentation document. 
-There are some helpfull links to getting into Visuel Studio Code Plugins as well. 
+# Community
 
-You can [download the PDF here](https://wuza.ch/specials/SA/Entwicklerdokumentation.pdf).
-For future adaptations of the documentation, the Word file will be made available via Git after our Bachelor thesis. 
-For the current processing an alternative Word document synchronization is more suitable (SharePoint).
+You can ask questions about Dafny on [Stack Overflow](https://stackoverflow.com/questions/tagged/dafny) or participate in general discussion on Dafny's [![Gitter](https://badges.gitter.im/dafny-lang/community.svg)](https://gitter.im/dafny-lang/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge).
 
-## VS Code Plugin Features
-If you would like to know which features are supported by the Visual Studio Code Plugin, please checkout the [VSCodePlugin-ReadMe in the seperate git repository](https://gitlab.dev.ifs.hsr.ch/dafny-ba/dafny-vscode-plugin/-/blob/master/README.md). 
+# Try Dafny
 
-## Server Launch Arguments
+The easiest way to get started with Dafny is to use [rise4fun](http://rise4fun.com/dafny), where you can write and verify Dafny programs without having install anything. On [rise4fun](http://rise4fun.com/dafny), you will also find the online Dafny tutorial.
+It is also easy to [install Dafny on your own machine](https://github.com/dafny-lang/dafny/wiki/INSTALL) in VS Code, which gives you a much better user experience than in the web browser.
 
-* **/log:[relativePath]** Relative path to the logfile. The default is `Logs/LanguageServerLog.txt`
-* **/stream:[relativePath]**  Relative path to the stream output. The default is `Logs/LanguageServerStreamRedirection.txt`
-* **/loglevel:[int]**   The minimum loglevel you desire. Options are:
-  * 0: trace
-  * 1: debug
-  * 2: information
-  * 3: warning
-  * 4: error (default)
-  * 5: fatal
-  * 6: none
-* **/synckind**:[incremental|full] How the client is requested to send textdocument changes. Incremental will only send changes, while full will always send the full document. Full reuqires less CPU, but more bandwidth. Try switching this options, if your language server is slow. The options are:
-  * incremental (default)
-  * full
+# Setup
 
+See [installation instructions](https://github.com/dafny-lang/dafny/wiki/INSTALL) on the wiki
+and instructions for installing the [Dafny mode for Emacs](https://github.com/boogie-org/boogie-friends).
 
-## Server Config
-You can edit the file Config/LanguageServerConfig.json with the same Information as above. The launch arguments have priority over the json config file.
+# Read more
+
+Here are some ways to get started with Dafny:
+
+* 4-part course on the _Basics of specification and verification of code_:
+  - Lecture 0: [Pre- and postconditions](https://youtu.be/oLS_y842fMc) (19:08)
+  - Lecture 1: [Invariants](https://youtu.be/J0FGb6PyO_k) (20:56)
+  - Lecture 2: [Binary search](https://youtu.be/-_tx3lk7yn4) (21:14)
+  - Lecture 3: [Dutch National Flag algorithm](https://youtu.be/dQC5m-GZYbk) (20:33)
+* New overview article: [Accessible Software Verification with Dafny](https://www.computer.org/csdl/mags/so/2017/06/mso2017060094-abs.html), IEEE Software, Nov/Dec 2017
+* [Online tutorial](http://rise4fun.com/Dafny/tutorial/guide), focusing mostly on simple imperative programs
+* [3-page tutorial notes](http://leino.science/papers/krml233.pdf) with examples (ICSE 2013)
+* Dafny [Quick Reference](http://research.microsoft.com/en-us/projects/dafny/reference.aspx)
+* Language reference for the [Dafny type system](http://leino.science/papers/krml243.html), which also describes available expressions for each type
+* [Cheatsheet](https://docs.google.com/document/d/1kz5_yqzhrEyXII96eCF1YoHZhnb_6dzv-K3u79bMMis/edit?pref=2&pli=1): basic Dafny syntax on two pages
+* Dafny Reference Manual [[html](https://github.com/dafny-lang/dafny/blob/master/Docs/DafnyRef/out/DafnyRef.html)] [[pdf](https://github.com/dafny-lang/dafny/blob/master/Docs/DafnyRef/out/DafnyRef.pdf)]
+* [Dafny Power User](http://leino.science/dafny-power-user)
+* Videos at [Verification Corner](https://www.youtube.com/channel/UCP2eLEql4tROYmIYm5mA27A)
+
+The language itself draws pieces of influence from:
+
+* Euclid (from the mindset of a designing a language whose programs are to be verified),
+* Eiffel (like the built-in contract features),
+* CLU (like its iterators, and inspiration for the out-parameter syntax),
+* Java, C#, and Scala (like the classes and traits, and syntax for functions),
+* ML (like the module system, and its functions and inductive datatypes), and
+* Coq and VeriFast (like the ability to include co-inductive datatypes and being able to write inductive and co-inductive proofs).
+
+# External contributions
+
+* [Haskell-to-Dafny translator](http://www.doc.ic.ac.uk/~dcw/h2d.cgi), by Duncan White
+* [Vim-loves-Dafny mode](https://github.com/mlr-msft/vim-loves-dafny) for vim, by Michael Lowell Roberts
+* [Boogie-Friends Emacs mode](https://github.com/boogie-org/boogie-friends)
+
+# Contributors
+
+To enforce some basic style conventions, we've adopted [pre-commit](https://pre-commit.com/).  We're
+using [their default hooks](https://github.com/pre-commit/pre-commit-hooks).  When you clone
+Dafny, install pre-commit as per [the instructions](https://pre-commit.com/#install).
+For example, on OSX you do
+
+    $ brew install pre-commit
+
+Then run
+
+    $ pre-commit install
+
+This will install pre-commit hooks in your .git/hooks directory.
+
+# Code of Conduct
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+# License
+
+Dafny itself is licensed under the MIT license. (See LICENSE.txt in the root directory for details.) The subdirectory `third_party` contains third party material; see NOTICES.txt for more details.
