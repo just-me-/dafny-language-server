@@ -71,7 +71,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ClassDecl o)
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Class);
-            if (o.ParentTraits.Any())
+            if (o.ParentTraits?.Any() ?? false)
             {
                 preDeclaredSymbol.BaseClasses = new List<ISymbol>();
                 foreach (var baseClassType in o.ParentTraits)

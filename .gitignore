@@ -85,3 +85,9 @@ Source/.vs
 /Source/DafnyRuntime/DafnyRuntimeJava/.gradle
 /Source/DafnyRuntime/DafnyRuntimeJava/build
 *.class
+
+# Language Server
+Logs/
+Binaries/nunit_random_seed.tmp
+Binaries/DafnyLanguageServer.exe
+model.bvd

@@ -4191,7 +4191,7 @@ namespace Microsoft.Dafny {
       : base(tok, name, module, typeArgs, members, attributes, traits) { }
   }
 
-  public class ClassDecl : TopLevelDeclWithMembers, RevealableTypeDecl {
+  public class ClassDecl : TopLevelDeclWithMembers, RevealableTypeDecl, IAstElement {
     public override string WhatKind { get { return "class"; } }
     public override bool CanBeRevealed() { return true; }
     public bool HasConstructor;  // filled in (early) during resolution; true iff there exists a member that is a Constructor
@@ -4200,6 +4200,14 @@ namespace Microsoft.Dafny {
     void ObjectInvariant() {
       Contract.Invariant(cce.NonNullElements(Members));
       Contract.Invariant(ParentTraits != null);
+    }
+
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var member in this.Members) {
+        member.Accept(v);
+      }
+      v.Leave(this);
     }
 
     public ClassDecl(IToken tok, string name, ModuleDefinition module,
@@ -9354,7 +9362,7 @@ namespace Microsoft.Dafny {
     }
   }
 
-  public class ThisExpr : Expression {
+  public class ThisExpr : Expression, IAstElement {
     public ThisExpr(IToken tok)
       : base(tok) {
       Contract.Requires(tok != null);
@@ -9384,6 +9392,11 @@ namespace Microsoft.Dafny {
       Contract.Requires(cl != null);
       Contract.Requires(cl.tok != null);
       Type = Resolver.GetThisType(cl.tok, cl);
+    }
+
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      v.Leave(this);
     }
   }
   public class ExpressionPair {
