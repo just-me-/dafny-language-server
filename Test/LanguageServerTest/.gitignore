@@ -1,0 +1,9 @@
+*/bin/*
+*/obj/*
+
+*.json
+*.props
+*.targets
+*.AssemblyInfo.cs
+*.cache
+*.FileListAbsolute.txt
