@@ -2941,8 +2941,7 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public virtual void Accept(Visitor v)
-    {
+    public virtual void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }
@@ -5846,43 +5845,34 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
-      if (v.GoesDeep)
-      {
-        foreach (Formal arg in this.Ins)
-        {
+      if (v.GoesDeep) {
+        foreach (Formal arg in this.Ins) {
           arg.Accept(v);
         }
 
-        foreach (Formal outParam in this.Outs)
-        {
+        foreach (Formal outParam in this.Outs) {
           outParam.Accept(v);
         }
 
-        foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
-        {
+        foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>()) {
           m.Accept(v);
         }
 
-        foreach (var ens in this.Ens)
-        {
+        foreach (var ens in this.Ens) {
           ens.Accept(v);
         }
 
-        foreach (var req in this.Req)
-        {
+        foreach (var req in this.Req) {
           req.Accept(v);
         }
 
-        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>())
-        {
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>()) {
           dec.Accept(v);
         }
         
-        foreach (var stmt in this.Body.Body)
-        {
+        foreach (var stmt in this.Body.Body) {
           stmt.Accept(v);
         }
       }
@@ -6096,8 +6086,7 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }
@@ -6227,8 +6216,7 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public virtual void Accept(Visitor v)
-    {
+    public virtual void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }
@@ -6437,10 +6425,8 @@ namespace Microsoft.Dafny {
       Args = args;
     }
 
-    public override void Accept(Visitor v)
-    {
-        foreach (var expr in this.Args)
-        {
+    public override void Accept(Visitor v) {
+        foreach (var expr in this.Args) {
             expr.Accept(v);
         }
     }
@@ -6678,18 +6664,6 @@ namespace Microsoft.Dafny {
   /// </summary>
   public class TypeRhs : AssignmentRhs
   {
-
-      public override void Accept(Visitor v)
-      {
-          v.Visit(this);
-          foreach (var arg in this.Arguments)    //new MyClass(a, b, c) -> visit all args
-          {
-              arg.Accept(v);
-          }
-          this.InitCall.Accept(v); //nmet sicher was das is.
-          //hätte noch so array sachen. für später. vgl oben den langen kommentar.
-          v.Leave(this);
-      }
     /// <summary>
     /// If ArrayDimensions != null, then the TypeRhs represents "new EType[ArrayDimensions]",
     ///     ElementInit is non-null to represent "new EType[ArrayDimensions] (elementInit)",
@@ -6756,6 +6730,16 @@ namespace Microsoft.Dafny {
       Path = path;
       Arguments = arguments;
     }
+
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var arg in this.Arguments) {
+        arg.Accept(v);
+      }
+      this.InitCall.Accept(v);
+      v.Leave(this);
+    }
+
     public override bool CanAffectPreviouslyKnownExpressions {
       get {
         if (InitCall != null) {
@@ -6978,17 +6962,14 @@ namespace Microsoft.Dafny {
       CanMutateKnownState = mutate;
     }
     public override void Accept(Visitor v) {
-        //lhs müsste man eig nur wenn es kein vardecl is, aber besser im visit das iwie handlen schätz ich.
-      foreach (var lhs in this.Lhss)
-      {
+      foreach (var lhs in this.Lhss) {
           lhs.Accept(v);
       }
 
-      foreach (AssignmentRhs rhs in this.Rhss)
-      {
+      foreach (AssignmentRhs rhs in this.Rhss) {
           rhs.Accept(v);
       }
-        }
+    }
   }
 
   public class AssignOrReturnStmt : ConcreteUpdateStatement
@@ -7135,8 +7116,7 @@ namespace Microsoft.Dafny {
       this.IsGhost = isGhost;
     }
 
-    public virtual void Accept(Visitor v)
-    {
+    public virtual void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }
@@ -7356,18 +7336,14 @@ namespace Microsoft.Dafny {
       }
     }
 
-    //visiting the blockstmt of 'thn' not separately, so i can set a custom scope not just entitled "blockscope".
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
       this.Guard.Accept(v);
-      foreach (var stmt in this.Thn.Body)
-      { 
+      foreach (var stmt in this.Thn.Body) { 
         stmt.Accept(v);
       }
       v.Leave(this);
-      if (this.Els != null)
-      {
+      if (this.Els != null) {
         this.Els.Accept(v);
       }
     }
@@ -7533,25 +7509,21 @@ namespace Microsoft.Dafny {
 
     public override void Accept(Visitor v) {
       v.Visit(this);
-      foreach (var d in this.Decreases.Expressions)
-      {
+      foreach (var d in this.Decreases.Expressions) {
         d.Accept(v);
       }
 
-      foreach (var i in this.Invariants)
-      {
+      foreach (var i in this.Invariants) {
         i.Accept(v);
       }
 
-      foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>())
-      {
+      foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>()) {
         m.Accept(v);
       }
 
       this.Guard.Accept(v);
 
-      foreach (var stmt in this.Body.Body)
-      {
+      foreach (var stmt in this.Body.Body) {
         stmt.Accept(v);
       }
       v.Leave(this);
@@ -7610,16 +7582,13 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
-        foreach (var a in this.Alternatives)
-        {
-                a.Guard.Accept(v);
-                foreach (var stmt in a.Body)
-                {
-                    stmt.Accept(v);
-                }
+    public override void Accept(Visitor v) {
+      foreach (var a in this.Alternatives) {
+        a.Guard.Accept(v);
+        foreach (var stmt in a.Body) {
+          stmt.Accept(v);
         }
+      }
     }
   }
 
@@ -8911,9 +8880,8 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
-        v.Visit(this); //does nothin'
+    public override void Accept(Visitor v) {
+        v.Visit(this);
         v.Leave(this);
     }
 
@@ -9019,8 +8987,7 @@ namespace Microsoft.Dafny {
       Contract.Requires(tok != null);
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
         v.Visit(this);
         v.Leave(this);
     }
@@ -9114,8 +9081,7 @@ namespace Microsoft.Dafny {
       Type = v.Type;
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }
@@ -9132,9 +9098,8 @@ namespace Microsoft.Dafny {
     public AutoGhostIdentifierExpr(IToken tok, string name)
       : base(tok, name) { }
 
-    public override void Accept(Visitor v)
-    {
-        v.Visit(this); //does nothing since already handled elsewhere.
+    public override void Accept(Visitor v) {
+        v.Visit(this);
         v.Leave(this);
     }
   }
@@ -9724,9 +9689,8 @@ namespace Microsoft.Dafny {
 
 
     }
-    public override void Accept(Visitor v)
-    {
-            this.E.Accept(v);
+    public override void Accept(Visitor v) {
+      this.E.Accept(v);
     }
   }
 
@@ -9745,8 +9709,7 @@ namespace Microsoft.Dafny {
   public class BinaryExpr : Expression
   {
 
-      public override void Accept(Visitor v)
-      {
+      public override void Accept(Visitor v) {
           E0.Accept(v);
           E1.Accept(v);
       }
@@ -10105,8 +10068,7 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       E0.Accept(v);
       E1.Accept(v);
       E2.Accept(v);
@@ -10880,11 +10842,10 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
-            this.Test.Accept(v);
-            this.Thn.Accept(v);
-            this.Els.Accept(v);
+    public override void Accept(Visitor v) {
+      this.Test.Accept(v);
+      this.Thn.Accept(v);
+      this.Els.Accept(v);
     }
   }
 
@@ -11223,8 +11184,7 @@ namespace Microsoft.Dafny {
       E = e;
       FieldName = fieldName;
     }
-    public void Accept(Visitor v)
-    {
+    public void Accept(Visitor v) {
         this.E.Accept(v);
     }
   }
@@ -11256,8 +11216,7 @@ namespace Microsoft.Dafny {
       E = e;
     }
     
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
         this.E.Accept(v);
     }
   }
@@ -11367,8 +11326,7 @@ namespace Microsoft.Dafny {
       }
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
         this.E.Accept(v);
     }
   }
@@ -11431,10 +11389,8 @@ namespace Microsoft.Dafny {
       E = desugaring;
     }
 
-    public override void Accept(Visitor v)
-    {
-      foreach (var e in this.Operands)
-      {
+    public override void Accept(Visitor v) {
+      foreach (var e in this.Operands) {
         e.Accept(v);
       }
     }
@@ -11495,8 +11451,7 @@ namespace Microsoft.Dafny {
       OptTypeArguments = optTypeArguments;
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
         v.Visit(this);
         v.Leave(this);
     }
@@ -11524,13 +11479,11 @@ namespace Microsoft.Dafny {
       OptTypeArguments = optTypeArguments;
     }
 
-    public override void Accept(Visitor v)
-    {
-        this.Lhs.Accept(v); //registers left side, which is expr.
+    public override void Accept(Visitor v) {
+      this.Lhs.Accept(v);
 
-        //creates symbol for right side:
-        v.Visit(this);
-        v.Leave(this);
+      v.Visit(this);
+      v.Leave(this);
     }
   }
 
@@ -11554,14 +11507,12 @@ namespace Microsoft.Dafny {
       Args = args;
     }
 
-    public override void Accept(Visitor v)
-    {
-        this.Lhs.Accept(v);
-        
-        foreach (var expression in this.Args)
-        {
-            expression.Accept(v); //name segments, binary exprs, etc.
-        }
+    public override void Accept(Visitor v) {
+      this.Lhs.Accept(v);
+
+      foreach (var expression in this.Args) {
+        expression.Accept(v);
+      }
     }
   }
 
@@ -11774,96 +11725,64 @@ namespace Microsoft.Dafny {
     public abstract void Visit(IAstElement o);
     public abstract void Leave(IAstElement o);
 
-
     #region classes-and-their-members
     public abstract void Visit(ClassDecl o);
     public abstract void Leave(ClassDecl o);
-
     public abstract void Visit(Field o);
     public abstract void Leave(Field o);
-
     public abstract void Visit(Method o);
     public abstract void Leave(Method o);
-
     public abstract void Visit(Constructor o);
     public abstract void Leave(Constructor o);
-
     public abstract void Visit(Function o);
     public abstract void Leave(Function o);
 
-        #endregion
+    #endregion
 
-        #region locals-formals
-
-        public abstract void Visit(NonglobalVariable o);
+    #region locals-formals
+    public abstract void Visit(NonglobalVariable o);
     public abstract void Leave(NonglobalVariable o);
-
-    public abstract void Visit(LocalVariable o);                                   //do not auto format this code!!!
+    public abstract void Visit(LocalVariable o);
     public abstract void Leave(LocalVariable o);
-        #endregion
+    #endregion
 
+    #region rhs
+    public abstract void Visit(AssignmentRhs o);
+    public abstract void Leave(AssignmentRhs o);
+    public abstract void Visit(TypeRhs e);
+    public abstract void Leave(TypeRhs e);
+    #endregion
 
+    #region statements
+    public abstract void Visit(BlockStmt o);
+    public abstract void Leave(BlockStmt o);
+    public abstract void Visit(WhileStmt s);
+    public abstract void Leave(WhileStmt e);
+    public abstract void Visit(IfStmt e);
+    public abstract void Leave(IfStmt e);
+    #endregion
 
-        #region rhs
-        public abstract void Visit(AssignmentRhs o);
-        public abstract void Leave(AssignmentRhs o);
-
-        public abstract void Visit(TypeRhs e);
-        public abstract void Leave(TypeRhs e);
-        #endregion
-
-
-        #region statements
-
-        public abstract void Visit(BlockStmt o);
-        public abstract void Leave(BlockStmt o);
-        public abstract void Visit(WhileStmt s);
-        public abstract void Leave(WhileStmt e);
-        public abstract void Visit(IfStmt e);
-        public abstract void Leave(IfStmt e);
-
-        #endregion
-
-
-
-
-        #region expressions
-        public abstract void Visit(Expression o);  //Expression sollte feingranularer sein. [so literal expression zB]
-        public abstract void Leave(Expression o);
-
-
-        public abstract void Visit(AutoGhostIdentifierExpr e);
-        public abstract void Leave(AutoGhostIdentifierExpr e);
-        public abstract void Visit(LiteralExpr e);
-        public abstract void Leave(LiteralExpr e);
-
-        public abstract void Visit(IdentifierExpr e);
-        public abstract void Leave(IdentifierExpr e);
-
-      public abstract void Visit(ApplySuffix e);
-        public abstract void Leave(ApplySuffix e);
-        public abstract void Visit(NameSegment e);
-        public abstract void Leave(NameSegment e);
-
-
-        public abstract void Leave(ModuleDefinition o);
-        public abstract void Visit(ModuleDefinition o);
-        public abstract void Leave(AliasModuleDecl o);
-        public abstract void Visit(AliasModuleDecl o);
-
-        public abstract void Visit(ExprDotName e);
-        public abstract void Leave(ExprDotName e);
-        public abstract void Visit(ThisExpr e);
-        public abstract void Leave(ThisExpr e);
-
-
-
-
-
-
-        //more todo
-
-        #endregion
-
-    }
+    #region expressions
+    public abstract void Visit(Expression o);
+    public abstract void Leave(Expression o);
+    public abstract void Visit(AutoGhostIdentifierExpr e);
+    public abstract void Leave(AutoGhostIdentifierExpr e);
+    public abstract void Visit(LiteralExpr e);
+    public abstract void Leave(LiteralExpr e);
+    public abstract void Visit(IdentifierExpr e);
+    public abstract void Leave(IdentifierExpr e);
+    public abstract void Visit(ApplySuffix e);
+    public abstract void Leave(ApplySuffix e);
+    public abstract void Visit(NameSegment e);
+    public abstract void Leave(NameSegment e);
+    public abstract void Leave(ModuleDefinition o);
+    public abstract void Visit(ModuleDefinition o);
+    public abstract void Leave(AliasModuleDecl o);
+    public abstract void Visit(AliasModuleDecl o);
+    public abstract void Visit(ExprDotName e);
+    public abstract void Leave(ExprDotName e);
+    public abstract void Visit(ThisExpr e);
+    public abstract void Leave(ThisExpr e);
+    #endregion
+  }
 }
