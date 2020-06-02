@@ -124,13 +124,6 @@ type ref;
 const null: ref;
 
 // ---------------------------------------------------------------
-// -- Traits -----------------------------------------------------
-// ---------------------------------------------------------------
-
-const unique NoTraitAtAll: ClassName;
-function TraitParent(ClassName): ClassName;
-
-// ---------------------------------------------------------------
 // -- Boxing and unboxing ----------------------------------------
 // ---------------------------------------------------------------
 
@@ -356,10 +349,8 @@ function ORD#Less(ORDINAL, ORDINAL): bool;
 axiom (forall o,p: ORDINAL :: { ORD#Less(o,p) }
   (ORD#Less(o,p) ==> o != p) &&  // irreflexivity
   (ORD#IsNat(o) && !ORD#IsNat(p) ==> ORD#Less(o,p)) &&
-  (ORD#IsNat(o) && ORD#IsNat(p) ==> ORD#Less(o,p) == (ORD#Offset(o) < ORD#Offset(p))));
-// ORD#Less is irreflexive:
-axiom (forall o,p: ORDINAL :: { ORD#Less(o,p) }
-  ORD#Less(o,p) ==> o != p);
+  (ORD#IsNat(o) && ORD#IsNat(p) ==> ORD#Less(o,p) == (ORD#Offset(o) < ORD#Offset(p))) &&
+  (ORD#Less(o,p) && ORD#IsNat(p) ==> ORD#IsNat(o)));
 // ORD#Less is trichotomous:
 axiom (forall o,p: ORDINAL :: { ORD#Less(o,p), ORD#Less(p,o) }
   ORD#Less(o,p) || o == p || ORD#Less(p,o));
