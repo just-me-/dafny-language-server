@@ -140,6 +140,37 @@ namespace PerformanceTest
           Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
         }
 
+        //Do not execute this theoretical test on gitlab, since it triggers the 1h timeout.
+        //[Test]
+        public void TestUltraLarge()
+        {
+          var f = Files.pf_large5;
+          var l = new LargeFileGenerator(100_000, 1986);
+          l.Generate();
+          l.Store(f);
+
+          var stopwatch = new Stopwatch();
+          stopwatch.Start();
+
+          Client.TextDocument.DidOpen(f, "dfy");
+
+          CompilerParams p = new CompilerParams
+          {
+            CompilationArguments = new string[] { },
+            FileToCompile = f
+          };
+
+          CancellationSource.CancelAfter(TimeSpan.FromMinutes(20));
+
+          Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
+
+          stopwatch.Stop();
+
+          var elapsed_time = stopwatch.ElapsedMilliseconds;
+          Console.WriteLine($"Performancetest 2 with 100k LOC took {elapsed_time}ms");
+          Assert.Less(elapsed_time, 600e3, "Runtime takes too long! Was: " + elapsed_time);
+        }
+
 
   }
 }
