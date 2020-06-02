@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Dafny</RootNamespace>
     <AssemblyName>DafnyPipeline</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
     <SignAssembly>true</SignAssembly>
@@ -36,7 +36,6 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -140,10 +139,10 @@
     <Reference Include="BoogieParserHelper">
       <HintPath>..\..\..\boogie\Binaries\BoogieParserHelper.dll</HintPath>
     </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
     <Reference Include="System" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <RequiredTargetFramework>4.8</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Numerics" />
   </ItemGroup>
@@ -178,9 +177,6 @@
     <Compile Include="cce.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AllStatementTypes.cd" />
-    <None Include="ast.cd" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Dafny.atg" />
   </ItemGroup>
   <ItemGroup>
