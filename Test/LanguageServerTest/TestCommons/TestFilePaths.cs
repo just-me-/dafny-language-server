@@ -164,6 +164,8 @@ namespace TestCommons
         //Performance
         public static readonly string pf_large1 = CreateTestfilePath("performance/pf_large1.dfy");
         public static readonly string pf_large2 = CreateTestfilePath("performance/pf_large2.dfy");
+        public static readonly string pf_large3 = CreateTestfilePath("performance/pf_large3.dfy");
+        public static readonly string pf_large4 = CreateTestfilePath("performance/pf_large4.dfy");
 
         //Performance
         public static readonly string hv_hover = CreateTestfilePath("hover/hover.dfy");

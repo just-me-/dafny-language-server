@@ -3296,8 +3296,7 @@ namespace Microsoft.Dafny {
     }
     public override object Dereference() { return Signature.ModuleDef; }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
         v.Visit(this);
         v.Leave(this);
     }
@@ -3536,27 +3535,20 @@ namespace Microsoft.Dafny {
       IsToBeCompiled = isToBeCompiled;
     }
 
-    public void Accept(Visitor v)
-    {
-        v.Visit(this);
+    public void Accept(Visitor v) {
+      v.Visit(this);
 
-        if (v.GoesDeep)
-        {
-            foreach (var moduleImport in TopLevelDecls)
-            {
-                if (moduleImport is AliasModuleDecl amd)
-                {
-                    amd.Accept(v);
-                }
-            }
+      if (v.GoesDeep) {
+        foreach (var moduleImport in TopLevelDecls) {
+          if (moduleImport is AliasModuleDecl amd) {
+            amd.Accept(v);
+          }
         }
-
-        foreach (var class1 in AllClasses(TopLevelDecls))
-        {
-            class1.Accept(v);
-        }
-
-        v.Leave(this);
+      }
+      foreach (var class1 in AllClasses(TopLevelDecls)) {
+        class1.Accept(v);
+      }
+      v.Leave(this);
     }
 
     VisibilityScope visibilityScope;
@@ -3876,11 +3868,9 @@ namespace Microsoft.Dafny {
       List<TypeParameter> typeArgs, [Captured] List<MemberDecl> members, Attributes attributes)
       : base(tok, name, module, typeArgs, members, attributes, null) { }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
-      foreach (var member in this.Members)
-      {
+      foreach (var member in this.Members) {
         member.Accept(v);
       }
       v.Leave(this);
@@ -4575,8 +4565,7 @@ namespace Microsoft.Dafny {
       Type = type;
     }
 
-    public override void Accept(Visitor v)
-    {
+    public override void Accept(Visitor v) {
       v.Visit(this);
       v.Leave(this);
     }

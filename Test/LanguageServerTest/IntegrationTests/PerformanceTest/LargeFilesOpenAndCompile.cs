@@ -41,7 +41,7 @@ namespace PerformanceTest
             stopwatch.Stop();
 
             var elapsed_time = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine($"Performancetest 1 took {elapsed_time}ms");
+            Console.WriteLine($"Performancetest 1 with 10'000 LOC took {elapsed_time}ms");
             Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
         }
 
@@ -74,8 +74,72 @@ namespace PerformanceTest
             stopwatch.Stop();
 
             var elapsed_time = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine($"Performancetest 2 took {elapsed_time}ms");
+            Console.WriteLine($"Performancetest 2 with 10'000 LOC took {elapsed_time}ms");
             Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
         }
-    }
+
+
+        [Test]
+        public void TestMedium()
+        {
+          var f = Files.pf_large3;
+          var l = new LargeFileGenerator(1_000, 1986);
+          l.Generate();
+          l.Store(f);
+
+          var stopwatch = new Stopwatch();
+          stopwatch.Start();
+
+          Client.TextDocument.DidOpen(f, "dfy");
+
+          CompilerParams p = new CompilerParams
+          {
+            CompilationArguments = new string[] { },
+            FileToCompile = f
+          };
+
+          CancellationSource.CancelAfter(TimeSpan.FromMinutes(5));
+
+          Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
+
+          stopwatch.Stop();
+
+          var elapsed_time = stopwatch.ElapsedMilliseconds;
+          Console.WriteLine($"Performancetest 2 with 1'000 LOC took {elapsed_time}ms");
+          Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
+        }
+
+
+        [Test]
+        public void TestSmall()
+        {
+          var f = Files.pf_large4;
+          var l = new LargeFileGenerator(100, 1986);
+          l.Generate();
+          l.Store(f);
+
+          var stopwatch = new Stopwatch();
+          stopwatch.Start();
+
+          Client.TextDocument.DidOpen(f, "dfy");
+
+          CompilerParams p = new CompilerParams
+          {
+            CompilationArguments = new string[] { },
+            FileToCompile = f
+          };
+
+          CancellationSource.CancelAfter(TimeSpan.FromMinutes(5));
+
+          Client.SendRequest<CompilerResults>("compile", p, CancellationSource.Token).Wait();
+
+          stopwatch.Stop();
+
+          var elapsed_time = stopwatch.ElapsedMilliseconds;
+          Console.WriteLine($"Performancetest 2 with 100 LOC took {elapsed_time}ms");
+          Assert.Less(elapsed_time, 60e3, "Runtime takes too long! Was: " + elapsed_time);
+        }
+
+
+  }
 }
