@@ -18,23 +18,26 @@ namespace DafnyLanguageServer.SymbolTable
         /// Only takes definitions into account.
         /// If you would like all symbols, not only definitions, use <c>GetSymbolByPosition</c>.
         /// </summary>
-        public ISymbol TopDown(ISymbol rootEntry, Uri file, int line, int character)
+        public ISymbol TopDown(ISymbol entryPoint, Uri file, int line, int character)
         {
-            if (rootEntry == null)
+            if (entryPoint == null)
             {
                 return null;
             }
+
             ISymbol bestMatch = null;
-            if (rootEntry.Wraps(file, line, character))
+
+            if (entryPoint.Wraps(file, line, character))
             {
-                bestMatch = rootEntry;
+                bestMatch = entryPoint;
             }
-            foreach (var child in rootEntry.Children)
+
+            foreach (var child in entryPoint.Children)
             {
                 if (child.Wraps(file, line, character))
                 {
                     bestMatch = child;
-                    if (child.Children != null && child.Children.Any())             //todo sonar hat noch gewagtt, dass .Children eig shclecht ist, weil da ne liste kopiert wrid... man könnt echt "HasChidlre" machen und gelich aufm hashset das prüfen.
+                    if (child.HasChildren)
                     {
                         var match = TopDown(child, file, line, character);
                         bestMatch = match ?? bestMatch;
@@ -43,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 // in case no better match was found,
                 // check default scope too
                 if (
-                    (bestMatch == null || bestMatch.Equals(rootEntry))
+                    (bestMatch == null || bestMatch.Equals(entryPoint))
                     && (child.Name == Resources.SymbolTableStrings.default_class || child.Name == Resources.SymbolTableStrings.default_module)
                     && (child.Children?.Any() ?? false)
                 )
@@ -130,47 +133,46 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter = null)
         {
             filter = DefaultPredicateFilter(filter);
-
-            var matchingSymbol = GetMatchingChild(entryPoint, filter); //todo man kann das runternehmen in den loop und den code vereinfachen.
-            if (matchingSymbol != null)
+            var symbol = entryPoint;
+            do
             {
-                return matchingSymbol;
-            }
-
-            var parent = entryPoint;
-            while (parent.Parent != null)
-            {
-                parent = parent.Parent;
-                matchingSymbol = GetMatchingChild(parent, filter); //todo get matching child würd ich eher search all children nennen
-                if (matchingSymbol != null)
+                var result = GetSingleChild(symbol, filter);
+                if (result != null)
                 {
-                    return matchingSymbol;
+                    return result;
                 }
-            }
+
+                symbol = symbol.Parent;
+
+            } while (symbol != null);
 
             if (entryPoint.Kind != Kind.RootNode)
             {
-                return GetMatchingChild(entryPoint.AssociatedDefaultClass, filter);
+                return GetSingleChild(entryPoint.AssociatedDefaultClass, filter);
             }
 
             return null;
         }
 
         /// <summary>
-        /// ?? kannst du was schreiben hier marcel todo.
+        /// Returns one symbol that matches the filter criteria and is child of the argument <c>symbol</c>
         /// </summary>
-        private ISymbol GetMatchingChild(ISymbol symbol, Predicate<ISymbol> filter = null)
+        private ISymbol GetSingleChild(ISymbol symbol, Predicate<ISymbol> filter = null)
         {
             if (symbol == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(symbol), Resources.ExceptionMessages.symbol_entrypoint_must_be_set);
             }
             filter = DefaultPredicateFilter(filter);
 
             ISymbol child = symbol.Children?.FirstOrDefault(filter.Invoke);
-            
-            // inherited?
-            if (child == null && symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
+            if (child != null)
+            {
+                return child;
+            }
+
+            // The following branch checks if the symbol is inherited by a base class
+            if (symbol.HasInheritedMembers)
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
@@ -181,7 +183,7 @@ namespace DafnyLanguageServer.SymbolTable
                     }
                 }
             }
-            return child;
+            return null;
         }
 
         /// <summary>
@@ -197,21 +199,19 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 return list;
             }
-            list.AddRange(GetAllChildren(symbol, filter));
+
             // in case it is the default scope; add functions and methods in the default scope too (and not only classes) 
-            if (symbol.Parent.Name == Resources.SymbolTableStrings.root_node
-                && symbol.Name == Resources.SymbolTableStrings.default_module
-                && symbol.ChildrenHash.ContainsKey(Resources.SymbolTableStrings.default_class))
+            if (symbol.Name == Resources.SymbolTableStrings.default_module)
             {
-                list.AddRange(GetAllChildren(symbol.ChildrenHash[Resources.SymbolTableStrings.default_class], filter));
+                list.AddRange(GetAllChildren(symbol.AssociatedDefaultClass, filter));
             }
 
-            var parent = symbol;
-            while (parent.Parent != null)
+            do
             {
-                parent = parent.Parent;
-                list.AddRange(GetAllChildren(parent, filter));
-            }
+                list.AddRange(GetAllChildren(symbol, filter));
+                symbol = symbol.Parent;
+            } while (symbol != null);
+
             return list;
         }
 
@@ -226,7 +226,7 @@ namespace DafnyLanguageServer.SymbolTable
             var list = symbol.Children?.Where(filter.Invoke).ToList() ?? new List<ISymbol>();
 
             // The following branch checks if the symbol is inherited by a base class
-            if (symbol.Kind == Kind.Class && (symbol.BaseClasses?.Any() ?? false))
+            if (symbol.HasInheritedMembers)
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {

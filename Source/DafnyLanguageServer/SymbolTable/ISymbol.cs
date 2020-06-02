@@ -29,10 +29,12 @@ namespace DafnyLanguageServer.SymbolTable
         List<ISymbol> Children { get; }
         List<ISymbol> Usages { get; set; }
         List<ISymbol> BaseClasses { get; set; }
+        bool HasInheritedMembers { get; }
         List<ISymbol> Descendants { get; set; }
         bool IsDeclaration { get; }
         ISymbol Module { get; set; }
         ISymbol AssociatedDefaultClass { get; }
+        bool HasChildren { get; }
 
         string ToNiceString();
         string ToDebugString();

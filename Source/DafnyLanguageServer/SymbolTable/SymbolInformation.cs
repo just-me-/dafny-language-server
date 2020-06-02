@@ -59,9 +59,11 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbol Parent { get; set; }
         public Dictionary<string, ISymbol> ChildrenHash { get; set; }
         public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
+        public bool HasChildren => ChildrenHash != null && ChildrenHash.Any();
         public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
         public List<ISymbol> Usages { get; set; }
         public List<ISymbol> BaseClasses { get; set; }
+        public bool HasInheritedMembers => Kind == Kind.Class && (BaseClasses?.Any() ?? false);
         #endregion
 
         #region ContainingModule-And-DefaultClass
@@ -138,7 +140,6 @@ namespace DafnyLanguageServer.SymbolTable
         public bool Wraps(Uri file, int line, int character)
         {
             return IsSameFile(file) && HasBody && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character));
-                                                        //optionales todo: Kann man das nicht vereinfachen? Iwie allgemien halten möglichst ohne special cases, ka so mit rekursion oder iwas, damit es weniger fehleranfällig ist?
         }
 
         private bool IsSameFile(Uri file)
@@ -165,14 +166,7 @@ namespace DafnyLanguageServer.SymbolTable
                     && ColumnEnd >= character;
         }
 
-        private bool WrapsAsClassField(int line, int character)
-        {
-            // Class fields do not have BodyLineStart/BodyLineEnd. This fields are a special case.
-            return Kind == Kind.Field && BodyLineEnd == 0
-                    && Line == line
-                    && Column <= character
-                    && ColumnEnd >= character;
-        }
+    
 
 
         /// <summary>
