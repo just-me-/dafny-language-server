@@ -130,6 +130,11 @@
     <Compile Include="Core\Interfaces\ICounterExampleProvider.cs" />
     <Compile Include="Core\Interfaces\ICompletionProvider.cs" />
     <Compile Include="Core\Interfaces\ICompileProvider.cs" />
+    <Compile Include="CustomDTOs\CompilerParams.cs" />
+    <Compile Include="CustomDTOs\CompilerResults.cs" />
+    <Compile Include="CustomDTOs\CounterExample.cs" />
+    <Compile Include="CustomDTOs\CounterExampleParams.cs" />
+    <Compile Include="CustomDTOs\CounterExampleResults.cs" />
     <Compile Include="DafnyAccess\LanguageServerOutputWriterSink.cs" />
     <Compile Include="Commons\PhysicalFile.cs" />
     <Compile Include="Commons\TranslationResult.cs" />

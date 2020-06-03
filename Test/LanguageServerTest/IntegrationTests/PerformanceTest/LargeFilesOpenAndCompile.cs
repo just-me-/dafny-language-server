@@ -2,6 +2,7 @@ using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;
+using DafnyLanguageServer.CustomDTOs;
 using TestCommons;
 using Files = TestCommons.Paths;
 

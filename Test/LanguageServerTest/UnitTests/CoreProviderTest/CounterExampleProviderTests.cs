@@ -2,6 +2,7 @@
 using System.IO;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
+using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using TestCommons;

@@ -3,6 +3,7 @@ using OmniSharp.Extensions.JsonRpc;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
+using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.WorkspaceManager;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,18 +16,9 @@ namespace DafnyLanguageServer.Handler
     /// It gets triggered every time a client sends a <c>compile</c> command request.
     /// This class creates a new <c>CompilationService</c> to provide compiled results. 
     /// </summary>
-    public class CompilerParams : IRequest<CompilerResults>
-    {
-        public string FileToCompile { get; set; }
-        public string[] CompilationArguments { get; set; }
-    }
 
-    public class CompilerResults
-    {
-        public bool Error { get; set; }
-        public string Message { get; set; }
-        public bool? Executable { get; set; }
-    }
+
+
 
     [Serial, Method("compile")]
     public interface ICompile : IJsonRpcRequestHandler<CompilerParams, CompilerResults> { }

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Dafny;

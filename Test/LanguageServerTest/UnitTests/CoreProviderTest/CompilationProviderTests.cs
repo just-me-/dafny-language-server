@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
+using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.WorkspaceManager;
