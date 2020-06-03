@@ -18,7 +18,7 @@ namespace HoverTest
         {
             Client.TextDocument.DidOpen(Files.hv_hover, "dfy");
             var result = Client.TextDocument.Hover(Files.hv_hover, 6, 14).Result;
-            var actual = result.Contents.MarkedStrings.Select(x => x.Value).ToList();
+            var actual = result.Contents.MarkupContent.Value;
 
             List<string> expected = new List<string>()
             {
@@ -36,7 +36,8 @@ namespace HoverTest
         {
             Client.TextDocument.DidOpen(Files.hv_hover, "dfy");
             var result = Client.TextDocument.Hover(Files.hv_hover, 0, 6).Result;
-            var actual = result.Contents.MarkedStrings.Select(x => x.Value).ToList();
+            var actual = result.Contents.MarkupContent.Value;
+
 
             List<string> expected = new List<string>()
             {

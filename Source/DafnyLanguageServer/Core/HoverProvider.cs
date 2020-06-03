@@ -56,12 +56,12 @@ namespace DafnyLanguageServer.Core
             fancyContent.Kind = MarkupKind.Markdown;
             fancyContent.Value =
 
-@$"## Symbol Hover Information
-*{symbol.ToNiceString()}*
-* **Kind:** {symbol.Kind}
-* **Type:** {type}
-* **Scope:** `{symbol.Parent.Name}`
-* **Declaration:** {declaration}";
+"## Symbol Information\n" +
+$"*{symbol.ToNiceString()}*\n" +
+$"* **Kind:** {symbol.Kind}\n" +
+$"* **Type:** {type}\n" +
+$"* **Scope:** `{symbol.Parent.Name}\n`" +
+$"* **Declaration:** {declaration}\n";
 
             return fancyContent;
         }
