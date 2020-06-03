@@ -25,7 +25,6 @@ namespace CodeLensIntegrationTest
             codelensResults = null;
         }
 
-
         protected void RunCodeLens(string testfile)
         {
             CodeLensParams codeLensParams = new CodeLensParams
@@ -36,22 +35,6 @@ namespace CodeLensIntegrationTest
             Client.TextDocument.DidOpen(testfile, "dfy");
             var response = Client.SendRequest<CodeLensContainer>("textDocument/codeLens", codeLensParams, CancellationToken.None);
             codelensResults = response.Result;
-
-            PrintResults();
-        }
-
-        private void PrintResults()
-        {
-            StringBuilder debugMsg = new StringBuilder();
-            debugMsg.AppendLine("Printing CodeLens Test Results:");
-            foreach (var result in codelensResults)
-            {
-                debugMsg.AppendLine("Title = \t" + result.Command.Title);
-                foreach (var jumpRef in result.Command.Arguments)
-                {
-                    debugMsg.AppendLine("\tRef = \t" + jumpRef.ToString());
-                }
-            }
         }
 
         protected void VerifyResults(List<ExpectedCodeLensEntry> expected)
@@ -65,8 +48,6 @@ namespace CodeLensIntegrationTest
                 expected.Select(x => x.Name).ToList(),
                 codelensResults.Select(x => x.Command.Title).ToList()
                 );
-
-            var want = codelensResults.Select(x => x.Command.Arguments.ToString()); //tmp debug 
 
             // check linked logic when clicked on references - is code lens popup filled up correctly? 
             if (expected.Count() != codelensResults.Count())

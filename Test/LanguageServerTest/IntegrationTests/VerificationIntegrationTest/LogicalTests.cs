@@ -31,8 +31,6 @@ namespace VerificationIntegrationTest
             {
                 "R[L3 C0 - L6 C1] - Error - Logical Error: A postcondition might not hold on this return path at [ Demo ]",
                 "R[L2 C16 - L2 C26] - Information - This is the postcondition that might not hold."
-
-
             };
 
             VerifyResults(expct);

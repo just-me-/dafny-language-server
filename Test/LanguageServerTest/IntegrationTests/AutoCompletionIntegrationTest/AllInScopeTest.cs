@@ -218,22 +218,6 @@ namespace AutoCompletionIntegrationTest
             VerifyCompletions(exp, line, col);
         }
 
-        //[Test]
-        public void FirstNotInMain()
-        {
-            int line = 20;
-            int col = 15;
-            var exp = new List<string>()
-            {
-                "A",
-                "B",
-                "Main"
-            };
-
-            GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
-        }
-
         [Test]
         public void FirstCharOnLineNotInMain()
         {
