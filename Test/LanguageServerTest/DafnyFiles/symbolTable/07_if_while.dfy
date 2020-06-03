@@ -28,5 +28,5 @@ method IAmTestNo7() {
 }
 
 method Main() {
-IAmTestNo7();
+IAmTestNo7();    
 }

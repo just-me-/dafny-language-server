@@ -24,22 +24,12 @@ namespace DafnyLanguageServer.Core
             {
                 return null;
             }
-
-            string type = symbol.Type?.ToString();
-            if (string.IsNullOrEmpty(type) || type == "?")
-            {
-                type = "N/A";
-            }
-
-            MarkedString m1 = new MarkedString("Symbol: " + symbol.ToNiceString());
-            MarkedString m2 = new MarkedString("Kind: " + symbol.Kind);
-            MarkedString m3 = new MarkedString("Type: " + type);
-            MarkedString m4 = new MarkedString("Scope: " + symbol.Parent.Name);
-            MarkedString m5 = new MarkedString("Declaration: " + (symbol.IsDeclaration ? Resources.LoggingMessages.hover_isDeclaration : symbol.DeclarationOrigin.ToNiceString()));
+            
+            MarkupContent fancyContent = CreateMarkupContent(symbol);
 
             Hover result = new Hover
             {
-                Contents = new MarkedStringsOrMarkupContent(m1, m2, m3, m4, m5),
+                Contents = new MarkedStringsOrMarkupContent(fancyContent),
                 Range = new Range
                 {
                     Start = new Position(symbol.Line - 1, symbol.Column - 1),
@@ -49,6 +39,31 @@ namespace DafnyLanguageServer.Core
 
             return result;
         }
-        
+
+        private static MarkupContent CreateMarkupContent(ISymbol symbol)
+        {
+            string type = symbol.Type?.ToString();
+            if (string.IsNullOrEmpty(type) || type == "?")
+            {
+                type = "N/A";
+            }
+
+            string declaration = symbol.IsDeclaration
+                ? Resources.LoggingMessages.hover_isDeclaration
+                : symbol.DeclarationOrigin.ToNiceString();
+
+            var fancyContent = new MarkupContent();
+            fancyContent.Kind = MarkupKind.Markdown;
+            fancyContent.Value =
+
+@$"## Symbol Hover Information
+*{symbol.ToNiceString()}*
+* **Kind:** {symbol.Kind}
+* **Type:** {type}
+* **Scope:** `{symbol.Parent.Name}`
+* **Declaration:** {declaration}";
+
+            return fancyContent;
+        }
     }
 }

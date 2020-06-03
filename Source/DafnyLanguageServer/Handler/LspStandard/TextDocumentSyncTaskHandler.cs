@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.SymbolTable;
+using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
@@ -112,6 +113,8 @@ namespace DafnyLanguageServer.Handler
                 PublishResults(diags);
 
                 _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
+                _mss.SendError("Error using mss");
+
             }
             catch (Exception e)
             {
