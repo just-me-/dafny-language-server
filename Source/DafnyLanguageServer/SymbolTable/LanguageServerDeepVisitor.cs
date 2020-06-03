@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Boogie;
 using Microsoft.Dafny;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
@@ -159,6 +160,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
+
         #endregion
 
         ///////"new" stuff from here on the other visitor didnt do from here on.
@@ -299,6 +301,35 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
+        public override void Visit(ComprehensionExpr o)
+        {
+            
+            var name = "bounded-expression-ghost-" + o.tok.line; //todo topdown uses wrapper by name-length, not body end. thus it no longer finds the symbols at the end of this bounded scope. resolve if time otherwise pech.
+            IToken endToken = new Token(o.tok.line, o.tok.col + 999);
+
+            var symbol = CreateSymbol(
+                name: name,
+                kind: Kind.BlockScope,
+
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: o.tok,
+                bodyEndPosAsToken: endToken,
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: true,
+                canBeUsed: false
+            );
+            SetScope(symbol);
+        }
+
+        public override void Leave(ComprehensionExpr o)
+        {
+            JumpUpInScope();
+        }
+
         /// <summary>
         /// A <c>TypeRhs</c> is the right hand side of something like var a:= new MyClass(). See also its class description.
         /// Also has some Array stuff that could be relevant for us.
@@ -353,8 +384,11 @@ namespace DafnyLanguageServer.SymbolTable
 
         //ApllySuffixes are just brackets after a Method call.
         //The Visitor will redirect the accept statements to the expressions lef to the (), thus we do nth.
+
         public override void Visit(ApplySuffix e) { }
         public override void Leave(ApplySuffix e) { }
+
+
 
         //Name Segment are identifiers, especially also in methods.
         //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
@@ -479,14 +513,24 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
 
+
         public override void Visit(IdentifierExpr e)
-        { //this expr often occurs within "decrease" clauses, although ther is no decrease statement... so i guess we just skip it.
+        {
         }
 
         public override void Leave(IdentifierExpr e)
         {
         }
 
+
+        public override void Visit(DisplayExpression o)
+        {
+        }
+
+        public override void Leave(DisplayExpression o)
+        {
+        }
+        
         public override void Visit(AssignmentRhs o)
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);

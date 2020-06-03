@@ -9181,6 +9181,11 @@ namespace Microsoft.Dafny {
     public override IEnumerable<Expression> SubExpressions {
       get { return Elements; }
     }
+    public override void Accept(Visitor v) {
+      foreach (var e in this.Elements) { 
+        e.Accept(v);
+      }
+    }
   }
 
   public class SetDisplayExpr : DisplayExpression {
@@ -9352,6 +9357,12 @@ namespace Microsoft.Dafny {
       E1 = e1;
     }
 
+    public override void Accept(Visitor v) { 
+      Seq?.Accept(v);
+      E0?.Accept(v);
+      E1?.Accept(v);
+    }
+
     public override IEnumerable<Expression> SubExpressions {
       get {
         yield return Seq;
@@ -9381,6 +9392,12 @@ namespace Microsoft.Dafny {
       Indices = indices;
     }
 
+    public override void Accept(Visitor v) {
+      Array.Accept(v);
+      foreach (var e in Indices) {
+          e.Accept(v);
+      }
+    }
     public override IEnumerable<Expression> SubExpressions {
       get {
         yield return Array;
@@ -9568,6 +9585,11 @@ namespace Microsoft.Dafny {
         yield return N;
         yield return Initializer;
       }
+    }
+
+    public override void Accept(Visitor v) {
+      N.Accept(v);
+      Initializer.Accept(v);
     }
   }
 
@@ -10195,6 +10217,17 @@ namespace Microsoft.Dafny {
     void ObjectInvariant() {
       Contract.Invariant(BoundVars != null);
       Contract.Invariant(Term != null);
+    }
+
+    public override void Accept(Visitor v) {
+      v.Visit(this);
+      foreach (var bv in this.BoundVars)
+      {
+        v.Visit(bv);
+        v.Leave(bv);
+      }
+      this.Term.Accept(v);
+      v.Leave(this);
     }
 
     public Attributes Attributes;
@@ -11783,6 +11816,11 @@ namespace Microsoft.Dafny {
     public abstract void Leave(ExprDotName e);
     public abstract void Visit(ThisExpr e);
     public abstract void Leave(ThisExpr e);
+    public abstract void Visit(DisplayExpression o);
+    public abstract void Leave(DisplayExpression o);
+    public abstract void Visit(ComprehensionExpr o);
+    public abstract void Leave(ComprehensionExpr o);
+
     #endregion
   }
 }

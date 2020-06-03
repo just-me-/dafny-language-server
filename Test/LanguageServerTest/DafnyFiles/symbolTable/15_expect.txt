@@ -1,0 +1,26 @@
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 2 | U : 0
+[L1:C8] "Main" | P : [L0]_default | D : self | C : 2 | U : 0
+[L2:C8] "i" | P : [L1]Main | D : self | C :  | U : 1
+[L3:C8] "s" | P : [L1]Main | D : self | C :  | U : 16
+[L3:C17] "i" | P : [L1]Main | D : [L2]i | C :  | U : 
+[L4:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L5:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L5:C14] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L6:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L6:C14] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L6:C21] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L7:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L8:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L8:C16] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C11] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C16] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C26] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C31] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C38] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C44] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L9:C51] "s" | P : [L1]Main | D : [L3]s | C :  | U : 
+[L13:C8] "foo" | P : [L0]_default | D : self | C : 1 | U : 0
+[L13:C13] "s" | P : [L13]foo | D : self | C :  | U : 2
+[L14:C11] "s" | P : [L13]foo | D : [L13]s | C :  | U : 
+[L16:C11] "s" | P : [L13]foo | D : [L13]s | C :  | U : 

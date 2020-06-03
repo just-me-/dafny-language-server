@@ -1,0 +1,20 @@
+[L0:C0] "_module" | P : [L0]_programRootNode | D : self | C : 1 | U : 0
+[L0:C0] "_default" | P : [L0]_module | D : self | C : 1 | U : 0
+[L1:C8] "F" | P : [L0]_default | D : self | C : 5 | U : 0
+[L2:C8] "s1" | P : [L1]F | D : self | C :  | U : 1
+[L3:C8] "s2" | P : [L1]F | D : self | C :  | U : 5
+[L4:C11] "s2" | P : [L1]F | D : [L3]s2 | C :  | U : 
+[L5:C8] "s3" | P : [L1]F | D : self | C :  | U : 2
+[L5:C12] "s4" | P : [L1]F | D : self | C :  | U : 2
+[L7:C11] "s2" | P : [L1]F | D : [L3]s2 | C :  | U : 
+[L7:C16] "s4" | P : [L1]F | D : [L5]s4 | C :  | U : 
+[L8:C11] "s2" | P : [L1]F | D : [L3]s2 | C :  | U : 
+[L8:C16] "s3" | P : [L1]F | D : [L5]s3 | C :  | U : 
+[L8:C31] "s2" | P : [L1]F | D : [L3]s2 | C :  | U : 
+[L8:C36] "s4" | P : [L1]F | D : [L5]s4 | C :  | U : 
+[L9:C11] "s2" | P : [L1]F | D : [L3]s2 | C :  | U : 
+[L9:C16] "s3" | P : [L1]F | D : [L5]s3 | C :  | U : 
+[L18:C11] "bounded-expression-ghost-18" | P : [L1]F | D : self | C : 1 | U : 
+[L18:C18] "x" | P : [L18]bounded-expression-ghost-18 | D : self | C :  | U : 1
+[L18:C23] "x" | P : [L18]bounded-expression-ghost-18 | D : [L18]x | C :  | U : 
+[L18:C29] "s1" | P : [L18]bounded-expression-ghost-18 | D : [L2]s1 | C :  | U : 

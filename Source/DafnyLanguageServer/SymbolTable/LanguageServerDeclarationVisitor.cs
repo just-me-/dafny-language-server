@@ -208,6 +208,27 @@ namespace DafnyLanguageServer.SymbolTable
             throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
+        public override void Visit(DisplayExpression o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Leave(DisplayExpression o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Visit(ComprehensionExpr o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Leave(ComprehensionExpr o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+
         public override void Leave(NameSegment e)
         {
             throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);

@@ -187,6 +187,42 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
+        [Test]
+        public void Test15_Sequences_Arrays()
+        {
+            var fa = Files.st_15;
+            var fe = Files.st_15e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
+        [Test]
+        public void Test16_Comprehension_Lambda_ForAll_BoundVars()
+        {
+            var fa = Files.st_16;
+            var fe = Files.st_16e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
+        [Test]
+        public void Test17_Sets()
+        {
+            var fa = Files.st_17;
+            var fe = Files.st_17e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
         private IEnumerable<string> GetSymbolsAsList(string f)
         {
             var physFile = new PhysicalFile
