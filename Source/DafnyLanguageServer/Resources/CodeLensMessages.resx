@@ -121,7 +121,7 @@
     <value> references to </value>
   </data>
   <data name="not_used" xml:space="preserve">
-    <value>Never used yet. Can you remove </value>
+    <value>Not used yet. Can you remove </value>
   </data>
   <data name="one_ref" xml:space="preserve">
     <value>1 reference to </value>
