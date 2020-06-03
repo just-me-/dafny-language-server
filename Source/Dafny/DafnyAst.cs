@@ -5475,11 +5475,11 @@ namespace Microsoft.Dafny {
         foreach (var ens in this.Ens) {
         ens.Accept(v);
         }
-       
+
         foreach (var req in this.Req) {
           req.Accept(v);
         }
-       
+
         foreach (var rd in this.Reads) {
           rd.Accept(v);
         }
@@ -5871,7 +5871,7 @@ namespace Microsoft.Dafny {
         foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>()) {
           dec.Accept(v);
         }
-        
+
         foreach (var stmt in this.Body.Body) {
           stmt.Accept(v);
         }
@@ -6389,7 +6389,7 @@ namespace Microsoft.Dafny {
       Contract.Requires(expr != null);
       this.Message = message;
     }
-    
+
     public override IEnumerable<Expression> SubExpressions {
       get {
         foreach (var e in base.SubExpressions) { yield return e; }
@@ -7266,7 +7266,7 @@ namespace Microsoft.Dafny {
       Contract.Requires(s != null);
       Body.Add(s);
     }
-    public override void Accept(Visitor v) { 
+    public override void Accept(Visitor v) {
         v.Visit(this);
       foreach (Statement stmt in this.Body) {
         stmt.Accept(v);
@@ -7339,7 +7339,7 @@ namespace Microsoft.Dafny {
     public override void Accept(Visitor v) {
       v.Visit(this);
       this.Guard.Accept(v);
-      foreach (var stmt in this.Thn.Body) { 
+      foreach (var stmt in this.Thn.Body) {
         stmt.Accept(v);
       }
       v.Leave(this);
@@ -11154,7 +11154,7 @@ namespace Microsoft.Dafny {
       this.Attributes = new UserSuppliedAttributes(tok, openBrace, closeBrace, args, this.Attributes);
     }
 
-    public void Accept(Visitor v) { 
+    public void Accept(Visitor v) {
       this.E.Accept(v);
     }
   }
@@ -11215,7 +11215,7 @@ namespace Microsoft.Dafny {
       : base(tok) {
       E = e;
     }
-    
+
     public override void Accept(Visitor v) {
         this.E.Accept(v);
     }
