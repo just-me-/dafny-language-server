@@ -1,4 +1,3 @@
-using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using System;
 using System.Diagnostics;

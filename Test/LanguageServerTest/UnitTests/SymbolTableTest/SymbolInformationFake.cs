@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.SymbolTable;
-using Microsoft.Dafny;
-using Type = Microsoft.Dafny.Type;
 
 namespace SymbolTableTest
 {

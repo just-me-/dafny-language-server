@@ -1,12 +1,8 @@
 ﻿using System;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Core;
 using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-
-using CounterExampleProvider = DafnyLanguageServer.Core.CounterExampleProvider;
 
 namespace DafnyLanguageServer.WorkspaceManager
 {

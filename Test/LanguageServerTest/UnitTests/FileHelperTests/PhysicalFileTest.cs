@@ -1,7 +1,6 @@
 using System;
 using DafnyLanguageServer.Commons;
 using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace ContentManagerTest
 {

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using DafnyLanguageServer.Handler;
 using NUnit.Framework;
-using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace CounterExampleIntegrationTest

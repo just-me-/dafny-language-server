@@ -1,16 +1,8 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Packaging;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Dafny;
 using NUnit.Framework.Internal;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using Files = TestCommons.Paths;
 
 

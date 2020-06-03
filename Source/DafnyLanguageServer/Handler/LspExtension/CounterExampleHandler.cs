@@ -1,12 +1,10 @@
 ﻿using System;
 using OmniSharp.Extensions.JsonRpc;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.WorkspaceManager;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Server;
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CodeLensIntegrationTest;
 using NUnit.Framework;
 using Files = TestCommons.Paths;
 

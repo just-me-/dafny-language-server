@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Resources;

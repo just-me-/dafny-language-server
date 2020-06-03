@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace AutoCompletionIntegrationTest

@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.CustomDTOs;
-using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Boogie.ModelViewer;

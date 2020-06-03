@@ -1,9 +1,4 @@
-using System;
-using System.Linq;
 using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Client;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using TestCommons;
 using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest

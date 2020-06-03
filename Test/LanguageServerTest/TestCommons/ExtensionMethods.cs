@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using DafnyLanguageServer.CustomDTOs;
-using DafnyLanguageServer.Handler;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace TestCommons

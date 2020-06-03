@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
-using TestCommons;
 
 namespace SymbolTableTest
 {

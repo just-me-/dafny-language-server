@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 
 namespace DafnyLanguageServer.Tools.ConfigInitialization
 {

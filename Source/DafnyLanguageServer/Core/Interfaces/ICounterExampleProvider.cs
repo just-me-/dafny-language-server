@@ -1,5 +1,4 @@
 ﻿using DafnyLanguageServer.CustomDTOs;
-using DafnyLanguageServer.Handler;
 
 namespace DafnyLanguageServer.Core
 {

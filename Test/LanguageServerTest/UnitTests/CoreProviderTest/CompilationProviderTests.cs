@@ -5,7 +5,6 @@ using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.DafnyAccess;
-using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
 using NUnit.Framework;

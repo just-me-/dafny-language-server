@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DafnyLanguageServer.CustomDTOs;
-using DafnyLanguageServer.Handler;
 using NUnit.Framework;
 using TestCommons;
 

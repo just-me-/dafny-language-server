@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Specialized;
 using System.IO;
-using System.Text.RegularExpressions;
-using DafnyLanguageServer;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
