@@ -35,7 +35,6 @@ namespace DafnyLanguageServer.Commons
         public string FileName => Path.GetFileName(Filepath);
 
         public string Sourcecode { get; set; }
-        public bool IsValid { get; set; }
 
         /// <summary>
         /// Applies TextDocumentChanges to this instance's source code.

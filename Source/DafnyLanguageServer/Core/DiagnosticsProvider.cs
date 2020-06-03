@@ -35,7 +35,6 @@ namespace DafnyLanguageServer.Core
                 Uri = _fileRepository.PhysicalFile.Uri,
                 Diagnostics = new Container<Diagnostic>(diagnostics)
             };
-            _fileRepository.PhysicalFile.IsValid = !(diagnostics.Count > 0); //todo weg
             return p;
             
         }

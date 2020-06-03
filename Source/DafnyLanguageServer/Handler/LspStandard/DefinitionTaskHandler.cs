@@ -4,6 +4,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
@@ -61,7 +62,7 @@ namespace DafnyLanguageServer.Handler
                 case DefinitionsOutcome.NotFound:
                     _log.LogWarning(string.Format(Resources.LoggingMessages.goto_notfound_at, uri, line, col));
                     _mss.SendInformation(Resources.LoggingMessages.goto_notfound);
-                    if (!_workspaceManager.GetFileRepository(uri).PhysicalFile.IsValid)
+                    if (!_workspaceManager.GetFileRepository(uri).Result.IsVerified)
                     {
                         _mss.SendWarning(Resources.LoggingMessages.goto_fileNotValid);
                     }
