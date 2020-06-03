@@ -1,7 +1,10 @@
 [L1:C8] "M" | P : [L0]_programRootNode | D : self | C : 2 | U : 0
 [L6:C11] "Counter" | P : [L1]M | D : self | C : 6 | U : 1
-[L7:C13] "count" | P : [L6]Counter | D : self | C :  | U : 4
-[L9:C9] "_ctor" | P : [L6]Counter | D : self | C : 0 | U : 0
+[L7:C13] "count" | P : [L6]Counter | D : self | C :  | U : 5
+[L9:C9] "_ctor" | P : [L6]Counter | D : self | C : 1 | U : 0
+[L9:C21] "initial" | P : [L9]_ctor | D : self | C :  | U : 1
+[L11:C13] "count" | P : [L9]_ctor | D : [L7]count | C :  | U : 
+[L11:C22] "initial" | P : [L9]_ctor | D : [L9]initial | C :  | U : 
 [L13:C16] "reset" | P : [L6]Counter | D : self | C : 0 | U : 1
 [L14:C18] "this" | P : [L13]reset | D : [L6]Counter | C :  | U : 
 [L16:C13] "count" | P : [L13]reset | D : [L7]count | C :  | U : 
