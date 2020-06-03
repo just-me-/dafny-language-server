@@ -10,18 +10,18 @@ namespace CoreProviderTest
 {
     public class SymbolManagerFakeForGoto : ISymbolTableManager
     {
-        private readonly bool returnDeclaration;
-        private readonly bool returnFailure;
+        private readonly bool _returnDefinition;
+        private readonly bool _returnNull;
 
-        public SymbolManagerFakeForGoto(bool alreadyDefintion, bool failure)
+        public SymbolManagerFakeForGoto(bool returnDefinition, bool returnNull)
         {
-            returnDeclaration = alreadyDefintion;
-            returnFailure = failure;
+            _returnDefinition = returnDefinition;
+            _returnNull = returnNull;
         }
 
         public ISymbol GetSymbolByPosition(Uri file, int line, int character)
         {
-            if (returnFailure)
+            if (_returnNull)
             {
                 return null;
             }
@@ -29,7 +29,7 @@ namespace CoreProviderTest
             ISymbol root = new FakeSymbolTable().GenerateSymbolTable();
             ISymbol declaration = root["barapapa"];
             ISymbol notDeclaration = declaration.Usages[0];
-            return returnDeclaration ? declaration : notDeclaration;
+            return _returnDefinition ? declaration : notDeclaration;
         }
 
         public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
@@ -67,14 +67,14 @@ namespace CoreProviderTest
 
     [TestFixture]
     [Category("Unit")]
-    public class GoToProvider
+    public class GoToProviderTest
     {
         [Test]
         public void TestRegularNotDefinition()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(false, false);
+            ISymbolTableManager manager = new SymbolManagerFakeForHover(false, false);
             var provider = new DefinitionsProvider(manager);
-            
+
             var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
 
             Assert.AreEqual("file:///N:/u/l.l", result.FirstOrDefault().Location.Uri.ToString());
@@ -116,6 +116,7 @@ namespace CoreProviderTest
             Assert.AreEqual(DefinitionsOutcome.NotFound, provider.Outcome);
 
         }
+
 
     }
 }
