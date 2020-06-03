@@ -27,11 +27,11 @@ namespace CoreProviderTest
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
             string textExpectation = "## Symbol Information\n" +
-                                     "*barapapa at Line 2 in l.l*\n" +
+                                     "*barapapa at Line 2 in N:\\u\\l.l*\n" +
                                      "* **Kind:** RootNode\n" +
                                      "* **Type:** N/A\n" +
                                      "* **Scope:** `_programRootNode`\n" +
-                                     "* **Declaration:** barapapa at Line 1 in l.l";
+                                     "* **Declaration:** barapapa at Line 1 in N:\\u\\l.l";
 
             Assert.AreEqual(textExpectation, result.Contents.MarkupContent.Value, "Markup Content does not match");
         }
@@ -51,7 +51,7 @@ namespace CoreProviderTest
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
             string textExpectation = "## Symbol Information\n" +
-                                     "*barapapa at Line 1 in l.l*\n" +
+                                     "*barapapa at Line 1 in N:\\u\\l.l*\n" +
                                      "* **Kind:** RootNode\n" +
                                      "* **Type:** N/A\n" +
                                      "* **Scope:** `_programRootNode`\n" +
