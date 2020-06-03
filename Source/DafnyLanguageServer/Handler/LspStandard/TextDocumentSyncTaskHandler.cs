@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
+using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 
@@ -45,38 +46,19 @@ namespace DafnyLanguageServer.Handler
             return new TextDocumentAttributes(uri, "");
         }
 
-        /// <summary>
-        /// Updates file and sends error to the client with the diagnostics service
-        /// </summary>
-        private void UpdateFileAndSendDiagnostics<T>(Uri uri, T textOrChangeEvent)
-        {
-            try
-            {
-                _log.LogInformation(Resources.LoggingMessages.request_update + uri);
-                IFileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
 
-                _log.LogInformation(Resources.LoggingMessages.request_update_diagnostics);
-                IDiagnosticsProvider provider = new DiagnosticsProvider(_router, _workspaceManager.GetFileRepository(uri).SymbolTableManager);
-                provider.SendDiagnostics(fileRepository);
 
-                _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
-            }
-            catch (Exception e)
-            {
-                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
 
-            }
-        }
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
             switch (Change)
             {
                 case TextDocumentSyncKind.Full:
-                    UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges.LastOrDefault()?.Text);
+                    ProcessUpdateRequest(request.TextDocument.Uri, request.ContentChanges.LastOrDefault()?.Text);
                     break;
                 case TextDocumentSyncKind.Incremental:
-                    UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.ContentChanges);
+                    ProcessUpdateRequest(request.TextDocument.Uri, request.ContentChanges);
                     break;
             }
 
@@ -85,7 +67,7 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidOpenTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.TextDocument.Text);
+            ProcessUpdateRequest(request.TextDocument.Uri, request.TextDocument.Text);
             return Unit.Task;
         }
 
@@ -96,7 +78,7 @@ namespace DafnyLanguageServer.Handler
 
         public Task<Unit> Handle(DidSaveTextDocumentParams request, CancellationToken cancellationToken)
         {
-            UpdateFileAndSendDiagnostics(request.TextDocument.Uri, request.Text); //flush all text on save
+            ProcessUpdateRequest(request.TextDocument.Uri, request.Text); //flush all text on save
             return Unit.Task;
         }
 
@@ -116,5 +98,62 @@ namespace DafnyLanguageServer.Handler
                 IncludeText = true
             };
         }
+
+
+        /// <summary>
+        /// Updates file and sends diagnostics and error count to the client with the diagnostics service
+        /// </summary>
+        private void ProcessUpdateRequest<T>(Uri uri, T textOrChangeEvent)
+        {
+            try
+            {
+                var fileRepository = UpdateFile(uri, textOrChangeEvent);
+                PublishDiagnosticsParams diags = GetDiagnostics(uri, fileRepository);
+                PublishResults(diags);
+
+                _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
+            }
+            catch (Exception e)
+            {
+                HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
+            }
+        }
+
+        /// <summary>
+        /// Delegates the update to the file repository.
+        /// </summary>
+        /// <returns>The updated file repository</returns>
+        private IFileRepository UpdateFile<T>(Uri uri, T textOrChangeEvent)
+        {
+            _log.LogInformation(Resources.LoggingMessages.request_update + uri);
+            IFileRepository fileRepository = _workspaceManager.UpdateFile(uri, textOrChangeEvent);
+            return fileRepository;
+        }
+
+        /// <summary>
+        /// Invokes the DiagnosticProvider to assemble diagnsotics
+        /// </summary>
+        /// <returns>Diagnostics ready to publish</returns>
+        private PublishDiagnosticsParams GetDiagnostics(Uri uri, IFileRepository fileRepository)
+        {
+            _log.LogInformation(Resources.LoggingMessages.request_update_diagnostics);
+            _mss.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
+            IFileRepository repo = _workspaceManager.GetFileRepository(uri);
+            IDiagnosticsProvider provider = new DiagnosticsProvider(repo);
+            var diags = provider.GetPublishableDiagnostics();
+            return diags;
+        }
+
+        /// <summary>
+        /// Publishes the Diagnostics using the <c>_router</c>
+        /// </summary>
+        /// <param name="diags">The Diagnostics to publish.</param>
+        private void PublishResults(PublishDiagnosticsParams diags)
+        {
+            _router.Document.PublishDiagnostics(diags);
+            _mss.SendCountedErrors(diags.Diagnostics.Count());
+        }
+
+
     }
 }

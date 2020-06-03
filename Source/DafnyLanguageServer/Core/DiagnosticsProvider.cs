@@ -18,35 +18,31 @@ namespace DafnyLanguageServer.Core
     /// </summary>
     public class DiagnosticsProvider : IDiagnosticsProvider
     {
-        private readonly ILanguageServer _router;
-        private readonly ISymbolTableManager _symbolTableManager;
-        private readonly MessageSenderService _msgSenderService;
+        private readonly IFileRepository _fileRepository;
 
-        public DiagnosticsProvider(ILanguageServer router, ISymbolTableManager symbolTableManager)
+        public DiagnosticsProvider(IFileRepository fileRepository)
         {
-            _router = router;  //optionales todo wenn zeit:  router und message sender möglichst oben bei den handlern lassen. Wenn zeit evtl hochgeben sonst egal.
-            _symbolTableManager = symbolTableManager;
-            _msgSenderService = new MessageSenderService(router);
+            _fileRepository = fileRepository;
         }
 
-        public void SendDiagnostics(IFileRepository fileRepository)
+        public PublishDiagnosticsParams GetPublishableDiagnostics()
         {
-            _msgSenderService.SendCurrentDocumentInProcess(fileRepository.PhysicalFile.Filepath);
-
-            var rawDiagnosticElements = fileRepository.Result.DiagnosticElements;
-            var diagnostics = ConvertToLSPDiagnostics(rawDiagnosticElements, fileRepository.PhysicalFile);
+            
+            var rawDiagnosticElements = _fileRepository.Result.DiagnosticElements;
+            var diagnostics = ConvertToLSPDiagnostics(rawDiagnosticElements);
             PublishDiagnosticsParams p = new PublishDiagnosticsParams
             {
-                Uri = fileRepository.PhysicalFile.Uri,
+                Uri = _fileRepository.PhysicalFile.Uri,
                 Diagnostics = new Container<Diagnostic>(diagnostics)
             };
-            _router.Document.PublishDiagnostics(p);
-            _msgSenderService.SendCountedErrors(diagnostics.Count);
-            fileRepository.PhysicalFile.IsValid = !(diagnostics.Count > 0);
+            _fileRepository.PhysicalFile.IsValid = !(diagnostics.Count > 0); //todo weg
+            return p;
+            
         }
 
-        public Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file)
+        public Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors)
         {
+            PhysicalFile file = _fileRepository.PhysicalFile;
             Collection<Diagnostic> diagnostics = new Collection<Diagnostic>();
             foreach (DiagnosticElement e in errors)
             {
@@ -80,9 +76,9 @@ namespace DafnyLanguageServer.Core
             {
                 msg = e.Msg;
             }
-            else if (e.Tok.val.Equals("{") && _symbolTableManager != null)
+            else if (e.Tok.val.Equals("{") && _fileRepository.SymbolTableManager != null)
             {
-                ISymbol wrappingSymbol = _symbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
+                ISymbol wrappingSymbol = _fileRepository.SymbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
                 range = CreateRange(wrappingSymbol.Position.BodyStartToken, wrappingSymbol.Position.BodyEndToken);
                 msg = e.Msg + $" at [ {wrappingSymbol.Name} ]";
             }

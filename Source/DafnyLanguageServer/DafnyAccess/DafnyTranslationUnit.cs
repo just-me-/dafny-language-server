@@ -110,6 +110,7 @@ namespace DafnyLanguageServer.DafnyAccess
             {
                 _status = TranslationStatus.Verified;
             }
+
             return new TranslationResult
             {
                 DiagnosticElements = _diagnosticElements,

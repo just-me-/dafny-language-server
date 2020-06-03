@@ -8,7 +8,7 @@ namespace DafnyLanguageServer.Core
 {
     public interface IDiagnosticsProvider
     {
-        void SendDiagnostics(IFileRepository fileRepository);
-        Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors, PhysicalFile file);
+        PublishDiagnosticsParams GetPublishableDiagnostics();
+        Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors);
     }
 }
