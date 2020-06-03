@@ -27,7 +27,6 @@ namespace DafnyLanguageServer.Core
 
         public PublishDiagnosticsParams GetPublishableDiagnostics()
         {
-            
             var rawDiagnosticElements = _fileRepository.Result.DiagnosticElements;
             var diagnostics = ConvertToLSPDiagnostics(rawDiagnosticElements);
             PublishDiagnosticsParams p = new PublishDiagnosticsParams
@@ -36,7 +35,6 @@ namespace DafnyLanguageServer.Core
                 Diagnostics = new Container<Diagnostic>(diagnostics)
             };
             return p;
-            
         }
 
         public Collection<Diagnostic> ConvertToLSPDiagnostics(IEnumerable<DiagnosticElement> errors)
@@ -79,11 +77,11 @@ namespace DafnyLanguageServer.Core
             {
                 ISymbol wrappingSymbol = _fileRepository.SymbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
                 range = CreateRange(wrappingSymbol.Position.BodyStartToken, wrappingSymbol.Position.BodyEndToken);
-                msg = e.Msg + $" at [ {wrappingSymbol.Name} ]";
+                msg = e.Msg + $"\n at {wrappingSymbol.Name}";
             }
             else
             {
-                msg = e.Msg + $" at [ {e.Tok.val} ]";
+                msg = e.Msg + $" \n at {e.Tok.val}\n ";
             }
 
             string src = file.Filepath.Split('/').Last();

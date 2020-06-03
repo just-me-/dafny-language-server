@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Commons
         {
             if (severity == ErrorLevel.Error)
             {
-                return new DiagnosticElement(eMsg.token, Resources.LoggingMessages.diagnostic_syntax_error + eMsg.message, severity);
+                return new DiagnosticElement(eMsg.token, Resources.LoggingMessages.diagnostic_syntax_error + "\n " + eMsg.message, severity);
             }
             return new DiagnosticElement(eMsg.token, eMsg.message, severity);
 
@@ -54,22 +54,10 @@ namespace DafnyLanguageServer.Commons
         public static DiagnosticElement ConvertToErrorInformation(this ErrorInformation eInfo)
         {
             if (eInfo is null) return null;
-            return new DiagnosticElement(eInfo.Tok, Resources.LoggingMessages.diagnostic_logical_error + eInfo.Msg, ErrorLevel.Error)
+            return new DiagnosticElement(eInfo.Tok, Resources.LoggingMessages.diagnostic_logical_error + "\n " + eInfo.Msg, ErrorLevel.Error)
             {
                 Aux = eInfo.Aux
             };
-        }
-
-        /// <summary>
-        /// Generic method that converts a list of errors into a list of DiagnosticElements using a converter.
-        /// </summary>
-        /// <typeparam name="T">Origin Type, either Dafny or Boogie Error [ErrorInformation or ErrorMessage]</typeparam>
-        /// <param name="source">List of errors of Type T</param>
-        /// <param name="converter">A converter, converting an Error from T to DiagnosticElement</param>
-        /// <returns>Converted List</returns>
-        public static List<DiagnosticElement> ToDiagnosticErrorList<T>(this IEnumerable<T> source, Func<T, DiagnosticElement> converter)
-        {
-            return source?.Select(converter).ToList();
         }
     }
 }
