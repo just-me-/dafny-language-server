@@ -8,61 +8,7 @@ using NUnit.Framework;
 
 namespace CoreProviderTest
 {
-    public class SymbolManagerFakeForGoto : ISymbolTableManager
-    {
-        private readonly bool _returnDefinition;
-        private readonly bool _returnNull;
-
-        public SymbolManagerFakeForGoto(bool returnDefinition, bool returnNull)
-        {
-            _returnDefinition = returnDefinition;
-            _returnNull = returnNull;
-        }
-
-        public ISymbol GetSymbolByPosition(Uri file, int line, int character)
-        {
-            if (_returnNull)
-            {
-                return null;
-            }
-
-            ISymbol root = new FakeSymbolTable().GenerateSymbolTable();
-            ISymbol declaration = root["barapapa"];
-            ISymbol notDeclaration = declaration.Usages[0];
-            return _returnDefinition ? declaration : notDeclaration;
-        }
-
-        public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-
-        public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-
-        public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllSymbolDeclarations()
-        {
-            throw new InvalidOperationException("Goto provider should not use this method.");
-        }
-    }
-
+    
 
 
     [TestFixture]
@@ -72,7 +18,7 @@ namespace CoreProviderTest
         [Test]
         public void TestRegularNotDefinition()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForHover(false, false);
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new DefinitionsProvider(manager);
 
             var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
@@ -89,7 +35,7 @@ namespace CoreProviderTest
         [Test]
         public void TestRegularAlreadyDefinition()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(true, false);
+            ISymbolTableManager manager = new FakeSymbolManager(true, false);
             var provider = new DefinitionsProvider(manager);
 
             var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
@@ -106,7 +52,7 @@ namespace CoreProviderTest
         [Test]
         public void TestNoSymbol()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(false, true);
+            ISymbolTableManager manager = new FakeSymbolManager(false, true);
             var provider = new DefinitionsProvider(manager);
 
             var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.

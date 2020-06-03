@@ -7,48 +7,6 @@ using NUnit.Framework;
 
 namespace CoreProviderTest
 {
-    public class SymbolManagerFakeForRename : ISymbolTableManager
-    {
-
-        public ISymbol GetSymbolByPosition(Uri file, int line, int character)
-        {
-            ISymbol root = new FakeSymbolTable().GenerateSymbolTable();
-            return root["barapapa"].Usages[1];
-
-        }
-
-        public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-
-        public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-
-        public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllSymbolDeclarations()
-        {
-            throw new InvalidOperationException("Rename provider should not use this method.");
-        }
-    }
-
-
 
     [TestFixture]
     [Category("Unit")]
@@ -57,7 +15,7 @@ namespace CoreProviderTest
         [Test]
         public void TestAssembling()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("oink", new Uri("file:///N:/u/l.l"), 2, 22);     //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
 
@@ -90,7 +48,7 @@ namespace CoreProviderTest
         [Test]
         public void TestOutcome()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("oink", new Uri("file:///N:/u/l.l"), 2, 22);
 
@@ -100,7 +58,7 @@ namespace CoreProviderTest
         [Test]
         public void IrregularName()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false,false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("{{}}}", new Uri("file:///N:/u/l.l"), 2, 22);
 
@@ -111,7 +69,7 @@ namespace CoreProviderTest
         [Test]
         public void StartWithNumber()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("1abc", new Uri("file:///N:/u/l.l"), 2, 22);
 
@@ -123,7 +81,7 @@ namespace CoreProviderTest
         [Test]
         public void UnderScoreName()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("_abc", new Uri("file:///N:/u/l.l"), 2, 22);
 
@@ -134,7 +92,7 @@ namespace CoreProviderTest
         [Test]
         public void ReservedWord()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForRename();
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("method", new Uri("file:///N:/u/l.l"), 2, 22);
 
