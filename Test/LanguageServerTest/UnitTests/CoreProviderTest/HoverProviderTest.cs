@@ -83,12 +83,12 @@ namespace CoreProviderTest
             Assert.AreEqual(29, result.Range.End.Character, "End Char is not matching");
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
-            string textExpectation = @"## Symbol Hover Information
-*barapapa at Line 2 in l.l*
-* **Kind:** RootNode
-* **Type:** N/A
-* **Scope:** `_programRootNode`
-* **Declaration:** barapapa at Line 1 in l.l";
+            string textExpectation = "## Symbol Information\n" +
+                                     "*barapapa at Line 2 in l.l*\n" +
+                                     "* **Kind:** RootNode\n" +
+                                     "* **Type:** N/A\n" +
+                                     "* **Scope:** `_programRootNode`\n" +
+                                     "* **Declaration:** barapapa at Line 1 in l.l";
 
             Assert.AreEqual(textExpectation, result.Contents.MarkupContent.Value, "Markup Content does not match");
         }
@@ -107,12 +107,12 @@ namespace CoreProviderTest
             Assert.AreEqual(18, result.Range.End.Character, "End Char is not matching");
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
-            string textExpectation = @"## Symbol Hover Information
-*barapapa at Line 1 in l.l*
-* **Kind:** RootNode
-* **Type:** N/A
-* **Scope:** `_programRootNode`
-* **Declaration:** This symbol is a declaration.";
+            string textExpectation = "## Symbol Information\n" +
+                                     "*barapapa at Line 1 in l.l*\n" +
+                                     "* **Kind:** RootNode\n" +
+                                     "* **Type:** N/A\n" +
+                                     "* **Scope:** `_programRootNode`\n" +
+                                     "* **Declaration:** This symbol is a declaration.";
 
             Assert.AreEqual(textExpectation, result.Contents.MarkupContent.Value, "Markup Content does not match");
         }

@@ -60,8 +60,8 @@ namespace DafnyLanguageServer.Core
 $"*{symbol.ToNiceString()}*\n" +
 $"* **Kind:** {symbol.Kind}\n" +
 $"* **Type:** {type}\n" +
-$"* **Scope:** `{symbol.Parent.Name}\n`" +
-$"* **Declaration:** {declaration}\n";
+$"* **Scope:** `{symbol.Parent.Name}`\n" +
+$"* **Declaration:** {declaration}";
 
             return fancyContent;
         }
