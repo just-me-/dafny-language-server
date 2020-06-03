@@ -75,9 +75,6 @@ namespace TestCommons
             MyLog.Information("Shutting down server...");
             Server.Stop().Wait();
             MyLog.Information("Server shutdown is complete.");
-
-            Client.Dispose();
-            Server.Dispose();
         }
     }
 }
