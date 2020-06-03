@@ -16,6 +16,8 @@ namespace DafnyLanguageServer.Handler
     /// </summary>
     public class CompletionTaskHandler : LspBasicHandler<CompletionCapability>, ICompletionHandler
     {
+        private static readonly Container<string> triggerChars = new Container<string>(".", "new ");
+
         public CompletionTaskHandler(ILanguageServer router, IWorkspace workspaceManager,
             ILoggerFactory loggingFactory)
             : base(router, workspaceManager, loggingFactory)
@@ -29,7 +31,8 @@ namespace DafnyLanguageServer.Handler
             return new CompletionRegistrationOptions
             {
                 DocumentSelector = _documentSelector,
-                ResolveProvider = false
+                ResolveProvider = false,
+                TriggerCharacters = triggerChars
             };
         }
 
