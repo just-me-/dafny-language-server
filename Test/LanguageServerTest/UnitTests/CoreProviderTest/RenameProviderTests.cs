@@ -59,7 +59,7 @@ namespace CoreProviderTest
         {
             ISymbolTableManager manager = new SymbolManagerFakeForRename();
             var provider = new RenameProvider(manager);
-            var result = provider.GetRenameChanges("oink", new Uri("file:///N:/u/l.l"), 2, 22);
+            var result = provider.GetRenameChanges("oink", new Uri("file:///N:/u/l.l"), 2, 22);     //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
 
             Assert.AreEqual("file:///N:/u/l.l", result.Changes.Keys.First().ToString(),
                 "The fake instance is not assigning URIs. It should be the default-null uri.");
@@ -84,6 +84,7 @@ namespace CoreProviderTest
 
             Assert.AreEqual(2, aslist[2].Range.Start.Line, "Edit 2 starts at wrong line");
             Assert.AreEqual(32, aslist[2].Range.Start.Character, "Edit 2 starts at wrong char");
+
         }
 
         [Test]

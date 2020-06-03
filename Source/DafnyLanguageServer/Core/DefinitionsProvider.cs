@@ -29,10 +29,6 @@ namespace DafnyLanguageServer.Core
                 Outcome = DefinitionsOutcome.NotFound;
                 return new LocationOrLocationLinks();
             }
-            if (symbol.IsDeclaration)
-            {
-                Outcome = DefinitionsOutcome.WasAlreadyDefintion;
-            }
 
             var originSymbol = symbol.DeclarationOrigin;
 
@@ -42,7 +38,8 @@ namespace DafnyLanguageServer.Core
 
             links.Add(new LocationOrLocationLink(location));
 
-            Outcome = DefinitionsOutcome.Success;
+            Outcome = symbol.IsDeclaration ? DefinitionsOutcome.WasAlreadyDefintion : DefinitionsOutcome.Success;
+
             return new LocationOrLocationLinks(links);
         }
     }
