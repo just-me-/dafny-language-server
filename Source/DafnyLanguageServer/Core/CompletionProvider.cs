@@ -63,7 +63,9 @@ namespace DafnyLanguageServer.Core
                 case CompletionType.AfterNew:
                     return symbol.Name + "()";
                 case CompletionType.AfterDot:
-                    return symbol.Kind == Kind.Method || symbol.Kind == Kind.Function ? symbol.Name + "()" : symbol.Name;
+                    return (symbol.Kind == Kind.Method || symbol.Kind == Kind.Function)
+                        ? (symbol.Name + "()")
+                        : symbol.Name;
                 default:
                     return symbol.Name;
             }
@@ -132,6 +134,10 @@ namespace DafnyLanguageServer.Core
 
         private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTableManager manager, ISymbol selectedSymbol)
         {
+            if (selectedSymbol == null)
+            {
+                throw new InvalidOperationException(Resources.ExceptionMessages.no_symbol_before_fot_found);
+            }
             var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
             if (classSymbol == null)
             {

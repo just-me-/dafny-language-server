@@ -29,7 +29,7 @@ namespace DafnyLanguageServer.WorkspaceManager
             Result = results;
         }
 
-       
+
         public PhysicalFile PhysicalFile { get; }
         public TranslationResult Result { get; private set; }
         public ISymbolTableManager SymbolTableManager { get; private set; } = new SymbolTableManager(SymbolTableGenerator.GetEmptySymbolTable());

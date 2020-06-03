@@ -15,10 +15,6 @@ namespace DafnyLanguageServer.Handler
     /// It gets triggered every time a client sends a <c>compile</c> command request.
     /// This class creates a new <c>CompilationService</c> to provide compiled results. 
     /// </summary>
-
-
-
-
     [Serial, Method("compile")]
     public interface ICompile : IJsonRpcRequestHandler<CompilerParams, CompilerResults> { }
 

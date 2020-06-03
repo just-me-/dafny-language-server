@@ -113,8 +113,6 @@ namespace DafnyLanguageServer.Handler
                 PublishResults(diags);
 
                 _log.LogInformation(string.Format(Resources.LoggingMessages.request_success, _method));
-                _mss.SendError("Error using mss");
-
             }
             catch (Exception e)
             {

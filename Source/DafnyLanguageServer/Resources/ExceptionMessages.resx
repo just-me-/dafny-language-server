@@ -219,4 +219,7 @@
     <value>No class origin was found for symbol: </value>
     <comment>Used within auto completions</comment>
   </data>
+  <data name="no_symbol_before_fot_found" xml:space="preserve">
+    <value>Symbol before dot has not been found.</value>
+  </data>
 </root>
