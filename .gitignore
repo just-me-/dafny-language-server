@@ -10,6 +10,9 @@
 
 .idea/
 
+boogie/
+boogiepartners/
+
 Binaries/*.dll
 Binaries/*.mdb
 Binaries/*.pdb
@@ -19,8 +22,12 @@ Binaries/Dafny.exe
 Binaries/Dafny.vshost.exe
 Binaries/DafnyServer.exe
 Binaries/DafnyRuntime.cs
+Binaries/Boogie.exe
+Binaries/TestFramework.exe
 Binaries/export/
 Binaries/mono_crash*
+Binaries/CodeContracts/
+Binaries/*.json
 
 Package/
 
@@ -91,3 +98,18 @@ Logs/
 Binaries/nunit_random_seed.tmp
 Binaries/DafnyLanguageServer.exe
 model.bvd
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
