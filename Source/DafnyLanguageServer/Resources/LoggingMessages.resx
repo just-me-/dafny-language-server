@@ -145,8 +145,23 @@
     <value>No Defintion found for {0} at L{1}:C{2}</value>
     <comment>Params: uri, line, col</comment>
   </data>
+  <data name="hover_declaration" xml:space="preserve">
+    <value>Declaration</value>
+  </data>
   <data name="hover_isDeclaration" xml:space="preserve">
-    <value>This symbol is a declaration.</value>
+    <value>This symbol is the declaration.</value>
+  </data>
+  <data name="hover_kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="hover_scope" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="hover_type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="hover_unknown" xml:space="preserve">
+    <value>N/A</value>
   </data>
   <data name="inner_error" xml:space="preserve">
     <value>Inner Error: </value>

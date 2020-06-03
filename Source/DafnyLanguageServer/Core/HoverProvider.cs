@@ -24,12 +24,12 @@ namespace DafnyLanguageServer.Core
             {
                 return null;
             }
-            
-            MarkupContent fancyContent = CreateMarkupContent(symbol);
+
+            MarkupContent formattedContent = CreateMarkupContent(symbol);
 
             Hover result = new Hover
             {
-                Contents = new MarkedStringsOrMarkupContent(fancyContent),
+                Contents = new MarkedStringsOrMarkupContent(formattedContent),
                 Range = new Range
                 {
                     Start = new Position(symbol.Line - 1, symbol.Column - 1),
@@ -45,25 +45,22 @@ namespace DafnyLanguageServer.Core
             string type = symbol.Type?.ToString();
             if (string.IsNullOrEmpty(type) || type == "?")
             {
-                type = "N/A";
+                type = Resources.LoggingMessages.hover_unknown;
             }
 
             string declaration = symbol.IsDeclaration
                 ? Resources.LoggingMessages.hover_isDeclaration
-                : symbol.DeclarationOrigin.ToNiceString();
+                : symbol.DeclarationOrigin.PositionToFormattedString();
 
-            var fancyContent = new MarkupContent();
-            fancyContent.Kind = MarkupKind.Markdown;
-            fancyContent.Value =
-
-"## Symbol Information\n" +
-$"*{symbol.ToNiceString()}*\n" +
-$"* **Kind:** {symbol.Kind}\n" +
-$"* **Type:** {type}\n" +
-$"* **Scope:** `{symbol.Parent.Name}`\n" +
-$"* **Declaration:** {declaration}";
-
-            return fancyContent;
+            var formattedContent = new MarkupContent();
+            formattedContent.Kind = MarkupKind.Markdown;
+            formattedContent.Value =
+                $" **`{symbol.Name}`** *({symbol.PositionToFormattedString()})*\n" +
+                $"* **{Resources.LoggingMessages.hover_type}:** {type}\n" +
+                $"* **{Resources.LoggingMessages.hover_kind}:** {symbol.Kind}\n" +
+                $"* **{Resources.LoggingMessages.hover_scope}:** `{symbol.Parent.Name}`\n" +
+                $"* **{Resources.LoggingMessages.hover_declaration}:** {declaration}";
+            return formattedContent;
         }
     }
 }

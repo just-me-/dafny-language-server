@@ -73,9 +73,9 @@ namespace DafnyLanguageServer.SymbolTable
 
 
         #region ToString
-        public string ToNiceString()
+        public string PositionToFormattedString()
         {
-            return $"{Name} at Line {Line} in {FileName}";
+            return $"line {Line}, {FileName}";
         }
 
         public string ToDebugString()
@@ -85,7 +85,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override string ToString()
         {
-            return ToNiceString();
+            return PositionToFormattedString();
         }
         #endregion
 
@@ -162,7 +162,7 @@ namespace DafnyLanguageServer.SymbolTable
                     && ColumnEnd >= character;
         }
 
-    
+
 
 
         /// <summary>

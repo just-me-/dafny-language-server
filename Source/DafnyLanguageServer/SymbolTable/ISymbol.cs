@@ -35,7 +35,7 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbol AssociatedDefaultClass { get; }
         bool HasChildren { get; }
 
-        string ToNiceString();
+        string PositionToFormattedString();
         string ToDebugString();
 
         bool Wraps(ISymbol child);

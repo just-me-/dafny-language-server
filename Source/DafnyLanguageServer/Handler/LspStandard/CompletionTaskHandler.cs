@@ -45,10 +45,10 @@ namespace DafnyLanguageServer.Handler
             {
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
-                IFileRepository filerepo = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
+                var filerepo = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                 var codeLine = filerepo.PhysicalFile.GetSourceLine(line - 1);
-                ISymbolTableManager symbolmanager = filerepo.SymbolTableManager;
-                ICompletionProvider provider = new CompletionProvider(symbolmanager);
+                var symbolmanager = filerepo.SymbolTableManager;
+                var provider = new CompletionProvider(symbolmanager);
                 return await Task.Run(() => provider.FindCompletionItems(request.TextDocument.Uri, line, col, codeLine),
                     cancellationToken);
             }
