@@ -6088,6 +6088,35 @@ namespace Microsoft.Dafny {
 
     public override void Accept(Visitor v) {
       v.Visit(this);
+      if (v.GoesDeep) {
+        foreach (Formal arg in this.Ins) {
+          arg.Accept(v);
+        }
+
+        foreach (Formal outParam in this.Outs) {
+          outParam.Accept(v);
+        }
+
+        foreach (var m in this.Mod?.Expressions ?? new List<FrameExpression>()) { 
+          m.Accept(v);
+        }
+
+        foreach (var ens in this.Ens) {
+          ens.Accept(v);
+        }
+
+        foreach (var req in this.Req) {
+          req.Accept(v);
+        }
+
+        foreach (var dec in this.Decreases?.Expressions ?? new List<Expression>()) {
+          dec.Accept(v);
+        }
+
+        foreach (var stmt in this.Body.Body) {
+          stmt.Accept(v);
+        }
+      }
       v.Leave(this);
     }
   }

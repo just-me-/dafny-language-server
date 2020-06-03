@@ -148,7 +148,7 @@ namespace SymbolTableTest
             var actual = GetSymbolsAsList(fa);
             var excpected = GetExpectation(fe);
 
-            CollectionAssert.AreEquivalent(excpected, actual); //todo there is still metho that is not found.
+            CollectionAssert.AreEquivalent(excpected, actual); //todo there is still metho that is not found. -> resolven is very complex and its a very specific case (very bad programming style) -> @doku and good is.
         }
 
         [Test]
@@ -222,6 +222,19 @@ namespace SymbolTableTest
 
             CollectionAssert.AreEquivalent(excpected, actual);
         }
+
+        [Test]
+        public void Test18_ctor()
+        {
+            var fa = Files.st_18;
+            var fe = Files.st_18e;
+
+            var actual = GetSymbolsAsList(fa);
+            var excpected = GetExpectation(fe);
+
+            CollectionAssert.AreEquivalent(excpected, actual);
+        }
+
 
         private IEnumerable<string> GetSymbolsAsList(string f)
         {
