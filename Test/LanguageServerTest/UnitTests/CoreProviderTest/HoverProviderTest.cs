@@ -8,63 +8,6 @@ using NUnit.Framework;
 
 namespace CoreProviderTest
 {
-    public class SymbolManagerFakeForHover : ISymbolTableManager
-    {
-        private readonly bool returnDeclaration;
-        private readonly bool returnFailure;
-
-        public SymbolManagerFakeForHover(bool alreadyDefintion, bool failure)
-        {
-            returnDeclaration = alreadyDefintion;
-            returnFailure = failure;
-        }
-
-        public ISymbol GetSymbolByPosition(Uri file, int line, int character)
-        {
-            if (returnFailure)
-            {
-                return null;
-            }
-
-            ISymbol root = new FakeSymbolTable().GenerateSymbolTable();
-            ISymbol declaration = root["barapapa"];
-            ISymbol notDeclaration = declaration.Usages[0];
-            return returnDeclaration ? declaration : notDeclaration;
-        }
-
-        public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-
-        public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-
-        public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-
-        public List<ISymbol> GetAllSymbolDeclarations()
-        {
-            throw new InvalidOperationException("Hover provider should not use this method.");
-        }
-    }
-
-
-
     [TestFixture]
     [Category("Unit")]
     public class HoverProviderTest
@@ -72,7 +15,7 @@ namespace CoreProviderTest
         [Test]
         public void TestRegular()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(false, false);
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new HoverProvider(manager);
 
             var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
@@ -96,7 +39,7 @@ namespace CoreProviderTest
         [Test]
         public void TestRegular2()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(true, false);
+            ISymbolTableManager manager = new FakeSymbolManager(true, false);
             var provider = new HoverProvider(manager);
 
             var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
@@ -121,7 +64,7 @@ namespace CoreProviderTest
         [Test]
         public void TestNull()
         {
-            ISymbolTableManager manager = new SymbolManagerFakeForGoto(false, true);
+            ISymbolTableManager manager = new FakeSymbolManager(false, true);
             var provider = new HoverProvider(manager);
 
             var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
