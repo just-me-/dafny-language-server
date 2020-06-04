@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Resources;
 using Newtonsoft.Json.Linq;
 
 namespace DafnyLanguageServer.Tools

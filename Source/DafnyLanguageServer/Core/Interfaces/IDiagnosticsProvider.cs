@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.WorkspaceManager;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.Core

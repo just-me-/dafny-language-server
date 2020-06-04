@@ -2,11 +2,9 @@
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 

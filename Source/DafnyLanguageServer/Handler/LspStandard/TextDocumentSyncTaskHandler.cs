@@ -10,8 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
-using DafnyLanguageServer.SymbolTable;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 

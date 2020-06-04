@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using DafnyLanguageServer.Resources;
-using DafnyLanguageServer.Tools;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 
