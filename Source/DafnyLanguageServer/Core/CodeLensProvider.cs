@@ -26,7 +26,6 @@ namespace DafnyLanguageServer.Core
         public CodeLensContainer GetCodeLensContainer()
         {
             List<CodeLens> items = new List<CodeLens>();
-
             foreach (var symbolInformation in _manager.GetAllSymbolDeclarations())
             {
                 if (_uri.Equals(symbolInformation.FileUri))
@@ -34,13 +33,11 @@ namespace DafnyLanguageServer.Core
                     items.Add(CreateCodeLensItem(symbolInformation));
                 }
             }
-
             return new CodeLensContainer(items);
         }
 
         private CodeLens CreateCodeLensItem(ISymbol symbolInformation)
         {
-
             Position position = new Position((long)symbolInformation.Line - 1, 0);
             Range range = new Range { Start = position, End = position };
 
@@ -51,13 +48,13 @@ namespace DafnyLanguageServer.Core
                 {
                     var startPos = new Position
                     {
-                        Line = usage.Position.BodyStartToken.line - 1,
-                        Character = usage.Position.BodyStartToken.col
+                        Line = usage.Line - 1,
+                        Character = usage.Column - 1
                     };
                     var endPos = new Position
                     {
-                        Line = usage.Position.BodyEndToken.line - 1,
-                        Character = usage.Position.BodyEndToken.col
+                        Line = usage.Line - 1,
+                        Character = usage.ColumnEnd - 1
                     };
                     locations.Add(new Location
                     {
