@@ -60,6 +60,12 @@ namespace CoreProviderTest
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
+
+        public ISymbolInformation GetEnclosingClass(ISymbolInformation wrappingEntrypointSymbol)
+        {
+            throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
+
+        }
     }
 
 }

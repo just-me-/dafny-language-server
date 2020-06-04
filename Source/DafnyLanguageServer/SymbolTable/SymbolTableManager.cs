@@ -66,7 +66,16 @@ namespace DafnyLanguageServer.SymbolTable
         /// </summary>
         public ISymbolInformation GetClassOriginFromSymbol(ISymbolInformation symbol)
         {
-            var classPath = symbol.DeclarationOrigin.UserTypeDefinition.ResolvedClass.FullName;
+            string classPath;
+            try
+            {
+                classPath = symbol.DeclarationOrigin.UserTypeDefinition.ResolvedClass.FullName;
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+
             string[] originPath = classPath.Split('.');
             LinkedList<string> chain = new LinkedList<string>(originPath);
 
@@ -97,6 +106,18 @@ namespace DafnyLanguageServer.SymbolTable
             symbols.AddRange(navigator.TopDownAll(DafnyProgramRootSymbol, filter));
 
             return symbols;
+        }
+
+        /// <summary>
+        /// Returns the class in which a symbol is located.
+        /// </summary>
+        /// <param name="entryPoint"></param>
+        /// <returns></returns>
+        public ISymbolInformation GetEnclosingClass(ISymbolInformation entryPoint)
+        {
+            ISymbolNavigator navigator = new SymbolNavigator();
+            bool filter(ISymbolInformation x) => x.IsDeclaration && x.Kind == Kind.Class;
+            return navigator.BottomUpFirst(entryPoint, filter);
         }
 
         /// <summary>

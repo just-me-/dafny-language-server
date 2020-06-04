@@ -121,29 +121,37 @@ namespace DafnyLanguageServer.Core
             switch (desire)
             {
                 case CompletionType.AfterDot:
-                    var selectedSymbol = SymbolTableManager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
-                    return GetSymbolsProperties(SymbolTableManager, selectedSymbol);
+                    if (ExtractedSymbol == "this")
+                    {
+                        ISymbolInformation declarationOfSymbolBeforeDot = SymbolTableManager.GetEnclosingClass(wrappingEntrypointSymbol);
+                        return GetSymbolsProperties(SymbolTableManager, declarationOfSymbolBeforeDot);
+                    }
+                    else
+                    {
+                        var declarationOfSymbolBeforeDot = SymbolTableManager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
+                        var classSymbol = SymbolTableManager.GetClassOriginFromSymbol(declarationOfSymbolBeforeDot);
+                        return GetSymbolsProperties(SymbolTableManager, classSymbol);
+                    }
+
                 case CompletionType.AfterNew:
                     return GetClassSymbolsInScope(SymbolTableManager, wrappingEntrypointSymbol);
+
                 case CompletionType.AllInScope:
                     return GetAllSymbolsInScope(SymbolTableManager, wrappingEntrypointSymbol);
+
                 default:
                     throw new ArgumentException(Resources.ExceptionMessages.completion_not_yet_supported);
             }
         }
 
-        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolTableManager manager, ISymbolInformation selectedSymbol)
+        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolTableManager manager, ISymbolInformation entryPoint)
         {
-            if (selectedSymbol == null)
+            if (entryPoint == null)
             {
                 throw new InvalidOperationException(Resources.ExceptionMessages.no_symbol_before_fot_found);
             }
-            var classSymbol = manager.GetClassOriginFromSymbol(selectedSymbol);
-            if (classSymbol == null)
-            {
-                throw new InvalidOperationException(Resources.ExceptionMessages.no_class_origin_found + selectedSymbol);
-            }
-            foreach (var suggestionElement in classSymbol.Children)
+
+            foreach (var suggestionElement in entryPoint.Children)
             {
                 if (IsNoDefaultNamespace(suggestionElement))
                 {
