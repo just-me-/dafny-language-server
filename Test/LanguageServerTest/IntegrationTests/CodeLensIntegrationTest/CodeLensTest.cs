@@ -63,7 +63,7 @@ namespace CodeLensIntegrationTest
                 },
                 new ExpectedCodeLensEntry
                 {
-                    Name = "Never used yet. Can you remove myMethod?"
+                    Name = "Not used yet. Can you remove myMethod?"
                 },
                 new ExpectedCodeLensEntry
                 {
@@ -85,11 +85,11 @@ namespace CodeLensIntegrationTest
             {
                 new ExpectedCodeLensEntry
                 {
-                    Name = "Never used yet. Can you remove C?",
+                    Name = "Not used yet. Can you remove C?",
                 },
                 new ExpectedCodeLensEntry
                 {
-                    Name = "Never used yet. Can you remove increase?",
+                    Name = "Not used yet. Can you remove increase?",
                 }
             };
             VerifyResults(exp);

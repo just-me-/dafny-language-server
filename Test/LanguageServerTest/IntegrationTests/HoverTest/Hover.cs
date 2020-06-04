@@ -10,7 +10,6 @@ namespace HoverTest
 {
     public class Tests : IntegrationTestBase
     {
-
         public Tests() : base("Hover")
         {
         }
@@ -22,12 +21,11 @@ namespace HoverTest
             var result = Client.TextDocument.Hover(Files.hv_hover, 6, 14).Result;
             var actual = result.Contents.MarkupContent.Value;
 
-            string textExpectation = "## Symbol Information\n" +
-                                     "*r at Line 7 in hover.dfy*\n" +
-                                     "* **Kind:** Variable\n" +
+            string textExpectation = " **`r`** *(line 7, hover.dfy)*\n" +
                                      "* **Type:** int\n" +
+                                     "* **Kind:** Variable\n" +
                                      "* **Scope:** `addOne`\n" +
-                                     "* **Declaration:** r at Line 5 in hover.dfy";
+                                     "* **Declaration:** line 5, hover.dfy";
             Console.WriteLine(actual);
             Assert.AreEqual(textExpectation, actual);
         }
@@ -40,12 +38,11 @@ namespace HoverTest
             var actual = result.Contents.MarkupContent.Value;
 
 
-            string textExpectation = "## Symbol Information\n" +
-                                     "*MyClass at Line 1 in hover.dfy*\n" +
-                                     "* **Kind:** Class\n" +
+            string textExpectation = " **`MyClass`** *(line 1, hover.dfy)*\n" +
                                      "* **Type:** N/A\n" +
+                                     "* **Kind:** Class\n" +
                                      "* **Scope:** `_module`\n" +
-                                     "* **Declaration:** This symbol is a declaration.";
+                                     "* **Declaration:** This symbol is the declaration.";
 
             Console.WriteLine(actual);
 

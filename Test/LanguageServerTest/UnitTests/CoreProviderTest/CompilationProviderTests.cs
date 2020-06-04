@@ -57,28 +57,28 @@ namespace CoreProviderTest
         public void FailureAssertionViolation()
         {
             RunCompilation(Files.cp_assertion);
-            VerifyResults(true, false, failurePrefix + "[L7:C13] Logical Error: assertion violation");
+            VerifyResults(true, false, failurePrefix + "[L7:C13] Logical Error: \n assertion violation");
         }
 
         [Test]
         public void FailurePostconditionViolation()
         {
             RunCompilation(Files.cp_postcondition);
-            VerifyResults(true, false, failurePrefix + "[L4:C1] Logical Error: A postcondition might not hold on this return path.");
+            VerifyResults(true, false, failurePrefix + "[L4:C1] Logical Error: \n A postcondition might not hold on this return path.");
         }
 
         [Test]
         public void FailureSyntaxErrorUnknownIdentifier()
         {
             RunCompilation(Files.cp_identifier);
-            VerifyResults(true, false, failurePrefix + "[L8:C4] Syntax Error: unresolved identifier: bruder");
+            VerifyResults(true, false, failurePrefix + "[L8:C4] Syntax Error: \n unresolved identifier: bruder");
         }
 
         [Test]
         public void FailureSyntaxErrorSemiExpected()
         {
             RunCompilation(Files.cp_semiexpected);
-            VerifyResults(true, false, failurePrefix + "[L7:C4] Syntax Error: semicolon expected");
+            VerifyResults(true, false, failurePrefix + "[L7:C4] Syntax Error: \n semicolon expected");
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace CoreProviderTest
         public void Otherlang_Java_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_java_dfyending);
-            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: EOF expected");
+            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: \n EOF expected");
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace CoreProviderTest
         public void Otherlang_Py_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_py_dfyending);
-            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: EOF expected");
+            VerifyResults(true, false, failurePrefix + "[L1:C1] Syntax Error: \n EOF expected");
         }
 
         [Test]

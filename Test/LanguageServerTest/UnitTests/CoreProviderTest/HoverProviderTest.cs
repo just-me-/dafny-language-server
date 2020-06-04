@@ -26,12 +26,12 @@ namespace CoreProviderTest
             Assert.AreEqual(29, result.Range.End.Character, "End Char is not matching");
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
-            string textExpectation = "## Symbol Information\n" +
-                                     "*barapapa at Line 2 in l.l*\n" +
-                                     "* **Kind:** RootNode\n" +
+
+            string textExpectation = " **`barapapa`** *(line 2, l.l)*\n" +
                                      "* **Type:** N/A\n" +
+                                     "* **Kind:** RootNode\n" +
                                      "* **Scope:** `_programRootNode`\n" +
-                                     "* **Declaration:** barapapa at Line 1 in l.l";
+                                     "* **Declaration:** line 1, l.l";
 
             string actual = result.Contents.MarkupContent.Value.Replace("N:\\u\\l.l", "l.l");
 
@@ -52,12 +52,11 @@ namespace CoreProviderTest
             Assert.AreEqual(18, result.Range.End.Character, "End Char is not matching");
 
             Console.WriteLine(result.Contents.MarkupContent.Value);
-            string textExpectation = "## Symbol Information\n" +
-                                     "*barapapa at Line 1 in l.l*\n" +
-                                     "* **Kind:** RootNode\n" +
+            string textExpectation = " **`barapapa`** *(line 1, l.l)*\n" +
                                      "* **Type:** N/A\n" +
+                                     "* **Kind:** RootNode\n" +
                                      "* **Scope:** `_programRootNode`\n" +
-                                     "* **Declaration:** This symbol is a declaration.";
+                                     "* **Declaration:** This symbol is the declaration.";
             string actual = result.Contents.MarkupContent.Value.Replace("N:\\u\\l.l", "l.l");
 
             Assert.AreEqual(textExpectation, actual, "Markup Content does not match");

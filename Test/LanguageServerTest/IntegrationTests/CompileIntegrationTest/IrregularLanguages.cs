@@ -19,7 +19,7 @@ namespace CompileIntegrationTest
         public void Java_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_java_dfyending);
-            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: EOF expected");
+            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: \n EOF expected");
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace CompileIntegrationTest
         public void Py_DfyEnding()
         {
             RunCompilation(Files.cp_otherlang_py_dfyending);
-            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: EOF expected");
+            VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: \n EOF expected");
         }
 
 

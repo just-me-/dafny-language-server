@@ -16,7 +16,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L6 C0 - L6 C39] - Error - Syntax Error: rbrace expected"
+                "R[L6 C0 - L6 C39] - Error - Syntax Error: \n rbrace expected"
             };
 
             VerifyResults(expct);
@@ -29,7 +29,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L4 C1 - L4 C2] - Error - Syntax Error: EOF expected"
+                "R[L4 C1 - L4 C2] - Error - Syntax Error: \n EOF expected"
             };
 
             VerifyResults(expct);
@@ -42,7 +42,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C8 - L3 C18] - Error - Syntax Error: invalid NameSegment"
+                "R[L3 C8 - L3 C18] - Error - Syntax Error: \n invalid NameSegment"
             };
 
             VerifyResults(expct);
@@ -55,7 +55,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C2 - L3 C5] - Error - Syntax Error: invalid UpdateStmt"
+                "R[L3 C2 - L3 C5] - Error - Syntax Error: \n invalid UpdateStmt"
             };
 
             VerifyResults(expct);
@@ -68,7 +68,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C5 - L3 C7] - Error - Syntax Error: invalid Suffix"
+                "R[L3 C5 - L3 C7] - Error - Syntax Error: \n invalid Suffix"
             };
 
             VerifyResults(expct);
@@ -81,7 +81,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L4 C0 - L4 C1] - Error - Syntax Error: closeparen expected"
+                "R[L4 C0 - L4 C1] - Error - Syntax Error: \n closeparen expected"
             };
 
             VerifyResults(expct);
@@ -94,7 +94,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L3 C20 - L3 C21] - Error - Syntax Error: rbrace expected"
+                "R[L3 C20 - L3 C21] - Error - Syntax Error: \n rbrace expected"
             };
 
             VerifyResults(expct);
@@ -107,7 +107,7 @@ namespace VerificationIntegrationTest
 
             List<string> expct = new List<string>()
             {
-                "R[L4 C0 - L4 C1] - Error - Syntax Error: semicolon expected"
+                "R[L4 C0 - L4 C1] - Error - Syntax Error: \n semicolon expected"
             };
 
             VerifyResults(expct);
