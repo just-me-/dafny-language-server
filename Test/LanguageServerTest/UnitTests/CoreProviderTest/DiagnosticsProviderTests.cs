@@ -38,7 +38,7 @@ namespace CoreProviderTest
             public void TestDiagnosticNoErrors()
             {
                 var errors = new List<FakeElementObject>();
-                DiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(new PhysicalFile()));
+                IDiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(new PhysicalFile()));
 
                 var diagnostics = diagnosticsService.ConvertToLSPDiagnostics(errors);
                 Assert.AreEqual(0, diagnostics.Count);
@@ -51,7 +51,7 @@ namespace CoreProviderTest
                 var info = new FakeElementObject(token, "Msg");
                 errors.Add(info);
 
-                DiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(createFakeFile(token.filename, randomFakeSource)));
+                IDiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(createFakeFile(token.filename, randomFakeSource)));
 
 
                 var diagnostics = diagnosticsService.ConvertToLSPDiagnostics(errors);
@@ -69,7 +69,7 @@ namespace CoreProviderTest
                 errorObject.AddAuxInfo(token, "SubMsg2");
                 errors.Add(errorObject);
 
-                DiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(createFakeFile(token.filename, randomFakeSource)));
+                IDiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(createFakeFile(token.filename, randomFakeSource)));
 
                 var diagnostics = diagnosticsService.ConvertToLSPDiagnostics(errors);
 

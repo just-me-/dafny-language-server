@@ -37,26 +37,25 @@ namespace DafnyLanguageServer.Handler.LspStandard
             try
             {
                 var manager = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymbolTableManager;
-                var line = (int) request.Position.Line + 1;
-                var col = (int) request.Position.Character + 1;
+                var line = (int)request.Position.Line + 1;
+                var col = (int)request.Position.Character + 1;
                 var uri = request.TextDocument.Uri;
                 var newName = request.NewName;
 
-                var provider = new RenameProvider(manager);
-
+                IRenameProvider provider = new RenameProvider(manager);
                 return await Task.Run(() => RunAndEvaulate(provider, newName, uri, line, col), cancellationToken);
             }
             catch (Exception e)
             {
                 HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
-
                 return null;
             }
         }
 
-        private WorkspaceEdit RunAndEvaulate(RenameProvider provider, string newName, Uri uri, int line, int col) {
-        
-            var result = provider.GetRenameChanges(newName, uri, line, col );
+        private WorkspaceEdit RunAndEvaulate(IRenameProvider provider, string newName, Uri uri, int line, int col)
+        {
+
+            var result = provider.GetRenameChanges(newName, uri, line, col);
 
             if (provider.Outcome.Error)
             {
@@ -65,7 +64,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             return result;
         }
     }
-    
+
 }
 
 

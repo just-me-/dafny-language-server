@@ -48,7 +48,8 @@ namespace DafnyLanguageServer.Handler
                 var filerepo = _workspaceManager.GetFileRepository(request.TextDocument.Uri);
                 var codeLine = filerepo.PhysicalFile.GetSourceLine(line - 1);
                 var symbolmanager = filerepo.SymbolTableManager;
-                var provider = new CompletionProvider(symbolmanager);
+
+                ICompletionProvider provider = new CompletionProvider(symbolmanager);
                 return await Task.Run(() => provider.FindCompletionItems(request.TextDocument.Uri, line, col, codeLine),
                     cancellationToken);
             }

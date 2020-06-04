@@ -12,7 +12,7 @@ namespace DafnyLanguageServer.Core
     public class DefinitionsProvider : IDefinitionsProvider
     {
         private readonly ISymbolTableManager _manager;
-        public DefinitionsOutcome Outcome { get; set; }
+        public DefinitionsOutcome Outcome { get; private set; }
 
         public DefinitionsProvider(ISymbolTableManager manager)
         {
@@ -44,5 +44,5 @@ namespace DafnyLanguageServer.Core
         }
     }
 
-    public enum DefinitionsOutcome { Success, WasAlreadyDefintion, NotFound}
+    public enum DefinitionsOutcome { Success, WasAlreadyDefintion, NotFound }
 }

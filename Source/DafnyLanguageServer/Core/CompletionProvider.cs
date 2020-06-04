@@ -107,7 +107,7 @@ namespace DafnyLanguageServer.Core
         /// Returns the wrapping symbol for the given scope.
         /// Can be used as entry point to call <c>GetSymbols</c>.
         /// </summary>
-        public ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
+        private ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
         {
             return SymbolTableManager.GetSymbolWrapperForCurrentScope(file, line, col);
         }
@@ -116,7 +116,7 @@ namespace DafnyLanguageServer.Core
         /// Call <c>GetSupposedDesire</c> before this function to get the <c>CompletionType</c> parameter.
         /// Call <c>GetWrappingEntrypointSymbol</c> to get the entry point parameter. 
         /// </summary>
-        public IEnumerable<ISymbol> GetSymbols(CompletionType desire, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbol> GetSymbols(CompletionType desire, ISymbol wrappingEntrypointSymbol)
         {
             switch (desire)
             {

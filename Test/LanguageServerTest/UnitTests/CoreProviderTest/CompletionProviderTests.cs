@@ -8,7 +8,7 @@ namespace CoreProviderTest
     [Category("Unit")]
     public class CompletionProviderTest
     {
-        private readonly CompletionProvider _provider = new CompletionProvider(null);
+        private readonly ICompletionProvider _provider = new CompletionProvider(null);
 
         [Test]
         public void Desire_SimpleAfterDot()

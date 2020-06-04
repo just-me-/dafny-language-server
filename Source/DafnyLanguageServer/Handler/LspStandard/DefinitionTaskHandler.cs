@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Handler
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
                 var manager = _workspaceManager.GetFileRepository(request.TextDocument.Uri).SymbolTableManager;
-                var provider = new DefinitionsProvider(manager);
+                IDefinitionsProvider provider = new DefinitionsProvider(manager);
                 return await Task.Run(() => RunAndEvaluate(provider, uri, line, col), cancellationToken);
             }
             catch (Exception e)
@@ -52,7 +52,7 @@ namespace DafnyLanguageServer.Handler
 
         }
 
-        private LocationOrLocationLinks RunAndEvaluate(DefinitionsProvider provider, Uri uri, int line, int col)
+        private LocationOrLocationLinks RunAndEvaluate(IDefinitionsProvider provider, Uri uri, int line, int col)
         {
             var result = provider.GetDefinitionLocation(uri, line, col);
 

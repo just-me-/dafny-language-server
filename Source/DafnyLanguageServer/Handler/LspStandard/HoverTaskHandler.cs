@@ -32,7 +32,8 @@ namespace DafnyLanguageServer.Handler
                 var uri = request.TextDocument.Uri;
                 var line = (int)request.Position.Line + 1;
                 var col = (int)request.Position.Character + 1;
-                var provider = new HoverProvider(manager);
+
+                IHoverProvider provider = new HoverProvider(manager);
                 return await Task.Run(() => provider.GetHoverInformation(uri, line, col), cancellationToken);
             }
             catch (Exception e)

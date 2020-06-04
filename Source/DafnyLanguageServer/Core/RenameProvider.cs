@@ -12,7 +12,7 @@ namespace DafnyLanguageServer.Core
     /// </summary>
     public class RenameProvider : IRenameProvider
     {
-        public RenameOutcome Outcome { get;  set; } = new RenameOutcome();
+        public RenameOutcome Outcome { get; } = new RenameOutcome();
 
         private readonly ISymbolTableManager _manager;
         private static readonly HashSet<string> _reservedWords = new ReservedWordsProvider().GetReservedWords();
@@ -38,7 +38,7 @@ namespace DafnyLanguageServer.Core
             {
                 return null;
             }
-            
+
             Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
 
             foreach (var symbol in symbolAtCursor.GetAllOccurrences())

@@ -5,7 +5,7 @@ namespace DafnyLanguageServer.Core
 {
     public interface IDefinitionsProvider
     {
-
         LocationOrLocationLinks GetDefinitionLocation(Uri uri, int line, int col);
+        DefinitionsOutcome Outcome { get; }
     }
 }
