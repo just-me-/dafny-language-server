@@ -33,14 +33,14 @@ namespace DafnyLanguageServer.Core
                 Range = new Range
                 {
                     Start = new Position(symbol.Line - 1, symbol.Column - 1),
-                    End = new Position(symbol.Line - 1, symbol.ColumnEnd - 1)
+                    End = new Position(symbol.Line - 1, symbol.IdentifierEndColumn - 1)
                 }
             };
 
             return result;
         }
 
-        private static MarkupContent CreateMarkupContent(ISymbol symbol)
+        private static MarkupContent CreateMarkupContent(ISymbolInformation symbol)
         {
             string type = symbol.Type?.ToString();
             if (string.IsNullOrEmpty(type) || type == "?")

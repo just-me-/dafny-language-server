@@ -14,16 +14,14 @@ namespace DafnyLanguageServer.SymbolTable
     /// To get the position of { use BodyStartToken and for } use BodyEndToken. Those positions are only available for
     /// types like methods, functions, class, ... not for fields or variables. Just like you would expect.
     /// </summary>
-    public class SymbolInformation : ISymbol
+    public class SymbolInformation : ISymbolInformation
     {
         #region Position-Name-Token-Uri
         public TokenPosition Position { get; set; }
-        public virtual int Line => Position.Token.line;
-        public virtual int? BodyLineStart => Position.BodyStartToken?.line;
-        public virtual int? BodyLineEnd => Position.BodyEndToken?.line;
-        public bool HasBody => BodyLineStart != null && BodyLineEnd != null;
-        public virtual int Column => Position.Token.col;
-        public virtual int ColumnEnd => Column + Name.Length;
+        public int Line => Position.Token.line;
+        public int Column => Position.Token.col;
+        public int IdentifierEndColumn => Position.Token.col + Name.Length;
+        public bool HasBody => Position.BodyStartToken != null && Position.BodyEndToken != null;
         #endregion
 
         #region Filename
@@ -31,7 +29,6 @@ namespace DafnyLanguageServer.SymbolTable
         public Uri FileUri => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
         public string FileName => Path.GetFileName(FileUri.LocalPath);
         #endregion
-
 
         #region Type-Kind
         public Kind Kind { get; set; }
@@ -49,28 +46,26 @@ namespace DafnyLanguageServer.SymbolTable
         }
         #endregion
 
-
         #region Declaration
-        public ISymbol DeclarationOrigin { get; set; }
+        public ISymbolInformation DeclarationOrigin { get; set; }
         public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
         #endregion
 
         #region Parent-Children-Usages
-        public ISymbol Parent { get; set; }
-        public Dictionary<string, ISymbol> ChildrenHash { get; set; }
-        public List<ISymbol> Children => ChildrenHash?.Values.ToList();      //children: only declarations
+        public ISymbolInformation Parent { get; set; }
+        public Dictionary<string, ISymbolInformation> ChildrenHash { get; set; }
+        public List<ISymbolInformation> Children => ChildrenHash?.Values.ToList();      //children: only declarations
         public bool HasChildren => ChildrenHash != null && ChildrenHash.Any();
-        public List<ISymbol> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
-        public List<ISymbol> Usages { get; set; }
-        public List<ISymbol> BaseClasses { get; set; }
+        public List<ISymbolInformation> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
+        public List<ISymbolInformation> Usages { get; set; }
+        public List<ISymbolInformation> BaseClasses { get; set; }
         public bool HasInheritedMembers => Kind == Kind.Class && (BaseClasses?.Any() ?? false);
         #endregion
 
         #region ContainingModule-And-DefaultClass
-        public ISymbol Module { get; set; }
-        public ISymbol AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
+        public ISymbolInformation Module { get; set; }
+        public ISymbolInformation AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
         #endregion
-
 
         #region ToString
         public string PositionToFormattedString()
@@ -85,12 +80,12 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override string ToString()
         {
-            return PositionToFormattedString();
+            return $"{Name} at Line {Line} in {FileName}";
         }
         #endregion
 
         #region Indexer
-        public ISymbol this[string index]
+        public ISymbolInformation this[string index]
         {
             get
             {
@@ -107,9 +102,9 @@ namespace DafnyLanguageServer.SymbolTable
             if (obj is SymbolInformation symbol)
             {
                 return symbol.Name == Name
+                       && symbol.FileUri == FileUri
                        && symbol.Line == Line
-                       && symbol.Column == Column
-                       && symbol.ColumnEnd == ColumnEnd;
+                       && symbol.Column == Column;
             }
             return false;
         }
@@ -120,64 +115,6 @@ namespace DafnyLanguageServer.SymbolTable
             hash = hash * 7 + FileUri.GetHashCode();
             hash = hash * 7 + Line.GetHashCode();
             return hash * 7 + Column.GetHashCode();
-        }
-        #endregion
-
-
-        #region Methods
-        public bool Wraps(ISymbol child)
-        {
-            return Wraps(child.FileUri, child.Line, child.Column);
-        }
-
-        /// <summary>
-        /// Checks if the given position (line, character) is included in the symbols range.
-        /// </summary>
-        public bool Wraps(Uri file, int line, int character)
-        {
-            return IsSameFile(file) && HasBody && (WrapsLine(line, character) || WrapsCharOnSameLine(line, character));
-        }
-
-        private bool IsSameFile(Uri file)
-        {
-            return this.Kind == Kind.RootNode || this.FileUri == file;
-        }
-
-
-        private bool WrapsLine(int line, int character)
-        {
-            return (
-                       (Line < line && BodyLineEnd > line)
-                    || (Line == line && Column <= character)
-                    || (BodyLineEnd == line && Position?.BodyEndToken?.col >= character)
-                   )
-                   && Line != BodyLineEnd;
-        }
-
-        private bool WrapsCharOnSameLine(int line, int character)
-        {
-            return BodyLineStart == BodyLineEnd
-                    && BodyLineStart == line
-                    && Column <= character
-                    && ColumnEnd >= character;
-        }
-
-
-
-
-        /// <summary>
-        /// Returns all occurrences of a symbol.
-        /// That is, the declaration and all usages.
-        /// Targeted for Rename-Feature.
-        /// </summary>
-        public IEnumerable<ISymbol> GetAllOccurrences()
-        {
-            var decl = DeclarationOrigin;
-            yield return decl;
-            foreach (var usage in decl.Usages)
-            {
-                yield return usage;
-            }
         }
         #endregion
     }
@@ -191,7 +128,7 @@ namespace DafnyLanguageServer.SymbolTable
         Constructor,
         Function,
         Field,
-        Variable, //besser: Local Variable?
+        Variable,
         Undefined,
         BlockScope
     }

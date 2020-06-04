@@ -2,6 +2,6 @@
 {
     public interface ISymbolTableGenerator
     {
-        ISymbol GenerateSymbolTable();
+        ISymbolInformation GenerateSymbolTable();
     }
 }

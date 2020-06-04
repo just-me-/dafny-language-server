@@ -3,12 +3,12 @@
 [L1:C11] "sorted" | P : [L0]_default | D : self | C : 2 | U : 0
 [L1:C18] "s" | P : [L1]sorted | D : self | C :  | U : 3
 [L3:C4] "bounded-expression-ghost-3" | P : [L1]sorted | D : self | C : 2 | U : 
-[L3:C11] "i" | P : [L3]bounded-expression-ghost-3 | D : self | C :  | U : 1
-[L3:C13] "j" | P : [L3]bounded-expression-ghost-3 | D : self | C :  | U : 1
+[L3:C11] "i" | P : [L3]bounded-expression-ghost-3 | D : self | C :  | U : 2
+[L3:C13] "j" | P : [L3]bounded-expression-ghost-3 | D : self | C :  | U : 2
 [L3:C23] "i" | P : [L3]bounded-expression-ghost-3 | D : [L3]i | C :  | U : 
 [L3:C27] "j" | P : [L3]bounded-expression-ghost-3 | D : [L3]j | C :  | U : 
 [L3:C32] "s" | P : [L3]bounded-expression-ghost-3 | D : [L1]s | C :  | U : 
 [L3:C39] "s" | P : [L3]bounded-expression-ghost-3 | D : [L1]s | C :  | U : 
-[L3:C41] "i" | P : [L3]bounded-expression-ghost-3 | D : [L0]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L3:C41] "i" | P : [L3]bounded-expression-ghost-3 | D : [L3]i | C :  | U : 
 [L3:C47] "s" | P : [L3]bounded-expression-ghost-3 | D : [L1]s | C :  | U : 
-[L3:C49] "j" | P : [L3]bounded-expression-ghost-3 | D : [L0]*ERROR - DECLARATION SYMBOL NOT FOUND* | C :  | U : 
+[L3:C49] "j" | P : [L3]bounded-expression-ghost-3 | D : [L3]j | C :  | U : 

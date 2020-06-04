@@ -11,30 +11,30 @@ namespace DafnyLanguageServer.SymbolTable
     /// If you are developing a feature (Handler class) do not use this class directly!
     /// Do use the <c>SymbolTableManager</c>.
     /// </summary>
-    public class SymbolTableNavigator : INavigator
+    public class SymbolNavigator : ISymbolNavigator
     {
         /// <summary>
         /// Searches the tree down. Returns the found symbol or null.
         /// Only takes definitions into account.
         /// If you would like all symbols, not only definitions, use <c>GetSymbolByPosition</c>.
         /// </summary>
-        public ISymbol TopDown(ISymbol entryPoint, Uri file, int line, int character)
+        public ISymbolInformation TopDown(ISymbolInformation entryPoint, Uri file, int line, int character)
         {
             if (entryPoint == null)
             {
                 return null;
             }
 
-            ISymbol bestMatch = null;
+            ISymbolInformation bestMatch = null;
 
-            if (entryPoint.Wraps(file, line, character))
+            if (SymbolUtil.PositionIsWithinSymbolTotalRange(entryPoint, file, line, character))
             {
                 bestMatch = entryPoint;
             }
 
             foreach (var child in entryPoint.Children)
             {
-                if (child.Wraps(file, line, character))
+                if (SymbolUtil.PositionIsWithinSymbolTotalRange(child, file, line, character))
                 {
                     bestMatch = child;
                     if (child.HasChildren)
@@ -57,7 +57,7 @@ namespace DafnyLanguageServer.SymbolTable
             return bestMatch;
         }
 
-        public ISymbol TopDown(ISymbol rootEntry, IToken t)
+        public ISymbolInformation TopDown(ISymbolInformation rootEntry, IToken t)
         {
             return TopDown(rootEntry, new Uri(t.filename), t.line, t.col);
         }
@@ -68,11 +68,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// Only symbols that wrap the location are searched.
         /// <returns> Returns the match oder null.</returns>
         /// This will find all symbols, not only definitions.
-        /// If you would like to search for definitions only, use <c>TopDown</c>
+        /// If you would like to search for definitions only, use <c>TopDown</c>  //todo rename +"at" position
         /// </summary>
-        public ISymbol GetSymbolByPosition(ISymbol rootEntry, Uri file, int line, int character)
+        public ISymbolInformation GetSymbolByPosition(ISymbolInformation rootEntry, Uri file, int line, int character)
         {
-            if (rootEntry == null || (!rootEntry.Wraps(file, line, character) && (rootEntry.Name != "_module")))
+            if (rootEntry == null || (!SymbolUtil.PositionIsWithinSymbolTotalRange(rootEntry, file, line, character) && (rootEntry.Name != Resources.SymbolTableStrings.default_module)))
             {
                 return null;
             }
@@ -81,20 +81,20 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 foreach (var symbol in wrappingSymbol.Descendants)
                 {
-                    if (symbol.Wraps(file, line, character))
+                    if (SymbolUtil.PositionIsWithinSymbolIdentifier(symbol, file, line, character))
                     {
                         return symbol;
                     }
                 }
             }
-            if (line == wrappingSymbol?.Line && character <= wrappingSymbol.ColumnEnd)
+            if (line == wrappingSymbol?.Line && character <= wrappingSymbol.IdentifierEndColumn)
             {
                 return wrappingSymbol;
             }
             return null;
         }
 
-        public ISymbol GetSymbolByPosition(ISymbol rootEntry, IToken token)
+        public ISymbolInformation GetSymbolByPosition(ISymbolInformation rootEntry, IToken token)
         {
             return GetSymbolByPosition(rootEntry, new Uri(token.filename), token.line, token.col);
         }
@@ -103,11 +103,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// Searches all symbols (not just definitions) from top to bottom.
         /// An optional filter for the conditions can be specified.
         /// </summary>
-        public List<ISymbol> TopDownAll(ISymbol symbol, Predicate<ISymbol> filter = null)
+        public List<ISymbolInformation> TopDownAll(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null)
         {
             filter = DefaultPredicateFilter(filter);
 
-            List<ISymbol> symbolList = new List<ISymbol>();
+            List<ISymbolInformation> symbolList = new List<ISymbolInformation>();
             if (symbol != null && filter.Invoke(symbol))
             {
                 symbolList.Add(symbol);
@@ -130,7 +130,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// Aborts the search when the first symbol fulfilling the filter is found.
         /// An optional filter for the conditions can be specified.
         /// </summary>
-        public ISymbol BottomUpFirst(ISymbol entryPoint, Predicate<ISymbol> filter = null)
+        public ISymbolInformation BottomUpFirst(ISymbolInformation entryPoint, Predicate<ISymbolInformation> filter = null)
         {
             filter = DefaultPredicateFilter(filter);
             var symbol = entryPoint;
@@ -157,7 +157,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Returns one symbol that matches the filter criteria and is child of the argument <c>symbol</c>
         /// </summary>
-        private ISymbol GetSingleChild(ISymbol symbol, Predicate<ISymbol> filter = null)
+        private ISymbolInformation GetSingleChild(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null)
         {
             if (symbol == null)
             {
@@ -165,7 +165,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             filter = DefaultPredicateFilter(filter);
 
-            ISymbol child = symbol.Children?.FirstOrDefault(filter.Invoke);
+            ISymbolInformation child = symbol.Children?.FirstOrDefault(filter.Invoke);
             if (child != null)
             {
                 return child;
@@ -190,11 +190,11 @@ namespace DafnyLanguageServer.SymbolTable
         /// Starts a search from the inside out. Returns all symbols that match a filter.
         /// An optional filter for the conditions can be specified.
         /// </summary>
-        public List<ISymbol> BottomUpAll(ISymbol symbol, Predicate<ISymbol> filter = null)
+        public List<ISymbolInformation> BottomUpAll(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null)
         {
             filter = DefaultPredicateFilter(filter);
 
-            List<ISymbol> list = new List<ISymbol>();
+            List<ISymbolInformation> list = new List<ISymbolInformation>();
             if (symbol == null)
             {
                 return list;
@@ -215,7 +215,7 @@ namespace DafnyLanguageServer.SymbolTable
             return list;
         }
 
-        private IEnumerable<ISymbol> GetAllChildren(ISymbol symbol, Predicate<ISymbol> filter = null)
+        private IEnumerable<ISymbolInformation> GetAllChildren(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null)
         {
             if (symbol == null)
             {
@@ -223,7 +223,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
             filter = DefaultPredicateFilter(filter);
 
-            var list = symbol.Children?.Where(filter.Invoke).ToList() ?? new List<ISymbol>();
+            var list = symbol.Children?.Where(filter.Invoke).ToList() ?? new List<ISymbolInformation>();
 
             // The following branch checks if the symbol is inherited by a base class
             if (symbol.HasInheritedMembers)
@@ -241,7 +241,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// Predicates can not have default predicate as function parameters.
         /// Therefore this function is used to set a default predicate it the given predicate was null. 
         /// </summary>
-        private Predicate<ISymbol> DefaultPredicateFilter(Predicate<ISymbol> filter)
+        private Predicate<ISymbolInformation> DefaultPredicateFilter(Predicate<ISymbolInformation> filter)
         {
             return filter ?? (s => true);
         }

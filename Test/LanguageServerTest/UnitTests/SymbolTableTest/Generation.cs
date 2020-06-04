@@ -247,12 +247,12 @@ namespace SymbolTableTest
             var dtu = new DafnyTranslationUnit(physFile);
             var dafnyProg = dtu.Verify().DafnyProgram;
             ISymbolTableGenerator st = new SymbolTableGenerator(dafnyProg);
-            ISymbol root = st.GenerateSymbolTable();
+            ISymbolInformation root = st.GenerateSymbolTable();
             ISymbolTableManager sm = new SymbolTableManager(root);
             
 
-            INavigator navigator = new SymbolTableNavigator();
-            List<ISymbol> symbols = new List<ISymbol>();
+            ISymbolNavigator navigator = new SymbolNavigator();
+            List<ISymbolInformation> symbols = new List<ISymbolInformation>();
 
 
             foreach (var modul in root.Children)

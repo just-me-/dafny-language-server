@@ -89,7 +89,7 @@ namespace DafnyLanguageServer.WorkspaceManager
                 Result.DafnyProgram != null)
             {
                 SymbolTableGenerator s = new SymbolTableGenerator(Result.DafnyProgram);
-                ISymbol rootnode = s.GenerateSymbolTable();
+                ISymbolInformation rootnode = s.GenerateSymbolTable();
                 SymbolTableManager = new SymbolTableManager(rootnode);
             }
         }

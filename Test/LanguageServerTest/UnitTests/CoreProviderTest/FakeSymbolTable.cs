@@ -15,9 +15,9 @@ namespace CoreProviderTest
         ///           another          decl
         ///                         use1   use2
         /// </remarks>
-        public ISymbol GenerateSymbolTable()
+        public ISymbolInformation GenerateSymbolTable()
         {
-            ISymbol root = SymbolTableGenerator.GetEmptySymbolTable();
+            ISymbolInformation root = SymbolTableGenerator.GetEmptySymbolTable();
             SymbolInformation decl = new SymbolInformation
             {
                 Position = new TokenPosition() { Token = new Token(1, 11) },
@@ -52,10 +52,10 @@ namespace CoreProviderTest
             };
             anotherSymbol.DeclarationOrigin = anotherSymbol;
 
-            root.ChildrenHash = new Dictionary<string, ISymbol>();
+            root.ChildrenHash = new Dictionary<string, ISymbolInformation>();
             root.ChildrenHash.Add("barapapa", decl);
             root.ChildrenHash.Add("bubu", anotherSymbol);
-            decl.Usages = new List<ISymbol> { use1, use2 };
+            decl.Usages = new List<ISymbolInformation> { use1, use2 };
 
             return root;
         }

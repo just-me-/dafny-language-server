@@ -18,7 +18,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableVisitorEverythingButDeclarations : LanguageServerVisitorBase
     {
-        public SymbolTableVisitorEverythingButDeclarations(ISymbol entryPoint) : base(entryPoint)
+        public SymbolTableVisitorEverythingButDeclarations(ISymbolInformation entryPoint) : base(entryPoint)
         {
             GoesDeep = true;
         }
@@ -52,8 +52,8 @@ namespace DafnyLanguageServer.SymbolTable
             CreateSymbol(
                 name: o.Name,
                 positionAsToken: o.tok,
-                bodyStartPosAsToken: o.tok,
-                bodyEndPosAsToken: o.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
                 kind: Kind.Module,
                 type: null,
                 isDeclaration: true,
@@ -75,11 +75,11 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (o.TraitsTyp.Any())
             {
-                preDeclaredSymbol.BaseClasses = new List<ISymbol>();
+                preDeclaredSymbol.BaseClasses = new List<ISymbolInformation>();
                 foreach (var baseClassType in o.TraitsTyp)
                 {
                     var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
-                    ISymbol baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);
+                    ISymbolInformation baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);
                     preDeclaredSymbol.BaseClasses.Add(baseSymbol);
                     //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
                     var t = CreateSymbol(
@@ -112,7 +112,6 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Field o)
         {
-            //do nothing, no need to set scope or such for fields
         }
 
         public override void Leave(Field o)
@@ -349,7 +348,7 @@ namespace DafnyLanguageServer.SymbolTable
             }
 
 
-            var nav = new SymbolTableNavigator();
+            var nav = new SymbolNavigator();
             var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
 
             CreateSymbol(
@@ -394,7 +393,7 @@ namespace DafnyLanguageServer.SymbolTable
         //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
-            var nav = new SymbolTableNavigator();
+            var nav = new SymbolNavigator();
             var resolvedSymbol = nav.TopDown(RootNode, e.ResolvedExpression.tok);
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
@@ -429,7 +428,7 @@ namespace DafnyLanguageServer.SymbolTable
                 mse = e.ResolvedExpression as MemberSelectExpr;
             }
 
-            var nav = new SymbolTableNavigator();
+            var nav = new SymbolNavigator();
             var definingItem = nav.TopDown(RootNode, mse?.Member.tok);
 
             var declaration = FindDeclaration(e.SuffixName, definingItem);

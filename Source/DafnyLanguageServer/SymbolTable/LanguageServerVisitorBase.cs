@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public abstract class LanguageServerVisitorBase : Visitor
     {
-        protected LanguageServerVisitorBase(ISymbol entryPoint)
+        protected LanguageServerVisitorBase(ISymbolInformation entryPoint)
         {
             SetScope(entryPoint);
             var root = entryPoint;
@@ -24,23 +24,23 @@ namespace DafnyLanguageServer.SymbolTable
             RootNode = root;
         }
 
-        public ISymbol RootNode { get; set; }
+        public ISymbolInformation RootNode { get; set; }
 
         //Zum Aufbau:
-        public ISymbol SurroundingScope { get; set; }
+        public ISymbolInformation SurroundingScope { get; set; }
 
         //Accessor for Convenience:
-        public ISymbol Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
-        public ISymbol CurrentClass { get; set; }
+        public ISymbolInformation Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
+        public ISymbolInformation CurrentClass { get; set; }
 
-        public ISymbol DefaultClass => Module.ChildrenHash.ContainsKey(DEFAULT_CLASS_NAME) ? Module[DEFAULT_CLASS_NAME] : null;
+        public ISymbolInformation DefaultClass => Module.ChildrenHash.ContainsKey(DEFAULT_CLASS_NAME) ? Module[DEFAULT_CLASS_NAME] : null;
 
-        public ISymbol DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
+        public ISymbolInformation DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
 
-        protected ISymbol FindDeclaration(string target, ISymbol scope, Kind? kind = null)
+        protected ISymbolInformation FindDeclaration(string target, ISymbolInformation scope, Kind? kind = null)
         {
-            INavigator navigator = new SymbolTableNavigator();
-            bool filter(ISymbol s) => s.Name == target && s.IsDeclaration && (kind == null || s.Kind == kind);
+            ISymbolNavigator navigator = new SymbolNavigator();
+            bool filter(ISymbolInformation s) => s.Name == target && s.IsDeclaration && (kind == null || s.Kind == kind);
             return navigator.BottomUpFirst(scope, filter) ?? new SymbolInformation
             {
                 Name = Resources.SymbolTableStrings.declaration_not_found,
@@ -48,8 +48,8 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     Token = new Token(0,0)
                 },
-                ChildrenHash = new Dictionary<string, ISymbol>(),
-                Usages = new List<ISymbol>()
+                ChildrenHash = new Dictionary<string, ISymbolInformation>(),
+                Usages = new List<ISymbolInformation>()
             };
         }
 
@@ -69,7 +69,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <param name="canHaveChildren">Default: true</param>
         /// <param name="canBeUsed">Default: true</param>
         /// <returns>Returns a SymbolInformation about the specific token.</returns>
-        protected ISymbol CreateSymbol(
+        protected ISymbolInformation CreateSymbol(
             string name,
             IToken positionAsToken,
 
@@ -80,15 +80,15 @@ namespace DafnyLanguageServer.SymbolTable
             IToken bodyEndPosAsToken = null,
 
             bool isDeclaration = true,
-            ISymbol declarationSymbol = null,
+            ISymbolInformation declarationSymbol = null,
             bool addUsageAtDeclaration = false,
             bool canHaveChildren = true,
             bool canBeUsed = true
             )
         {
-            ISymbol result = new SymbolInformation();
+            ISymbolInformation result = new SymbolInformation();
             result.Name = name;
-            result.Parent = SurroundingScope; //is null for modules
+            result.Parent = SurroundingScope; //is null for root
 
             if (kind != null)
             {
@@ -120,13 +120,13 @@ namespace DafnyLanguageServer.SymbolTable
             result.Position = new TokenPosition
             {
                 Token = positionAsToken,
-                BodyStartToken = bodyStartPosAsToken ?? positionAsToken,
-                BodyEndToken = bodyEndPosAsToken ?? positionAsToken
+                BodyStartToken = bodyStartPosAsToken,
+                BodyEndToken = bodyEndPosAsToken
             };
 
             if (canBeUsed)
             {
-                result.Usages = new List<ISymbol>();
+                result.Usages = new List<ISymbolInformation>();
             }
 
             if (isDeclaration)
@@ -149,11 +149,11 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (canHaveChildren)
             {
-                result.ChildrenHash = new Dictionary<string, ISymbol>();
-                result.Descendants = new List<ISymbol>();
+                result.ChildrenHash = new Dictionary<string, ISymbolInformation>();
+                result.Descendants = new List<ISymbolInformation>();
             }
 
-            if (isDeclaration) //add child unless we are on toplevel scope.
+            if (isDeclaration)
             {
                 SurroundingScope?.ChildrenHash.Add(result.Name, result);
             }
@@ -165,10 +165,10 @@ namespace DafnyLanguageServer.SymbolTable
             return result;
         }
 
-        protected void SetScope(ISymbol symbol) => SurroundingScope = symbol;
+        protected void SetScope(ISymbolInformation symbol) => SurroundingScope = symbol;
         protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
-        protected void SetModule(ISymbol symbol) => Module = symbol;
-        protected void SetClass(ISymbol symbol) => CurrentClass = symbol;
+        protected void SetModule(ISymbolInformation symbol) => Module = symbol;
+        protected void SetClass(ISymbolInformation symbol) => CurrentClass = symbol;
 
         public override void Visit(IAstElement o) { }
 
