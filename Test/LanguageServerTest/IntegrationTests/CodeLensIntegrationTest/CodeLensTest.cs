@@ -23,7 +23,7 @@ namespace CodeLensIntegrationTest
                     Name = "1 reference to ClassA",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 18, Line = 17}
+                        new ExpectedReference{Col = 21, Line = 17}
                     }
                 },
                 new ExpectedCodeLensEntry
@@ -31,7 +31,7 @@ namespace CodeLensIntegrationTest
                     Name = "1 reference to myMethod",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 11, Line = 18}
+                        new ExpectedReference{Col = 10, Line = 18}
                     }
                 },
                 new ExpectedCodeLensEntry
@@ -39,8 +39,8 @@ namespace CodeLensIntegrationTest
                     Name = "2 references to ClassB",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 19, Line = 19},
-                        new ExpectedReference{Col = 19, Line = 20},
+                        new ExpectedReference{Col = 22, Line = 19},
+                        new ExpectedReference{Col = 22, Line = 20},
                     }
                 },
                 new ExpectedCodeLensEntry
@@ -48,9 +48,9 @@ namespace CodeLensIntegrationTest
                     Name = "3 references to myMethod",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 12, Line = 21},
-                        new ExpectedReference{Col = 12, Line = 22},
-                        new ExpectedReference{Col = 12, Line = 23},
+                        new ExpectedReference{Col = 11, Line = 21},
+                        new ExpectedReference{Col = 11, Line = 22},
+                        new ExpectedReference{Col = 11, Line = 23},
                     }
                 },
                 new ExpectedCodeLensEntry
@@ -58,7 +58,7 @@ namespace CodeLensIntegrationTest
                     Name = "1 reference to ClassC",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 15, Line = 29}
+                        new ExpectedReference{Col = 18, Line = 29}
                     }
                 },
                 new ExpectedCodeLensEntry
@@ -70,7 +70,7 @@ namespace CodeLensIntegrationTest
                     Name = "1 reference to MultipleReturns",
                     References = new List<ExpectedReference>
                     {
-                        new ExpectedReference{Col = 18, Line = 27}
+                        new ExpectedReference{Col = 17, Line = 27}
                     }
                 }
             };
