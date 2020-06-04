@@ -5,11 +5,11 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public interface ISymbolTableManager
     {
-        ISymbol GetSymbolByPosition(Uri file, int line, int character);
-        ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character);
-        ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName);
-        List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null);
-        ISymbol GetClassOriginFromSymbol(ISymbol symbol);
-        List<ISymbol> GetAllSymbolDeclarations();
+        ISymbolInformation GetSymbolByPosition(Uri file, int line, int character);
+        ISymbolInformation GetSymbolWrapperForCurrentScope(Uri file, int line, int character);
+        ISymbolInformation GetClosestSymbolByName(ISymbolInformation entryPoint, string symbolName);
+        List<ISymbolInformation> GetAllDeclarationForSymbolInScope(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null);
+        ISymbolInformation GetClassOriginFromSymbol(ISymbolInformation symbol);
+        List<ISymbolInformation> GetAllSymbolDeclarations();
     }
 }

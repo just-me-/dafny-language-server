@@ -169,6 +169,7 @@
     </Compile>
     <Compile Include="SymbolTable\ISymbolTableManager.cs" />
     <Compile Include="SymbolTable\SymbolTableManager.cs" />
+    <Compile Include="SymbolTable\SymbolUtil.cs" />
     <Compile Include="Tools\ConfigInitialization\ConfigArgumentsParser.cs" />
     <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrorReporter.cs" />
     <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrors.cs" />
@@ -215,14 +216,14 @@
       <DependentUpon>LoggingMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="SymbolTable\ISymbolTableGenerator.cs" />
-    <Compile Include="SymbolTable\INavigator.cs" />
-    <Compile Include="SymbolTable\ISymbol.cs" />
+    <Compile Include="SymbolTable\ISymbolNavigator.cs" />
+    <Compile Include="SymbolTable\ISymbolInformation.cs" />
     <Compile Include="SymbolTable\SymbolInformation.cs" />
     <Compile Include="SymbolTable\SymbolTableGenerator.cs" />
     <Compile Include="SymbolTable\LanguageServerVisitorBase.cs" />
     <Compile Include="SymbolTable\LanguageServerDeclarationVisitor.cs" />
     <Compile Include="SymbolTable\LanguageServerDeepVisitor.cs" />
-    <Compile Include="SymbolTable\SymbolTableNavigator.cs" />
+    <Compile Include="SymbolTable\SymbolNavigator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DafnyDriver\DafnyDriver.csproj">

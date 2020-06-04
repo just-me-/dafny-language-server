@@ -222,4 +222,7 @@
   <data name="no_symbol_before_fot_found" xml:space="preserve">
     <value>Symbol before dot has not been found.</value>
   </data>
+  <data name="illegal_wrapping_args" xml:space="preserve">
+    <value>Arguments are illegal, e.g. start position is not before endposition.</value>
+  </data>
 </root>

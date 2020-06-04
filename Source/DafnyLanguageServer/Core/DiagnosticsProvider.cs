@@ -75,7 +75,7 @@ namespace DafnyLanguageServer.Core
             }
             else if (e.Tok.val.Equals("{") && _fileRepository.SymbolTableManager != null)
             {
-                ISymbol wrappingSymbol = _fileRepository.SymbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
+                ISymbolInformation wrappingSymbol = _fileRepository.SymbolTableManager.GetSymbolWrapperForCurrentScope(file.Uri, line, col);
                 range = CreateRange(wrappingSymbol.Position.BodyStartToken, wrappingSymbol.Position.BodyEndToken);
                 msg = e.Msg + $"\n at {wrappingSymbol.Name}";
             }

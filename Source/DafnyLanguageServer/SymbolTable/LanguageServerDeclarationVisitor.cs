@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.SymbolTable
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {
 
-        public LanguageServerDeclarationVisitor(ISymbol entryPoint) : base(entryPoint)
+        public LanguageServerDeclarationVisitor(ISymbolInformation entryPoint) : base(entryPoint)
         {
             GoesDeep = false;
         }
@@ -86,8 +86,8 @@ namespace DafnyLanguageServer.SymbolTable
                 type: o.Type,
 
                 positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
 
                 isDeclaration: true,
                 declarationSymbol: null,

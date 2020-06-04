@@ -36,7 +36,7 @@ namespace DafnyLanguageServer.Core
             return completionItems;
         }
 
-        private CompletionItem CreateCompletionItem(ISymbol symbol, CompletionType desire)
+        private CompletionItem CreateCompletionItem(ISymbolInformation symbol, CompletionType desire)
         {
             CompletionItemKind kind = Enum.TryParse(symbol.Kind.ToString(), true, out kind)
                 ? kind
@@ -56,7 +56,7 @@ namespace DafnyLanguageServer.Core
                 };
         }
 
-        private string GetCompletionCodeFragment(ISymbol symbol, CompletionType desire)
+        private string GetCompletionCodeFragment(ISymbolInformation symbol, CompletionType desire)
         {
             switch (desire)
             {
@@ -107,7 +107,7 @@ namespace DafnyLanguageServer.Core
         /// Returns the wrapping symbol for the given scope.
         /// Can be used as entry point to call <c>GetSymbols</c>.
         /// </summary>
-        private ISymbol GetWrappingEntrypointSymbol(Uri file, int line, int col)
+        private ISymbolInformation GetWrappingEntrypointSymbol(Uri file, int line, int col)
         {
             return SymbolTableManager.GetSymbolWrapperForCurrentScope(file, line, col);
         }
@@ -116,7 +116,7 @@ namespace DafnyLanguageServer.Core
         /// Call <c>GetSupposedDesire</c> before this function to get the <c>CompletionType</c> parameter.
         /// Call <c>GetWrappingEntrypointSymbol</c> to get the entry point parameter. 
         /// </summary>
-        private IEnumerable<ISymbol> GetSymbols(CompletionType desire, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbolInformation> GetSymbols(CompletionType desire, ISymbolInformation wrappingEntrypointSymbol)
         {
             switch (desire)
             {
@@ -132,7 +132,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbol> GetSymbolsProperties(ISymbolTableManager manager, ISymbol selectedSymbol)
+        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolTableManager manager, ISymbolInformation selectedSymbol)
         {
             if (selectedSymbol == null)
             {
@@ -152,7 +152,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbol> GetClassSymbolsInScope(ISymbolTableManager manager, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbolInformation> GetClassSymbolsInScope(ISymbolTableManager manager, ISymbolInformation wrappingEntrypointSymbol)
         {
             var completionItems = new List<CompletionItem>();
             foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
@@ -161,7 +161,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbol> GetAllSymbolsInScope(ISymbolTableManager manager, ISymbol wrappingEntrypointSymbol)
+        private IEnumerable<ISymbolInformation> GetAllSymbolsInScope(ISymbolTableManager manager, ISymbolInformation wrappingEntrypointSymbol)
         {
             foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, IsNoDefaultNamespace))
             {
@@ -169,7 +169,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private bool IsNoDefaultNamespace(ISymbol element)
+        private bool IsNoDefaultNamespace(ISymbolInformation element)
         {
             return element.Name != Resources.SymbolTableStrings.default_class &&
                    element.Name != Resources.SymbolTableStrings.default_module &&

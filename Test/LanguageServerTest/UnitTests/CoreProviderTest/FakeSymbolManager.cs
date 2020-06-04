@@ -18,45 +18,45 @@ namespace CoreProviderTest
             _returnNull = returnsNull;
         }
 
-        public ISymbol GetSymbolByPosition(Uri file, int line, int character)
+        public ISymbolInformation GetSymbolByPosition(Uri file, int line, int character)
         {
             if (_returnNull)
             {
                 return null;
             }
 
-            ISymbol root = new FakeSymbolTable().GenerateSymbolTable();
-            ISymbol declaration = root["barapapa"];
-            ISymbol notDeclaration = declaration.Usages[0];
+            ISymbolInformation root = new FakeSymbolTable().GenerateSymbolTable();
+            ISymbolInformation declaration = root["barapapa"];
+            ISymbolInformation notDeclaration = declaration.Usages[0];
             return _returnDeclaration ? declaration : notDeclaration;
         }
 
-        public ISymbol GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
+        public ISymbolInformation GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
 
-        public ISymbol GetClosestSymbolByName(ISymbol entryPoint, string symbolName)
+        public ISymbolInformation GetClosestSymbolByName(ISymbolInformation entryPoint, string symbolName)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
 
-        public List<ISymbol> GetAllDeclarationForSymbolInScope(ISymbol symbol, Predicate<ISymbol> filter = null)
+        public List<ISymbolInformation> GetAllDeclarationForSymbolInScope(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
 
-        public ISymbol GetOriginFromSymbol(ISymbol symbol)
+        public ISymbolInformation GetOriginFromSymbol(ISymbolInformation symbol)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
 
-        public ISymbol GetClassOriginFromSymbol(ISymbol symbol)
+        public ISymbolInformation GetClassOriginFromSymbol(ISymbolInformation symbol)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }
 
-        public List<ISymbol> GetAllSymbolDeclarations()
+        public List<ISymbolInformation> GetAllSymbolDeclarations()
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
         }

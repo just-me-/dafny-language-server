@@ -17,7 +17,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// A virtual Root Symbol. It covers all range, can not have a parent, and has all top level modules as descendants.
         /// </summary>
-        private ISymbol DafnyProgramRootSymbol { get; }
+        private ISymbolInformation DafnyProgramRootSymbol { get; }
         private Microsoft.Dafny.Program DafnyProgram { get; }
 
         public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)
@@ -31,21 +31,21 @@ namespace DafnyLanguageServer.SymbolTable
         /// Generates the symbolt able for the provdied Dafny Program.
         /// </summary>
         /// <returns>A single symbol acting as the root entrypoint (aka global namespace) for that dafny program.</returns>
-        public ISymbol GenerateSymbolTable()
+        public ISymbolInformation GenerateSymbolTable()
         {
             var modules = DafnyProgram.Modules().ToList();
             modules.Sort((m1, m2) => Depth(m1) - Depth(m2));
 
             foreach (var module in modules)
             {
-                ISymbol rootForVisitor = GetEntryPoint(module);
+                ISymbolInformation rootForVisitor = GetEntryPoint(module);
                 var declarationVisitor = new LanguageServerDeclarationVisitor(rootForVisitor);
                 module.Accept(declarationVisitor);
             }
 
             foreach (var module in modules)
             {
-                ISymbol rootForVisitor = GetEntryPoint(module);
+                ISymbolInformation rootForVisitor = GetEntryPoint(module);
                 var deepVisitor = new SymbolTableVisitorEverythingButDeclarations(rootForVisitor);
                 module.Accept(deepVisitor);
             }
@@ -53,19 +53,19 @@ namespace DafnyLanguageServer.SymbolTable
             return DafnyProgramRootSymbol;
         }
 
-        private static ISymbol CreateRootNode()
+        private static ISymbolInformation CreateRootNode()
         {
             return new SymbolInformation
             {
-                ChildrenHash = new Dictionary<string, ISymbol>(),
-                Descendants = new List<ISymbol>(),
+                ChildrenHash = new Dictionary<string, ISymbolInformation>(),
+                Descendants = new List<ISymbolInformation>(),
                 Kind = Kind.RootNode,
                 Name = Resources.SymbolTableStrings.root_node,
                 Position = new TokenPosition
                 {
                     Token = new Token(0, 0),
                     BodyStartToken = new Token(0, 0),
-                    BodyEndToken = new Token(int.MaxValue, int.MaxValue)
+                    BodyEndToken = new Token(int.MaxValue-1024, int.MaxValue-1024)
                 }
             };
         }
@@ -73,14 +73,14 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Returns an empty symbol tree, that is, just a root node without any descendants.
         /// </summary>
-        public static ISymbol GetEmptySymbolTable()
+        public static ISymbolInformation GetEmptySymbolTable()
         {
             return CreateRootNode();
         }
 
         private int Depth(ModuleDefinition m) => m.FullName.Split('.').Length - 1;   //gäbe height iwas.
 
-        private ISymbol GetEntryPoint(ModuleDefinition m)
+        private ISymbolInformation GetEntryPoint(ModuleDefinition m)
         {
             var hierarchy = m.FullName.Split('.').ToList();
             var rootForVisitor = DafnyProgramRootSymbol;

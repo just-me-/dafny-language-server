@@ -7,7 +7,8 @@ namespace SymbolTableTest
 {
     class SymbolTableNavigatorTest
     {
-        INavigator nav = new SymbolTableNavigator();
+        ISymbolNavigator nav = new SymbolNavigator();
+        private static readonly string defaultFile = @"C:/file.dfy";
         private static readonly Uri defaultUri = new Uri(@"C:/file.dfy");
 
 
@@ -15,40 +16,47 @@ namespace SymbolTableTest
         [Test]
         public void GetTopDownSymbolSimple()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 3, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 2, 0, 0, defaultUri, "Child");
+
+            //marcel hatte:
+            //c SymbolInformationFake(int lineStart, int lineEnd, int columnStart, int columnEnd, Uri file = null, string name = "no_name"
+            //er:   -   -    bsl  bel, bsc, bec
+            //ich: ml, mc,   bsl, bsc, bel, bec    und file ist neu string.
+            //also die mittleren zwei tuschen
+            //dann noch zwei davor anfügen.
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 3, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 2, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbol symbol = nav.TopDown(rootEntry, defaultUri, 2, 0);
+            ISymbolInformation symbol = nav.TopDown(rootEntry, defaultUri, 2, 0);
             Assert.AreEqual(mySymbol, symbol);
         }
 
         [Test]
         public void GetTopDownSymbolDeep()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 10, 0, 0, defaultUri, "Parent");
-            rootEntry.AddChild(new SymbolInformationFake(1, 2, 0, 0, defaultUri, "SubParent1"));
-            rootEntry.AddChild(new SymbolInformationFake(3, 4, 0, 0, defaultUri, "SubParent2"));
-            var subParent = new SymbolInformationFake(5, 10, 0, 0, defaultUri, "RightSubParent");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 10, 0, defaultFile, "Parent");
+            rootEntry.AddChild(new SymbolInformationFake(1, 0, 1, 0, 2, 0, defaultFile, "SubParent1"));
+            rootEntry.AddChild(new SymbolInformationFake(3, 0, 3, 0, 4, 0, defaultFile, "SubParent2"));
+            var subParent = new SymbolInformationFake(5, 0, 5, 0, 10, 0, defaultFile, "RightSubParent");
             rootEntry.AddChild(subParent);
-            SymbolInformationFake mySymbol = new SymbolInformationFake(6, 10, 0, 0, defaultUri, "MyChild");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(6,0, 6, 0, 10, 0, defaultFile, "MyChild");
             subParent.AddChild(mySymbol);
-            ISymbol symbol = nav.TopDown(rootEntry, defaultUri, 9, 0);
+            ISymbolInformation symbol = nav.TopDown(rootEntry, defaultUri, 9, 0);
             Assert.AreEqual(mySymbol, symbol);
         }
         [Test]
         public void GetTopDownSymbolEmptyLine()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 10, 0, 0, defaultUri, "Parent");
-            rootEntry.AddChild(new SymbolInformationFake(1, 4, 0, 0, defaultUri, "SubParent1"));
-            rootEntry.AddChild(new SymbolInformationFake(6, 9, 0, 0, defaultUri, "SubParent2"));
-            ISymbol symbol = nav.TopDown(rootEntry, defaultUri, 5, 0);
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 10, 0, defaultFile, "Parent");
+            rootEntry.AddChild(new SymbolInformationFake(1, 0, 1, 0, 4, 0, defaultFile, "SubParent1"));
+            rootEntry.AddChild(new SymbolInformationFake(6, 0, 6, 0, 9, 0, defaultFile, "SubParent2"));
+            ISymbolInformation symbol = nav.TopDown(rootEntry, defaultUri, 5, 0);
             Assert.AreEqual(rootEntry, symbol);
         }
 
         [Test]
         public void GetTopDownSymbolEmptyRoot()
         {
-            ISymbol symbol = nav.TopDown(null, defaultUri, 5, 0);
+            ISymbolInformation symbol = nav.TopDown(null, defaultUri, 5, 0);
             Assert.IsNull(symbol);
         }
 
@@ -56,37 +64,37 @@ namespace SymbolTableTest
         [Test]
         public void GetSymbolByPositionEmptyList()
         {
-            ISymbol symbol = nav.GetSymbolByPosition(null, defaultUri, 1, 1);
+            ISymbolInformation symbol = nav.GetSymbolByPosition(null, defaultUri, 1, 1);
             Assert.IsNull(symbol);
         }
 
         [Test]
         public void GetSymbolByPositionTopLevel()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 1, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 1, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbol symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 1, 1);
+            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 1, 1);
             Assert.AreEqual(rootEntry, symbol);
         }
 
         [Test]
         public void GetSymbolByPositionNested()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 1, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 1, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 1, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 1, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbol symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 2, 1);
+            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 2, 1);
             Assert.AreEqual(mySymbol, symbol);
         }
 
         [Test]
         public void GetSymbolByPositionNotExist()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbol symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 6, 9);
+            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 6, 9);
             Assert.IsNull(symbol);
         }
 
@@ -94,7 +102,7 @@ namespace SymbolTableTest
         [Test]
         public void TopDownAllEmptyList()
         {
-            Predicate<ISymbol> filter = (s => true);
+            Predicate<ISymbolInformation> filter = (s => true);
             var symbol = nav.TopDownAll(null, filter);
             Assert.False(symbol.Any());
         }
@@ -102,10 +110,10 @@ namespace SymbolTableTest
         [Test]
         public void TopDownAllMatchChild()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddSubsymbol(mySymbol);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Child"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Child"));
             var symbol = nav.TopDownAll(rootEntry, filter);
             Assert.True(symbol.Count == 1);
             Assert.AreEqual(mySymbol, symbol.First());
@@ -114,10 +122,10 @@ namespace SymbolTableTest
         [Test]
         public void TopDownAllMatchParent()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddSubsymbol(mySymbol);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Parent"));
             var symbol = nav.TopDownAll(rootEntry, filter);
             Assert.True(symbol.Count == 1);
             Assert.AreEqual(rootEntry, symbol.First());
@@ -127,7 +135,7 @@ namespace SymbolTableTest
         public void TopDownAllMatchNoDefinition()
         {
             SymbolInformationFake rootEntry = null;
-            Predicate<ISymbol> filter = (s => true);
+            Predicate<ISymbolInformation> filter = (s => true);
             var symbol = nav.TopDownAll(rootEntry, filter);
             Assert.IsFalse(symbol.Any());
         }
@@ -135,10 +143,10 @@ namespace SymbolTableTest
         [Test]
         public void TopDownAllNotFound()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("NotExists"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("NotExists"));
             var symbol = nav.TopDownAll(rootEntry, filter);
             Assert.False(symbol.Any());
         }
@@ -147,11 +155,11 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpFirstChild()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Child"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Child"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
             Assert.AreEqual(mySymbol, symbol);
         }
@@ -159,13 +167,13 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpFirstParent()
         {
-            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Module");
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Module");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             moduleFake.AddChild(rootEntry);
             rootEntry.SetParent(moduleFake);
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Parent"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
             Assert.AreEqual(rootEntry, symbol);
         }
@@ -173,10 +181,10 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpFirstNoMatch()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("NotExists"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("NotExists"));
             var symbol = nav.BottomUpFirst(mySymbol, filter);
             Assert.AreEqual(null, symbol);
         }
@@ -185,11 +193,11 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpAllChild()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Child"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Child"));
             var symbol = nav.BottomUpAll(mySymbol, filter);
             Assert.AreEqual(mySymbol, symbol.First());
         }
@@ -197,13 +205,13 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpAllParent()
         {
-            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Module");
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake moduleFake = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Module");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             moduleFake.AddChild(rootEntry);
             rootEntry.SetParent(moduleFake);
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("Parent"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("Parent"));
             var symbol = nav.BottomUpAll(mySymbol, filter);
             Assert.AreEqual(rootEntry, symbol.First());
         }
@@ -211,10 +219,10 @@ namespace SymbolTableTest
         [Test]
         public void BottomUpAllNoMatch()
         {
-            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 5, 0, 0, defaultUri, "Parent");
-            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 5, 0, 0, defaultUri, "Child");
+            SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             mySymbol.SetParent(rootEntry);
-            Predicate<ISymbol> filter = (s => s.Name.Equals("NotExists"));
+            Predicate<ISymbolInformation> filter = (s => s.Name.Equals("NotExists"));
             var symbol = nav.BottomUpAll(mySymbol, filter);
             Assert.False(symbol.Any());
         }

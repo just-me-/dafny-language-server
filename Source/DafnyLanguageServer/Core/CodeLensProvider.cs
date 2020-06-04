@@ -36,7 +36,7 @@ namespace DafnyLanguageServer.Core
             return new CodeLensContainer(items);
         }
 
-        private CodeLens CreateCodeLensItem(ISymbol symbolInformation)
+        private CodeLens CreateCodeLensItem(ISymbolInformation symbolInformation)
         {
             Position position = new Position((long)symbolInformation.Line - 1, 0);
             Range range = new Range { Start = position, End = position };
@@ -54,7 +54,7 @@ namespace DafnyLanguageServer.Core
                     var endPos = new Position
                     {
                         Line = usage.Line - 1,
-                        Character = usage.ColumnEnd - 1
+                        Character = usage.IdentifierEndColumn - 1
                     };
                     locations.Add(new Location
                     {
