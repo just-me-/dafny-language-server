@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
+using DafnyLanguageServer.Tools;
 
 namespace TestCommons
 {

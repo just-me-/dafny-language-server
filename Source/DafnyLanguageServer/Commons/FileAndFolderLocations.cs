@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace DafnyLanguageServer.Resources
+namespace DafnyLanguageServer.Commons
 {
     public static class FileAndFolderLocations
     {

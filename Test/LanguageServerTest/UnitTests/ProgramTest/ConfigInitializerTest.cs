@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
+using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;

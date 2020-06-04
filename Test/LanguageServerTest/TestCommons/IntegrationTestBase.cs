@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
+using DafnyLanguageServer.Tools;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using Serilog;
