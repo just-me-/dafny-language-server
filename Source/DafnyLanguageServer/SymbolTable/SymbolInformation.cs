@@ -59,6 +59,7 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbolInformation> Descendants { get; set; }                        //Descendants: any symbol within my body, including simple usages.
         public List<ISymbolInformation> Usages { get; set; }
         public List<ISymbolInformation> BaseClasses { get; set; }
+        public List<ISymbolInformation> Params { get; set; }
         public bool HasInheritedMembers => Kind == Kind.Class && (BaseClasses?.Any() ?? false);
         #endregion
 

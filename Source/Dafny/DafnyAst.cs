@@ -5381,6 +5381,11 @@ namespace Microsoft.Dafny {
       IsOld = isOld;
     }
 
+    public override void Accept(Visitor v) {
+        v.Visit(this);
+        v.Leave(this);
+    }
+
     public bool HasName {
       get {
         return !Name.StartsWith("#");
@@ -11799,11 +11804,13 @@ namespace Microsoft.Dafny {
     public abstract void Visit(Function o);
     public abstract void Leave(Function o);
 
-    #endregion
+        #endregion
 
-    #region locals-formals
+        #region locals-formals
     public abstract void Visit(NonglobalVariable o);
     public abstract void Leave(NonglobalVariable o);
+    public abstract void Visit(Formal o);
+    public abstract void Leave(Formal o);
     public abstract void Visit(LocalVariable o);
     public abstract void Leave(LocalVariable o);
     #endregion

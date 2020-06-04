@@ -9,7 +9,7 @@ using Type = Microsoft.Dafny.Type;
 
 namespace SymbolTableTest
 {
-    class SymbolInformationFake : ISymbolInformation
+    public class SymbolInformationFake : ISymbolInformation
     {
 
 
@@ -111,6 +111,7 @@ namespace SymbolTableTest
         public Dictionary<string, ISymbolInformation> ChildrenHash { get; set; }
         public List<ISymbolInformation> Usages { get; set; }
         public List<ISymbolInformation> BaseClasses { get; set; }
+        public List<ISymbolInformation> Params { get; set; }
         public List<ISymbolInformation> Descendants { get; set; }
         public ISymbolInformation Module { get; set; }
         public ISymbolInformation AssociatedDefaultClass { get; }

@@ -93,12 +93,5 @@ namespace DafnyLanguageServer.SymbolTable
 
             return rootForVisitor;
         }
-
-
-
-
-
-
-
     }
 }

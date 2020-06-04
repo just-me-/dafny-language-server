@@ -244,6 +244,16 @@ namespace DafnyLanguageServer.SymbolTable
             throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
 
+        public override void Visit(Formal o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
+        public override void Leave(Formal o)
+        {
+            throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
+        }
+
         public override void Visit(LocalVariable o)
         {
             throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);

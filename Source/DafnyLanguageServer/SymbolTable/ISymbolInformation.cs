@@ -27,6 +27,7 @@ namespace DafnyLanguageServer.SymbolTable
         List<ISymbolInformation> Children { get; }
         List<ISymbolInformation> Usages { get; set; }
         List<ISymbolInformation> BaseClasses { get; set; }
+        List<ISymbolInformation> Params { get; set; }
         bool HasInheritedMembers { get; }
         List<ISymbolInformation> Descendants { get; set; }
         bool IsDeclaration { get; }

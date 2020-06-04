@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
+using Formal = Microsoft.Dafny.Formal;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
@@ -192,6 +193,37 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public override void Leave(NonglobalVariable o)
+        {
+        }
+
+        public override void Visit(Formal o)
+        {
+            var symbol = CreateSymbol(
+                name: o.Name,
+                kind: Kind.Variable,
+                type: o.Type,
+
+                positionAsToken: o.tok,
+                bodyStartPosAsToken: null,
+                bodyEndPosAsToken: null,
+
+                isDeclaration: true,
+                declarationSymbol: null,
+                addUsageAtDeclaration: false,
+
+                canHaveChildren: false,
+                canBeUsed: true
+            );
+
+            if (o.InParam)
+            {
+                SurroundingScope.Params = SurroundingScope.Params ?? new List<ISymbolInformation>();
+                SurroundingScope.Params.Add(symbol);
+            }
+            
+        }
+
+        public override void Leave(Formal o)
         {
         }
 

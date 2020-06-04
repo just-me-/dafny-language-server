@@ -2,15 +2,15 @@ class MyClass {
 
     var field: int; 
 	
-    method  addOne(i: int) returns (r:int) {
-       r := i + 1;
+    method  add(i: int, j: int) returns (r:int) {
+       r := i + j;
        return r; 
     }
 	
     method aMethod() modifies this { 
         var aLocalVar := 2;
         field := aLocalVar;  
-        aLocalVar := addOne(field);
+        aLocalVar := add(field, 3);
     }
 
     constructor () { }
