@@ -7,7 +7,6 @@ namespace DafnyLanguageServer.SymbolTable
 {
     public interface ISymbolInformation
     {
-
         TokenPosition Position { get; set; }
         Uri FileUri { get; }
         string FileName { get; }
@@ -25,15 +24,15 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbolInformation DeclarationOrigin { get; set; }
         Dictionary<string, ISymbolInformation> ChildrenHash { get; set; }
         List<ISymbolInformation> Children { get; }
-        List<ISymbolInformation> Usages { get; set; }
-        List<ISymbolInformation> BaseClasses { get; set; }
+        bool HasChildren { get; }
         List<ISymbolInformation> Params { get; set; }
+        List<ISymbolInformation> BaseClasses { get; set; }
         bool HasInheritedMembers { get; }
         List<ISymbolInformation> Descendants { get; set; }
         bool IsDeclaration { get; }
         ISymbolInformation Module { get; set; }
         ISymbolInformation AssociatedDefaultClass { get; }
-        bool HasChildren { get; }
+        List<ISymbolInformation> Usages { get; set; }
         IEnumerable<ISymbolInformation> GetAllOccurrences();
 
         string PositionToFormattedString();
