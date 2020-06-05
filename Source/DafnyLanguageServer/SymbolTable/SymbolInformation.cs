@@ -78,6 +78,19 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbolInformation> BaseClasses { get; set; }
         public List<ISymbolInformation> Params { get; set; }
         public bool HasInheritedMembers => Kind == Kind.Class && (BaseClasses?.Any() ?? false);
+        /// <summary>
+        /// Returns all occurrences of a symbol. That is, the declaration and all usages. Targeted for rename-feature.
+        /// </summary>
+        public IEnumerable<ISymbolInformation> GetAllOccurrences()
+        {
+            var decl = this.DeclarationOrigin;
+            yield return decl;
+            foreach (var usage in decl.Usages)
+            {
+                yield return usage;
+            }
+        }
+
         #endregion
 
         #region ContainingModule-And-DefaultClass

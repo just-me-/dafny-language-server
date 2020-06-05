@@ -21,7 +21,6 @@ namespace DafnyLanguageServer.Handler
             : base(router, workspaceManager, loggingFactory)
         {
             _method = Resources.Requests.watchedFileChanged;
-
         }
 
         public object GetRegistrationOptions()

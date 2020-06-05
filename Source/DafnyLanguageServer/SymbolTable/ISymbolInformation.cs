@@ -34,6 +34,7 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbolInformation Module { get; set; }
         ISymbolInformation AssociatedDefaultClass { get; }
         bool HasChildren { get; }
+        IEnumerable<ISymbolInformation> GetAllOccurrences();
 
         string PositionToFormattedString();
         string ToDebugString();

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace DafnyLanguageServer.SymbolTable
 {
+    /// <summary>
+    /// Isolated wrapping logic for ISymbolInformation. 
+    /// </summary>
     public static class SymbolUtil
     {
-
         /// <summary>
         /// Checks whether a position is within the identifier of a symbol.
         /// If the position is within the symbol's body, this method will return false.
@@ -26,17 +28,14 @@ namespace DafnyLanguageServer.SymbolTable
             int targetLine = line;
             int targetCol = character;
 
-            return Wraps(startLine, startCol, endLine,  endCol, targetLine, targetCol);
+            return Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
         }
-
-
 
         /// <summary>
         /// Checks whether a position is within the full range of a symbol.
         /// The full range starts at the identifier and stops at the body end.
         /// If there is no body, the identifier end counts as the full range.
         /// </summary>
-
         public static bool PositionIsWithinSymbolTotalRange(ISymbolInformation s, Uri file, int line, int character)
         {
             if (!IsSameFile(s, file))
@@ -60,13 +59,12 @@ namespace DafnyLanguageServer.SymbolTable
                 endLine = s.Line;
                 endCol = s.Column + s.Name.Length;
             }
-           
+
 
             int targetLine = line;
             int targetCol = character;
 
             return Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
-
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace DafnyLanguageServer.SymbolTable
             int startCol = s.Position.BodyStartToken.col;
 
             int endLine = s.Position.BodyEndToken.line;
-            int endCol = s.Position.BodyEndToken.col; 
+            int endCol = s.Position.BodyEndToken.col;
 
 
             int targetLine = line;
@@ -112,7 +110,6 @@ namespace DafnyLanguageServer.SymbolTable
             int endLine, int endCol,
             int targetLine, int targetCol)
         {
-
             //preliminary checks
             if (startLine > endLine)
             {
@@ -166,7 +163,6 @@ namespace DafnyLanguageServer.SymbolTable
             return false;
         }
 
-
         /// <summary>
         /// Checks if a is in the same file as the provided URI.
         /// If a is the root note, this returns always true, since the root not surfaces every file.
@@ -174,21 +170,6 @@ namespace DafnyLanguageServer.SymbolTable
         private static bool IsSameFile(ISymbolInformation a, Uri file)
         {
             return a.Kind == Kind.RootNode || a.FileUri == file;
-        }
-        
-        /// <summary>
-        /// Returns all occurrences of a symbol.
-        /// That is, the declaration and all usages.
-        /// Targeted for rename-feature.
-        /// </summary>
-        public static IEnumerable<ISymbolInformation> GetAllOccurrences(ISymbolInformation a)
-        {
-            var decl = a.DeclarationOrigin;
-            yield return decl;
-            foreach (var usage in decl.Usages)
-            {
-                yield return usage;
-            }
         }
     }
 }
