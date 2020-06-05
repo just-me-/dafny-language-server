@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -126,15 +127,13 @@ namespace DafnyLanguageServer.SymbolTable
                 throw new ArgumentException(Resources.ExceptionMessages.illegal_wrapping_args);
             }
 
-            //if target is linewise inbetween, we are good.
-            //read: startLine < targetLine < endLine
-            if (startLine < targetLine && targetLine < endLine)
+            if (LineIsWrapped(startLine, endLine, targetLine))
             {
                 return true;
             }
 
             //if startline is equal, we have to check the character
-            if (startLine == targetLine && targetLine < endLine)
+            if (OnlySameStartLine(startLine, endLine, targetLine))
             {
                 if (startCol <= targetCol)
                 {
@@ -162,6 +161,17 @@ namespace DafnyLanguageServer.SymbolTable
 
             return false;
         }
+
+        private static bool LineIsWrapped(int startLine, int endLine, int targetLine)
+        {
+            return startLine < targetLine && targetLine < endLine;
+        }
+
+        private static bool OnlySameStartLine(int startLine, int endLine, int targetLine)
+        {
+            return startLine == targetLine && targetLine < endLine;
+        }
+
 
         /// <summary>
         /// Checks if a is in the same file as the provided URI.
