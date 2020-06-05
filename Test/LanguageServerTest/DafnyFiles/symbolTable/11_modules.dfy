@@ -48,7 +48,6 @@ module ImportOpened{
         var m2 := new Class();
         m2.Method();
         print m2.field;
-        MethodIn_default();
     }
 }
 

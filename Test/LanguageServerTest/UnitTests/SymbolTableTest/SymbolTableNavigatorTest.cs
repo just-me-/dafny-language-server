@@ -60,11 +60,11 @@ namespace SymbolTableTest
             Assert.IsNull(symbol);
         }
 
-        // GetSymbolByPosition
+        // GetSymbolAtPosition
         [Test]
         public void GetSymbolByPositionEmptyList()
         {
-            ISymbolInformation symbol = nav.GetSymbolByPosition(null, defaultUri, 1, 1);
+            ISymbolInformation symbol = nav.GetSymbolAtPosition(null, defaultUri, 1, 1);
             Assert.IsNull(symbol);
         }
 
@@ -74,7 +74,7 @@ namespace SymbolTableTest
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 1, defaultFile, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 1, 1);
+            ISymbolInformation symbol = nav.GetSymbolAtPosition(rootEntry, defaultUri, 1, 1);
             Assert.AreEqual(rootEntry, symbol);
         }
 
@@ -84,7 +84,7 @@ namespace SymbolTableTest
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 1, defaultFile, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 1, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 2, 1);
+            ISymbolInformation symbol = nav.GetSymbolAtPosition(rootEntry, defaultUri, 2, 1);
             Assert.AreEqual(mySymbol, symbol);
         }
 
@@ -94,7 +94,7 @@ namespace SymbolTableTest
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 5, 0, defaultFile, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 5, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);
-            ISymbolInformation symbol = nav.GetSymbolByPosition(rootEntry, defaultUri, 6, 9);
+            ISymbolInformation symbol = nav.GetSymbolAtPosition(rootEntry, defaultUri, 6, 9);
             Assert.IsNull(symbol);
         }
 

@@ -48,7 +48,7 @@ namespace DafnyLanguageServer.Handler.LspStandard
             catch (Exception e)
             {
                 HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
-                return null;
+                return new WorkspaceEdit();
             }
         }
 

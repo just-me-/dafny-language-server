@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.SymbolTable
         public ISymbolInformation GetSymbolByPosition(Uri file, int line, int character)
         {
             ISymbolNavigator navigator = new SymbolNavigator();
-            var symbol = navigator.GetSymbolByPosition(DafnyProgramRootSymbol, file, line, character);
+            var symbol = navigator.GetSymbolAtPosition(DafnyProgramRootSymbol, file, line, character);
             return symbol;
         }
 

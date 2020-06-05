@@ -16,7 +16,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Searches the tree down. Returns the found symbol or null.
         /// Only takes definitions into account.
-        /// If you would like all symbols, not only definitions, use <c>GetSymbolByPosition</c>.
+        /// If you would like all symbols, not only definitions, use <c>GetSymbolAtPosition</c>.
         /// </summary>
         public ISymbolInformation TopDown(ISymbolInformation entryPoint, Uri file, int line, int character)
         {
@@ -68,9 +68,9 @@ namespace DafnyLanguageServer.SymbolTable
         /// Only symbols that wrap the location are searched.
         /// <returns> Returns the match oder null.</returns>
         /// This will find all symbols, not only definitions.
-        /// If you would like to search for definitions only, use <c>TopDown</c>  //todo rename +"at" position
+        /// If you would like to search for definitions only, use <c>TopDown</c>
         /// </summary>
-        public ISymbolInformation GetSymbolByPosition(ISymbolInformation rootEntry, Uri file, int line, int character)
+        public ISymbolInformation GetSymbolAtPosition(ISymbolInformation rootEntry, Uri file, int line, int character)
         {
             if (rootEntry == null || (!SymbolUtil.PositionIsWithinSymbolTotalRange(rootEntry, file, line, character) && (rootEntry.Name != Resources.SymbolTableStrings.default_module)))
             {
@@ -94,9 +94,9 @@ namespace DafnyLanguageServer.SymbolTable
             return null;
         }
 
-        public ISymbolInformation GetSymbolByPosition(ISymbolInformation rootEntry, IToken token)
+        public ISymbolInformation GetSymbolAtPosition(ISymbolInformation rootEntry, IToken token)
         {
-            return GetSymbolByPosition(rootEntry, new Uri(token.filename), token.line, token.col);
+            return GetSymbolAtPosition(rootEntry, new Uri(token.filename), token.line, token.col);
         }
 
         /// <summary>

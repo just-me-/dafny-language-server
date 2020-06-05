@@ -12,7 +12,7 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableGenerator : ISymbolTableGenerator
     {
-        
+
 
         /// <summary>
         /// A virtual Root Symbol. It covers all range, can not have a parent, and has all top level modules as descendants.
@@ -65,7 +65,7 @@ namespace DafnyLanguageServer.SymbolTable
                 {
                     Token = new Token(0, 0),
                     BodyStartToken = new Token(0, 0),
-                    BodyEndToken = new Token(int.MaxValue-1024, int.MaxValue-1024)
+                    BodyEndToken = new Token(int.MaxValue - 1024, int.MaxValue - 1024)
                 }
             };
         }

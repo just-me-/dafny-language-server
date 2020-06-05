@@ -9,11 +9,28 @@ using Type = Microsoft.Dafny.Type;
 namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
-    /// The actual "string" name for a Symbol is the base <c>SymbolInformation</c>.
-    /// Eg in <c>function myMethod {...}</c> the Symbol (and its position data) is myMethod.
-    /// To get the position of { use BodyStartToken and for } use BodyEndToken. Those positions are only available for
-    /// types like methods, functions, class, ... not for fields or variables. Just like you would expect.
+    /// This class represents any symbol in Dafny code.
+    /// Every identifier occuring in the code is described with a SymbolInformation.
     /// </summary>
+    /// <remarks>
+    /// Position: Contains 3 Tokens. The identifier itself, and if available bodyStart "{" and bodyEnd "}"
+    /// Name: Name of the symbol, e.g. myMethod. Unnamed scopes are for example called 'ghost-block-scope-13' or such.
+    /// Kind: Method, Class, Variable, ...
+    /// Type: int, MyClass, ...
+    /// UserType: MyClass (only applicable for custom user classes).
+    /// DeclarationOrigin: Symbol of the declaration. If symbol is declaration, points to 'this'.
+    /// Parent: Symbol reference to the surrounding (parent) scope.
+    /// ChildrenHash: All declarations occuring inside the body of this symbol. Key: string with child identifier name, Value: ISymbolInformation with childSymbol-reference.
+    /// ChildrenHash is null if the symbol can't have descendants.
+    /// The indexer ([]-operator) is overloaded to access the childrenhash. myClass["myMethod"] is same as myClass.ChildrenHash.Get("myMethod")
+    /// Children: Same as list.
+    /// Descendants: All symbols, not only declarations, also usages, occuring inside the body. Is null if symbol can't have descendants.
+    /// Usages: List of symbol references, pointing to where this symbol gets used. Only available for declarations, otherwise null.
+    /// BaseClasses: Only for classes that inherit from traits. Contains the trait symbols.
+    /// Params: Only for methods (including ctor, function, etc): References to symbol in-parameters.
+    /// Module: Contains a reference to the module this symbol is in. Could also move up to parents until a module is reached.
+    /// AssociatedDefaultClass: Contains a reference to the default class of this symbol. Same as Module["_default"].
+    /// </remarks>
     public class SymbolInformation : ISymbolInformation
     {
         #region Position-Name-Token-Uri

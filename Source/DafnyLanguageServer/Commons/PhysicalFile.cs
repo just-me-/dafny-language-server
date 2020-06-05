@@ -86,7 +86,6 @@ namespace DafnyLanguageServer.Commons
             return currentLine == targetLine && currentCol == targetCol;
         }
 
-        //todo tests and doc 
         public string GetSourceLine(int line)
         {
             var codeLines = Regex.Split(this.Sourcecode, "\r\n|\r|\n");

@@ -79,7 +79,7 @@ namespace DafnyLanguageServer.SymbolTable
                 preDeclaredSymbol.BaseClasses = new List<ISymbolInformation>();
                 foreach (var baseClassType in o.TraitsTyp)
                 {
-                    var baseClassIdentifier = baseClassType as UserDefinedType; //trait is always userdefined, right? kann net von string erben oder so.
+                    var baseClassIdentifier = baseClassType as UserDefinedType;
                     ISymbolInformation baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);
                     preDeclaredSymbol.BaseClasses.Add(baseSymbol);
                     //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
@@ -96,7 +96,6 @@ namespace DafnyLanguageServer.SymbolTable
                       canHaveChildren: false,
                       canBeUsed: false
                     );
-                    //adjust parent because the 'Mimi extends BABA' parent is rather Mimi then whtatever.
                     t.Parent = preDeclaredSymbol;
                 }
             }
@@ -335,8 +334,8 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Visit(ComprehensionExpr o)
         {
             
-            var name = "bounded-expression-ghost-" + o.tok.line; //todo topdown uses wrapper by name-length, not body end. thus it no longer finds the symbols at the end of this bounded scope. resolve if time otherwise pech.
-            IToken endToken = new Token(o.tok.line, o.tok.col + 999);
+            var name = "bounded-expression-ghost-" + o.tok.line;
+            IToken endToken = new Token(o.tok.line, int.MaxValue - 1024);
 
             var symbol = CreateSymbol(
                 name: name,
@@ -375,13 +374,12 @@ namespace DafnyLanguageServer.SymbolTable
 
             if (t == null)
             {
-                throw new InvalidOperationException(Resources.SymbolTableStrings.typeRHS_vs_UserDefinedType);
-                //todo vor der abgabe zumindest mal noch testen ob das auch bei anderen type rhs der fall ist, wie z.b. ein int arraay hust hust (spoilerarlert... ne ich sags lieber nicht).
+                return;
             }
 
 
             var nav = new SymbolNavigator();
-            var declaration = nav.GetSymbolByPosition(RootNode, t.ResolvedClass.tok);
+            var declaration = nav.GetSymbolAtPosition(RootNode, t.ResolvedClass.tok);
 
             CreateSymbol(
                 name: t.Name,
