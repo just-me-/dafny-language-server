@@ -61,7 +61,6 @@ namespace DafnyLanguageServer.SymbolTable
                 endCol = s.Column + s.Name.Length;
             }
 
-
             int targetLine = line;
             int targetCol = character;
 
@@ -111,18 +110,9 @@ namespace DafnyLanguageServer.SymbolTable
             int endLine, int endCol,
             int targetLine, int targetCol)
         {
-            //preliminary checks
-            if (startLine > endLine)
-            {
-                throw new ArgumentException(Resources.ExceptionMessages.illegal_wrapping_args);
-            }
-
-            if (startLine == endLine && startCol > endCol)
-            {
-                throw new ArgumentException(Resources.ExceptionMessages.illegal_wrapping_args);
-            }
-
-            if (startLine < 0 || endLine < 0 || startCol < 0 || endCol < 0)
+            if ((startLine > endLine) ||
+                (startLine == endLine && startCol > endCol) ||
+                (startLine < 0 || endLine < 0 || startCol < 0 || endCol < 0))
             {
                 throw new ArgumentException(Resources.ExceptionMessages.illegal_wrapping_args);
             }
@@ -132,31 +122,19 @@ namespace DafnyLanguageServer.SymbolTable
                 return true;
             }
 
-            //if startline is equal, we have to check the character
             if (OnlySameStartLine(startLine, endLine, targetLine))
             {
-                if (startCol <= targetCol)
-                {
-                    return true;
-                }
+                return (startCol <= targetCol);
             }
 
-            //if endline is equal, we have to check the character
-            if (startLine < targetLine && targetLine == endLine)
+            if (OnlySameEndLine(startLine, endLine, targetLine))
             {
-                if (targetCol <= endCol)
-                {
-                    return true;
-                }
+                return (targetCol <= endCol);
             }
 
-            //if both lines are equal, just the character needs to be inbetween
-            if (startLine == targetLine && targetLine == endLine)
+            if (OnSameLine(startLine, endLine, targetLine))
             {
-                if (startCol <= targetCol && targetCol <= endCol)
-                {
-                    return true;
-                }
+                return (startCol <= targetCol && targetCol <= endCol);
             }
 
             return false;
@@ -172,6 +150,15 @@ namespace DafnyLanguageServer.SymbolTable
             return startLine == targetLine && targetLine < endLine;
         }
 
+        private static bool OnlySameEndLine(int startLine, int endLine, int targetLine)
+        {
+            return startLine < targetLine && targetLine == endLine;
+        }
+
+        private static bool OnSameLine(int startLine, int endLine, int targetLine)
+        {
+            return startLine == targetLine && targetLine == endLine;
+        }
 
         /// <summary>
         /// Checks if a is in the same file as the provided URI.
