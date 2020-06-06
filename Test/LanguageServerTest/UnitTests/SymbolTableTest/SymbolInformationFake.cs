@@ -11,15 +11,12 @@ namespace SymbolTableTest
 {
     public class SymbolInformationFake : ISymbolInformation
     {
-
-
         public SymbolInformationFake(int mainLine, int mainCol,
             int bodyStartLine = -1, int bodyStartCol = -1,
             int bodyEndLine = -1, int bodyEndCol = -1,
             string file = @"C:/file.dfy", string name = "no_name"
             )
         {
-
             ChildrenHash = new Dictionary<string, ISymbolInformation>();
             Descendants = null;
             Parent = null;
@@ -119,10 +116,14 @@ namespace SymbolTableTest
         public string PositionToFormattedString()
         {
             throw new InvalidOperationException();
-
         }
 
         public string ToDebugString()
+        {
+            throw new InvalidOperationException();
+        }
+
+        public IEnumerable<ISymbolInformation> GetAllOccurrences()
         {
             throw new InvalidOperationException();
         }

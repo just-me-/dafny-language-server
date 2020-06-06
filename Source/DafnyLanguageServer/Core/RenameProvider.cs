@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Core
 
             Dictionary<Uri, List<TextEdit>> changes = new Dictionary<Uri, List<TextEdit>>();
 
-            foreach (var symbol in SymbolUtil.GetAllOccurrences(symbolAtCursor))
+            foreach (var symbol in symbolAtCursor.GetAllOccurrences())
             {
                 var textEdit = new TextEdit
                 {
