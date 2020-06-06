@@ -84,13 +84,13 @@ namespace DafnyLanguageServer.Core
             var args = new
             {
                 Uri = _uri,
-                Position = position, // where to show the CodeLens popup
-                Locations = locations // what should be in the pop up displayed 
+                Position = position,  // where to show the CodeLens popup
+                Locations = locations // what should be displayed inside the popup 
             };
             Command command = new Command
             {
                 Title = msgTitle,
-                Name = "dafny.showReferences",
+                Name = "dafny.showReferences", //todo auslagern
                 Arguments = new JArray(JsonConvert.SerializeObject(args))
             };
             return new CodeLens
