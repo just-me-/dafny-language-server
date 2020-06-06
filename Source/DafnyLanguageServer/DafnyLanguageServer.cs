@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;
@@ -83,8 +82,6 @@ namespace DafnyLanguageServer
 
         private async Task RedirectStreamUntilServerExits()
         {
-            // Redirect OutPutStream for plain LSP output (avoid Boogie output printer stuff) and start server 
-            // code should no longer make prints but lets keep it for additional safety.
             try
             {
                 using (StreamWriter writer = new StreamWriter(new FileStream(LanguageServerConfig.RedirectedStreamFile,
