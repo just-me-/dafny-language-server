@@ -124,13 +124,13 @@ namespace DafnyLanguageServer.Core
                     if (ExtractedSymbol == "this")
                     {
                         ISymbolInformation declarationOfSymbolBeforeDot = SymbolTableManager.GetEnclosingClass(wrappingEntrypointSymbol);
-                        return GetSymbolsProperties(SymbolTableManager, declarationOfSymbolBeforeDot);
+                        return GetSymbolsProperties(declarationOfSymbolBeforeDot);
                     }
                     else
                     {
                         var declarationOfSymbolBeforeDot = SymbolTableManager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
                         var classSymbol = SymbolTableManager.GetClassOriginFromSymbol(declarationOfSymbolBeforeDot);
-                        return GetSymbolsProperties(SymbolTableManager, classSymbol);
+                        return GetSymbolsProperties(classSymbol);
                     }
 
                 case CompletionType.AfterNew:
@@ -144,7 +144,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolTableManager manager, ISymbolInformation entryPoint)
+        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolInformation entryPoint)
         {
             if (entryPoint == null)
             {
