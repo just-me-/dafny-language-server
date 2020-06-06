@@ -111,13 +111,13 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Returns the class in which a symbol is located.
         /// </summary>
-        /// <param name="wrappingEntrypointSymbol"></param>
+        /// <param name="entryPoint"></param>
         /// <returns></returns>
-        public ISymbolInformation GetEnclosingClass(ISymbolInformation wrappingEntrypointSymbol)
+        public ISymbolInformation GetEnclosingClass(ISymbolInformation entryPoint)
         {
             ISymbolNavigator navigator = new SymbolNavigator();
             bool filter(ISymbolInformation x) => x.IsDeclaration && x.Kind == Kind.Class;
-            return navigator.BottomUpFirst(wrappingEntrypointSymbol, filter);
+            return navigator.BottomUpFirst(entryPoint, filter);
         }
 
         /// <summary>

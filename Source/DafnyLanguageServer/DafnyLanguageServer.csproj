@@ -174,7 +174,7 @@
     <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrorReporter.cs" />
     <Compile Include="Tools\ConfigInitialization\ConfigInitializationErrors.cs" />
     <Compile Include="Tools\ConfigInitialization\ConfigInitializer.cs" />
-    <Compile Include="Tools\ConfigInitialization\ConfigJsonParser.cs" />
+    <Compile Include="Tools\ConfigInitialization\ConfigJSONParser.cs" />
     <Compile Include="Tools\LoggerCreator.cs" />
     <Compile Include="WorkspaceManager\IFileRepository.cs" />
     <Compile Include="WorkspaceManager\Workspace.cs" />

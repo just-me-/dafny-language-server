@@ -18,21 +18,21 @@ namespace DafnyLanguageServer.SymbolTable
         /// Only takes definitions into account.
         /// If you would like all symbols, not only definitions, use <c>GetSymbolAtPosition</c>.
         /// </summary>
-        public ISymbolInformation TopDown(ISymbolInformation rootEntry, Uri file, int line, int character)
+        public ISymbolInformation TopDown(ISymbolInformation entryPoint, Uri file, int line, int character)
         {
-            if (rootEntry == null)
+            if (entryPoint == null)
             {
                 return null;
             }
 
             ISymbolInformation bestMatch = null;
 
-            if (SymbolUtil.PositionIsWithinSymbolTotalRange(rootEntry, file, line, character))
+            if (SymbolUtil.PositionIsWithinSymbolTotalRange(entryPoint, file, line, character))
             {
-                bestMatch = rootEntry;
+                bestMatch = entryPoint;
             }
 
-            foreach (var child in rootEntry.Children)
+            foreach (var child in entryPoint.Children)
             {
                 if (SymbolUtil.PositionIsWithinSymbolTotalRange(child, file, line, character))
                 {
@@ -46,7 +46,7 @@ namespace DafnyLanguageServer.SymbolTable
                 // in case no better match was found,
                 // check default scope too
                 if (
-                    (bestMatch == null || bestMatch.Equals(rootEntry))
+                    (bestMatch == null || bestMatch.Equals(entryPoint))
                     && (child.Name == Resources.SymbolTableStrings.default_class || child.Name == Resources.SymbolTableStrings.default_module)
                     && (child.Children?.Any() ?? false)
                 )

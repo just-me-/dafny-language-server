@@ -90,7 +90,7 @@ namespace DafnyLanguageServer.Core
             Command command = new Command
             {
                 Title = msgTitle,
-                Name = Resources.Requests.showRefCommand,
+                Name = "dafny.showReferences", //todo auslagern
                 Arguments = new JArray(JsonConvert.SerializeObject(args))
             };
             return new CodeLens

@@ -124,13 +124,13 @@ namespace DafnyLanguageServer.Core
                     if (ExtractedSymbol == "this")
                     {
                         ISymbolInformation declarationOfSymbolBeforeDot = SymbolTableManager.GetEnclosingClass(wrappingEntrypointSymbol);
-                        return GetSymbolsProperties(declarationOfSymbolBeforeDot);
+                        return GetSymbolsProperties(SymbolTableManager, declarationOfSymbolBeforeDot);
                     }
                     else
                     {
                         var declarationOfSymbolBeforeDot = SymbolTableManager.GetClosestSymbolByName(wrappingEntrypointSymbol, ExtractedSymbol);
                         var classSymbol = SymbolTableManager.GetClassOriginFromSymbol(declarationOfSymbolBeforeDot);
-                        return GetSymbolsProperties(classSymbol);
+                        return GetSymbolsProperties(SymbolTableManager, classSymbol);
                     }
 
                 case CompletionType.AfterNew:
@@ -144,7 +144,7 @@ namespace DafnyLanguageServer.Core
             }
         }
 
-        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolInformation entryPoint)
+        private IEnumerable<ISymbolInformation> GetSymbolsProperties(ISymbolTableManager manager, ISymbolInformation entryPoint)
         {
             if (entryPoint == null)
             {
@@ -162,6 +162,7 @@ namespace DafnyLanguageServer.Core
 
         private IEnumerable<ISymbolInformation> GetClassSymbolsInScope(ISymbolTableManager manager, ISymbolInformation wrappingEntrypointSymbol)
         {
+            var completionItems = new List<CompletionItem>();
             foreach (var suggestionElement in manager.GetAllDeclarationForSymbolInScope(wrappingEntrypointSymbol, x => x.Kind == Kind.Class && IsNoDefaultNamespace(x)))
             {
                 yield return suggestionElement;

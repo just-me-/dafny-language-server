@@ -138,9 +138,6 @@
   <data name="rename" xml:space="preserve">
     <value>Rename</value>
   </data>
-  <data name="showRefCommand" xml:space="preserve">
-    <value>dafny.showReferences</value>
-  </data>
   <data name="shutdown" xml:space="preserve">
     <value>Shutdown</value>
   </data>

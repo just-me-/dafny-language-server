@@ -74,7 +74,7 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
 
         private void ApplyJSON()
         {
-            new ConfigJsonParser(Reporter, JSONConfigFile).ApplyJSON();
+            new ConfigJSONParser(Reporter, JSONConfigFile).ApplyJSON();
         }
 
         private void ApplyArgs()
