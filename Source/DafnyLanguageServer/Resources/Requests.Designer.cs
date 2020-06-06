@@ -124,6 +124,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dafny.showReferences.
+        /// </summary>
+        public static string showRefReq {
+            get {
+                return ResourceManager.GetString("showRefReq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shutdown.
         /// </summary>
         public static string shutdown {
