@@ -13,12 +13,12 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
     /// The results are directly saved into the global config entity
     /// Errors are reporter to the ErrorReporter.
     /// </summary>
-    public class ConfigJsonParser
+    public class ConfigJSONParser
     {
         private ConfigInitializationErrorReporter Reporter { get; }
         private string JSONConfigFile { get; }
 
-        public ConfigJsonParser(ConfigInitializationErrorReporter r, string json)
+        public ConfigJSONParser(ConfigInitializationErrorReporter r, string json)
         {
             Reporter = r;
             JSONConfigFile = json;
