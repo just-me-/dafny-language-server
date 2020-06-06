@@ -11,6 +11,6 @@ namespace DafnyLanguageServer.SymbolTable
         List<ISymbolInformation> GetAllDeclarationForSymbolInScope(ISymbolInformation symbol, Predicate<ISymbolInformation> filter = null);
         ISymbolInformation GetClassOriginFromSymbol(ISymbolInformation symbol);
         List<ISymbolInformation> GetAllSymbolDeclarations();
-        ISymbolInformation GetEnclosingClass(ISymbolInformation wrappingEntrypointSymbol);
+        ISymbolInformation GetEnclosingClass(ISymbolInformation entryPoint);
     }
 }

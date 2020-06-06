@@ -111,8 +111,6 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Returns the class in which a symbol is located.
         /// </summary>
-        /// <param name="entryPoint"></param>
-        /// <returns></returns>
         public ISymbolInformation GetEnclosingClass(ISymbolInformation entryPoint)
         {
             ISymbolNavigator navigator = new SymbolNavigator();
