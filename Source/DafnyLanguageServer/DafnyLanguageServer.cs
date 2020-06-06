@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Handler.LspStandard;
 using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;

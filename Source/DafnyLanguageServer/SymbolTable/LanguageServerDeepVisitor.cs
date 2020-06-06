@@ -428,7 +428,7 @@ namespace DafnyLanguageServer.SymbolTable
 
             var declaration = FindDeclaration(e.Name, resolvedSymbol);
 
-            var symbol = CreateSymbol(
+            CreateSymbol(
                 name: e.Name,
                 kind: null,
                 type: e.Type,

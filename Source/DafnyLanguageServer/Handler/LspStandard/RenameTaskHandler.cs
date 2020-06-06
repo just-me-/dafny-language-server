@@ -8,7 +8,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
-namespace DafnyLanguageServer.Handler.LspStandard
+namespace DafnyLanguageServer.Handler
 {
     public class RenameTaskHandler : LspBasicHandler<RenameCapability>, IRenameHandler
     {
