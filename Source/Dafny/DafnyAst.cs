@@ -5494,7 +5494,7 @@ namespace Microsoft.Dafny {
           dec.Accept(v);
         }
 
-        this.Body.Accept(v);
+        this.Body?.Accept(v);
       }
       v.Leave(this);
     }
