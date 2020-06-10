@@ -42,11 +42,18 @@ namespace DafnyLanguageServer.Commons
         /// <param name="change">The TextDocumentContentChangeEvent provided by the LSP</param>
         public void Apply(TextDocumentContentChangeEvent change)
         {
-            Position startPos = change.Range.Start;
-            int startIndex = GetIndex(startPos);
-            string newSourceCut = Sourcecode.Remove(startIndex, change.RangeLength);
-            string newSource = newSourceCut.Insert(startIndex, change.Text);
-            Sourcecode = newSource;
+            try
+            {
+                Position startPos = change.Range.Start;
+                int startIndex = GetIndex(startPos);
+                string newSourceCut = Sourcecode.Remove(startIndex, change.RangeLength);
+                string newSource = newSourceCut.Insert(startIndex, change.Text);
+                Sourcecode = newSource;
+            }
+            catch (Exception)
+            {
+                Sourcecode = File.ReadAllText(Uri.LocalPath);
+            }
         }
 
         /// <summary>
