@@ -104,13 +104,15 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(Method o)
         {
+            var hasABody = o.BodyEndTok.line != 0 && o.BodyEndTok.col != 0;
+
             var symbol = CreateSymbol(
                 name: o.Name,
                 kind: Kind.Method,
 
                 positionAsToken: o.tok,
-                bodyStartPosAsToken: o.BodyStartTok,
-                bodyEndPosAsToken: o.BodyEndTok,
+                bodyStartPosAsToken: hasABody ? o.BodyStartTok : null,
+                bodyEndPosAsToken: hasABody ? o.BodyEndTok : null,
 
                 isDeclaration: true,
                 declarationSymbol: null,
