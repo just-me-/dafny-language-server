@@ -36,5 +36,16 @@ namespace AutoCompletionIntegrationTest
             List<string> receivedEdits = completions.Select(x => x.InsertText).ToList();
             CollectionAssert.AreEquivalent(expectedItems, receivedEdits);
         }
+
+        protected void VerifyParameters(List<string> expectedItems)
+        {
+            List<string> receivedDetails = completions.Select(x => x.Detail).ToList();
+            Assert.AreEqual(expectedItems.Count, receivedDetails.Count);
+            for (int i = 0; i <= expectedItems.Count; i++)
+            {
+                if (expectedItems[0] != "")
+                    Assert.IsTrue(receivedDetails[i].Contains(expectedItems[0]));
+            }
+        }
     }
 }

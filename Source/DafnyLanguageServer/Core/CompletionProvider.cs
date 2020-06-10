@@ -50,11 +50,11 @@ namespace DafnyLanguageServer.Core
             if (symbol.Params != null)
             {
                 details += LoggingMessages.completion_params + ": "
-                        + string.Join(",", symbol?.Params.Select(parameter => parameter.Name + ": " + parameter.Type))
+                        + string.Join(", ", symbol?.Params.Select(parameter => parameter.Name + ": " + parameter.Type))
                         + "\n ";
             }
 #if DEBUG
-            details += $"Kind: { symbol.Kind }, Parent: { symbol.Parent.Name }";
+            details += $"Kind: { symbol.Kind } \n Parent: { symbol.Parent.Name }";
 #endif
 
             return

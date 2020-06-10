@@ -89,6 +89,7 @@ namespace TestCommons
         public static readonly string ac_c_partial = CreateTestfilePath("autocompletion/class_partial.dfy");
         public static readonly string ac_include_main = CreateTestfilePath("autocompletion/include_main.dfy");
         public static readonly string ac_includee = CreateTestfilePath("autocompletion/include_includee.dfy");
+        public static readonly string ac_params = CreateTestfilePath("autocompletion/parameters.dfy");
 
         //Verification
         public static readonly string vc_lo_assertion = CreateTestfilePath("verification/moreless_assertion.dfy");
