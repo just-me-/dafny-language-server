@@ -1,7 +1,9 @@
-﻿using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.Resources;
+using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DafnyLanguageServer.Core
@@ -44,15 +46,24 @@ namespace DafnyLanguageServer.Core
 
             var insertCode = GetCompletionCodeFragment(symbol, desire);
 
+            var details = "";
+            if (symbol.Params != null)
+            {
+                details += LoggingMessages.completion_params + ": "
+                        + string.Join(",", symbol?.Params.Select(parameter => parameter.Name + ": " + parameter.Type))
+                        + "\n ";
+            }
+#if DEBUG
+            details += $"Kind: { symbol.Kind }, Parent: { symbol.Parent.Name }";
+#endif
+
             return
                 new CompletionItem
                 {
                     Label = symbol.Name,
                     Kind = kind,
                     InsertText = insertCode,
-#if DEBUG
-                    Detail = $"Kind: { symbol.Kind } \n Parent: { symbol.Parent.Name }"
-#endif
+                    Detail = details
                 };
         }
 
