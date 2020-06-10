@@ -1,3 +1,3 @@
 class ABC {
-    const
+    constructor () {}
 }

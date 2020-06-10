@@ -59,19 +59,33 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             foreach (ErrorMessage e in _reporter.AllMessages[ErrorLevel.Error])
             {
-                _diagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
-                _hasErrors = true;
+                if (IsSameFile(e.token))
+                {
+                    _diagnosticElements.Add(e.ConvertToErrorInformation(ErrorLevel.Error));
+                    _hasErrors = true;
+                }
             }
 
             foreach (ErrorMessage w in _reporter.AllMessages[ErrorLevel.Warning])
             {
-                _diagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
+                if (IsSameFile(w.token))
+                {
+                    _diagnosticElements.Add(w.ConvertToErrorInformation(ErrorLevel.Warning));
+                }
             }
 
             foreach (ErrorMessage i in _reporter.AllMessages[ErrorLevel.Info])
             {
-                _diagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
+                if (IsSameFile(i.token))
+                {
+                    _diagnosticElements.Add(i.ConvertToErrorInformation(ErrorLevel.Info));
+                }
             }
+        }
+
+        private bool IsSameFile(IToken t)
+        {
+            return string.IsNullOrEmpty(t.filename) || new Uri(t.filename) == _file.Uri;
         }
         #endregion
 
