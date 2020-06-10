@@ -1,12 +1,11 @@
-﻿using System;
+﻿using DafnyLanguageServer.CustomDTOs;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DafnyLanguageServer.CustomDTOs;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace TestCommons
 {
-
     public static class Extension
     {
         public static string ToCustomString(this Range r)
@@ -81,7 +80,4 @@ namespace TestCommons
             return source?.Select(converter).ToList();
         }
     }
-
-
-
 }

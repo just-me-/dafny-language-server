@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Boogie;
+﻿using Microsoft.Boogie;
 using Microsoft.Dafny;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -12,12 +12,11 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class SymbolTableGenerator : ISymbolTableGenerator
     {
-
-
         /// <summary>
         /// A virtual Root Symbol. It covers all range, can not have a parent, and has all top level modules as descendants.
         /// </summary>
         private ISymbolInformation DafnyProgramRootSymbol { get; }
+
         private Microsoft.Dafny.Program DafnyProgram { get; }
 
         public SymbolTableGenerator(Microsoft.Dafny.Program dafnyProgram)

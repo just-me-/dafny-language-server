@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace CoreProviderTest
 {
-    
-
-
     [TestFixture]
     [Category("Unit")]
     public class GoToProviderTest
@@ -29,7 +24,6 @@ namespace CoreProviderTest
             Assert.AreEqual(0, result.FirstOrDefault().Location.Range.End.Line, "End Line is not matching");
             Assert.AreEqual(10, result.FirstOrDefault().Location.Range.End.Character, "End Char is not matching");
             Assert.AreEqual(DefinitionsOutcome.Success, provider.Outcome);
-
         }
 
         [Test]
@@ -46,7 +40,6 @@ namespace CoreProviderTest
             Assert.AreEqual(0, result.FirstOrDefault().Location.Range.End.Line, "End Line is not matching");
             Assert.AreEqual(10, result.FirstOrDefault().Location.Range.End.Character, "End Char is not matching");
             Assert.AreEqual(DefinitionsOutcome.WasAlreadyDefintion, provider.Outcome);
-
         }
 
         [Test]
@@ -60,9 +53,6 @@ namespace CoreProviderTest
             Assert.IsFalse(result.Any());
 
             Assert.AreEqual(DefinitionsOutcome.NotFound, provider.Outcome);
-
         }
-
-
     }
 }

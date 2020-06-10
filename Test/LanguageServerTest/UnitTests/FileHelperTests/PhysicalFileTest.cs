@@ -1,7 +1,7 @@
-using System;
 using DafnyLanguageServer.Commons;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 
 namespace ContentManagerTest
 {
@@ -152,7 +152,6 @@ namespace ContentManagerTest
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
         }
 
-
         [Test]
         public void GetLineContentNormal()
         {
@@ -172,7 +171,6 @@ namespace ContentManagerTest
                 Sourcecode = "a\nabc\na"
             };
             Assert.Throws<IndexOutOfRangeException>(() => f.GetSourceLine(-1));
-
         }
 
         [Test]
@@ -183,7 +181,6 @@ namespace ContentManagerTest
                 Sourcecode = "a\nabc\na"
             };
             Assert.Throws<IndexOutOfRangeException>(() => f.GetSourceLine(3));
-
         }
 
         [Test]
@@ -196,8 +193,5 @@ namespace ContentManagerTest
             var actual = f.GetSourceLine(1);
             Assert.AreEqual("abc", actual);
         }
-
-
     }
-    
 }

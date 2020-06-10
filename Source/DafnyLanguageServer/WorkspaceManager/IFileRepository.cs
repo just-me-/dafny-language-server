@@ -9,7 +9,9 @@ namespace DafnyLanguageServer.WorkspaceManager
         PhysicalFile PhysicalFile { get; }
         TranslationResult Result { get; }
         ISymbolTableManager SymbolTableManager { get; }
+
         void UpdateFile(string sourceCodeOfFile);
-        void UpdateFile(Container<TextDocumentContentChangeEvent> changes); 
+
+        void UpdateFile(Container<TextDocumentContentChangeEvent> changes);
     }
 }

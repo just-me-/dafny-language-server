@@ -6,7 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class Arguments : CompileBase
     {
-
         [Test]
         public void WithArgumentsNoCompile()
         {
@@ -40,10 +39,6 @@ namespace CompileIntegrationTest
         {
             RunCompilation(Files.cp_fineDLL, new string[] { "``~ÄÄÄ" });
             VerifyLoosely(true, false, "Error while preprocessing your custom command line arguments.");
-
-
-
         }
-
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using NUnit.Framework.Internal;
-using Files = TestCommons.Paths;
-
 
 namespace PerformanceTest
 {
@@ -65,7 +63,6 @@ namespace PerformanceTest
             return code;
         }
 
-
         public string ToCode(CodeItem codeItem)
         {
             switch (codeItem)
@@ -92,6 +89,7 @@ namespace PerformanceTest
                 case CodeItem.Print:
                     loc++;
                     return $"print {GetRandomExistingVar()};";
+
                 default:
                     throw new InvalidOperationException();
             }
@@ -124,7 +122,6 @@ namespace PerformanceTest
             return CodeItem.Var;
         }
     }
-
 
     public enum CodeItem { Block, Var, Print, EndBlock }
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
+using System;
+using System.IO;
 
 namespace DafnyLanguageServer.Tools.ConfigInitialization
 {
@@ -26,7 +26,6 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
 
         public void ApplyJSON()
         {
-
             if (!File.Exists(JSONConfigFile))
             {
                 Reporter.AddError(ExceptionMessages.config_file_not_existing);
@@ -46,19 +45,15 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
                     Path.Combine(FileAndFolderLocations.rootFolder, (string)token);
             }, baseToken, "logging", "stream");
 
-
             SafelyPerform((token) =>
             {
                 LanguageServerConfig.LogLevel = (LogLevel)(int)token;
             }, baseToken, "logging", "loglevel");
 
-
             SafelyPerform((token) =>
             {
                 LanguageServerConfig.SyncKind = (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), (string)token, true);
             }, baseToken, "synckind");
-
-
         }
 
         private void SafelyPerform(Action<JToken> a, JToken baseToken, params string[] subTokens)
@@ -75,7 +70,6 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
                     }
                 }
                 a.Invoke(token);
-
             }
             catch (Exception e)
             {

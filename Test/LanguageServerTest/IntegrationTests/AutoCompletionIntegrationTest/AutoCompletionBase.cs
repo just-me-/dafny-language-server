@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System.Collections.Generic;
+using System.Linq;
 using TestCommons;
 
 namespace AutoCompletionIntegrationTest
@@ -20,7 +20,6 @@ namespace AutoCompletionIntegrationTest
             completions = null;
         }
 
-
         protected void GetCompletions(string file, int line, int column)
         {
             Client.TextDocument.DidOpen(file, "dfy");
@@ -32,7 +31,7 @@ namespace AutoCompletionIntegrationTest
             ).Result;
         }
 
-        protected void VerifyCompletions(List<string> expectedItems, int expectedStartLine, int expectedStartCol)
+        protected void VerifyCompletions(List<string> expectedItems)
         {
             List<string> receivedEdits = completions.Select(x => x.InsertText).ToList();
             CollectionAssert.AreEquivalent(expectedItems, receivedEdits);

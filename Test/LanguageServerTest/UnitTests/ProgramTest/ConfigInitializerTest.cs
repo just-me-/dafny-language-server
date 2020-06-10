@@ -1,28 +1,27 @@
-using System;
-using System.IO;
 using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Resources;
-using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
+using System;
+using System.IO;
 using Files = TestCommons.Paths;
 
 namespace ProgramTest
 {
     public class ConfigInitializerTest
     {
-
         private static readonly string defaultLogFolder = FileAndFolderLocations.logFolder;
+
         private static string CombinePath(string path, string file) => Path.GetFullPath(Path.Combine(path, file));
+
         private static string CombineWithDefaultLogFolder(string file) => CombinePath(defaultLogFolder, file);
 
         private static string defaultLog = FileAndFolderLocations.defaultLogFile;
         private static string defaultStream = FileAndFolderLocations.defaultStreamFile;
 
-
         #region WithCfgFiles
+
         [Test]
         public void Defaults()
         {
@@ -56,16 +55,13 @@ namespace ProgramTest
             LogLevel expectedLogLevel = LogLevel.Trace;
             TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Full;
 
-
             Console.WriteLine(LanguageServerConfig.ToString());
-
 
             Assert.IsFalse(ci.Errors.HasErrors);
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
-
         }
 
         [Test]
@@ -81,7 +77,6 @@ namespace ProgramTest
             TextDocumentSyncKind expectedSyncKind = TextDocumentSyncKind.Incremental;
 
             Console.WriteLine(LanguageServerConfig.ToString());
-
 
             Assert.IsTrue(ci.Errors.HasErrors);
             Assert.IsTrue(ci.Errors.ErrorMessages.Contains("same files"));
@@ -110,7 +105,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
-
         }
 
         public void AdditionalFields()
@@ -131,7 +125,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
-
         }
 
         public void OtherFileExtension()
@@ -152,7 +145,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
-
         }
 
         public void NoFileExtension()
@@ -173,9 +165,7 @@ namespace ProgramTest
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
-
         }
-
 
         [Test]
         public void Backslashes()
@@ -306,7 +296,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
-
         [Test]
         public void WrongLogPathType()
         {
@@ -328,9 +317,10 @@ namespace ProgramTest
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
-        #endregion
+        #endregion WithCfgFiles
 
         #region defaults
+
         [Test]
         public void NoCfgFile()
         {
@@ -353,10 +343,9 @@ namespace ProgramTest
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
-        #endregion
+        #endregion defaults
 
         #region Arguments
-
 
         [Test]
         public void SunnyCase()
@@ -379,7 +368,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
-
 
         [Test]
         public void MissingCfGFile()
@@ -469,7 +457,6 @@ namespace ProgramTest
             Assert.IsTrue(ci.Errors.HasErrors, "Error Mismatch");
             Assert.IsTrue(ci.Errors.ErrorMessages.Contains("No Argument provided"));
 
-
             Assert.AreEqual(expectedLogFile, LanguageServerConfig.LogFile);
             Assert.AreEqual(expectedStreamFile, LanguageServerConfig.RedirectedStreamFile);
             Assert.AreEqual(expectedSyncKind, LanguageServerConfig.SyncKind);
@@ -520,6 +507,6 @@ namespace ProgramTest
             Assert.AreEqual(expectedLogLevel, LanguageServerConfig.LogLevel);
         }
 
-        #endregion
+        #endregion Arguments
     }
 }

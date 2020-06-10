@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DafnyLanguageServer.SymbolTable;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using DafnyLanguageServer.SymbolTable;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.Core
 {
@@ -87,7 +87,7 @@ namespace DafnyLanguageServer.Core
 
             line = line.Substring(0, col);
 
-            // get word before point 
+            // get word before point
             var match = Regex.Match(line, @"([a-zA-Z_]\w*)\.$");
             if (match.Success)
             {
@@ -114,7 +114,7 @@ namespace DafnyLanguageServer.Core
 
         /// <summary>
         /// Call <c>GetSupposedDesire</c> before this function to get the <c>CompletionType</c> parameter.
-        /// Call <c>GetWrappingEntrypointSymbol</c> to get the entry point parameter. 
+        /// Call <c>GetWrappingEntrypointSymbol</c> to get the entry point parameter.
         /// </summary>
         private IEnumerable<ISymbolInformation> GetSymbols(CompletionType desire, ISymbolInformation wrappingEntrypointSymbol)
         {

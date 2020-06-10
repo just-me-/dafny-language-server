@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace RenameTest
 {
     public class CustomTexts : RenameBase
     {
-
         protected string f = Files.rn_scopes;
-
 
         [Test]
         public void Regular()
@@ -37,7 +35,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-
         [Test]
         public void ReservedWord()
         {
@@ -45,9 +42,7 @@ namespace RenameTest
             string text = "method";
             Run(f, 16, 17, text);
             Assert.IsNull(result);
-
         }
-
 
         [Test]
         public void NoWord()
@@ -72,7 +67,5 @@ namespace RenameTest
             Run(f, 16, 17, text);
             Assert.IsNull(result);
         }
-
-
     }
 }

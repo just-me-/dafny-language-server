@@ -1,6 +1,6 @@
-﻿using System;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using NUnit.Framework;
+using System;
 
 namespace CoreProviderTest
 {
@@ -109,7 +109,6 @@ namespace CoreProviderTest
             var line = "new  ";
             var desire = _provider.GetSupposedDesire(line, 4);
             Assert.AreEqual(CompletionType.AllInScope, desire);
-
         }
 
         [Test]

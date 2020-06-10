@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.IO;
 
 namespace DafnyLanguageServer.Tools
 {
@@ -11,7 +11,7 @@ namespace DafnyLanguageServer.Tools
     public class ReservedWordsProvider
     {
         /// <summary>
-        /// Inline defined list as backup, in case no custom file is provided.
+        /// Inline defined set as backup, in case no custom file is provided.
         /// </summary>
         private static readonly HashSet<string> defaultReservedWords = new HashSet<string>
         {
@@ -47,7 +47,7 @@ namespace DafnyLanguageServer.Tools
                 JObject j = JObject.Parse(File.ReadAllText(jsonFile));
 
                 var words = j["words"];
-                JArray a = (JArray) words;
+                JArray a = (JArray)words;
                 IList<string> l = a.ToObject<IList<string>>();
                 return new HashSet<string>(l);
             }

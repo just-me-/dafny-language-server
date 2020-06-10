@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace RenameTest
 {
-
     public class BasicTests : RenameBase
     {
-
         protected string f = Files.rn_scopes;
 
         [Test]
@@ -38,11 +36,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-
-
-
-
-
         [Test]
         public void DeepBlockLocalVarDecl()
         {
@@ -54,7 +47,7 @@ namespace RenameTest
             };
             VerifyForSingleFile(expected);
         }
-        
+
         [Test]
         public void DeepBlockLocalVarUsage()
         {
@@ -66,10 +59,6 @@ namespace RenameTest
             };
             VerifyForSingleFile(expected);
         }
-
-
-
-
 
         //GetSymbol failed.. infet offenbar keine declarations.
         [Test]
@@ -105,11 +94,6 @@ namespace RenameTest
             };
             VerifyForSingleFile(expected);
         }
-
-
-
-
-
 
         [Test]
         public void ClassAtThisExpr()
@@ -148,14 +132,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-
-
-
-
-
-
-
-
         //GetSymbol failed
         [Test]
         public void ClassMethodAtDecl()
@@ -169,7 +145,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-
         [Test]
         public void ClassMethodAtUsage()
         {
@@ -181,8 +156,6 @@ namespace RenameTest
             };
             VerifyForSingleFile(expected);
         }
-
-
 
         [Test]
         public void GlobalMethodAtDecl()
@@ -207,7 +180,5 @@ namespace RenameTest
             };
             VerifyForSingleFile(expected);
         }
-
-
     }
 }

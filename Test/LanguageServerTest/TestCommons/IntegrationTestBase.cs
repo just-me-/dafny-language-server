@@ -1,16 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Resources;
-using DafnyLanguageServer.Tools;
+﻿using DafnyLanguageServer.Commons;
+using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
 using OmniSharp.Extensions.LanguageServer.Client.Processes;
 using Serilog;
 using Serilog.Extensions.Logging;
-using NUnit.Framework;
-using Files = TestCommons.Paths;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TestCommons
 {
@@ -62,7 +59,6 @@ namespace TestCommons
 
             MyLog.Information("Language server has been successfully initialized.");
             MyLog.Information($"Running {Name} Test");
-
         }
 
         [TearDown]

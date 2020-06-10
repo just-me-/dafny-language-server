@@ -6,7 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class SyntaxErrors : CompileBase
     {
-
         [Test]
         public void FailureSyntaxErrorUnknownIdentifier()
         {
@@ -20,7 +19,5 @@ namespace CompileIntegrationTest
             RunCompilation(Files.cp_semiexpected);
             VerifyResults(true, false, failPrefix + "[L7:C4] Syntax Error: \n semicolon expected");
         }
-
-
     }
 }

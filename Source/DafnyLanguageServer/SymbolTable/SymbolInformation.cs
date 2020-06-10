@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Boogie;
+using Microsoft.Dafny;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.SymbolTable
@@ -39,13 +39,13 @@ namespace DafnyLanguageServer.SymbolTable
         public int Column => Position.Token.col;
         public int IdentifierEndColumn => Position.Token.col + Name.Length;
         public bool HasBody => Position.BodyStartToken != null && Position.BodyEndToken != null;
-        #endregion
+        #endregion Position-Name-Token-Uri
 
         #region Filename
         public string Name { get; set; }
         public Uri FileUri => new Uri(Position?.Token?.filename ?? "N:\\u\\l.l");
         public string FileName => Path.GetFileName(FileUri.LocalPath);
-        #endregion
+        #endregion Filename
 
         #region Type-Kind
         public Kind Kind { get; set; }
@@ -61,12 +61,13 @@ namespace DafnyLanguageServer.SymbolTable
                 return null;
             }
         }
-        #endregion
+
+        #endregion Type-Kind
 
         #region Declaration
         public ISymbolInformation DeclarationOrigin { get; set; }
         public bool IsDeclaration => ReferenceEquals(DeclarationOrigin, this);
-        #endregion
+        #endregion Declaration
 
         #region Parent-Children-Usages
         public ISymbolInformation Parent { get; set; }
@@ -78,6 +79,7 @@ namespace DafnyLanguageServer.SymbolTable
         public List<ISymbolInformation> BaseClasses { get; set; }
         public List<ISymbolInformation> Params { get; set; }
         public bool HasInheritedMembers => Kind == Kind.Class && (BaseClasses?.Any() ?? false);
+
         /// <summary>
         /// Returns all occurrences of a symbol. That is, the declaration and all usages. Targeted for rename-feature.
         /// </summary>
@@ -91,14 +93,15 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        #endregion
+        #endregion Parent-Children-Usages
 
         #region ContainingModule-And-DefaultClass
         public ISymbolInformation Module { get; set; }
         public ISymbolInformation AssociatedDefaultClass => Module?[Resources.SymbolTableStrings.default_class];
-        #endregion
+        #endregion ContainingModule-And-DefaultClass
 
         #region ToString
+
         public string PositionToFormattedString()
         {
             return $"line {Line}, {FileName}";
@@ -113,7 +116,8 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return $"{Name} at Line {Line} in {FileName}";
         }
-        #endregion
+
+        #endregion ToString
 
         #region Indexer
         public ISymbolInformation this[string index]
@@ -125,9 +129,11 @@ namespace DafnyLanguageServer.SymbolTable
             }
             set => ChildrenHash.Add(index, value);
         }
-        #endregion
+
+        #endregion Indexer
 
         #region EqualsHash
+
         public override bool Equals(object obj)
         {
             if (obj is SymbolInformation symbol)
@@ -147,7 +153,8 @@ namespace DafnyLanguageServer.SymbolTable
             hash = hash * 7 + Line.GetHashCode();
             return hash * 7 + Column.GetHashCode();
         }
-        #endregion
+
+        #endregion EqualsHash
     }
 
     public enum Kind

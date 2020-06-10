@@ -1,15 +1,15 @@
-﻿using System.IO;
-using System.Linq;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Dafny;
+using System.IO;
+using System.Linq;
 using Type = Microsoft.Dafny.Type;
 
 namespace DafnyLanguageServer.Core
 {
     /// <summary>
-    ///  This service is used by the <c>CompileHandler</c>. 
+    ///  This service is used by the <c>CompileHandler</c>.
     /// </summary>
     public class CompileProvider : ICompileProvider
     {
@@ -56,7 +56,6 @@ namespace DafnyLanguageServer.Core
                 Executable = hasMain,
                 Message = tw.ToString().TrimEnd('\r', '\n')
             };
-
         }
 
         private CompilerResults ExtractError(int oldErrorCount)
@@ -75,10 +74,8 @@ namespace DafnyLanguageServer.Core
         {
             if (System.IO.Path.GetExtension(Path) != Resources.CompilationResults.file_ending)
             {
-
                 compilerResults = CreateErrorneousResults(Resources.CompilationResults.only_dfy);
                 return false;
-
             }
 
             if (!File.Exists(FileRepo.PhysicalFile.Filepath))
@@ -98,7 +95,6 @@ namespace DafnyLanguageServer.Core
 
                 compilerResults = CreateErrorneousResults($"[L{line}:C{col}] {msg}");
                 return false;
-
             }
 
             if (!DafnyOptions.O.Compile)
@@ -127,5 +123,4 @@ namespace DafnyLanguageServer.Core
             };
         }
     }
-
 }

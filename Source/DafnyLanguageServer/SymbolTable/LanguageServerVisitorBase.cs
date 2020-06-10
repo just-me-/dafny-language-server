@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Boogie;
+﻿using Microsoft.Boogie;
 using Microsoft.Dafny;
+using System;
+using System.Collections.Generic;
 using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
@@ -25,16 +25,12 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         public ISymbolInformation RootNode { get; set; }
-
-        //Zum Aufbau:
         public ISymbolInformation SurroundingScope { get; set; }
-
-        //Accessor for Convenience:
-        public ISymbolInformation Module { get; set; } //<- unique pro visitor - jeder visitor geht ja nur ein modul durch.
+        public ISymbolInformation Module { get; set; }
         public ISymbolInformation CurrentClass { get; set; }
 
         public ISymbolInformation DefaultClass => Module.ChildrenHash.ContainsKey(DEFAULT_CLASS_NAME) ? Module[DEFAULT_CLASS_NAME] : null;
-
+        
         public ISymbolInformation DefaultModule => RootNode.ChildrenHash.ContainsKey(DEFAULT_MODULE_NAME) ? RootNode[DEFAULT_MODULE_NAME] : null;
 
         protected ISymbolInformation FindDeclaration(string target, ISymbolInformation scope, Kind? kind = null)
@@ -46,16 +42,16 @@ namespace DafnyLanguageServer.SymbolTable
                 Name = Resources.SymbolTableStrings.declaration_not_found,
                 Position = new TokenPosition()
                 {
-                    Token = new Token(0,0)
+                    Token = new Token(0, 0)
                 },
                 ChildrenHash = new Dictionary<string, ISymbolInformation>(),
                 Usages = new List<ISymbolInformation>()
             };
         }
 
-
         /// <summary>
-        ///  This is a Factory Method. Default values are set.
+        /// This method creates symbols.
+        /// Provide the arguments carefully.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="kind">Variable, Method, Module, ...</param>
@@ -166,12 +162,19 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         protected void SetScope(ISymbolInformation symbol) => SurroundingScope = symbol;
+
         protected void JumpUpInScope() => SurroundingScope = SurroundingScope.Parent;
+
         protected void SetModule(ISymbolInformation symbol) => Module = symbol;
+
         protected void SetClass(ISymbolInformation symbol) => CurrentClass = symbol;
 
-        public override void Visit(IAstElement o) { }
+        public override void Visit(IAstElement o)
+        {
+        }
 
-        public override void Leave(IAstElement o) { }
+        public override void Leave(IAstElement o)
+        {
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Boogie;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Boogie;
 
 namespace DafnyLanguageServer.SymbolTable
 {
@@ -61,7 +61,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             return TopDown(rootEntry, new Uri(t.filename), t.line, t.col);
         }
-
 
         /// <summary>
         /// Searches the tree downwards to match a specific location.
@@ -143,7 +142,6 @@ namespace DafnyLanguageServer.SymbolTable
                 }
 
                 symbol = symbol.Parent;
-
             } while (symbol != null);
 
             if (entryPoint.Kind != Kind.RootNode)
@@ -171,7 +169,6 @@ namespace DafnyLanguageServer.SymbolTable
                 return child;
             }
 
-            // The following branch checks if the symbol is inherited by a base class
             if (symbol.HasInheritedMembers)
             {
                 foreach (var baseScope in symbol.BaseClasses)
@@ -200,7 +197,6 @@ namespace DafnyLanguageServer.SymbolTable
                 return list;
             }
 
-            // in case it is the default scope; add functions and methods in the default scope too (and not only classes) 
             if (symbol.Name == Resources.SymbolTableStrings.default_module)
             {
                 list.AddRange(GetAllChildren(symbol.AssociatedDefaultClass, filter));
@@ -225,12 +221,11 @@ namespace DafnyLanguageServer.SymbolTable
 
             var list = symbol.Children?.Where(filter.Invoke).ToList() ?? new List<ISymbolInformation>();
 
-            // The following branch checks if the symbol is inherited by a base class
             if (symbol.HasInheritedMembers)
             {
                 foreach (var baseScope in symbol.BaseClasses)
                 {
-                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException(Resources.ExceptionMessages.invalid_filter_operation));   
+                    list.AddRange(baseScope?.Children?.Where(filter.Invoke) ?? throw new InvalidOperationException(Resources.ExceptionMessages.invalid_filter_operation));
                 }
             }
             return list;
@@ -239,7 +234,7 @@ namespace DafnyLanguageServer.SymbolTable
         /// <summary>
         /// Since mono is used for Ci, the ??= Operator is not valid (C#8 feature not supported)
         /// Predicates can not have default predicate as function parameters.
-        /// Therefore this function is used to set a default predicate it the given predicate was null. 
+        /// Therefore this function is used to set a default predicate it the given predicate was null.
         /// </summary>
         private Predicate<ISymbolInformation> DefaultPredicateFilter(Predicate<ISymbolInformation> filter)
         {

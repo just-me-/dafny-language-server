@@ -6,8 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class LogicalErrors : CompileBase
     {
-
-
         [Test]
         public void FailureAssertionViolation()
         {
@@ -21,7 +19,5 @@ namespace CompileIntegrationTest
             RunCompilation(Files.cp_postcondition);
             VerifyResults(true, false, failPrefix + "[L4:C1] Logical Error: \n A postcondition might not hold on this return path");
         }
-
-
     }
 }

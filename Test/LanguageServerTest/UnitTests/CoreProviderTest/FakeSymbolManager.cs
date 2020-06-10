@@ -1,9 +1,6 @@
-﻿using System;
+﻿using DafnyLanguageServer.SymbolTable;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DafnyLanguageServer.SymbolTable;
 
 namespace CoreProviderTest
 {
@@ -64,8 +61,6 @@ namespace CoreProviderTest
         public ISymbolInformation GetEnclosingClass(ISymbolInformation entryPoint)
         {
             throw new InvalidOperationException("This fake is not offering this method. Use it only for rename, hover or goto.");
-
         }
     }
-
 }

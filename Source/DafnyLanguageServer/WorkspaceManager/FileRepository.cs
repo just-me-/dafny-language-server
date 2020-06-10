@@ -1,8 +1,8 @@
-﻿using System;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 
 namespace DafnyLanguageServer.WorkspaceManager
 {
@@ -28,7 +28,6 @@ namespace DafnyLanguageServer.WorkspaceManager
             PhysicalFile = physFile;
             Result = results;
         }
-
 
         public PhysicalFile PhysicalFile { get; }
         public TranslationResult Result { get; private set; }
@@ -61,7 +60,6 @@ namespace DafnyLanguageServer.WorkspaceManager
             AddSymbolTable();
         }
 
-
         /// <summary>
         /// Creates a <c>DafnyTranslationUnit</c> and calls the verification process for the physical file of this instance.
         /// Afterwards, the updated content gets verified.
@@ -76,7 +74,6 @@ namespace DafnyLanguageServer.WorkspaceManager
             DafnyTranslationUnit translationUnit = new DafnyTranslationUnit(PhysicalFile);
             Result = translationUnit.Verify();
         }
-
 
         /// <summary>
         /// Sets the SymbolTableManager Property.

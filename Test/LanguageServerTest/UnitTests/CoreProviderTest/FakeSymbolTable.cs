@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using Microsoft.Boogie;
+using System.Collections.Generic;
 
 namespace CoreProviderTest
 {
@@ -10,7 +10,7 @@ namespace CoreProviderTest
         /// Builds a short fake symbol table which can be used for testing.
         /// </summary>
         /// <returns>root symbol of the fake table</returns>
-        /// <remarks> 
+        /// <remarks>
         ///                     root
         ///           another          decl
         ///                         use1   use2
@@ -23,7 +23,6 @@ namespace CoreProviderTest
                 Position = new TokenPosition() { Token = new Token(1, 11) },
                 Name = "barapapa",
                 Parent = root
-
             };
             decl.DeclarationOrigin = decl;
 
@@ -41,7 +40,6 @@ namespace CoreProviderTest
                 Name = "barapapa",
                 Parent = root,
                 DeclarationOrigin = decl
-
             };
 
             SymbolInformation anotherSymbol = new SymbolInformation

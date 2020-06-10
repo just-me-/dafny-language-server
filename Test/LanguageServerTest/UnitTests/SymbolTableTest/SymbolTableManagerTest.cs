@@ -1,6 +1,6 @@
 ﻿namespace SymbolTableTest
 {
-    class SymbolTableManagerTest
+    internal class SymbolTableManagerTest
     {
     }
 }

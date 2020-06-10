@@ -1,6 +1,6 @@
-﻿using System;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 
 namespace DafnyLanguageServer.Core
 {

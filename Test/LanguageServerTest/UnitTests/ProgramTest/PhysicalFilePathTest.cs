@@ -3,9 +3,10 @@ using NUnit.Framework;
 
 namespace ProgramTest
 {
-    class PhysicalFilePathTest
+    internal class PhysicalFilePathTest
     {
         private const string expct = @"C:/bla.txt";
+
         [Test]
         public void NormalWindowsPath()
         {
@@ -125,6 +126,7 @@ namespace ProgramTest
 
             Assert.AreEqual(@"builds/bla.txt", pf.Filepath);
         }
+
         [Test]
         public void FileName()
         {

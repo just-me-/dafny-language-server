@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Files = TestCommons.Paths;
 
 namespace SymbolTableTest
@@ -15,7 +15,6 @@ namespace SymbolTableTest
     /// </summary>
     public class Generation
     {
-
         [Test]
         public void Test01_BasicSymbols()
         {
@@ -76,7 +75,6 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-
         [Test]
         public void Test06_ClassesMethodsMultiReturns_VariousBasicCodeFeatures()
         {
@@ -89,7 +87,6 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-
         [Test]
         public void Test07_IfWhile()
         {
@@ -101,7 +98,6 @@ namespace SymbolTableTest
 
             CollectionAssert.AreEquivalent(excpected, actual);
         }
-
 
         [Test]
         public void Test08_NegationTernary()
@@ -235,7 +231,6 @@ namespace SymbolTableTest
             CollectionAssert.AreEquivalent(excpected, actual);
         }
 
-
         private IEnumerable<string> GetSymbolsAsList(string f)
         {
             var physFile = new PhysicalFile
@@ -249,15 +244,13 @@ namespace SymbolTableTest
             ISymbolTableGenerator st = new SymbolTableGenerator(dafnyProg);
             ISymbolInformation root = st.GenerateSymbolTable();
             ISymbolTableManager sm = new SymbolTableManager(root);
-            
 
             ISymbolNavigator navigator = new SymbolNavigator();
             List<ISymbolInformation> symbols = new List<ISymbolInformation>();
 
-
             foreach (var modul in root.Children)
             {
-                symbols.AddRange(navigator.TopDownAll(modul)); 
+                symbols.AddRange(navigator.TopDownAll(modul));
             }
 
             var actual = symbols.Select(x => x.ToDebugString()).ToList();

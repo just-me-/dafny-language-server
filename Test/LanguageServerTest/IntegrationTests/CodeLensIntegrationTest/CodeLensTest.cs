@@ -1,14 +1,9 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
-
 
 namespace CodeLensIntegrationTest
 {
-    /// <summary>
-    /// CodeLens has "only" a few integration test but each test is for a file
-    /// with multiple CodeLens tests containing. 
-    /// </summary>
     [TestFixture]
     public class CodeLensTest : CodeLensBase
     {

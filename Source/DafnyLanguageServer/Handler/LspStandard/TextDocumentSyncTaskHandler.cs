@@ -1,4 +1,8 @@
-﻿using MediatR;
+﻿using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Core;
+using DafnyLanguageServer.WorkspaceManager;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -8,10 +12,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Core;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -44,10 +44,6 @@ namespace DafnyLanguageServer.Handler
         {
             return new TextDocumentAttributes(uri, "");
         }
-
-
-
-
 
         public Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
         {
@@ -97,7 +93,6 @@ namespace DafnyLanguageServer.Handler
                 IncludeText = true
             };
         }
-
 
         /// <summary>
         /// Updates file and sends diagnostics and error count to the client with the diagnostics service
@@ -152,7 +147,5 @@ namespace DafnyLanguageServer.Handler
             _router.Document.PublishDiagnostics(diags);
             _mss.SendCountedErrors(diags.Diagnostics.Count());
         }
-
-
     }
 }

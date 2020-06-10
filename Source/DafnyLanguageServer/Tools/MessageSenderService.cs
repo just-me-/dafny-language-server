@@ -21,6 +21,7 @@ namespace DafnyLanguageServer.Tools
         }
 
         /* Pop-up messages */
+
         public void SendError(string msg)
         {
             SendMessage("ERROR", msg);
@@ -37,6 +38,7 @@ namespace DafnyLanguageServer.Tools
         }
 
         /* Status bar information */
+
         public void SendServerStarted(string dafnyVersion, string additionalStatusbarInformation = "")
         {
             SendMessage("serverStarted", dafnyVersion + additionalStatusbarInformation);

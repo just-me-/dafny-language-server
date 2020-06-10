@@ -1,12 +1,12 @@
-﻿using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+﻿using DafnyLanguageServer.Core;
+using DafnyLanguageServer.WorkspaceManager;
+using Microsoft.Extensions.Logging;
+using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.Core;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {

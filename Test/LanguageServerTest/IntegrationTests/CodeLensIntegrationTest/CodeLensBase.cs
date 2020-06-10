@@ -1,18 +1,16 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;
 
 namespace CodeLensIntegrationTest
 {
     public class CodeLensBase : IntegrationTestBase
     {
-
         protected CodeLensContainer codelensResults;
 
         public CodeLensBase() : base("CodeLens")
@@ -43,13 +41,13 @@ namespace CodeLensIntegrationTest
             {
                 Assert.Fail("CodeLens results are null - no results received!");
             }
-            // check shown references 
+            // check shown references
             CollectionAssert.AreEquivalent(
                 expected.Select(x => x.Name).ToList(),
                 codelensResults.Select(x => x.Command.Title).ToList()
                 );
 
-            // check linked logic when clicked on references - is code lens popup filled up correctly? 
+            // check linked logic when clicked on references - is code lens popup filled up correctly?
             if (expected.Count() != codelensResults.Count())
             {
                 Assert.Fail("Not same numbers of results as expected.");

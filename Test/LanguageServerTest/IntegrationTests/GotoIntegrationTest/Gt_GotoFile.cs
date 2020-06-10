@@ -25,7 +25,6 @@ namespace GotoIntegrationTest
         {
             SetGoToDefinitionWithoutZeroIndexing(file, l, 24);
             SpecificVerificationWithGoalInSameFile();
-
         }
 
         [Test]
@@ -42,7 +41,6 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
     }
-
 
     [TestFixture]
     public class ClassB : GoToBase
@@ -97,7 +95,6 @@ namespace GotoIntegrationTest
         }
     }
 
-
     [TestFixture]
     public class MethodInClassA : GoToBase
     {
@@ -128,7 +125,6 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
     }
-
 
     [TestFixture]
     public class MethodInClassB : GoToBase
@@ -161,7 +157,6 @@ namespace GotoIntegrationTest
         }
     }
 
-
     [TestFixture]
     public class MultiReturnMethod : GoToBase
     {
@@ -184,7 +179,6 @@ namespace GotoIntegrationTest
             SetGoToDefinitionWithoutZeroIndexing(file, l, 20);
             SpecificVerificationWithGoalInSameFile();
         }
-
 
         [Test]
         public void RightMost_MultiReturnMethod()
@@ -262,7 +256,9 @@ namespace GotoIntegrationTest
         public OutParameter() : base(1, 55, Files.gt_goto)
         {
         }
+
         private const int l = 5;
+
         [Test]
         public void Parameter()
         {
@@ -277,7 +273,9 @@ namespace GotoIntegrationTest
         public GetParameter() : base(1, 24, Files.gt_goto)
         {
         }
+
         private const int l = 5;
+
         [Test]
         public void Parameter()
         {
@@ -285,7 +283,6 @@ namespace GotoIntegrationTest
             SpecificVerificationWithGoalInSameFile();
         }
     }
-
 
     [TestFixture]
     public class UninitializedVariableMore : GoToBase
@@ -348,7 +345,6 @@ namespace GotoIntegrationTest
             VerifyResult(file, 27, 8);
         }
     }
-
 
     [TestFixture]
     public class InitializedVariableA : GoToBase

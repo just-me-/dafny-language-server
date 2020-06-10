@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CoreProviderTest
 {
-    class DiagnosticsProviderTests
+    internal class DiagnosticsProviderTests
     {
         public class CreateDiagnosticTest
         {
@@ -52,7 +52,6 @@ namespace CoreProviderTest
                 errors.Add(info);
 
                 IDiagnosticsProvider diagnosticsService = new DiagnosticsProvider(new FileRepository(createFakeFile(token.filename, randomFakeSource)));
-
 
                 var diagnostics = diagnosticsService.ConvertToLSPDiagnostics(errors);
 

@@ -1,22 +1,20 @@
-﻿using System;
-using System.Linq;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace SymbolTableTest
 {
-    class SymbolTableNavigatorTest
+    internal class SymbolTableNavigatorTest
     {
-        ISymbolNavigator nav = new SymbolNavigator();
+        private ISymbolNavigator nav = new SymbolNavigator();
         private static readonly string defaultFile = @"C:/file.dfy";
         private static readonly Uri defaultUri = new Uri(@"C:/file.dfy");
-
 
         // TopDown
         [Test]
         public void GetTopDownSymbolSimple()
         {
-
             //marcel hatte:
             //c SymbolInformationFake(int lineStart, int lineEnd, int columnStart, int columnEnd, Uri file = null, string name = "no_name"
             //er:   -   -    bsl  bel, bsc, bec
@@ -38,11 +36,12 @@ namespace SymbolTableTest
             rootEntry.AddChild(new SymbolInformationFake(3, 0, 3, 0, 4, 0, defaultFile, "SubParent2"));
             var subParent = new SymbolInformationFake(5, 0, 5, 0, 10, 0, defaultFile, "RightSubParent");
             rootEntry.AddChild(subParent);
-            SymbolInformationFake mySymbol = new SymbolInformationFake(6,0, 6, 0, 10, 0, defaultFile, "MyChild");
+            SymbolInformationFake mySymbol = new SymbolInformationFake(6, 0, 6, 0, 10, 0, defaultFile, "MyChild");
             subParent.AddChild(mySymbol);
             ISymbolInformation symbol = nav.TopDown(rootEntry, defaultUri, 9, 0);
             Assert.AreEqual(mySymbol, symbol);
         }
+
         [Test]
         public void GetTopDownSymbolEmptyLine()
         {

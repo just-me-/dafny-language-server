@@ -1,13 +1,12 @@
-﻿using System.Text;
-using DafnyLanguageServer.CustomDTOs;
+﻿using DafnyLanguageServer.CustomDTOs;
 using NUnit.Framework;
+using System.Text;
 using TestCommons;
 
 namespace CompileIntegrationTest
 {
     public class CompileBase : IntegrationTestBase
     {
-
         protected CompilerResults compilerResults;
         protected const string compileKeyword = "compile";
         protected readonly string failPrefix = DafnyLanguageServer.Resources.CompilationResults.compilation_failed;
@@ -21,7 +20,6 @@ namespace CompileIntegrationTest
         {
             compilerResults = null;
         }
-
 
         protected void RunCompilation(string testfile, string[] args = null)
         {
@@ -52,7 +50,6 @@ namespace CompileIntegrationTest
             MyLog.Debug(debugMsg.ToString());
         }
 
-
         protected void VerifyResults(bool expectedError, bool expectedExecutable, string expectedMessage)
         {
             if (compilerResults == null)
@@ -74,7 +71,5 @@ namespace CompileIntegrationTest
             Assert.AreEqual(expectedError, compilerResults.Error, "CompilationError Mismatch");
             Assert.AreEqual(expectedExecutable, compilerResults.Executable, "Executable Created Mismatch");
         }
-
-
     }
 }

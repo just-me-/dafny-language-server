@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
 
 namespace SymbolTableTest
 {
-
     [TestFixture]
     [Category("Unit")]
     public class Wraps
     {
         [Test]
-
         public void BasicTrueTrivial()
         {
             int startLine = 3;
@@ -26,7 +20,6 @@ namespace SymbolTableTest
             int targetCol = 5;
 
             bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
-
 
             Assert.IsTrue(actual);
         }
@@ -46,7 +39,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void LineAfter()
         {
@@ -61,7 +53,6 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
             Assert.IsFalse(actual);
         }
-
 
         [Test]
         public void SameStartLineTrue()
@@ -168,7 +159,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void targetAtSymbolStart()
         {
@@ -228,8 +218,8 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
             Assert.IsTrue(actual);
         }
-    
-    [Test]
+
+        [Test]
         public void targetAtSymbolStart_1off()
         {
             int startLine = 3;
@@ -295,7 +285,7 @@ namespace SymbolTableTest
             int startLine = 3;
             int startCol = 3;
             int endLine = 3;
-            int endCol = 3;  
+            int endCol = 3;
 
             int targetLine = 3;
             int targetCol = 3;
@@ -364,7 +354,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void StartAfterEndLine()
         {
@@ -417,7 +406,7 @@ namespace SymbolTableTest
             int startCol = 3;
             int endLine = 7;
             int endCol = 7;
-            
+
             int bignumber = int.MaxValue;
 
             endCol += bignumber;
@@ -432,12 +421,10 @@ namespace SymbolTableTest
 
     public class ConreteWrapperTests
     {
-        ISymbolInformation symbolWithBody = new SymbolInformationFake(2,0,4,0,6,0);
-        ISymbolInformation symbolWithoutBody = new SymbolInformationFake(2,0);
-        ISymbolInformation symbolInAnotherFile = new SymbolInformationFake(2,0,-1,-1,-1,-1,"C:/another.dfy") {Kind = Kind.Class};
-        Uri defaultUri = new Uri("C:/file.dfy");
-
-
+        private ISymbolInformation symbolWithBody = new SymbolInformationFake(2, 0, 4, 0, 6, 0);
+        private ISymbolInformation symbolWithoutBody = new SymbolInformationFake(2, 0);
+        private ISymbolInformation symbolInAnotherFile = new SymbolInformationFake(2, 0, -1, -1, -1, -1, "C:/another.dfy") { Kind = Kind.Class };
+        private Uri defaultUri = new Uri("C:/file.dfy");
 
         [Test]
         public void Body_Inside()
@@ -457,7 +444,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void Body_Outside2()
         {
@@ -466,9 +452,6 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.PositionIsWithinSymbolBody(symbolWithBody, defaultUri, line, character);
             Assert.IsFalse(actual);
         }
-
-
-
 
         [Test]
         public void TotalRange_Inside1()
@@ -506,7 +489,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void Identifier_Inside()
         {
@@ -533,7 +515,6 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.PositionIsWithinSymbolIdentifier(symbolWithBody, defaultUri, line, character);
             Assert.IsFalse(actual);
         }
-
 
         [Test]
         public void Wrongfile_Identifier()
@@ -562,9 +543,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
-
-
         [Test]
         public void InBodyOfSymbolWOBody()
         {
@@ -573,7 +551,6 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.PositionIsWithinSymbolBody(symbolWithoutBody, defaultUri, line, character);
             Assert.IsFalse(actual);
         }
-
 
         [Test]
         public void InBodyOfSymbolWOBody2()
@@ -602,7 +579,6 @@ namespace SymbolTableTest
             Assert.IsFalse(actual);
         }
 
-
         [Test]
         public void SymbolWOBody_IdentifierRange_In()
         {
@@ -620,7 +596,5 @@ namespace SymbolTableTest
             bool actual = SymbolUtil.PositionIsWithinSymbolIdentifier(symbolWithoutBody, defaultUri, line, character);
             Assert.IsFalse(actual);
         }
-
-
     }
 }

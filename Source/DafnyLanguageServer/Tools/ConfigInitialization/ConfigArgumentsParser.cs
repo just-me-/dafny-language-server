@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace DafnyLanguageServer.Tools.ConfigInitialization
 {
@@ -55,7 +55,6 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
             {
                 Reporter.AddError(ExceptionMessages.no_arg_for_switch + key);
                 return;
-
             }
 
             switch (key.ToLower())
@@ -67,11 +66,11 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
                     LanguageServerConfig.LogFile = Path.Combine(FileAndFolderLocations.rootFolder, value);
                     break;
                 case "/loglevel":
-                    LanguageServerConfig.LogLevel = (LogLevel) int.Parse(value);
+                    LanguageServerConfig.LogLevel = (LogLevel)int.Parse(value);
                     break;
                 case "/synckind":
                     LanguageServerConfig.SyncKind =
-                        (TextDocumentSyncKind) Enum.Parse(typeof(TextDocumentSyncKind), value, true);
+                        (TextDocumentSyncKind)Enum.Parse(typeof(TextDocumentSyncKind), value, true);
                     break;
                 default:
                     Reporter.AddError(string.Format(ExceptionMessages.unknown_switch, key));

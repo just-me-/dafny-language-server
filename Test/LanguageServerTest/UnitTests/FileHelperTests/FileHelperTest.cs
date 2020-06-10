@@ -64,7 +64,7 @@ namespace ContentManagerTests
             var code = @"method Main() {
                         var a := 1 + 2;
                         var acc2 := new C();
-                        var acc3.             
+                        var acc3.
             }";
             var acc3 = FileHelper.GetCurrentWord(code, 4 - 1, 33);
             Assert.AreEqual("acc3", acc3);

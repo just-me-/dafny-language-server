@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System;
 using TestCommons;
 using Files = TestCommons.Paths;
 
@@ -37,7 +34,6 @@ namespace HoverTest
             var result = Client.TextDocument.Hover(Files.hv_hover, 0, 6).Result;
             var actual = result.Contents.MarkupContent.Value;
 
-
             string textExpectation = " **`MyClass`** *(line 1, hover.dfy)*\n" +
                                      "* **Type:** N/A\n" +
                                      "* **Kind:** Class\n" +
@@ -45,7 +41,6 @@ namespace HoverTest
                                      "* **Declaration:** This symbol is the declaration.";
 
             Console.WriteLine(actual);
-
             Assert.AreEqual(textExpectation, actual);
         }
     }

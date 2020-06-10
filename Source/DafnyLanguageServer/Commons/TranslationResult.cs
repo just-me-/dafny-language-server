@@ -6,7 +6,7 @@ namespace DafnyLanguageServer.Commons
 {
     public class TranslationResult
     {
-        public List<DiagnosticElement> DiagnosticElements { get; set;  } = new List<DiagnosticElement>();
+        public List<DiagnosticElement> DiagnosticElements { get; set; } = new List<DiagnosticElement>();
         public Microsoft.Dafny.Program DafnyProgram { get; set; }
         public IEnumerable<Tuple<string, MSBoodie.Program>> BoogiePrograms { get; set; }
         public TranslationStatus TranslationStatus { get; set; }

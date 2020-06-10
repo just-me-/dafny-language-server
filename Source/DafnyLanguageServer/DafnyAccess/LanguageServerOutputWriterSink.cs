@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Microsoft.Boogie;
+﻿using Microsoft.Boogie;
+using System.IO;
 
 namespace DafnyLanguageServer.DafnyAccess
 {
@@ -77,6 +77,4 @@ namespace DafnyLanguageServer.DafnyAccess
                 tw.WriteLine(s);
         }
     }
-
-
 }

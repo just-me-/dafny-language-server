@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using Microsoft.Dafny;
 
 namespace DafnyLanguageServer.SymbolTable
 {
     /// <summary>
-    /// Isolated wrapping logic for ISymbolInformation. 
+    /// Isolated wrapping logic for ISymbolInformation.
     /// </summary>
     public static class SymbolUtil
     {
@@ -88,7 +86,6 @@ namespace DafnyLanguageServer.SymbolTable
 
             int endLine = s.Position.BodyEndToken.line;
             int endCol = s.Position.BodyEndToken.col;
-
 
             int targetLine = line;
             int targetCol = character;

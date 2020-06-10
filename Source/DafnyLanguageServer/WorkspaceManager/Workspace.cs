@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
+using System.Collections.Concurrent;
 
 namespace DafnyLanguageServer.WorkspaceManager
 {
@@ -61,7 +61,6 @@ namespace DafnyLanguageServer.WorkspaceManager
                     Filepath = documentPath.LocalPath,
                     Sourcecode = string.Empty
                 });
-
         }
 
         public IFileRepository GetFileRepository(Uri documentPath)

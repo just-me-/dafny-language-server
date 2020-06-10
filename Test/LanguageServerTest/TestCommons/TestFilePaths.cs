@@ -1,17 +1,11 @@
-﻿using System.IO;
-using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Resources;
-using DafnyLanguageServer.Tools;
+﻿using DafnyLanguageServer.Commons;
+using System.IO;
 
 namespace TestCommons
 {
-
     public static class Paths
     {
-
-
-        /***CONFIG READER TEST***/
-        /************************/
+        //Config Reader
         public static readonly string cr_default = CreateTestfilePath("configReader/default.json");
         public static readonly string cr_fine = CreateTestfilePath("configReader/fine.json");
         public static readonly string cr_sameFiles = CreateTestfilePath("configReader/sameFiles.json");
@@ -22,14 +16,11 @@ namespace TestCommons
         public static readonly string cr_backslashes = CreateTestfilePath("configReader/backslashes.json");
         public static readonly string cr_empty = CreateTestfilePath("configReader/empty.json");
         public static readonly string cr_nojsony = CreateTestfilePath("configReader/nojson.json");
-
         public static readonly string cr_wrongLogLevel = CreateTestfilePath("configReader/exceedingLogLevel.json");
         public static readonly string cr_wrongLogLevelType = CreateTestfilePath("configReader/wrongLogLevelType.json");
         public static readonly string cr_wrongStreamPathType = CreateTestfilePath("configReader/wrongStreamPathType.json");
         public static readonly string cr_wrongLogPathType = CreateTestfilePath("configReader/wrongLogPathType.json");
 
-        /***DAFNY SOURCE FILES***/
-        /************************/
         //Compile
         public static readonly string cp_fineDLL = CreateTestfilePath("compile/compiles_as_dll.dfy");
         public static readonly string cp_fineEXE = CreateTestfilePath("compile/compiles_as_exe.dfy");
@@ -61,7 +52,6 @@ namespace TestCommons
         public static readonly string ce_2mc = CreateTestfilePath("counterExample/two_connected_methods.dfy");
         public static readonly string ce_lp = CreateTestfilePath("counterExample/largerprogram.dfy");
         public static readonly string ce_li = CreateTestfilePath("counterExample/loopinvariant.dfy");
-
         public static readonly string ce_fail1_bvd = CreateTestfilePath("counterExample/postcondition_violation_1.bvd");
         public static readonly string ce_fail2_bvd = CreateTestfilePath("counterExample/postcondition_violation_2.bvd");
         public static readonly string ce_float_bvd = CreateTestfilePath("counterExample/float.bvd");
@@ -70,7 +60,6 @@ namespace TestCommons
         public static readonly string ce_2m_bvd = CreateTestfilePath("counterExample/two_methods.bvd");
         public static readonly string ce_2mc_bvd = CreateTestfilePath("counterExample/two_connected_methods.bvd");
         public static readonly string ce_li_bvd = CreateTestfilePath("counterExample/loopinvariant.bvd");
-
 
         //Integration
         public static readonly string int_demofile = CreateTestfilePath("integration_demofile.dfy");
@@ -83,6 +72,7 @@ namespace TestCommons
 
         // CodeLens
         public static readonly string cl_basic = CreateTestfilePath("codelens/basic.dfy");
+
         public static readonly string cl_include_main = CreateTestfilePath("codelens/include_main.dfy");
         public static readonly string cl_includee = CreateTestfilePath("codelens/include_includee.dfy");
         public static readonly string cl_empty = CreateTestfilePath("codelens/empty.dfy");
@@ -106,7 +96,6 @@ namespace TestCommons
         public static readonly string vc_lo_postcondition = CreateTestfilePath("verification/moreless_postcondition.dfy");
         public static readonly string vc_lo_noensure = CreateTestfilePath("verification/moreless_noensure.dfy");
         public static readonly string vc_lo_multiplefails = CreateTestfilePath("verification/moreless_manyfails.dfy");
-
         public static readonly string vc_sy_curly = CreateTestfilePath("verification/syntax_curlyexpected.dfy");
         public static readonly string vc_sy_eof = CreateTestfilePath("verification/syntax_EOFexpected.dfy");
         public static readonly string vc_sy_ns = CreateTestfilePath("verification/syntax_invalidNameSegment.dfy");
@@ -115,17 +104,14 @@ namespace TestCommons
         public static readonly string vc_sy_parenthesis = CreateTestfilePath("verification/syntax_parenexpected.dfy");
         public static readonly string vc_sy_bracer = CreateTestfilePath("verification/syntax_rbrace.dfy");
         public static readonly string vc_sy_semi = CreateTestfilePath("verification/syntax_semi.dfy");
-
         public static readonly string vc_re_args = CreateTestfilePath("verification/resolver_arguments.dfy");
         public static readonly string vc_re_type = CreateTestfilePath("verification/resolver_undeclaredType.dfy");
         public static readonly string vc_re_identifier = CreateTestfilePath("verification/resolver_identifier.dfy");
-
         public static readonly string vc_warning_include = CreateTestfilePath("verification/include_includer_warning.dfy");
         public static readonly string vc_warning = CreateTestfilePath("verification/warning.dfy");
         public static readonly string vc_information = CreateTestfilePath("verification/information.dfy");
 
-
-        //SymbolTAble
+        //SymbolTable
         public static readonly string st_01 = CreateTestfilePath("symbolTable/01_basic.dfy");
         public static readonly string st_02 = CreateTestfilePath("symbolTable/02_classAccessors.dfy");
         public static readonly string st_03 = CreateTestfilePath("symbolTable/03_blockscope.dfy");
@@ -144,8 +130,6 @@ namespace TestCommons
         public static readonly string st_16 = CreateTestfilePath("symbolTable/16_comprehension.dfy");
         public static readonly string st_17 = CreateTestfilePath("symbolTable/17_collections.dfy");
         public static readonly string st_18 = CreateTestfilePath("symbolTable/18_ctor.dfy");
-
-
         public static readonly string st_01e = CreateTestfilePath("symbolTable/01_expect.txt");
         public static readonly string st_02e = CreateTestfilePath("symbolTable/02_expect.txt");
         public static readonly string st_03e = CreateTestfilePath("symbolTable/03_expect.txt");
@@ -165,7 +149,6 @@ namespace TestCommons
         public static readonly string st_17e = CreateTestfilePath("symbolTable/17_expect.txt");
         public static readonly string st_18e = CreateTestfilePath("symbolTable/18_expect.txt");
 
-
         //Rename
         public static readonly string rn_scopes = CreateTestfilePath("rename/renameWithScopes.dfy");
         public static readonly string rn_include_main = CreateTestfilePath("rename/include_main.dfy");
@@ -178,11 +161,8 @@ namespace TestCommons
         public static readonly string pf_large4 = CreateTestfilePath("performance/pf_large4.dfy");
         public static readonly string pf_large5 = CreateTestfilePath("performance/pf_large5.dfy");
 
-        //Performance
+        //Hover
         public static readonly string hv_hover = CreateTestfilePath("hover/hover.dfy");
-
-
-
 
         private static string CreateTestfilePath(string s)
         {

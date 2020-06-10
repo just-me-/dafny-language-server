@@ -1,15 +1,14 @@
-﻿using System;
+﻿using NUnit.Framework;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using TestCommons;
 
 namespace RenameTest
 {
     public class RenameBase : IntegrationTestBase
     {
-
         public RenameBase() : base("Rename")
         {
         }
@@ -28,12 +27,11 @@ namespace RenameTest
             RenameParams p = new RenameParams()
             {
                 NewName = newText,
-                Position = new Position(lineInEditor-1, colInEditor-1),
+                Position = new Position(lineInEditor - 1, colInEditor - 1),
                 TextDocument = new TextDocumentIdentifier(new Uri(testfile))
             };
             var response = Client.SendRequest<WorkspaceEdit>("textDocument/rename", p, CancellationSource.Token);
             result = response.Result;
-
         }
 
         public void VerifyForSingleFile(IList<string> expected)
@@ -58,6 +56,5 @@ namespace RenameTest
             }
             CollectionAssert.AreEquivalent(expected, actual);
         }
-
     }
 }

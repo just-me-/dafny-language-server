@@ -6,7 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class IrregularFiles : CompileBase
     {
-
         [Test]
         public void Inexistant_File()
         {
@@ -20,6 +19,5 @@ namespace CompileIntegrationTest
             RunCompilation(Files.cp_empty);
             VerifyResults(false, false, "Compiled assembly into empty.dll");
         }
-
     }
 }

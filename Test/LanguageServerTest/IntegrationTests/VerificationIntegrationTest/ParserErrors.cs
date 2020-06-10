@@ -1,14 +1,12 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace VerificationIntegrationTest
 {
-
     [TestFixture, Timeout(10000)]
     public class ParserErrors : VerificationBase
     {
-
         [Test]
         public void CurlyExpected()
         {
@@ -112,11 +110,5 @@ namespace VerificationIntegrationTest
 
             VerifyResults(expct);
         }
-
-
-
-
-
     }
-
 }

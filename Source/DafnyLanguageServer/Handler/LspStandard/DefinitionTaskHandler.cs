@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DafnyLanguageServer.Core;
+using DafnyLanguageServer.WorkspaceManager;
+using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.Core;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -20,7 +20,6 @@ namespace DafnyLanguageServer.Handler
         : base(router, workspaceManager, loggingFactory)
         {
             _method = Resources.Requests.definitions;
-
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()
@@ -49,7 +48,6 @@ namespace DafnyLanguageServer.Handler
                 HandleError(string.Format(Resources.LoggingMessages.request_error, _method), e);
                 return null;
             }
-
         }
 
         private LocationOrLocationLinks RunAndEvaluate(IDefinitionsProvider provider, Uri uri, int line, int col)

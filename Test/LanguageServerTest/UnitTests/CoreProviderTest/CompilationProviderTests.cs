@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.DafnyAccess;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Boogie;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Files = TestCommons.Paths;
 
 namespace CoreProviderTest
@@ -88,7 +88,6 @@ namespace CoreProviderTest
             VerifyResults(false, true, "Compiled assembly into include_main.exe");
         }
 
-
         [Test]
         public void Inexistant_File()
         {
@@ -151,10 +150,8 @@ namespace CoreProviderTest
             VerifyResultsLoosely(true, false);
         }
 
-
         private void RunCompilation(string filePath, string[] args = null)
         {
-
             if (args == null)
             {
                 args = new string[] { };
@@ -187,7 +184,6 @@ namespace CoreProviderTest
             Assert.AreEqual(expectedMessage, compilerResults.Message);
         }
 
-
         private void VerifyResultsLoosely(bool expectedError, bool expectedExecutable, string expectedMessage = "")
         {
             if (compilerResults == null)
@@ -199,5 +195,4 @@ namespace CoreProviderTest
             Assert.IsTrue(compilerResults.Message.Contains(expectedMessage), $"Message not contained. Expected: {expectedMessage}. Is: {compilerResults.Message}");
         }
     }
-
 }

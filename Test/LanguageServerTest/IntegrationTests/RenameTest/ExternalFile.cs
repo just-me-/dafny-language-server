@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace RenameTest
 {
-
     public class ExternalFile : RenameBase
     {
-
         protected string f = Files.rn_include_main;
 
         [Test]
@@ -21,7 +19,6 @@ namespace RenameTest
                 "newText at L2:C17 - L2:C18 in include_main.dfy"
             };
             VerifyForMultiFiles(expected);
-
         }
 
         [Test]
@@ -36,7 +33,6 @@ namespace RenameTest
             VerifyForMultiFiles(expected);
         }
 
-
         [Test]
         public void ExternalClassField()
         {
@@ -48,6 +44,5 @@ namespace RenameTest
             };
             VerifyForMultiFiles(expected);
         }
-
     }
 }

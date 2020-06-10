@@ -1,15 +1,15 @@
-﻿using DafnyLanguageServer.Handler;
-using Microsoft.Extensions.DependencyInjection;
-using OmniSharp.Extensions.LanguageServer.Server;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Handler;
 using DafnyLanguageServer.Resources;
 using DafnyLanguageServer.Tools;
 using DafnyLanguageServer.Tools.ConfigInitialization;
 using DafnyLanguageServer.WorkspaceManager;
+using Microsoft.Extensions.DependencyInjection;
+using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using DidChangeWatchedFilesHandler = DafnyLanguageServer.Handler.DidChangeWatchedFilesHandler;
 using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
 using ILogger = Serilog.ILogger;
@@ -21,7 +21,7 @@ namespace DafnyLanguageServer
     /// Creates and starts the Dafny Language Server.
     /// It starts the Omnisharp Language Server and registers all handlers as well as the services.
     /// It does also use owr <c>ConfigInitializer</c> to provide customized settings for the server.
-    /// It also redirects the output stream. 
+    /// It also redirects the output stream.
     /// </summary>
     public class DafnyLanguageServer
     {

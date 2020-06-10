@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Core;
 using DafnyLanguageServer.CustomDTOs;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.IO;
 using TestCommons;
 using Files = TestCommons.Paths;
 
@@ -152,7 +152,6 @@ namespace CoreProviderTest
             CollectionAssert.AreEquivalent(expectation, resultAsString);
         }
 
-
         [Test]
         public void CEWithTwoConnectedMethods()
         {
@@ -181,7 +180,6 @@ namespace CoreProviderTest
             {
                 Sourcecode = src
             };
-
         }
     }
 }

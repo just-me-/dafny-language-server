@@ -1,14 +1,12 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace VerificationIntegrationTest
 {
-
     [TestFixture, Timeout(10000)]
     public class Warnings : VerificationBase
     {
-
         [Test]
         public void Warning_BasedOnInclude()
         {
