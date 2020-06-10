@@ -37,13 +37,16 @@ namespace DafnyLanguageServer.Commons
         /// </summary>  
         public static DiagnosticElement ConvertToErrorInformation(this ErrorMessage eMsg, ErrorLevel severity)
         {
+            IToken editedToken = RepositionErrorsWithoutPosToL1C1(eMsg.token);
             if (severity == ErrorLevel.Error)
             {
-                return new DiagnosticElement(eMsg.token, Resources.LoggingMessages.diagnostic_syntax_error + "\n " + eMsg.message, severity);
+                return new DiagnosticElement(editedToken, Resources.LoggingMessages.diagnostic_syntax_error + "\n " + eMsg.message, severity);
             }
-            return new DiagnosticElement(eMsg.token, eMsg.message, severity);
+            return new DiagnosticElement(editedToken, eMsg.message, severity);
 
         }
+
+
 
         /// <summary>
         ///Converts Boogie Errors into DiagnosticElements. These can only be of type error.
@@ -51,11 +54,29 @@ namespace DafnyLanguageServer.Commons
         /// </summary>  
         public static DiagnosticElement ConvertToErrorInformation(this ErrorInformation eInfo)
         {
-            if (eInfo is null) return null;
-            return new DiagnosticElement(eInfo.Tok, Resources.LoggingMessages.diagnostic_logical_error + "\n " + eInfo.Msg, ErrorLevel.Error)
+            if (eInfo is null)
+            {
+                return null;
+            }
+            IToken editedToken = RepositionErrorsWithoutPosToL1C1(eInfo.Tok);
+
+            return new DiagnosticElement(editedToken, Resources.LoggingMessages.diagnostic_logical_error + "\n " + eInfo.Msg, ErrorLevel.Error)
             {
                 Aux = eInfo.Aux
             };
+        }
+
+        private static IToken RepositionErrorsWithoutPosToL1C1(IToken originalToken)
+        {
+            IToken result = new Token();
+            int finalLine = originalToken.line == 0 ? 1 : originalToken.line;
+            int finalCol = originalToken.col == 0 ? 1 : originalToken.col;
+            result.line = finalLine;
+            result.col = finalCol;
+            result.val = originalToken.val;
+            result.kind = originalToken.kind;
+            result.pos = originalToken.pos;
+            return result;
         }
     }
 }
