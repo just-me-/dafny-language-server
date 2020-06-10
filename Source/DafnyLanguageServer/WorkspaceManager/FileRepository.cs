@@ -84,9 +84,7 @@ namespace DafnyLanguageServer.WorkspaceManager
         /// </summary>
         private void AddSymbolTable()
         {
-
-            if (Result.TranslationStatus >= TranslationStatus.Resolved &&
-                Result.DafnyProgram != null)
+            if (Result.TranslationStatus >= TranslationStatus.Resolved && Result.DafnyProgram != null)
             {
                 SymbolTableGenerator s = new SymbolTableGenerator(Result.DafnyProgram);
                 ISymbolInformation rootnode = s.GenerateSymbolTable();

@@ -5877,7 +5877,7 @@ namespace Microsoft.Dafny {
           dec.Accept(v);
         }
 
-        foreach (var stmt in this.Body.Body) {
+        foreach (var stmt in this.Body?.Body ?? new List<Statement>()) {
           stmt.Accept(v);
         }
       }
@@ -6118,7 +6118,7 @@ namespace Microsoft.Dafny {
           dec.Accept(v);
         }
 
-        foreach (var stmt in this.Body.Body) {
+        foreach (var stmt in this.Body?.Body ?? new List<Statement>()) {
           stmt.Accept(v);
         }
       }
@@ -7557,7 +7557,7 @@ namespace Microsoft.Dafny {
 
       this.Guard.Accept(v);
 
-      foreach (var stmt in this.Body.Body) {
+      foreach (var stmt in this.Body?.Body ?? new List<Statement>()) {
         stmt.Accept(v);
       }
       v.Leave(this);
