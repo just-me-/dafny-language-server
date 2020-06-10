@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Client;
+using System.Collections.Generic;
 using TestCommons;
 
 namespace VerificationIntegrationTest
@@ -9,7 +9,6 @@ namespace VerificationIntegrationTest
     {
         protected List<string> diagnosticList;
         private readonly System.Threading.EventWaitHandle waitHandle = new System.Threading.AutoResetEvent(false);
-        
 
         public VerificationBase() : base("Verification")
         {
@@ -32,7 +31,6 @@ namespace VerificationIntegrationTest
 
             Client.TextDocument.OnPublishDiagnostics(diagnosticsHandler);
         }
-
 
         protected void SendRequestAndAwaitDiagnostics(string file)
         {

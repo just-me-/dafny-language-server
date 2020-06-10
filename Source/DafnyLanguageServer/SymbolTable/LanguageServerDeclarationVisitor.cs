@@ -1,9 +1,10 @@
-﻿using System;
-using Microsoft.Dafny;
+﻿using Microsoft.Dafny;
+using System;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
+
 // ReSharper disable RedundantArgumentDefaultValue
 // Parameters explicitly stated for clarity.
 
@@ -15,7 +16,6 @@ namespace DafnyLanguageServer.SymbolTable
     /// </summary>
     public class LanguageServerDeclarationVisitor : LanguageServerVisitorBase
     {
-
         public LanguageServerDeclarationVisitor(ISymbolInformation entryPoint) : base(entryPoint)
         {
             GoesDeep = false;
@@ -77,7 +77,6 @@ namespace DafnyLanguageServer.SymbolTable
             SetClass(null);
         }
 
-
         public override void Visit(Field o)
         {
             CreateSymbol(
@@ -121,7 +120,7 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: true
             );
-            SetScope(symbol); //technically not necessary since we dont go deeper.
+            SetScope(symbol);
         }
 
         public override void Leave(Method o)
@@ -146,7 +145,7 @@ namespace DafnyLanguageServer.SymbolTable
               canHaveChildren: true,
               canBeUsed: true
             );
-            SetScope(symbol); //technically not necessary since we dont go deeper.
+            SetScope(symbol);
         }
 
         public override void Leave(Constructor o)
@@ -172,7 +171,7 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: true,
                 canBeUsed: true
             );
-            SetScope(symbol); //technically not necessary since we dont go deeper.
+            SetScope(symbol);
         }
 
         public override void Leave(Function o)
@@ -229,7 +228,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
             throw new InvalidOperationException(Resources.ExceptionMessages.visit_only_declarations);
         }
-
 
         public override void Leave(NameSegment e)
         {

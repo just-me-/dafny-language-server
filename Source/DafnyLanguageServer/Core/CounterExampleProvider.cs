@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.CustomDTOs;
 using Microsoft.Boogie;
 using Microsoft.Boogie.ModelViewer;
 using Microsoft.Boogie.ModelViewer.Dafny;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DafnyLanguageServer.Core
 {
-
     /// <summary>
     /// This class provides counter examples.
     /// It analyzes the file 'model.bvd' and extracts its information.
@@ -26,7 +25,6 @@ namespace DafnyLanguageServer.Core
         public CounterExampleProvider(PhysicalFile file) : this(file, FileAndFolderLocations.modelBVD)
         {
         }
-
 
         /// <summary>
         /// Use this ctor to inject a custom model-file for testing.
@@ -52,6 +50,7 @@ namespace DafnyLanguageServer.Core
         private class ModelReader
         {
             private string ModelBvd { get; }
+
             public ModelReader(string pathToBvdFile) => ModelBvd = pathToBvdFile;
 
             public List<ILanguageSpecificModel> ReadModelFile()
@@ -91,6 +90,7 @@ namespace DafnyLanguageServer.Core
         {
             private PhysicalFile PhysicalFile { get; }
             private List<ILanguageSpecificModel> SpecificModels { get; }
+
             public CounterExampleExtractor(PhysicalFile file, List<ILanguageSpecificModel> specificModels)
             {
                 PhysicalFile = file;
@@ -111,7 +111,6 @@ namespace DafnyLanguageServer.Core
                 }
                 return result;
             }
-
 
             private StateNode FindInitialState(ILanguageSpecificModel specificModel)
             {
@@ -155,7 +154,6 @@ namespace DafnyLanguageServer.Core
 
             private void AddPosition(CounterExample ce, string stateCapturedStateName)
             {
-
                 const string regex = @".*dfy\((\d+),(\d+)\)";   //anything, then dfy(00,00)
                 var r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 var m = r.Match(stateCapturedStateName);
@@ -188,7 +186,9 @@ namespace DafnyLanguageServer.Core
             }
 
             private static string RemoveSpaceAfterMinus(string s) => s.Replace("- ", "-");
+
             private static bool IsUnknown(string s) => s.StartsWith("**") || s.StartsWith("'");
+
             private static bool IsReference(string s) => s.StartsWith("T@U!val!");
         }
     }

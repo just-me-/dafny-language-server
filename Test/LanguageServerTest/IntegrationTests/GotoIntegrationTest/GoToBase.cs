@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
+using System.Linq;
 using TestCommons;
 
 namespace GotoIntegrationTest
 {
     public class GoToBase : IntegrationTestBase
     {
-
         protected LocationOrLocationLinks goneTo;
 
         [SetUp]
@@ -16,7 +15,6 @@ namespace GotoIntegrationTest
         {
             goneTo = default;
         }
-
 
         protected void SetGoToDefinitionWithoutZeroIndexing(string file, int line, int col)
         {
@@ -30,11 +28,10 @@ namespace GotoIntegrationTest
             long col = goneTo.FirstOrDefault().Location.Range.Start.Character;
             Uri uri = goneTo.FirstOrDefault().Location.Uri;
 
-            Assert.AreEqual(expLine, line + 1);  //adding 1 here to get rid of the 0 indexing.
-            Assert.AreEqual(expCol, col + 1);    //same
+            Assert.AreEqual(expLine, line + 1);  //adding 1 here to get rid of the 0-based indexing.
+            Assert.AreEqual(expCol, col + 1);
             Assert.AreEqual(new Uri(expectedFile), uri);
         }
-
 
         protected int expectedLine;
         protected int expectedChar;
@@ -59,7 +56,5 @@ namespace GotoIntegrationTest
             }
             VerifyResult(file, expectedLine, expectedChar);
         }
-
-
     }
 }

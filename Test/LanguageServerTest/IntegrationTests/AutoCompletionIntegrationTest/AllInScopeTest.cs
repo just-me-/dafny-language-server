@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace AutoCompletionIntegrationTest
 {
-    /// <summary>
-    /// This class is testing method suggestion based on a scope range. 
-    /// </summary>
     [TestFixture]
     public class AllInScopeTest : AutoCompletionBase
     {
@@ -21,7 +18,7 @@ namespace AutoCompletionIntegrationTest
                 "Main",
             };
             GetCompletions(Files.ac_basic_var, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -39,7 +36,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_basic_var_class, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -56,7 +53,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -67,7 +64,7 @@ namespace AutoCompletionIntegrationTest
 
             GetCompletions(Files.ac_empty, line, col);
             var exp = new List<string>();
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -83,7 +80,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -99,7 +96,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -116,7 +113,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -133,7 +130,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -149,7 +146,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -165,7 +162,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -181,7 +178,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -198,7 +195,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -215,7 +212,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -231,7 +228,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -247,7 +244,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -263,7 +260,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -278,7 +275,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
     }
 }

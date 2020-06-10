@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Microsoft.Boogie;
+using Microsoft.Dafny;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
 using Formal = Microsoft.Dafny.Formal;
 using Function = Microsoft.Dafny.Function;
 using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
 using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
+
 // ReSharper disable RedundantArgumentDefaultValue
 // explicitly stated for clarity.
 
@@ -39,14 +40,10 @@ namespace DafnyLanguageServer.SymbolTable
             SetModule(preDeclaredSymbol);
         }
 
-
-
-
         public override void Leave(ModuleDefinition o)
         {
             SetScope(null);
         }
-
 
         public override void Visit(AliasModuleDecl o)
         {
@@ -63,12 +60,12 @@ namespace DafnyLanguageServer.SymbolTable
                 canBeUsed: true
             );
         }
+
         public override void Leave(AliasModuleDecl o)
         {
         }
 
         #region navigate-through-declarations
-
 
         public override void Visit(ClassDecl o)
         {
@@ -82,12 +79,12 @@ namespace DafnyLanguageServer.SymbolTable
                     var baseClassIdentifier = baseClassType as UserDefinedType;
                     ISymbolInformation baseSymbol = FindDeclaration(baseClassIdentifier?.Name, SurroundingScope);
                     preDeclaredSymbol.BaseClasses.Add(baseSymbol);
-                    //Create Symbol for the extends ->>BASE<-- so its clickable and base gets a reference coutn.
+
                     var t = CreateSymbol(
                       name: baseClassIdentifier?.Name,
                       positionAsToken: baseClassIdentifier?.tok,
-                      bodyStartPosAsToken: baseClassIdentifier?.tok,
-                      bodyEndPosAsToken: baseClassIdentifier?.tok,
+                      bodyStartPosAsToken: null,
+                      bodyEndPosAsToken: null,
                       kind: Kind.Class,
                       type: baseClassType,
                       isDeclaration: false,
@@ -118,14 +115,11 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-
-
         public override void Visit(Method o)
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
 
             SetScope(preDeclaredSymbol);
-
         }
 
         public override void Leave(Method o)
@@ -138,7 +132,6 @@ namespace DafnyLanguageServer.SymbolTable
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Constructor);
 
             SetScope(preDeclaredSymbol);
-
         }
 
         public override void Leave(Constructor o)
@@ -150,7 +143,7 @@ namespace DafnyLanguageServer.SymbolTable
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Function);
 
-            SetScope(preDeclaredSymbol); //technically not necessary since we dont go deeper.
+            SetScope(preDeclaredSymbol);
         }
 
         public override void Leave(Function o)
@@ -158,21 +151,10 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
+        #endregion navigate-through-declarations
 
-
-        #endregion
-
-        ///////"new" stuff from here on the other visitor didnt do from here on.
-
-
-        /// <summary>
-        /// Non global variables are method parameters (in and out parameters).
-        /// We treat them as variable definitions.
-        /// Additional Info: Base Class of non global variable is formal.
-        /// </summary>
         public override void Visit(NonglobalVariable o)
         {
-
             CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
@@ -219,17 +201,14 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope.Params = SurroundingScope.Params ?? new List<ISymbolInformation>();
                 SurroundingScope.Params.Add(symbol);
             }
-            
         }
 
         public override void Leave(Formal o)
         {
         }
 
-        //local variable are just locally defined vars: var bla:=2
         public override void Visit(LocalVariable o)
         {
-
             CreateSymbol(
                 name: o.Name,
                 kind: Kind.Variable,
@@ -333,7 +312,6 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ComprehensionExpr o)
         {
-            
             var name = "bounded-expression-ghost-" + o.tok.line;
             IToken endToken = new Token(o.tok.line, int.MaxValue - 1024);
 
@@ -360,10 +338,6 @@ namespace DafnyLanguageServer.SymbolTable
             JumpUpInScope();
         }
 
-        /// <summary>
-        /// A <c>TypeRhs</c> is the right hand side of something like var a:= new MyClass(). See also its class description.
-        /// Also has some Array stuff that could be relevant for us.
-        /// </summary>
         public override void Visit(TypeRhs e)
         {
             UserDefinedType t = null;
@@ -376,7 +350,6 @@ namespace DafnyLanguageServer.SymbolTable
             {
                 return;
             }
-
 
             var nav = new SymbolNavigator();
             var declaration = nav.GetSymbolAtPosition(RootNode, t.ResolvedClass.tok);
@@ -399,28 +372,34 @@ namespace DafnyLanguageServer.SymbolTable
             );
         }
 
-        public override void Leave(TypeRhs e) { }
+        public override void Leave(TypeRhs e)
+        {
+        }
 
-        //A AutoGhostIndentifierExpr is when we have a VarDeclStmt: var a:= b.
-        //This VarDecl Stmt contains a Update stmt, and the left side contains ghostVars, aka the 'a'.
-        //We do nth since within the VarDeclStmt, the 'a' gets registered.
-        public override void Visit(AutoGhostIdentifierExpr e) { }
-        public override void Leave(AutoGhostIdentifierExpr e) { }
+        public override void Visit(AutoGhostIdentifierExpr e)
+        {
+        }
 
-        public override void Visit(LiteralExpr e) { }
-        public override void Leave(LiteralExpr e) { }
+        public override void Leave(AutoGhostIdentifierExpr e)
+        {
+        }
 
+        public override void Visit(LiteralExpr e)
+        {
+        }
 
-        //ApllySuffixes are just brackets after a Method call.
-        //The Visitor will redirect the accept statements to the expressions lef to the (), thus we do nth.
+        public override void Leave(LiteralExpr e)
+        {
+        }
 
-        public override void Visit(ApplySuffix e) { }
-        public override void Leave(ApplySuffix e) { }
+        public override void Visit(ApplySuffix e)
+        {
+        }
 
+        public override void Leave(ApplySuffix e)
+        {
+        }
 
-
-        //Name Segment are identifiers, especially also in methods.
-        //For example two name segments in   var1 := returnsTwo(); --> var1, returnsTwo
         public override void Visit(NameSegment e)
         {
             var nav = new SymbolNavigator();
@@ -487,9 +466,6 @@ namespace DafnyLanguageServer.SymbolTable
 
         public override void Visit(ThisExpr e)
         {
-            //we could also just do nothing, then you couldn't click on "this." for goto def or so.
-            //maybe even better cause many this names may cause trouble or such, i don't know.
-
             string definingClassName = e.Type.ToString();
             var definingClass = FindDeclaration(definingClassName, SurroundingScope, Kind.Class);
             var declaration = definingClass;
@@ -541,8 +517,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-
-
         public override void Visit(IdentifierExpr e)
         {
         }
@@ -551,7 +525,6 @@ namespace DafnyLanguageServer.SymbolTable
         {
         }
 
-
         public override void Visit(DisplayExpression o)
         {
         }
@@ -559,7 +532,7 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(DisplayExpression o)
         {
         }
-        
+
         public override void Visit(AssignmentRhs o)
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);

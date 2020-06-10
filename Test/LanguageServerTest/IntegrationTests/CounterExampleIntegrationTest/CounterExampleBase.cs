@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using DafnyLanguageServer.CustomDTOs;
+﻿using DafnyLanguageServer.CustomDTOs;
 using NUnit.Framework;
+using System.Collections.Generic;
 using TestCommons;
 
 namespace CounterExampleIntegrationTest
@@ -39,8 +39,6 @@ namespace CounterExampleIntegrationTest
                 Assert.Fail("No Counter Example Message provided by server");
             }
             CollectionAssert.AreEquivalent(expectation, resultsAsString);
-
         }
-
     }
 }

@@ -2,10 +2,10 @@
 {
     public enum TranslationStatus
     {
-        Virgin, 
-        Parsed, 
-        Resolved, 
-        Translated, 
+        Virgin,
+        Parsed,
+        Resolved,
+        Translated,
         Boogied,
         Verified
     }

@@ -1,15 +1,15 @@
-﻿using System;
-using DafnyLanguageServer.Commons;
+﻿using DafnyLanguageServer.Commons;
 using DafnyLanguageServer.Resources;
+using System;
 
 namespace DafnyLanguageServer.Tools.ConfigInitialization
 {
-
-
     /// <summary>
-    /// This is a service to set up the language server config.
-    /// It is used once at the server start up. 
+    /// This is a service to set up the language server config. It is used once at the server start up.
     /// </summary>
+    /// <remarks>
+    /// //Loglevels (starting from 0): Trace - Debug - Info - Warning - Error - Critical - None
+    /// </remarks>
     public class ConfigInitializer
     {
         public ConfigInitializationErrorReporter Reporter { get; } = new ConfigInitializationErrorReporter();
@@ -17,9 +17,6 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
 
         private string[] LaunchArguments { get; }
         private string JSONConfigFile { get; }
-
-        //Log Levels (starting from 0)
-        //Trace - Debug - Info - Warning - Error - Critical - None
 
         /// <summary>
         /// This constructor uses the default config files.
@@ -47,7 +44,7 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
         /// Then, they are overwritten by the JSON, if provided.
         /// Then, they are overwritten by launch arguments, if provided.
         /// <remarks>
-        /// The method will run to completion and provide defaults in case of errors. 
+        /// The method will run to completion and provide defaults in case of errors.
         /// In case of errors, they are available in the <c>InitializationErrors</c> property.
         /// </remarks>
         /// </summary>
@@ -89,7 +86,7 @@ namespace DafnyLanguageServer.Tools.ConfigInitialization
                 throw new ArgumentException(ExceptionMessages.stream_and_log_are_same);
             }
 
-            if ((int) LanguageServerConfig.LogLevel > 6 || (int) LanguageServerConfig.LogLevel < 0)
+            if ((int)LanguageServerConfig.LogLevel > 6 || (int)LanguageServerConfig.LogLevel < 0)
             {
                 throw new ArgumentException(ExceptionMessages.level_out_of_bounds);
             }

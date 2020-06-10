@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
 
 namespace CoreProviderTest
 {
@@ -62,7 +59,6 @@ namespace CoreProviderTest
             Assert.AreEqual(textExpectation, actual, "Markup Content does not match");
         }
 
-
         [Test]
         public void TestNull()
         {
@@ -73,7 +69,5 @@ namespace CoreProviderTest
 
             Assert.IsNull(result);
         }
-
-
     }
 }

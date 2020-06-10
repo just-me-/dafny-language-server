@@ -1,7 +1,7 @@
-﻿using System;
+﻿using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace DafnyLanguageServer.Commons
 {
@@ -9,7 +9,7 @@ namespace DafnyLanguageServer.Commons
     /// This class represents a physical Dafny file. The content of this file is not buffered.
     /// It is the current representation of the file in the users workspace in VSCode.
     /// Gets updated whenever a change event over LSP is triggered.
-    /// Only contains basic attributes like source code and name. 
+    /// Only contains basic attributes like source code and name.
     /// </summary>
     public class PhysicalFile
     {

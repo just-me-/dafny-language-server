@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace CounterExampleIntegrationTest
@@ -7,14 +7,12 @@ namespace CounterExampleIntegrationTest
     [TestFixture]
     public class BasicTests : CounterExampleBase
     {
-
         [Test]
         public void PostconditionFullfilled()
         {
             GetCounterExamples(Files.ce_ok);
             CollectionAssert.IsEmpty(counterExampleResults.CounterExamples);
         }
-
 
         [Test]
         public void ViolatedWith1CounterExamples()
@@ -37,6 +35,5 @@ namespace CounterExampleIntegrationTest
             };
             VerifyResults(expecation);
         }
-
     }
 }

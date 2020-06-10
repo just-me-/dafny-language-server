@@ -1,6 +1,6 @@
-﻿using System;
-using DafnyLanguageServer.WorkspaceManager;
+﻿using DafnyLanguageServer.WorkspaceManager;
 using NUnit.Framework;
+using System;
 
 namespace ContentManagerTests
 {
@@ -9,11 +9,11 @@ namespace ContentManagerTests
     internal class BufferManagerTests
     {
         private IWorkspace b;
-        readonly Uri uri1 = new Uri(@"C:\file1.txt");
-        readonly Uri uri2 = new Uri(@"C:\file2.txt");
-        readonly Uri unregisteredUri = new Uri(@"C:\file3.txt");
+        private readonly Uri uri1 = new Uri(@"C:\file1.txt");
+        private readonly Uri uri2 = new Uri(@"C:\file2.txt");
+        private readonly Uri unregisteredUri = new Uri(@"C:\file3.txt");
 
-        readonly string source1 = @"
+        private readonly string source1 = @"
             method MultipleReturns(x: int, y: int) returns (more: int, less: int)
             {
                 more:= x + y;
@@ -21,7 +21,8 @@ namespace ContentManagerTests
                 // comments: are not strictly necessary.
             }
             ";
-        readonly string source2 = "";
+
+        private readonly string source2 = "";
 
         [SetUp]
         public void createBuffer()
@@ -74,7 +75,6 @@ namespace ContentManagerTests
             IFileRepository f = b.GetFileRepository(uri1);
             Assert.AreEqual("C:\\file1.txt", f.PhysicalFile.Filepath);
         }
-
 
         [Test]
         public void GetSourceCode()

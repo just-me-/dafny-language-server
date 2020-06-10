@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Dafny;
+﻿using Microsoft.Dafny;
+using System;
 using System.Collections.Generic;
 using Type = Microsoft.Dafny.Type;
 
@@ -14,12 +14,10 @@ namespace DafnyLanguageServer.SymbolTable
         bool HasBody { get; }
         int Column { get; }
         int IdentifierEndColumn { get; }
-
         string Name { get; set; }
         Kind Kind { get; set; }
         Type Type { get; set; }
         UserDefinedType UserTypeDefinition { get; }
-
         ISymbolInformation Parent { get; set; }
         ISymbolInformation DeclarationOrigin { get; set; }
         Dictionary<string, ISymbolInformation> ChildrenHash { get; set; }
@@ -33,10 +31,13 @@ namespace DafnyLanguageServer.SymbolTable
         ISymbolInformation Module { get; set; }
         ISymbolInformation AssociatedDefaultClass { get; }
         List<ISymbolInformation> Usages { get; set; }
+
         IEnumerable<ISymbolInformation> GetAllOccurrences();
 
         string PositionToFormattedString();
+
         string ToDebugString();
+
         ISymbolInformation this[string index] { get; set; }
     }
 }

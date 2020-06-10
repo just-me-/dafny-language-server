@@ -1,10 +1,10 @@
-﻿using System;
+﻿using DafnyLanguageServer.SymbolTable;
+using Microsoft.Boogie;
+using Microsoft.Dafny;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DafnyLanguageServer.SymbolTable;
-using Microsoft.Boogie;
-using Microsoft.Dafny;
 using Type = Microsoft.Dafny.Type;
 
 namespace SymbolTableTest

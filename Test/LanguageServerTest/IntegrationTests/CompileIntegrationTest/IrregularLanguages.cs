@@ -6,8 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class IrregularLanguages : CompileBase
     {
-
-
         [Test]
         public void Java()
         {
@@ -35,7 +33,5 @@ namespace CompileIntegrationTest
             RunCompilation(Files.cp_otherlang_py_dfyending);
             VerifyResults(true, false, failPrefix + "[L1:C1] Syntax Error: \n EOF expected");
         }
-
-
     }
 }

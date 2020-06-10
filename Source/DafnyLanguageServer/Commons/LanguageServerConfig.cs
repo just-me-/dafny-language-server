@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Text;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
+using System.IO;
+using System.Text;
 
 namespace DafnyLanguageServer.Commons
 {
@@ -24,7 +24,6 @@ namespace DafnyLanguageServer.Commons
 
         public static LogLevel LogLevel { get; set; }
         public static TextDocumentSyncKind SyncKind { get; set; }
-
 
         public new static string ToString()
         {

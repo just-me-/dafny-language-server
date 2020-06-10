@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.Tools;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DafnyLanguageServer.Core
 {
@@ -17,11 +17,11 @@ namespace DafnyLanguageServer.Core
         private readonly ISymbolTableManager _manager;
         private static readonly HashSet<string> _reservedWords = new ReservedWordsProvider().GetReservedWords();
 
-
         public RenameProvider(ISymbolTableManager manager)
         {
             _manager = manager;
         }
+
         public WorkspaceEdit GetRenameChanges(string newName, Uri uri, int line, int col)
         {
             var symbolAtCursor = _manager.GetSymbolByPosition(uri, line, col);
@@ -75,7 +75,6 @@ namespace DafnyLanguageServer.Core
             if (!newName.All(c => char.IsLetterOrDigit(c) || c == '_'))
             {
                 SetError(newName + Resources.LoggingMessages.rename_only_digits);
-
             }
 
             if (newName.StartsWith("_"))
@@ -87,7 +86,6 @@ namespace DafnyLanguageServer.Core
             {
                 SetError(Resources.LoggingMessages.rename_start_with_number);
             }
-
         }
 
         private Dictionary<Uri, IEnumerable<TextEdit>> ConvertDict(Dictionary<Uri, List<TextEdit>> input)
@@ -113,13 +111,11 @@ namespace DafnyLanguageServer.Core
             return textEditsPerFile;
         }
 
-
         private void SetError(string msg)
         {
             Outcome.Error = true;
             Outcome.Msg = msg;
         }
-
     }
 
     public class RenameOutcome

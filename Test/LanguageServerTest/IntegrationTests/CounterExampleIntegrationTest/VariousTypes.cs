@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace CounterExampleIntegrationTest
@@ -7,8 +7,6 @@ namespace CounterExampleIntegrationTest
     [TestFixture]
     public class VariousTypes : CounterExampleBase
     {
-
-
         [Test]
         public void Bool()
         {
@@ -63,6 +61,5 @@ namespace CounterExampleIntegrationTest
             };
             VerifyResults(expecation);
         }
-
     }
 }

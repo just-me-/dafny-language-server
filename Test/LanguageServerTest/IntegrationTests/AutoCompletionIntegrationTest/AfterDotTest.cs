@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace AutoCompletionIntegrationTest
 {
-    /// <summary>
-    /// This class is testing method suggestion based on a class reference. 
-    /// </summary>
     [TestFixture]
     public class AfterDotTest : AutoCompletionBase
     {
@@ -18,7 +15,7 @@ namespace AutoCompletionIntegrationTest
             var exp = new List<string>() { };
 
             GetCompletions(Files.ac_c_empty, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -32,7 +29,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_c_one_method, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -46,7 +43,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_c_multiple, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -60,7 +57,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_c_in_class, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -74,7 +71,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_c_partial, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -89,7 +86,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
     }
 }

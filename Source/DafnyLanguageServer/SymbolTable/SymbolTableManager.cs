@@ -58,7 +58,6 @@ namespace DafnyLanguageServer.SymbolTable
             return navigator.BottomUpAll(symbol, extendedFilter);
         }
 
-
         /// <summary>
         /// For instances of classes - returns the origins "class type" as Smybol.
         /// Eg var instance = new ClassA();

@@ -2,13 +2,10 @@ using NUnit.Framework;
 using Files = TestCommons.Paths;
 
 namespace GotoIntegrationTest
-
-//Notiz: ALle failenden tests sind aukommentiert damit CI nicht ausrastet. Wird später gefixed im Milestone 5 wenn wir Symbol Table haben. Alle Todos Ticket 71
 {
     [TestFixture]
     public class IrregularPositions : GoToBase
     {
-
         [Test]
         public void RandomSpot()
         {
@@ -40,6 +37,5 @@ namespace GotoIntegrationTest
             SetGoToDefinitionWithoutZeroIndexing(file, -5, -5);
             Assert.IsEmpty(goneTo);
         }
-
     }
 }

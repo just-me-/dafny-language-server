@@ -6,8 +6,6 @@ namespace CompileIntegrationTest
     [TestFixture]
     public class SuccessStories : CompileBase
     {
-
-
         [Test]
         public void SuccessWithExeAsResult()
         {
@@ -28,6 +26,5 @@ namespace CompileIntegrationTest
             RunCompilation(Files.cp_include_main);
             VerifyResults(false, true, "Compiled assembly into include_main.exe");
         }
-
     }
 }

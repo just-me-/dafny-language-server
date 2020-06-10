@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using DafnyLanguageServer.SymbolTable;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace CoreProviderTest
 {
-
     [TestFixture]
     [Category("Unit")]
     public class RenameProviderTests
@@ -42,7 +40,6 @@ namespace CoreProviderTest
 
             Assert.AreEqual(2, aslist[2].Range.Start.Line, "Edit 2 starts at wrong line");
             Assert.AreEqual(32, aslist[2].Range.Start.Character, "Edit 2 starts at wrong char");
-
         }
 
         [Test]
@@ -58,7 +55,7 @@ namespace CoreProviderTest
         [Test]
         public void IrregularName()
         {
-            ISymbolTableManager manager = new FakeSymbolManager(false,false);
+            ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new RenameProvider(manager);
             var result = provider.GetRenameChanges("{{}}}", new Uri("file:///N:/u/l.l"), 2, 22);
 
@@ -76,7 +73,6 @@ namespace CoreProviderTest
             Assert.IsTrue(provider.Outcome.Error, "error expected in rename-outcome");
             Assert.AreEqual(DafnyLanguageServer.Resources.LoggingMessages.rename_start_with_number, provider.Outcome.Msg);
         }
-
 
         [Test]
         public void UnderScoreName()

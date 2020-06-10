@@ -7,7 +7,6 @@ namespace GotoIntegrationTest
     [TestFixture]
     public class IncludedFile : GoToBase
     {
-
         [Test]
         public void ExternalClassDefinition()
         {
@@ -16,7 +15,6 @@ namespace GotoIntegrationTest
 
             VerifyResult(Files.gt_includee, 1, 7);
         }
-
 
         [Test]
         public void MethodOfExternalClass()
@@ -35,6 +33,5 @@ namespace GotoIntegrationTest
 
             VerifyResult(Files.gt_includee, 6, 9);
         }
-
     }
 }

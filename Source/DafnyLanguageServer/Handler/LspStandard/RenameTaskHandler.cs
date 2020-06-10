@@ -1,24 +1,22 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.Handler
 {
     public class RenameTaskHandler : LspBasicHandler<RenameCapability>, IRenameHandler
     {
-
         public RenameTaskHandler(ILanguageServer router, IWorkspace workspaceManager,
             ILoggerFactory loggingFactory = null)
             : base(router, workspaceManager, loggingFactory)
         {
             _method = Resources.Requests.rename;
-
         }
 
         public RenameRegistrationOptions GetRegistrationOptions()
@@ -54,7 +52,6 @@ namespace DafnyLanguageServer.Handler
 
         private WorkspaceEdit RunAndEvaulate(IRenameProvider provider, string newName, Uri uri, int line, int col)
         {
-
             var result = provider.GetRenameChanges(newName, uri, line, col);
 
             if (provider.Outcome.Error)
@@ -64,7 +61,4 @@ namespace DafnyLanguageServer.Handler
             return result;
         }
     }
-
 }
-
-

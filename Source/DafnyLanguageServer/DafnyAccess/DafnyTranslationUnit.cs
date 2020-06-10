@@ -1,10 +1,11 @@
+using DafnyLanguageServer.Commons;
+using DafnyLanguageServer.Resources;
 using Microsoft.Boogie;
 using Microsoft.Dafny;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DafnyLanguageServer.Commons;
-using DafnyLanguageServer.Resources;
+
 using Bpl = Microsoft.Boogie;
 
 namespace DafnyLanguageServer.DafnyAccess
@@ -87,7 +88,8 @@ namespace DafnyLanguageServer.DafnyAccess
         {
             return string.IsNullOrEmpty(t.filename) || new Uri(t.filename) == _file.Uri;
         }
-        #endregion
+
+        #endregion ErrorReporting
 
         /// <summary>
         /// Ensures that this instance will only get used once.
@@ -131,7 +133,6 @@ namespace DafnyLanguageServer.DafnyAccess
                 BoogiePrograms = _boogiePrograms,
                 DafnyProgram = _dafnyProgram,
                 TranslationStatus = _status
-
             };
         }
 
@@ -143,7 +144,6 @@ namespace DafnyLanguageServer.DafnyAccess
             DafnyOptions.Install(new DafnyOptions(_reporter));
             DafnyOptions.Clo.ApplyDefaultOptions();
             DafnyOptions.O.ModelViewFile = FileAndFolderLocations.modelBVD;
-
         }
 
         /// <summary>
@@ -238,8 +238,8 @@ namespace DafnyLanguageServer.DafnyAccess
                 _status = TranslationStatus.Boogied;
             }
             return success;
-
         }
+
         /// <summary>
         /// Clears the model file. This is necassary, since no model means no counter examples.
         /// If the file exists from a previous run, it needs to be deleted.

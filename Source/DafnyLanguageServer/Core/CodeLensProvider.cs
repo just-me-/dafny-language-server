@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DafnyLanguageServer.SymbolTable;
+﻿using DafnyLanguageServer.SymbolTable;
 using DafnyLanguageServer.WorkspaceManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DafnyLanguageServer.Core
 {
@@ -85,7 +85,7 @@ namespace DafnyLanguageServer.Core
             {
                 Uri = _uri,
                 Position = position,  // where to show the CodeLens popup
-                Locations = locations // what should be displayed inside the popup 
+                Locations = locations // what should be displayed inside the popup
             };
             Command command = new Command
             {

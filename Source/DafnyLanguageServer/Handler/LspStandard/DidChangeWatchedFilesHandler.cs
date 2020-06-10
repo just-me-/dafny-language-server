@@ -1,11 +1,11 @@
-﻿using MediatR;
+﻿using DafnyLanguageServer.WorkspaceManager;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using System.Threading;
 using System.Threading.Tasks;
-using DafnyLanguageServer.WorkspaceManager;
-using Microsoft.Extensions.Logging;
 
 namespace DafnyLanguageServer.Handler
 {
@@ -13,7 +13,7 @@ namespace DafnyLanguageServer.Handler
     /// This handler implements a file watcher for Dafny files in the client workspace like it is defined in the LSP.
     /// This handler gets called qhenever a watched file gets changed from a third part program on the client side.
     /// We do actually not handle those requests separately.
-    /// This watcher has been implemented to support the defined LSP and do not throw an "not implemented error" in case a Dafny file has been modified from another editor or program. 
+    /// This watcher has been implemented to support the defined LSP and do not throw an "not implemented error" in case a Dafny file has been modified from another editor or program.
     /// </summary>
     internal class DidChangeWatchedFilesHandler : LspBasicHandler<DidChangeWatchedFilesCapability>, IDidChangeWatchedFilesHandler
     {

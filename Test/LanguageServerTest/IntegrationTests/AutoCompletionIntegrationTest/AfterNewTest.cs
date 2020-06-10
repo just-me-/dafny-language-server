@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using Files = TestCommons.Paths;
 
 namespace AutoCompletionIntegrationTest
 {
-    /// <summary>
-    /// This class is testing method suggestion based on "new" keyword - should only show classes. 
-    /// </summary>
     [TestFixture]
     public class AfterNewTest : AutoCompletionBase
     {
@@ -21,7 +18,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -35,7 +32,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -49,7 +46,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -62,10 +59,10 @@ namespace AutoCompletionIntegrationTest
                 "c",
                 "Main",
                 "C"
-            }; // not empty; "AllInScope"-result 
+            };
 
             GetCompletions(Files.ac_include_main, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
 
         [Test]
@@ -80,7 +77,7 @@ namespace AutoCompletionIntegrationTest
             };
 
             GetCompletions(Files.ac_multiple_classes, line, col);
-            VerifyCompletions(exp, line, col);
+            VerifyCompletions(exp);
         }
     }
 }

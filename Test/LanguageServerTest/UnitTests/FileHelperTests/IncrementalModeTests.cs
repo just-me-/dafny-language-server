@@ -1,13 +1,12 @@
-using System;
 using DafnyLanguageServer.Commons;
 using NUnit.Framework;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using System;
 
 namespace ContentManagerTest
 {
     public class GetIndexTest
     {
-
         private PhysicalFile f;
 
         [SetUp]
@@ -82,7 +81,6 @@ namespace ContentManagerTest
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
         }
 
-
         [Test]
         public void Pos_15_24()
         {
@@ -96,7 +94,6 @@ namespace ContentManagerTest
         {
             Position p = new Position(1, 100);
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
-
         }
 
         [Test]
@@ -104,14 +101,11 @@ namespace ContentManagerTest
         {
             Position p = new Position(100, 0);
             Assert.Throws<IndexOutOfRangeException>(() => f.GetIndex(p));
-
         }
-
     }
 
     public class ApplyChangesTest
     {
-
         private PhysicalFile f;
 
         private const string cleanSource = "\r\n\r\nclass MyClass {\r\n\r\n\r\n var field: int; \r\n\t\r\n\t\r\n method  addOne(i: int) returns(r:int) {\r\n r := i + 1;\r\n       return r; \r\n    }\r\n method aMethod() modifies this { \r\n var aLocalVar := 2;\r\n field := aLocalVar;  \r\n aLocalVar := addOne(field);\r\n    }\r\n\r\n\r\n\r\n constructor() { }\r\n\r\n}\r\n\r\n";
@@ -125,7 +119,6 @@ namespace ContentManagerTest
             };
         }
 
-
         [Test]
         public void Empty_at_0_0()
         {
@@ -134,15 +127,14 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 0, Character = 0},
-                    End = new Position {Line = 0, Character = 0}
+                    Start = new Position { Line = 0, Character = 0 },
+                    End = new Position { Line = 0, Character = 0 }
                 },
                 RangeLength = 0
             };
             f.Apply(change);
 
             Assert.AreEqual(cleanSource, cleanSource);
-
         }
 
         [Test]
@@ -153,18 +145,15 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 15},
-                    End = new Position {Line = 15, Character = 15}
+                    Start = new Position { Line = 15, Character = 15 },
+                    End = new Position { Line = 15, Character = 15 }
                 },
                 RangeLength = 0
             };
             f.Apply(change);
 
             Assert.AreEqual(cleanSource, f.Sourcecode);
-
         }
-
-
 
         //INSSERT
         [Test]
@@ -175,8 +164,8 @@ namespace ContentManagerTest
                 Text = "a",
                 Range = new Range
                 {
-                    Start = new Position {Line = 0, Character = 0},
-                    End = new Position {Line = 0, Character = 0}
+                    Start = new Position { Line = 0, Character = 0 },
+                    End = new Position { Line = 0, Character = 0 }
                 },
                 RangeLength = 0
             };
@@ -193,8 +182,8 @@ namespace ContentManagerTest
                 Text = "a",
                 Range = new Range
                 {
-                    Start = new Position {Line = 1, Character = 0},
-                    End = new Position {Line = 1, Character = 0}
+                    Start = new Position { Line = 1, Character = 0 },
+                    End = new Position { Line = 1, Character = 0 }
                 },
                 RangeLength = 0
             };
@@ -211,8 +200,8 @@ namespace ContentManagerTest
                 Text = "a",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 15},
-                    End = new Position {Line = 15, Character = 15}
+                    Start = new Position { Line = 15, Character = 15 },
+                    End = new Position { Line = 15, Character = 15 }
                 },
                 RangeLength = 0
             };
@@ -229,8 +218,8 @@ namespace ContentManagerTest
                 Text = "abc",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 15},
-                    End = new Position {Line = 15, Character = 15}
+                    Start = new Position { Line = 15, Character = 15 },
+                    End = new Position { Line = 15, Character = 15 }
                 },
                 RangeLength = 0
             };
@@ -238,7 +227,6 @@ namespace ContentManagerTest
 
             Assert.AreEqual(cleanSource.Insert(229, "abc"), f.Sourcecode);
         }
-
 
         //DELETE
         [Test]
@@ -249,8 +237,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 15},
-                    End = new Position {Line = 15, Character = 16}
+                    Start = new Position { Line = 15, Character = 15 },
+                    End = new Position { Line = 15, Character = 16 }
                 },
                 RangeLength = 1
             };
@@ -267,8 +255,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 14},
-                    End = new Position {Line = 15, Character = 15}
+                    Start = new Position { Line = 15, Character = 14 },
+                    End = new Position { Line = 15, Character = 15 }
                 },
                 RangeLength = 1
             };
@@ -276,7 +264,6 @@ namespace ContentManagerTest
 
             Assert.AreEqual(cleanSource.Remove(228, 1), f.Sourcecode);
         }
-
 
         [Test]
         public void RemovingRangeAt_15_15()
@@ -286,8 +273,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 15},
-                    End = new Position {Line = 15, Character = 20}
+                    Start = new Position { Line = 15, Character = 15 },
+                    End = new Position { Line = 15, Character = 20 }
                 },
                 RangeLength = 5
             };
@@ -295,7 +282,6 @@ namespace ContentManagerTest
 
             Assert.AreEqual(cleanSource.Remove(229, 5), f.Sourcecode);
         }
-
 
         [Test]
         public void RemovingLine_15_WithoutNewLine()
@@ -305,8 +291,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 0},
-                    End = new Position {Line = 15, Character = 35}
+                    Start = new Position { Line = 15, Character = 0 },
+                    End = new Position { Line = 15, Character = 35 }
                 },
                 RangeLength = 35
             };
@@ -323,8 +309,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 0},
-                    End = new Position {Line = 16, Character = 0}
+                    Start = new Position { Line = 15, Character = 0 },
+                    End = new Position { Line = 16, Character = 0 }
                 },
                 RangeLength = 37
             };
@@ -341,8 +327,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 0, Character = 0},
-                    End = new Position {Line = 1, Character = 0}
+                    Start = new Position { Line = 0, Character = 0 },
+                    End = new Position { Line = 1, Character = 0 }
                 },
                 RangeLength = 2
             };
@@ -360,8 +346,8 @@ namespace ContentManagerTest
                 Text = "baba",
                 Range = new Range
                 {
-                    Start = new Position {Line = 15, Character = 1},
-                    End = new Position {Line = 15, Character = 30}
+                    Start = new Position { Line = 15, Character = 1 },
+                    End = new Position { Line = 15, Character = 30 }
                 },
                 RangeLength = 29
             };
@@ -369,15 +355,10 @@ namespace ContentManagerTest
 
             Assert.AreEqual(cleanSource.Remove(215, 29).Insert(215, "baba"), f.Sourcecode);
         }
-
-
-
     }
-
 
     public class RequestExplicitlyMeasuredByDebugging_ExpectationExplicitlyTypedOut
     {
-
         private PhysicalFile f;
 
         private const string cleanSource = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}";
@@ -391,7 +372,6 @@ namespace ContentManagerTest
             };
         }
 
-
         [Test]
         public void HitReturn_2_8()
         {
@@ -400,8 +380,8 @@ namespace ContentManagerTest
                 Text = "",
                 Range = new Range
                 {
-                    Start = new Position {Line = 2, Character = 7},
-                    End = new Position {Line = 2, Character = 8}
+                    Start = new Position { Line = 2, Character = 7 },
+                    End = new Position { Line = 2, Character = 8 }
                 },
                 RangeLength = 1
             };
@@ -410,7 +390,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    contructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -431,7 +410,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    consructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -452,7 +430,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    consatructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -473,9 +450,7 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    consabctructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
-
 
         [Test]
         public void Replace()
@@ -485,7 +460,7 @@ namespace ContentManagerTest
                 Text = "var b:string;",
                 Range = new Range
                 {
-                    Start = new Position { Line = 1, Character = 4},
+                    Start = new Position { Line = 1, Character = 4 },
                     End = new Position { Line = 1, Character = 14 }
                 },
                 RangeLength = 10
@@ -495,7 +470,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var b:string;\r\n    constructor(){}\r\n}";
 
             Assert.AreEqual(expected, f.Sourcecode);
-            
         }
 
         [Test]
@@ -516,7 +490,6 @@ namespace ContentManagerTest
             const string expected = @"//nix";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -537,7 +510,6 @@ namespace ContentManagerTest
             const string expected = @"";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -558,7 +530,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}\r\n";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
 
         [Test]
@@ -579,7 +550,6 @@ namespace ContentManagerTest
             const string expected = "class A {\r\n    var a:int;\r\n    constructor(){}\r\n}//bla";
 
             Assert.AreEqual(expected, f.Sourcecode);
-
         }
     }
 }

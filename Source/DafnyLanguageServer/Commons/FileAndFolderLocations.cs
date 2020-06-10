@@ -30,8 +30,8 @@ namespace DafnyLanguageServer.Commons
         //model.bvd for Counter Example
         public static readonly string modelBVD = CombineWithRoot("model.bvd");
 
-
         private static string Combine(string a, string b) => Path.GetFullPath(Path.Combine(a, b));
+
         private static string CombineWithRoot(string b) => Combine(rootFolder, b);
     }
 }

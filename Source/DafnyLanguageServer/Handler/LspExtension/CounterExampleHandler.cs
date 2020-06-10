@@ -1,19 +1,19 @@
-﻿using System;
-using OmniSharp.Extensions.JsonRpc;
-using System.Threading;
-using System.Threading.Tasks;
-using DafnyLanguageServer.Core;
+﻿using DafnyLanguageServer.Core;
 using DafnyLanguageServer.CustomDTOs;
 using DafnyLanguageServer.WorkspaceManager;
 using Microsoft.Extensions.Logging;
+using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Server;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DafnyLanguageServer.Handler
 {
     /// <summary>
     /// This class provides an extension of the Language Server Protocol.
     /// It gets triggered every time a client sends a <c>counterExample</c> command request.
-    /// This class creates a new <c>DafnyTranslationUnit</c> to provide counter example result. 
+    /// This class creates a new <c>DafnyTranslationUnit</c> to provide counter example result.
     /// </summary>
     [Serial, Method("counterExample")]
     public interface ICounterExample : IJsonRpcRequestHandler<CounterExampleParams, CounterExampleResults>
