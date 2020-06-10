@@ -52,7 +52,7 @@ namespace DafnyLanguageServer.Commons
             }
             catch (Exception)
             {
-                Sourcecode = File.ReadAllText(Uri.LocalPath);
+                Sourcecode = File.ReadAllText(Filepath);
             }
         }
 
