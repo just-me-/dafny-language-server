@@ -78,7 +78,7 @@ namespace HoverTest
         }
 
         [Test]
-        public void TreeParam()
+        public void ThreeParam()
         {
             Client.TextDocument.DidOpen(Files.hv_params, "dfy");
             var result = Client.TextDocument.Hover(Files.hv_params, 12, 11).Result;
