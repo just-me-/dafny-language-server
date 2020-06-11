@@ -154,18 +154,6 @@ namespace DafnyLanguageServer.SymbolTable
                 SurroundingScope?.ChildrenHash.Add(result.Name, result);
             }
 
-            if (!isDeclaration &&
-                result.Kind == Kind.Method || result.Kind == Kind.Function)
-            {
-                result.Params = declarationSymbol?.Params;
-            }
-
-            if (!isDeclaration &&
-                result.Kind == Kind.Class)
-            {
-                result.Params = declarationSymbol["_ctor"]?.Params;
-            }
-
             SurroundingScope?.Descendants.Add(result);
 
             result.Module = Module;
