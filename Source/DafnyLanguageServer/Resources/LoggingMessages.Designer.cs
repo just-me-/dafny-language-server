@@ -61,6 +61,15 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Parameters ähnelt.
+        /// </summary>
+        public static string completion_params {
+            get {
+                return ResourceManager.GetString("completion_params", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Could not redirect output stream.  ähnelt.
         /// </summary>
         public static string could_not_redirect_outputstream {

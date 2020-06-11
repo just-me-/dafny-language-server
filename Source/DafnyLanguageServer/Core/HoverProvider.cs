@@ -1,6 +1,7 @@
 ﻿using DafnyLanguageServer.SymbolTable;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using System;
+using System.Linq;
 
 namespace DafnyLanguageServer.Core
 {
@@ -51,11 +52,21 @@ namespace DafnyLanguageServer.Core
             string declaration = symbol.IsDeclaration
                 ? Resources.LoggingMessages.hover_isDeclaration
                 : symbol.DeclarationOrigin.PositionToFormattedString();
+            string parameters = "";
+            if (symbol.Kind == Kind.Method || symbol.Kind == Kind.Function)
+            {
+                parameters += "(";
+                if (symbol?.DeclarationOrigin?.Params != null)
+                {
+                    parameters += string.Join(", ", symbol.DeclarationOrigin.Params.Select(parameter => parameter.Name + ": " + parameter.Type));
+                }
+                parameters += ")";
+            }
 
             var formattedContent = new MarkupContent();
             formattedContent.Kind = MarkupKind.Markdown;
             formattedContent.Value =
-                $" **`{symbol.Name}`** *({symbol.PositionToFormattedString()})*\n" +
+                $" **`{symbol.Name + parameters}`** *({symbol.PositionToFormattedString()})*\n" +
                 $"* **{Resources.LoggingMessages.hover_type}:** {type}\n" +
                 $"* **{Resources.LoggingMessages.hover_kind}:** {symbol.Kind}\n" +
                 $"* **{Resources.LoggingMessages.hover_scope}:** `{symbol.Parent.Name}`\n" +
