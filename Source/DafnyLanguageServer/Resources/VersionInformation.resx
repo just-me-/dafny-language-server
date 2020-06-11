@@ -122,6 +122,6 @@
     <comment>Optional information for statusbar information</comment>
   </data>
   <data name="version" xml:space="preserve">
-    <value>1.2.2</value>
+    <value>1.2.3</value>
   </data>
 </root>
