@@ -2,6 +2,11 @@
 using Microsoft.Dafny;
 using System;
 using System.Collections.Generic;
+using Formal = Microsoft.Dafny.Formal;
+using Function = Microsoft.Dafny.Function;
+using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
+using LiteralExpr = Microsoft.Dafny.LiteralExpr;
+using LocalVariable = Microsoft.Dafny.LocalVariable;
 using Type = Microsoft.Dafny.Type;
 using Visitor = Microsoft.Dafny.Visitor;
 
@@ -169,6 +174,7 @@ namespace DafnyLanguageServer.SymbolTable
 
         protected void SetClass(ISymbolInformation symbol) => CurrentClass = symbol;
 
+        #region empty-base-methods
         public override void Visit(IAstElement o)
         {
         }
@@ -176,5 +182,206 @@ namespace DafnyLanguageServer.SymbolTable
         public override void Leave(IAstElement o)
         {
         }
+
+        public override void Visit(ClassDecl o)
+        {
+        }
+
+        public override void Leave(ClassDecl o)
+        {
+        }
+
+        public override void Visit(Field o)
+        {
+        }
+
+        public override void Leave(Field o)
+        {
+        }
+
+        public override void Visit(Method o)
+        {
+        }
+
+        public override void Leave(Method o)
+        {
+        }
+
+        public override void Visit(Constructor o)
+        {
+        }
+
+        public override void Leave(Constructor o)
+        {
+        }
+
+        public override void Visit(Function o)
+        {
+        }
+
+        public override void Leave(Function o)
+        {
+        }
+
+        public override void Visit(NonglobalVariable o)
+        {
+        }
+
+        public override void Leave(NonglobalVariable o)
+        {
+        }
+
+        public override void Visit(Formal o)
+        {
+        }
+
+        public override void Leave(Formal o)
+        {
+        }
+
+        public override void Visit(LocalVariable o)
+        {
+        }
+
+        public override void Leave(LocalVariable o)
+        {
+        }
+
+        public override void Visit(AssignmentRhs o)
+        {
+        }
+
+        public override void Leave(AssignmentRhs o)
+        {
+        }
+
+        public override void Visit(TypeRhs e)
+        {
+        }
+
+        public override void Leave(TypeRhs e)
+        {
+        }
+
+        public override void Visit(BlockStmt o)
+        {
+        }
+
+        public override void Leave(BlockStmt o)
+        {
+        }
+
+        public override void Visit(WhileStmt s)
+        {
+        }
+
+        public override void Leave(WhileStmt e)
+        {
+        }
+
+        public override void Visit(IfStmt e)
+        {
+        }
+
+        public override void Leave(IfStmt e)
+        {
+        }
+
+        public override void Visit(Expression o)
+        {
+        }
+
+        public override void Leave(Expression o)
+        {
+        }
+
+        public override void Visit(AutoGhostIdentifierExpr e)
+        {
+        }
+
+        public override void Leave(AutoGhostIdentifierExpr e)
+        {
+        }
+
+        public override void Visit(LiteralExpr e)
+        {
+        }
+
+        public override void Leave(LiteralExpr e)
+        {
+        }
+
+        public override void Visit(IdentifierExpr e)
+        {
+        }
+
+        public override void Leave(IdentifierExpr e)
+        {
+        }
+
+        public override void Visit(ApplySuffix e)
+        {
+        }
+
+        public override void Leave(ApplySuffix e)
+        {
+        }
+
+        public override void Visit(NameSegment e)
+        {
+        }
+
+        public override void Leave(NameSegment e)
+        {
+        }
+
+        public override void Leave(ModuleDefinition o)
+        {
+        }
+
+        public override void Visit(ModuleDefinition o)
+        {
+        }
+
+        public override void Leave(AliasModuleDecl o)
+        {
+        }
+
+        public override void Visit(AliasModuleDecl o)
+        {
+        }
+
+        public override void Visit(ExprDotName e)
+        {
+        }
+
+        public override void Leave(ExprDotName e)
+        {
+        }
+
+        public override void Visit(ThisExpr e)
+        {
+        }
+
+        public override void Leave(ThisExpr e)
+        {
+        }
+
+        public override void Visit(DisplayExpression o)
+        {
+        }
+
+        public override void Leave(DisplayExpression o)
+        {
+        }
+
+        public override void Visit(ComprehensionExpr o)
+        {
+        }
+
+        public override void Leave(ComprehensionExpr o)
+        {
+        }
+        #endregion empty-base-methods
     }
 }

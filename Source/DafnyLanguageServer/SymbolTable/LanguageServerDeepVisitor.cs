@@ -107,14 +107,6 @@ namespace DafnyLanguageServer.SymbolTable
             SetClass(null);
         }
 
-        public override void Visit(Field o)
-        {
-        }
-
-        public override void Leave(Field o)
-        {
-        }
-
         public override void Visit(Method o)
         {
             var preDeclaredSymbol = FindDeclaration(o.Name, SurroundingScope, Kind.Method);
@@ -172,11 +164,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canBeUsed: true
                 );
         }
-
-        public override void Leave(NonglobalVariable o)
-        {
-        }
-
         public override void Visit(Formal o)
         {
             var symbol = CreateSymbol(
@@ -203,10 +190,6 @@ namespace DafnyLanguageServer.SymbolTable
             }
         }
 
-        public override void Leave(Formal o)
-        {
-        }
-
         public override void Visit(LocalVariable o)
         {
             CreateSymbol(
@@ -225,10 +208,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: true
             );
-        }
-
-        public override void Leave(LocalVariable o)
-        {
         }
 
         public override void Visit(BlockStmt o)
@@ -372,34 +351,6 @@ namespace DafnyLanguageServer.SymbolTable
             );
         }
 
-        public override void Leave(TypeRhs e)
-        {
-        }
-
-        public override void Visit(AutoGhostIdentifierExpr e)
-        {
-        }
-
-        public override void Leave(AutoGhostIdentifierExpr e)
-        {
-        }
-
-        public override void Visit(LiteralExpr e)
-        {
-        }
-
-        public override void Leave(LiteralExpr e)
-        {
-        }
-
-        public override void Visit(ApplySuffix e)
-        {
-        }
-
-        public override void Leave(ApplySuffix e)
-        {
-        }
-
         public override void Visit(NameSegment e)
         {
             var nav = new SymbolNavigator();
@@ -423,10 +374,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-        }
-
-        public override void Leave(NameSegment e)
-        {
         }
 
         public override void Visit(ExprDotName e)
@@ -460,10 +407,6 @@ namespace DafnyLanguageServer.SymbolTable
             );
         }
 
-        public override void Leave(ExprDotName e)
-        {
-        }
-
         public override void Visit(ThisExpr e)
         {
             string definingClassName = e.Type.ToString();
@@ -485,10 +428,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-        }
-
-        public override void Leave(ThisExpr e)
-        {
         }
 
         public override void Visit(Expression o)
@@ -513,26 +452,6 @@ namespace DafnyLanguageServer.SymbolTable
             );
         }
 
-        public override void Leave(Expression o)
-        {
-        }
-
-        public override void Visit(IdentifierExpr e)
-        {
-        }
-
-        public override void Leave(IdentifierExpr e)
-        {
-        }
-
-        public override void Visit(DisplayExpression o)
-        {
-        }
-
-        public override void Leave(DisplayExpression o)
-        {
-        }
-
         public override void Visit(AssignmentRhs o)
         {
             var declaration = FindDeclaration(o.Tok.val, SurroundingScope);
@@ -552,10 +471,6 @@ namespace DafnyLanguageServer.SymbolTable
                 canHaveChildren: false,
                 canBeUsed: false
             );
-        }
-
-        public override void Leave(AssignmentRhs o)
-        {
         }
     }
 }
