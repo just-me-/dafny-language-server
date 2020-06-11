@@ -16,7 +16,8 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new DefinitionsProvider(manager);
 
-            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            // note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.AreEqual("file:///N:/u/l.l", result.FirstOrDefault().Location.Uri.ToString());
             Assert.AreEqual(0, result.FirstOrDefault().Location.Range.Start.Line, "Start Line is not matching");
@@ -32,7 +33,7 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(true, false);
             var provider = new DefinitionsProvider(manager);
 
-            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.AreEqual("file:///N:/u/l.l", result.FirstOrDefault().Location.Uri.ToString());
             Assert.AreEqual(0, result.FirstOrDefault().Location.Range.Start.Line, "Start Line is not matching");
@@ -48,7 +49,7 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(false, true);
             var provider = new DefinitionsProvider(manager);
 
-            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetDefinitionLocation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.IsFalse(result.Any());
 

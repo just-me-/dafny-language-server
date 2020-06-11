@@ -15,7 +15,8 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(false, false);
             var provider = new HoverProvider(manager);
 
-            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.AreEqual(1, result.Range.Start.Line, "Start Line is not matching");
             Assert.AreEqual(21, result.Range.Start.Character, "Start Char is not matching");
@@ -41,7 +42,7 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(true, false);
             var provider = new HoverProvider(manager);
 
-            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.AreEqual(0, result.Range.Start.Line, "Start Line is not matching");
             Assert.AreEqual(10, result.Range.Start.Character, "Start Char is not matching");
@@ -65,7 +66,7 @@ namespace CoreProviderTest
             ISymbolTableManager manager = new FakeSymbolManager(false, true);
             var provider = new HoverProvider(manager);
 
-            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10); //note: params do not matter. the fake returns a fixed symbol and does not respect the position. those methods are tested within the symbol table tests.
+            var result = provider.GetHoverInformation(new Uri("file:///N:/u/l.l"), 0, 10);
 
             Assert.IsNull(result);
         }

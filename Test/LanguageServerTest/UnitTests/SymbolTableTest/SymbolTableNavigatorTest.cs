@@ -15,12 +15,6 @@ namespace SymbolTableTest
         [Test]
         public void GetTopDownSymbolSimple()
         {
-            //marcel hatte:
-            //c SymbolInformationFake(int lineStart, int lineEnd, int columnStart, int columnEnd, Uri file = null, string name = "no_name"
-            //er:   -   -    bsl  bel, bsc, bec
-            //ich: ml, mc,   bsl, bsc, bel, bec    und file ist neu string.
-            //also die mittleren zwei tuschen
-            //dann noch zwei davor anfügen.
             SymbolInformationFake rootEntry = new SymbolInformationFake(1, 0, 1, 0, 3, 0, defaultFile, "Parent");
             SymbolInformationFake mySymbol = new SymbolInformationFake(2, 0, 2, 0, 2, 0, defaultFile, "Child");
             rootEntry.AddChild(mySymbol);

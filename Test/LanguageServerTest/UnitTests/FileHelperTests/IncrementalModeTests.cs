@@ -138,7 +138,7 @@ namespace ContentManagerTest
         }
 
         [Test]
-        public void Empty_at_15_15() //this is at:    aLocalV|ar := addOne(field);
+        public void Empty_at_15_15()
         {
             TextDocumentContentChangeEvent change = new TextDocumentContentChangeEvent
             {
@@ -155,7 +155,6 @@ namespace ContentManagerTest
             Assert.AreEqual(cleanSource, f.Sourcecode);
         }
 
-        //INSSERT
         [Test]
         public void InsertOneCharAt_0_0()
         {
@@ -228,7 +227,6 @@ namespace ContentManagerTest
             Assert.AreEqual(cleanSource.Insert(229, "abc"), f.Sourcecode);
         }
 
-        //DELETE
         [Test]
         public void PressingDELETEat_15_15()
         {
@@ -337,7 +335,6 @@ namespace ContentManagerTest
             Assert.AreEqual(cleanSource.Remove(0, 2), f.Sourcecode);
         }
 
-        //CopyPaste
         [Test]
         public void ReplaceLine_15()
         {

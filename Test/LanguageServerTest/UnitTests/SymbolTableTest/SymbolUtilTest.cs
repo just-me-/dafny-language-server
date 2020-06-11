@@ -379,13 +379,13 @@ namespace SymbolTableTest
 
             int targetLine = 5;
             int targetCol = 5;
-            
+
             bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
             Assert.IsFalse(actual);
         }
 
         [Test]
-        public void Negatives() //negative target is not tested... -2 is just not in range of something positive.
+        public void Negatives()
         {
             int startLine = -1;
             int startCol = -1;
