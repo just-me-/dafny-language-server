@@ -4,6 +4,11 @@ using System.Text;
 
 namespace DafnyLanguageServer.SymbolTable
 {
+    /// <summary>
+    /// Use this class to navigate on the symbol table.
+    /// It handles access based on a root symbol.
+    /// Navigation can be done by using predicates, such as "only declarations".
+    /// </summary>
     public class SymbolTableManager : ISymbolTableManager
     {
         public ISymbolInformation DafnyProgramRootSymbol { get; }
@@ -18,11 +23,10 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// In case the user is typing and there can not be an entry point via a Symbol
+        /// In case the user is typing and there can not be an entry point via a symbol
         /// (eg for auto completion), the entry point has to be via the scope of the wrapping parent symbol.
         /// Use this method to get the parent symbol as en entry point.
         /// </summary>
-        //  weg
         public ISymbolInformation GetSymbolWrapperForCurrentScope(Uri file, int line, int character)
         {
             ISymbolNavigator navigator = new SymbolNavigator();
@@ -59,7 +63,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// For instances of classes - returns the origins "class type" as Smybol.
+        /// For instances of classes - returns the origins "class type" as symbol.
         /// Eg var instance = new ClassA();
         /// Calling this function with instance will return the symbol of ClassA (origin).
         /// </summary>
@@ -89,7 +93,7 @@ namespace DafnyLanguageServer.SymbolTable
         }
 
         /// <summary>
-        /// Gets all Symbol declarations.
+        /// Gets all symbol declarations.
         /// this can for example be used to know where to show CodeLens information.
         /// </summary>
         public List<ISymbolInformation> GetAllSymbolDeclarations()

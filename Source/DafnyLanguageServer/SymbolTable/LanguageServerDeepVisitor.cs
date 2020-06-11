@@ -5,12 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Formal = Microsoft.Dafny.Formal;
 using Function = Microsoft.Dafny.Function;
-using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
-using LiteralExpr = Microsoft.Dafny.LiteralExpr;
 using LocalVariable = Microsoft.Dafny.LocalVariable;
-
-// ReSharper disable RedundantArgumentDefaultValue
-// explicitly stated for clarity.
 
 namespace DafnyLanguageServer.SymbolTable
 {

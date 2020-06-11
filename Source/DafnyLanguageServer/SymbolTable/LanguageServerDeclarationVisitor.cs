@@ -1,12 +1,5 @@
 ﻿using Microsoft.Dafny;
-using System;
 using Function = Microsoft.Dafny.Function;
-using IdentifierExpr = Microsoft.Dafny.IdentifierExpr;
-using LiteralExpr = Microsoft.Dafny.LiteralExpr;
-using LocalVariable = Microsoft.Dafny.LocalVariable;
-
-// ReSharper disable RedundantArgumentDefaultValue
-// Parameters explicitly stated for clarity.
 
 namespace DafnyLanguageServer.SymbolTable
 {
