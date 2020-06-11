@@ -107,7 +107,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-        //GetSymbolAtPosition Fails here
         [Test]
         public void ClassAtDecl()
         {
@@ -132,7 +131,6 @@ namespace RenameTest
             VerifyForSingleFile(expected);
         }
 
-        //GetSymbol failed
         [Test]
         public void ClassMethodAtDecl()
         {

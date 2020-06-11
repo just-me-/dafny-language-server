@@ -28,7 +28,7 @@ namespace GotoIntegrationTest
             long col = goneTo.FirstOrDefault().Location.Range.Start.Character;
             Uri uri = goneTo.FirstOrDefault().Location.Uri;
 
-            Assert.AreEqual(expLine, line + 1);  //adding 1 here to get rid of the 0-based indexing.
+            Assert.AreEqual(expLine, line + 1);  //adding 1 here because 0-based indexing
             Assert.AreEqual(expCol, col + 1);
             Assert.AreEqual(new Uri(expectedFile), uri);
         }
