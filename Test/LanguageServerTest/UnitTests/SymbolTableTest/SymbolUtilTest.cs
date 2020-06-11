@@ -365,8 +365,8 @@ namespace SymbolTableTest
             int targetLine = 5;
             int targetCol = 5;
 
-            Assert.Throws<ArgumentException>(() =>
-                SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol));
+            bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
+            Assert.IsFalse(actual);
         }
 
         [Test]
@@ -379,9 +379,9 @@ namespace SymbolTableTest
 
             int targetLine = 5;
             int targetCol = 5;
-
-            Assert.Throws<ArgumentException>(() =>
-                SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol));
+            
+            bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
+            Assert.IsFalse(actual);
         }
 
         [Test]
@@ -395,8 +395,8 @@ namespace SymbolTableTest
             int targetLine = 5;
             int targetCol = 5;
 
-            Assert.Throws<ArgumentException>(() =>
-                SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol));
+            bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
+            Assert.IsFalse(actual);
         }
 
         [Test]
@@ -414,8 +414,8 @@ namespace SymbolTableTest
             int targetLine = 5;
             int targetCol = 5;
 
-            Assert.Throws<ArgumentException>(() =>
-                SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol));
+            bool actual = SymbolUtil.Wraps(startLine, startCol, endLine, endCol, targetLine, targetCol);
+            Assert.IsFalse(actual);
         }
     }
 

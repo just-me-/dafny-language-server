@@ -111,7 +111,7 @@ namespace DafnyLanguageServer.SymbolTable
                 (startLine == endLine && startCol > endCol) ||
                 (startLine < 0 || endLine < 0 || startCol < 0 || endCol < 0))
             {
-                throw new ArgumentException(Resources.ExceptionMessages.illegal_wrapping_args);
+                return false;
             }
 
             if (LineIsWrapped(startLine, endLine, targetLine))
