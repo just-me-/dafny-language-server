@@ -41,7 +41,7 @@ namespace DafnyLanguageServer.Tools
 
             var log = loggerconfig
                 .Enrich.FromLogContext()
-                .WriteTo.File(LanguageServerConfig.LogFile, fileSizeLimitBytes: 1024 * 1024)
+                .WriteTo.File(LanguageServerConfig.LogFile, fileSizeLimitBytes: 1024*1024, rollOnFileSizeLimit: true)
                 .CreateLogger();
 
             return log;
