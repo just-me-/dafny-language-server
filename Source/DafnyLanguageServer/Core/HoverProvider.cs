@@ -56,9 +56,9 @@ namespace DafnyLanguageServer.Core
             if (symbol.Kind == Kind.Method || symbol.Kind == Kind.Function)
             {
                 parameters += "(";
-                if (symbol?.Params != null)
+                if (symbol?.DeclarationOrigin?.Params != null)
                 {
-                    parameters += string.Join(", ", symbol.Params.Select(parameter => parameter.Name + ": " + parameter.Type));
+                    parameters += string.Join(", ", symbol.DeclarationOrigin.Params.Select(parameter => parameter.Name + ": " + parameter.Type));
                 }
                 parameters += ")";
             }
