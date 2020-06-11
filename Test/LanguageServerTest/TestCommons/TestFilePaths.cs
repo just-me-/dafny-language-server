@@ -164,6 +164,7 @@ namespace TestCommons
 
         //Hover
         public static readonly string hv_hover = CreateTestfilePath("hover/hover.dfy");
+        public static readonly string hv_params = CreateTestfilePath("hover/parameters.dfy");
 
         private static string CreateTestfilePath(string s)
         {

@@ -43,5 +43,49 @@ namespace HoverTest
             Console.WriteLine(actual);
             Assert.AreEqual(textExpectation, actual);
         }
+
+        [Test]
+        public void NoParam()
+        {
+            Client.TextDocument.DidOpen(Files.hv_params, "dfy");
+            var result = Client.TextDocument.Hover(Files.hv_params, 3, 14).Result;
+            var actual = result.Contents.MarkupContent.Value;
+
+            string textExpectation = " **`noParam()`** *(line 4, parameters.dfy)*\n";
+            Assert.IsTrue(actual.Contains(textExpectation));
+        }
+
+        [Test]
+        public void OneParam()
+        {
+            Client.TextDocument.DidOpen(Files.hv_params, "dfy");
+            var result = Client.TextDocument.Hover(Files.hv_params, 5, 16).Result;
+            var actual = result.Contents.MarkupContent.Value;
+
+            string textExpectation = " **`oneParam(a: int)`** *(line 6, parameters.dfy)*\n";
+            Assert.IsTrue(actual.Contains(textExpectation));
+        }
+
+        [Test]
+        public void TwoParam()
+        {
+            Client.TextDocument.DidOpen(Files.hv_params, "dfy");
+            var result = Client.TextDocument.Hover(Files.hv_params, 7, 14).Result;
+            var actual = result.Contents.MarkupContent.Value;
+
+            string textExpectation = " **`twoParam(a: int, b: int)`** *(line 8, parameters.dfy)*\n";
+            Assert.IsTrue(actual.Contains(textExpectation));
+        }
+
+        [Test]
+        public void TreeParam()
+        {
+            Client.TextDocument.DidOpen(Files.hv_params, "dfy");
+            var result = Client.TextDocument.Hover(Files.hv_params, 12, 11).Result;
+            var actual = result.Contents.MarkupContent.Value;
+
+            string textExpectation = " **`MyMethod(a: int, b: int, c: int)`** *(line 13, parameters.dfy)*\n";
+            Assert.IsTrue(actual.Contains(textExpectation));
+        }
     }
 }
