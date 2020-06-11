@@ -61,7 +61,7 @@ namespace DafnyLanguageServer.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 03.06.2020 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die 11.06.2020 ähnelt.
         /// </summary>
         internal static string release_date {
             get {
