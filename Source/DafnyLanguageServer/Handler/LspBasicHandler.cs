@@ -47,7 +47,6 @@ namespace DafnyLanguageServer.Handler
         protected void HandleError(string msg, Exception e)
         {
             _log.LogError(msg + "\nException: " + e.Message + "\nStackTrace: " + e.StackTrace);
-            _mss.SendError(msg);
         }
     }
 }
